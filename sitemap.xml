@@ -19,105 +19,111 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/about.html</loc>
-    <lastmod>2026-07-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://juxin-consulting.vercel.app/contact.html</loc>
-    <lastmod>2026-07-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://juxin-consulting.vercel.app/courses.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-strategy-planning.html</loc>
+    <loc>https://juxin-consulting.vercel.app/about.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-organization-reform.html</loc>
+    <loc>https://juxin-consulting.vercel.app/contact.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-digital-transformation.html</loc>
+    <loc>https://juxin-consulting.vercel.app/strategic-planning.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-project-incubation.html</loc>
+    <loc>https://juxin-consulting.vercel.app/organizational-change.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-performance-growth.html</loc>
+    <loc>https://juxin-consulting.vercel.app/digital-transformation.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-cost-reduction.html</loc>
+    <loc>https://juxin-consulting.vercel.app/startup-incubation.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-talent-team.html</loc>
+    <loc>https://juxin-consulting.vercel.app/growth-strategy.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-entrepreneur-financing.html</loc>
+    <loc>https://juxin-consulting.vercel.app/performance-management.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-brand-marketing.html</loc>
+    <loc>https://juxin-consulting.vercel.app/business-model.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/article-supply-chain.html</loc>
+    <loc>https://juxin-consulting.vercel.app/digital-marketing.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/course-growth-strategy.html</loc>
+    <loc>https://juxin-consulting.vercel.app/digital-roadmap.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/course-organization-management.html</loc>
+    <loc>https://juxin-consulting.vercel.app/org-structure-design.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/course-digital-practice.html</loc>
+    <loc>https://juxin-consulting.vercel.app/pitch-deck.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://juxin-consulting.vercel.app/course-entrepreneur-practice.html</loc>
+    <loc>https://juxin-consulting.vercel.app/strategy-guide.html</loc>
     <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://juxin-consulting.vercel.app/report-2026-enterprise-growth.html</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://juxin-consulting.vercel.app/privacy.html</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://juxin-consulting.vercel.app/terms.html</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
