@@ -1,0 +1,11 @@
+﻿User-agent: *
+Allow: /
+
+# 禁止抓取的路径
+Disallow: /admin/
+Disallow: /search/
+
+# Sitemap
+Sitemap: https://juxin-consulting.vercel.app/sitemap.xml
+
+
