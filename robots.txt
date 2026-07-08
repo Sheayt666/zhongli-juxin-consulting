@@ -4,7 +4,7 @@ Disallow: /cgi-bin/
 Disallow: /admin/
 
 # Sitemap
-Sitemap: https://juxin-consulting.pages.dev/sitemap.xml
+Sitemap: https://juxin-consulting.help/sitemap.xml
 
 # 百度
 User-agent: Baiduspider
