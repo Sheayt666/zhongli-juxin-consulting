@@ -1,11 +1,43 @@
-﻿User-agent: *
+User-agent: *
 Allow: /
-
-# 禁止抓取的路径
+Disallow: /cgi-bin/
 Disallow: /admin/
-Disallow: /search/
 
 # Sitemap
 Sitemap: https://juxin-consulting.vercel.app/sitemap.xml
 
+# 百度
+User-agent: Baiduspider
+Allow: /
+User-agent: Baiduspider-mobile
+Allow: /
+User-agent: Baiduspider-image
+Allow: /
 
+# 谷歌
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+User-agent: Googlebot-Mobile
+Allow: /
+
+# 必应
+User-agent: bingbot
+Allow: /
+
+# 360
+User-agent: 360Spider
+Allow: /
+
+# 搜狗
+User-agent: Sogou spider
+Allow: /
+
+# 神马
+User-agent: Yisouspider
+Allow: /
+
+# 头条
+User-agent: Bytespider
+Allow: /
