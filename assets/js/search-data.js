@@ -319,5 +319,93 @@ const siteSearchData = [
     "category": "{article['category']}",
     "readTime": "{article['readTime']}",
     "keywords": "{article['keywords']}"
+  },
+  {
+    "title": "企业品牌战略规划完整方法论：从定位到升级的系统路径",
+    "url": "article-brand-strategy.html",
+    "description": "企业品牌战略怎么制定？本文详解从品牌诊断到定位规划，从体系搭建到升级迭代的完整方法论，附真实案例和工具模板。",
+    "category": "战略规划",
+    "readTime": "15分钟",
+    "keywords": "品牌战略 品牌规划 品牌定位 品牌升级 品牌建设 品牌管理 企业品牌 品牌营销"
+  },
+  {
+    "title": "企业多元化战略：从相关多元到跨界扩张的路径选择与风险控制",
+    "url": "article-diversification-strategy.html",
+    "description": "企业多元化怎么搞？本文详解相关多元化与不相关多元化的路径选择，业务组合分析方法，风险控制策略，附真实案例。",
+    "category": "战略规划",
+    "readTime": "14分钟",
+    "keywords": "多元化战略 相关多元化 跨界经营 企业扩张 战略选择 风险控制 业务组合"
+  },
+  {
+    "title": "企业并购与整合完整指南：从尽职调查到文化融合的系统方法论",
+    "url": "article-ma-integration.html",
+    "description": "企业并购怎么做？本文详解从战略规划到标的筛选，从尽职调查到估值谈判，从整合落地到文化融合的全流程方法。",
+    "category": "战略规划",
+    "readTime": "16分钟",
+    "keywords": "企业并购 并购整合 尽职调查 收购兼并 文化融合 并购估值 投后管理"
+  },
+  {
+    "title": "薪酬体系设计完整指南：宽带薪酬与激励机制的系统方法论",
+    "url": "article-compensation-design.html",
+    "description": "薪酬体系怎么设计？本文详解从岗位价值评估到宽带薪酬设计，从绩效薪酬到长期激励的完整体系，附真实案例和工具模板。",
+    "category": "组织管理",
+    "readTime": "16分钟",
+    "keywords": "薪酬体系 宽带薪酬 薪酬设计 激励机制 薪酬管理 薪资结构 绩效薪酬 薪酬激励"
+  },
+  {
+    "title": "企业招聘体系搭建：从人才画像到入职管理的全流程设计",
+    "url": "article-recruitment-system.html",
+    "description": "招聘体系怎么建？本文详解从人才画像到渠道策略，从面试方法到入职管理的全流程体系搭建方法，附真实案例。",
+    "category": "组织管理",
+    "readTime": "14分钟",
+    "keywords": "招聘体系 人才招聘 招聘流程 人才画像 面试方法 入职管理 雇主品牌 人才获取"
+  },
+  {
+    "title": "业务流程再造BPR：从诊断到优化的企业效率提升方法论",
+    "url": "article-process-reengineering.html",
+    "description": "流程再造怎么做？本文详解从流程诊断到精益优化，从ESIA方法到数字化赋能的效率提升系统方法论，附真实案例。",
+    "category": "组织管理",
+    "readTime": "15分钟",
+    "keywords": "流程再造 BPR 业务流程 流程优化 企业效率 流程管理 组织效率 精益管理"
+  },
+  {
+    "title": "CRM系统选型与实施完整指南：从需求分析到落地推广的方法论",
+    "url": "article-crm-selection.html",
+    "description": "CRM系统怎么选？本文详解从需求分析到选型评估，从实施落地到用户推广的全流程方法，附主流厂商对比和真实案例。",
+    "category": "数字化转型",
+    "readTime": "15分钟",
+    "keywords": "CRM系统 客户关系管理 CRM选型 CRM实施 销售管理系统 客户管理 SCRM"
+  },
+  {
+    "title": "数字化工厂建设路径：传统制造业智能化转型的系统方法论",
+    "url": "article-smart-factory.html",
+    "description": "数字化工厂怎么建？本文详解从成熟度评估到架构设计，从设备联网到MES建设，从数据应用到组织人才的系统路径。",
+    "category": "数字化转型",
+    "readTime": "16分钟",
+    "keywords": "数字化工厂 智能工厂 工业4.0 智能制造 制造业转型 数字车间 工业互联网"
+  },
+  {
+    "title": "企业数据中台建设方法论：从数据治理到业务赋能的完整路径",
+    "url": "article-data-platform.html",
+    "description": "数据中台怎么建？本文详解从数据治理到资产化运营，从架构设计到组织变革的完整方法论，附真实案例和避坑指南。",
+    "category": "数字化转型",
+    "readTime": "14分钟",
+    "keywords": "数据中台 数据治理 数据平台 数据资产 数据驱动 企业数据 数据分析平台"
+  },
+  {
+    "title": "A轮融资完整攻略：投资人逻辑、估值方法与谈判策略实战指南",
+    "url": "article-series-a-funding.html",
+    "description": "A轮融资怎么搞？本文深度拆解投资人决策逻辑、6种估值方法、Term Sheet核心条款、谈判策略和尽职调查应对方法。",
+    "category": "创业孵化",
+    "readTime": "16分钟",
+    "keywords": "A轮融资 创业融资 投资人 估值方法 融资谈判 创业投资 Venture Capital VC融资"
+  },
+  {
+    "title": "创业合伙人机制设计：从选择到分配到退出的系统方法论",
+    "url": "article-co-founder-mechanism.html",
+    "description": "合伙人怎么选？股权怎么分？本文详解从合伙人选择标准到股权分配模型，从权责利划分到退出机制设计的完整体系。",
+    "category": "创业孵化",
+    "readTime": "15分钟",
+    "keywords": "创业合伙人 合伙人机制 股权分配 合伙人选择 创业团队 合伙人退出 联合创始人"
   }
 ];
