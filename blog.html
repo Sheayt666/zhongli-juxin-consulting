@@ -138,40 +138,26 @@
     <section class="search-section" aria-label="文章搜索">
       <div class="container">
         <div class="search-box-wrapper">
-          <div class="search-box">
-            <div class="search-tabs" role="tablist">
-              <button class="search-tab active" role="tab" data-mode="site" aria-selected="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
-                站内搜索
-              </button>
-              <button class="search-tab" role="tab" data-mode="web" aria-selected="false">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                全网搜索
-              </button>
-            </div>
-            <form class="search-form" id="searchForm" role="search">
-              <input 
-                type="search" 
-                id="searchInput" 
-                class="search-input" 
-                placeholder="搜索战略、组织、数字化、创业等关键词..." 
-                aria-label="搜索文章"
-                autocomplete="off"
-              >
-              <button type="submit" class="search-btn" aria-label="搜索">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
-                <span>搜索</span>
-              </button>
-            </form>
-            <div class="search-hint" id="searchHint">
-              <span>热门：</span>
-              <a href="#" data-keyword="战略规划">战略规划</a>
-              <a href="#" data-keyword="组织变革">组织变革</a>
-              <a href="#" data-keyword="数字化转型">数字化转型</a>
-              <a href="#" data-keyword="OKR">OKR</a>
-              <a href="#" data-keyword="创业">创业</a>
-              <a href="#" data-keyword="降本增效">降本增效</a>
-            </div>
+          <form class="search-bar" id="searchForm" role="search">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            <input 
+              type="search" 
+              id="searchInput" 
+              class="search-input" 
+              placeholder="搜索战略、组织、数字化、创业等关键词..." 
+              aria-label="搜索文章"
+              autocomplete="off"
+            >
+            <button type="submit" class="search-btn" aria-label="搜索">搜索</button>
+          </form>
+          <div class="search-hint" id="searchHint">
+            <span>热门：</span>
+            <a href="#" data-keyword="战略规划">战略规划</a>
+            <a href="#" data-keyword="组织变革">组织变革</a>
+            <a href="#" data-keyword="数字化转型">数字化转型</a>
+            <a href="#" data-keyword="OKR">OKR</a>
+            <a href="#" data-keyword="创业">创业</a>
+            <a href="#" data-keyword="降本增效">降本增效</a>
           </div>
           <div class="search-results" id="searchResults" style="display:none;">
             <div class="search-results-header">
@@ -728,7 +714,7 @@
 
 <script src="assets/js/analytics.js" defer></script>
 <script>
-// 搜索功能 - DOMContentLoaded确保可靠执行
+// 站内搜索功能
 (function() {
   'use strict';
   
@@ -984,43 +970,13 @@
   var clearSearchBtn = document.getElementById('clearSearch');
   var searchHint = document.getElementById('searchHint');
   var categorySection = document.getElementById('categorySection');
-  var searchTabs = document.querySelectorAll('.search-tab');
-  
-  var currentMode = 'site';
-  
-  // 切换搜索模式
-  searchTabs.forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      searchTabs.forEach(function(t) {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      this.classList.add('active');
-      this.setAttribute('aria-selected', 'true');
-      currentMode = this.getAttribute('data-mode');
-      
-      if (currentMode === 'site') {
-        searchInput.placeholder = '搜索战略、组织、数字化、创业等关键词...';
-      } else {
-        searchInput.placeholder = '输入关键词，通过百度搜索全网内容...';
-      }
-      
-      searchInput.focus();
-    });
-  });
   
   // 搜索提交
   searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
     var keyword = searchInput.value.trim();
     if (!keyword) return;
-    
-    if (currentMode === 'site') {
-      performSiteSearch(keyword);
-    } else {
-      var baiduUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '+site%3Ajuxin-consulting.help';
-      window.open(baiduUrl, '_blank');
-    }
+    performSiteSearch(keyword);
   });
   
   // 站内搜索
@@ -1061,7 +1017,7 @@
         '<div class="search-no-results">' +
           '<div class="search-no-results-icon">📭</div>' +
           '<p>没有找到与 "<strong>' + escapeHtml(keyword) + '</strong>" 相关的文章</p>' +
-          '<p class="search-no-results-tip">试试其他关键词，或 <a href="#" onclick="doWebSearch(\'' + escapeHtml(keyword) + '\');return false;">使用全网搜索</a></p>' +
+          '<p class="search-no-results-tip">试试其他关键词</p>' +
         '</div>';
     } else {
       resultsCount.textContent = '找到 ' + results.length + ' 篇相关文章';
@@ -1101,7 +1057,7 @@
   clearSearchBtn.addEventListener('click', function() {
     searchInput.value = '';
     searchResults.style.display = 'none';
-    searchHint.style.display = 'block';
+    searchHint.style.display = 'flex';
     if (categorySection) categorySection.style.display = 'block';
     
     document.querySelectorAll('section[id]').forEach(function(sec) {
@@ -1119,19 +1075,13 @@
       e.preventDefault();
       var kw = this.getAttribute('data-keyword');
       searchInput.value = kw;
-      if (currentMode === 'site') {
-        performSiteSearch(kw);
-      } else {
-        searchForm.dispatchEvent(new Event('submit'));
-      }
+      performSiteSearch(kw);
     });
   });
   
   // 实时搜索（防抖）
   var debounceTimer = null;
   searchInput.addEventListener('input', function() {
-    if (currentMode !== 'site') return;
-    
     clearTimeout(debounceTimer);
     var val = this.value.trim();
     
@@ -1140,7 +1090,7 @@
         performSiteSearch(val);
       } else if (val.length === 0) {
         searchResults.style.display = 'none';
-        searchHint.style.display = 'block';
+        searchHint.style.display = 'flex';
         if (categorySection) categorySection.style.display = 'block';
         document.querySelectorAll('section[id]').forEach(function(sec) {
           if (['strategic', 'organizational', 'digital', 'startup'].indexOf(sec.id) > -1) {
@@ -1169,12 +1119,6 @@
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 })();
-
-// 全网搜索（供内联onclick调用）
-function doWebSearch(keyword) {
-  var baiduUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent(keyword) + '+site%3Ajuxin-consulting.help';
-  window.open(baiduUrl, '_blank');
-}
 </script>
 </body>
 </html>
