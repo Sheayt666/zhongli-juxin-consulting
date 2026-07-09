@@ -1375,5 +1375,101 @@ const siteSearchData = [
     "category": "供应链出海",
     "readTime": "17分钟",
     "keywords": "供应链坑,跨境供应链,库存积压"
+  },
+  {
+    "title": "跨境品牌增长飞轮：从0到1亿美金的品牌增长底层逻辑",
+    "url": "article-brand-growth-flywheel.html",
+    "description": "品牌增长不是线性的而是飞轮式的。三层飞轮、六大板块、四个阶段，系统拆解品牌增长底层逻辑与实施路径",
+    "category": "品牌出海",
+    "readTime": "22分钟",
+    "keywords": "品牌增长,增长飞轮,底层逻辑"
+  },
+  {
+    "title": "跨境品牌私域体系搭建：从0到1构建用户资产护城河",
+    "url": "article-private-domain-system.html",
+    "description": "流量越来越贵，私域是品牌出海的必经之路。五层架构（数据层/触点层/内容层/体系层/社群层）完整拆解",
+    "category": "品牌出海",
+    "readTime": "21分钟",
+    "keywords": "私域体系,邮件营销,会员体系"
+  },
+  {
+    "title": "跨境用户生命周期管理（LCM）：从获客到忠诚的全链路运营体系",
+    "url": "article-user-lifecycle-management.html",
+    "description": "最大化用户LTV的系统化方法。5个阶段、RFM分层模型、数据驱动自动化运营、4步实施路径",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "用户生命周期,LCM,LTV,RFM"
+  },
+  {
+    "title": "跨境品牌矩阵战略：从单一品牌到品牌组合的增长方法论",
+    "url": "article-brand-portfolio-strategy.html",
+    "description": "单一品牌有天花板，品牌矩阵突破增长瓶颈。4种模式、5步实施路径、5个常见大坑，系统拆解品牌组合战略",
+    "category": "品牌出海",
+    "readTime": "19分钟",
+    "keywords": "品牌矩阵,多品牌战略,品牌组合"
+  },
+  {
+    "title": "全域SEO联动策略：独立站+亚马逊+TikTok+Google的搜索流量增长飞轮",
+    "url": "article-omnichannel-seo-strategy.html",
+    "description": "SEO不是独立站专利，而是全域流量底层引擎。四层架构、五种联动模式、从0到1落地路径",
+    "category": "全域联动",
+    "readTime": "22分钟",
+    "keywords": "全域SEO,SEO联动,跨境SEO,搜索流量"
+  },
+  {
+    "title": "全域归因体系：从最后点击到全链路归因，让每一分钱都花得明白",
+    "url": "article-omnichannel-attribution.html",
+    "description": "广告费花了几百万不知道哪个渠道有用？6种归因模型对比、4层数据基础、5步落地路径",
+    "category": "全域联动",
+    "readTime": "21分钟",
+    "keywords": "全域归因,归因模型,营销归因,ROI"
+  },
+  {
+    "title": "独立站增长黑客：30个低成本高增长的DTC实战方法论",
+    "url": "article-dtc-growth-hacking.html",
+    "description": "没有大预算怎么做独立站？增长黑客思维——用最小成本获取最大增长。30个实战方法覆盖5大环节",
+    "category": "品牌独立站",
+    "readTime": "21分钟",
+    "keywords": "增长黑客,DTC增长,低成本获客,增长方法论"
+  },
+  {
+    "title": "亚马逊爆款打造全流程：从0到BSR的完整打法手册",
+    "url": "article-amazon-hit-product.html",
+    "description": "爆款不是碰运气是打出来的。6个阶段完整拆解：选品→开发→上架→启动→放量→维稳，系统化打造爆款",
+    "category": "亚马逊跨境",
+    "readTime": "22分钟",
+    "keywords": "亚马逊爆款,爆款打造,BSR,选品"
+  },
+  {
+    "title": "亚马逊站外引流完全指南：从Deal站到红人营销的全渠道打法",
+    "url": "article-amazon-offsite-traffic.html",
+    "description": "只靠站内已经不够了。7大站外渠道全拆解：Deal站、红人测评、内容SEO、社交、广告、EDM、独立站",
+    "category": "亚马逊跨境",
+    "readTime": "19分钟",
+    "keywords": "亚马逊站外,站外引流,Deal站,红人营销"
+  },
+  {
+    "title": "TikTok爆款内容公式：7步拆解百万播放的底层逻辑与可复制模板",
+    "url": "article-tiktok-viral-formula.html",
+    "description": "爆款不是碰运气是设计出来的。底层算法逻辑、7步创作公式、6种爆款模板、批量生产方法",
+    "category": "TK内容电商",
+    "readTime": "20分钟",
+    "keywords": "TikTok爆款,内容公式,爆款视频,短视频运营"
+  },
+  {
+    "title": "跨境品牌定位深度方法论：从差异化到心智占领的完整体系",
+    "url": "article-brand-positioning-deep-dive.html",
+    "description": "定位不是一句slogan，而是一套完整的体系。从市场调研到差异化定位、从视觉锤到语言钉、从定位到落地",
+    "category": "品牌出海",
+    "readTime": "23分钟",
+    "keywords": "品牌定位,差异化,心智占领,定位理论"
+  },
+  {
+    "title": "跨境品牌故事与叙事营销：如何用故事打动全球用户",
+    "url": "article-cross-border-brand-story-deep.html",
+    "description": "好品牌都会讲故事。品牌故事的7种经典框架、叙事营销的4个层次、如何讲好中国品牌的全球化故事",
+    "category": "品牌出海",
+    "readTime": "18分钟",
+    "keywords": "品牌故事,叙事营销,内容营销,品牌传播"
   }
 ];
