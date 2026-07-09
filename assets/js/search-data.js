@@ -239,5 +239,85 @@ const siteSearchData = [
     "category": "战略规划",
     "readTime": "30分钟",
     "keywords": "战略规划咨询 众力聚鑫战略规划咨询服务，15年实战经验，帮助企业制定增长战略、竞争战略、多元化战略，提供从诊断到落地的全流程陪跑。绩效挂钩，不达目标不收尾款。"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
+  },
+  {{
+    "title": "{article['title']}",
+    "url": "{article['url']}",
+    "description": "{article['description']}",
+    "category": "{article['category']}",
+    "readTime": "{article['readTime']}",
+    "keywords": "{article['keywords']}"
   }
 ];
