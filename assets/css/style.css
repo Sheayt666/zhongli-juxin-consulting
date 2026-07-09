@@ -248,7 +248,7 @@
 
 /* ===== 课程页面样式 ===== */
 
-/* 课程卡片网格 */
+/* 课程卡片网格 - 与service-card/case-card设计语言一致 */
 .course-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -286,21 +286,21 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  padding: 3px 10px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 4px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.92);
+  border-radius: var(--radius-sm);
   font-size: 11px;
   font-weight: 600;
-  color: var(--ink-soft);
+  color: var(--accent);
 }
 .course-hot {
   position: absolute;
   top: 12px;
   right: 12px;
-  padding: 3px 10px;
+  padding: 4px 10px;
   background: var(--red);
   color: #fff;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 11px;
   font-weight: 600;
 }
@@ -318,11 +318,23 @@
   line-height: 1.4;
 }
 .course-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.6;
   margin-bottom: 16px;
   flex: 1;
+}
+.course-info {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.course-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .course-meta {
   display: flex;
@@ -333,7 +345,7 @@
 }
 .course-price {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--accent);
 }
 .course-price .old {
@@ -343,16 +355,8 @@
   margin-left: 6px;
   font-weight: 500;
 }
-.course-info {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 16px;
-}
-.course-info span {
-  margin-right: 12px;
-}
 .btn-course {
-  padding: 8px 16px !important;
+  padding: 8px 18px !important;
   font-size: 13px !important;
 }
 
@@ -367,13 +371,14 @@
 .course-tab {
   padding: 8px 20px;
   border: 1px solid var(--rule);
-  background: #fff;
-  border-radius: 50px;
+  background: var(--surface);
+  border-radius: 999px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
   color: var(--ink-soft);
   font-family: inherit;
+  font-weight: 500;
 }
 .course-tab:hover, .course-tab.active {
   background: var(--accent);
@@ -381,20 +386,18 @@
   border-color: var(--accent);
 }
 
-/* 学习路径步骤箭头 */
+/* 学习路径 - 与全站process-steps风格对齐 */
 .process-steps {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  gap: 0;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  position: relative;
 }
 .step-card {
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
-  width: 220px;
   text-align: center;
   position: relative;
   transition: all 0.25s;
@@ -405,13 +408,14 @@
   border-color: var(--accent);
 }
 .step-num {
-  width: 36px;
-  height: 36px;
-  margin: 0 auto 12px;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent2));
   color: #fff;
   font-weight: 700;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -423,23 +427,18 @@
   color: var(--ink);
 }
 .step-card p {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.6;
   margin-bottom: 12px;
 }
 .step-arrow {
-  display: flex;
-  align-items: center;
-  font-size: 24px;
-  color: var(--muted-light);
-  padding: 0 12px;
-  flex-shrink: 0;
+  display: none;
 }
 .step-deliver {
   padding-top: 12px;
   border-top: 1px solid var(--rule-light);
-  font-size: 12px;
+  font-size: 13px;
 }
 .deliver-label {
   color: var(--muted);
@@ -463,8 +462,8 @@
   transition: all 0.25s;
 }
 .course-outline-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
   border-color: var(--accent);
 }
 .outline-header {
@@ -476,9 +475,9 @@
   border-bottom: 1px solid var(--rule-light);
 }
 .outline-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
   background: var(--accent-bg);
   display: flex;
   align-items: center;
@@ -514,14 +513,14 @@
   break-inside: avoid;
 }
 .outline-list li::before {
-  content: '✓';
+  content: '\2713';
   color: var(--green);
   font-weight: 700;
   font-size: 12px;
   flex-shrink: 0;
 }
 
-/* 学习保障小网格 */
+/* 学习保障网格 - 与audience-grid风格对齐 */
 .guarantee-grid-sm {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -537,8 +536,8 @@
   transition: all 0.25s;
 }
 .guarantee-item-sm:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
   border-color: var(--accent);
 }
 .gi-icon {
@@ -552,13 +551,18 @@
   color: var(--ink);
 }
 .gi-content p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   line-height: 1.6;
   margin: 0;
 }
 
-/* 学员评价增强 */
+/* 学员评价 - 与全站testimonial风格对齐 + 增强 */
+.testimonial-grid-pro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
 .testimonial-grid-pro .testimonial-card {
   position: relative;
   transition: all 0.3s;
@@ -566,6 +570,7 @@
 .testimonial-grid-pro .testimonial-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
+  border-color: var(--accent);
 }
 .testimonial-stars {
   font-size: 16px;
@@ -584,14 +589,13 @@
 }
 .result-value {
   color: var(--green);
-  font-weight: 700;
+  font-weight: 600;
 }
 .testimonial-company {
   font-size: 12px;
   color: var(--muted-light);
   margin-top: 2px;
 }
-
 
 /* ===== 搜索框样式（长条简洁版） ===== */
 .search-section {
@@ -878,10 +882,9 @@
   .course-grid { grid-template-columns: 1fr; }
   .course-outline-grid { grid-template-columns: 1fr; }
   .outline-list { columns: 1; }
-  .guarantee-grid-sm { grid-template-columns: 1fr; gap: 16px; }
+  .guarantee-grid-sm { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .course-tabs { gap: 6px; }
   .course-tab { padding: 6px 14px; font-size: 13px; }
-  .step-arrow { display: none; }
-  .step-card { width: 100%; }
-  .process-steps { gap: 16px; }
+  .process-steps { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .step-card { padding: 20px 16px; }
 }
