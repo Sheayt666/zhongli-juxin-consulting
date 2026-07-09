@@ -1151,5 +1151,93 @@ const siteSearchData = [
     "category": "创业孵化",
     "readTime": "19分钟",
     "keywords": "创业诊断 项目诊断 创业增长 创业评估 创业加速 创业瓶颈 创业优化 创业成长"
+  },
+  {
+    "title": "跨境全域增长诊断：独立站+TK+亚马逊+SEO 8大维度健康度评估体系",
+    "url": "article-cross-channel-diagnosis.html",
+    "description": "跨境全域增长怎么诊断？本文提供8大维度50+指标的完整诊断方法论：战略协同、流量联动、转化路径、品牌资产、数据打通、用户运营、供应链、组织能力，帮你找到增长瓶颈，构建全域增长飞轮。",
+    "category": "全域联动打法",
+    "readTime": "22分钟",
+    "keywords": "全域增长诊断,跨境多渠道诊断,独立站诊断,亚马逊诊断,TikTok诊断,SEO诊断,增长飞轮,品牌出海,渠道协同"
+  },
+  {
+    "title": "全域品牌建设方法论：多渠道协同打造超级品牌的系统路径",
+    "url": "article-cross-channel-brand-building.html",
+    "description": "全域品牌怎么建设？6大品牌支柱+4阶段实施路径：品牌识别、话语体系、体验设计、内容矩阵、社群建设、数据资产，让独立站+亚马逊+TikTok+SEO协同打造超级品牌。",
+    "category": "全域联动打法",
+    "readTime": "20分钟",
+    "keywords": "全域品牌建设,多渠道品牌,品牌出海,独立站品牌,亚马逊品牌,TikTok品牌,品牌资产,品牌方法论"
+  },
+  {
+    "title": "独立站+亚马逊双轮驱动：流量互导与品牌沉淀的实战方法论",
+    "url": "article-cross-channel-amazon-dtc.html",
+    "description": "独立站和亚马逊如何协同？5大联动策略+3种流量互导路径：用户导流、信任背书、产品分层、数据协同、品牌共建，实现销量和品牌双增长。",
+    "category": "全域联动打法",
+    "readTime": "18分钟",
+    "keywords": "独立站亚马逊双轮驱动,亚马逊引流独立站,独立站亚马逊协同,流量互导,品牌沉淀,跨境双渠道"
+  },
+  {
+    "title": "TikTok+独立站内容闭环：从种草到转化的完整链路设计",
+    "url": "article-cross-channel-tiktok-dtc.html",
+    "description": "TikTok种草到独立站转化怎么做？5环节内容闭环：种草→信任→跳转→转化→沉淀，内容矩阵设计方法，数据追踪与优化，让流量真正变成销量。",
+    "category": "全域联动打法",
+    "readTime": "19分钟",
+    "keywords": "TikTok独立站,内容闭环,种草转化,TikTok电商,独立站引流,内容矩阵,流量变现"
+  },
+  {
+    "title": "SEO+内容营销全域布局：从搜索到社交的流量矩阵构建",
+    "url": "article-cross-channel-seo-content.html",
+    "description": "全域SEO怎么做？独立站+亚马逊+TikTok三大渠道SEO策略，内容全域分发方法，5步搭建全域内容矩阵，实现一次性投入、长期复利的流量资产。",
+    "category": "全域联动打法",
+    "readTime": "21分钟",
+    "keywords": "全域SEO,内容营销,独立站SEO,亚马逊SEO,TikTok SEO,内容矩阵,流量矩阵,跨境SEO"
+  },
+  {
+    "title": "全域数据打通与用户画像构建：CDP落地实战指南",
+    "url": "article-cross-channel-data-cdp.html",
+    "description": "全域数据怎么打通？用户画像怎么建？5个数据层级、用户身份匹配方法、5维度标签体系设计、4阶段实施方案，从数据汇总到智能应用，让数据真正驱动增长。",
+    "category": "全域联动打法",
+    "readTime": "19分钟",
+    "keywords": "全域数据打通,CDP客户数据平台,用户画像,数据孤岛,跨境数据,用户标签,RFM模型,数据驱动增长"
+  },
+  {
+    "title": "全域会员体系与私域运营：构建跨境品牌的用户护城河",
+    "url": "article-cross-channel-membership.html",
+    "description": "跨境私域怎么做？会员体系设计、3大私域阵地（EDM/短信/社群）、5阶段生命周期运营方法，让复购率提升到40%+，LTV提升200%以上。",
+    "category": "全域联动打法",
+    "readTime": "18分钟",
+    "keywords": "会员体系,私域运营,跨境私域,EDM营销,短信营销,社群运营,用户LTV,复购率,用户护城河"
+  },
+  {
+    "title": "品牌出海组织搭建：从团队配置到能力建设的完整体系",
+    "url": "article-brand-overseas-organization.html",
+    "description": "品牌出海团队怎么搭？4阶段组织演进路径、4大关键岗位能力模型、人才招聘培养方法、激励机制与文化建设，打造有战斗力的出海团队。",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "品牌出海组织,跨境团队搭建,出海人才,组织架构,团队管理,能力模型,激励机制,企业文化"
+  },
+  {
+    "title": "跨境品牌增长飞轮：从0到1到10的进化路径与底层逻辑",
+    "url": "article-brand-overseas-flywheel.html",
+    "description": "品牌增长的底层逻辑是什么？6大增长飞轮部件（产品/内容/流量/转化/复购/口碑）、3个进化阶段、常见问题与解法，构建自动增长的飞轮系统。",
+    "category": "品牌出海",
+    "readTime": "18分钟",
+    "keywords": "增长飞轮,品牌增长,跨境增长,从0到1,增长方法论,产品力,复购率,口碑营销,增长模型"
+  },
+  {
+    "title": "供应链出海与品牌化：从OEM工厂到全球化品牌的进化路径",
+    "url": "article-supply-chain-branding.html",
+    "description": "工厂怎么转型做品牌？OEM到ODM到OBM的5步路径，供应链优势转化为品牌优势的3大方法，工厂转型的4大常见坑，组织能力转型升级方法。",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "供应链出海,工厂转型品牌,OEM转OBM,供应链品牌化,制造业出海,品牌出海,工厂做品牌,跨境供应链"
+  },
+  {
+    "title": "DTC品牌联名与跨界合作：品牌增长的加速器与破圈之道",
+    "url": "article-dtc-co-branding.html",
+    "description": "DTC品牌怎么破圈？5种联名模式（品牌×品牌/KOL/IP/艺术家/公益），完整的合作流程，7个避坑指南，让联名成为品牌增长的加速器。",
+    "category": "品牌出海",
+    "readTime": "17分钟",
+    "keywords": "品牌联名,DTC联名,跨界合作,品牌破圈,联名营销,增长加速器,KOL联名,IP联名"
   }
 ];
