@@ -422,6 +422,39 @@
 }
 </style>
 <style>
+/* cases-centering-optimized */
+/* 案例页面内容居中优化 */
+.cb-page-hero .container {
+  max-width: 900px;
+}
+
+.cb-case-section .container {
+  max-width: 1100px;
+}
+
+.cb-filter-section .container {
+  max-width: 1100px;
+}
+
+/* 案例卡片网格居中 */
+.cb-case-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* 案例详情内容区 */
+.cb-case-body {
+  max-width: 100%;
+}
+
+/* 响应式 */
+@media (max-width: 900px) {
+  .cb-case-section .container,
+  .cb-filter-section .container {
+    max-width: 100%;
+  }
+}
+</style><style>
 .case-filter {
   display: flex;
   justify-content: center;
