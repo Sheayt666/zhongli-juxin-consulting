@@ -2547,3 +2547,93 @@
     padding: 24px 14px 32px !important;
   }
 }
+
+
+/* === 紧急修复：文章单栏居中布局 === */
+/* 覆盖旧的两栏grid布局，强制单列居中 */
+body .article-content .article-container,
+body main .article-content .container.article-container,
+.article-content .article-container {
+  display: block !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+  gap: 0 !important;
+  max-width: 780px !important;
+  margin: 0 auto !important;
+  padding: 56px 24px 64px !important;
+  width: 100% !important;
+  float: none !important;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* 确保article-body占满整宽 */
+.article-content .article-body {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  grid-column: auto !important;
+}
+
+/* 隐藏可能存在的侧边栏 */
+.article-sidebar,
+.sidebar-widget,
+.article-side {
+  display: none !important;
+}
+
+/* 文章标题区居中 */
+.article-content .article-header {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  text-align: left !important;
+  grid-column: auto !important;
+}
+
+/* 面包屑导航内容居中 */
+.breadcrumb-nav .container {
+  max-width: 820px !important;
+  margin: 0 auto !important;
+}
+
+/* 确保文章内容区背景为白色 */
+.article-content {
+  background: var(--bg) !important;
+}
+
+/* 移动端适配 */
+@media (max-width: 900px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 100% !important;
+    padding: 40px 20px 48px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 28px 16px 36px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 24px 14px 32px !important;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  body .article-content .article-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
