@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 {"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},
 {"@type":"ListItem","position":2,"name":"深度文章","item":"https://juxin-consulting.help/blog.html"},
-{"@type":"ListItem","position":3,"name":"品牌独立站","item":"https://juxin-consulting.help/blog.html"},
+{"@type":"ListItem","position":3,"name":"品牌独立站","item":"https://juxin-consulting.help/blog.html#品牌独立站"},
 {"@type":"ListItem","position":4,"name":"独立站9个烧钱陷阱：80%的卖家钱都白花了，你中招了吗？","item":"https://juxin-consulting.help/article-dtc-money-pitfalls.html"}
 ]}
 </script>
@@ -42,6 +42,7 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="top-notice">
   <div class="container top-notice-inner">
     <span class="top-notice-badge">🔥 限时福利</span>
@@ -71,7 +72,7 @@
       <ol class="breadcrumb-list">
         <li><a href="index.html">首页</a></li>
         <li><a href="blog.html">深度文章</a></li>
-        <li><a href="blog.html#品牌出海">品牌独立站</a></li>
+        <li><a href="blog.html#品牌独立站">品牌独立站</a></li>
         <li class="breadcrumb-current">独立站9个烧钱陷阱：80%的卖家钱都白花了，你中招了吗？</li>
       </ol>
     </div>
@@ -87,7 +88,7 @@
         </div>
         <h1 class="article-title">独立站9个烧钱陷阱：80%的卖家钱都白花了，你中招了吗？</h1>
         <p class="article-subtitle">
-          投了几十万广告费，回头一算还亏钱？独立站的钱到底烧在哪了？9个最常见的烧钱陷阱，每一个都在偷偷吃掉你的利润。
+          独立站钱都烧在哪了？9个最常见的烧钱陷阱：选错建站系统、主题丑、素材差、广告不优化、落地页不匹配、不弃购挽回、不做邮件营销、盲目做App、只看ROAS不看利润。
         </p>
       </header>
       <div class="article-body">
@@ -144,12 +145,15 @@
   <section class="related-section section">
     <div class="container">
       <div class="section-header"><span class="section-tag">📖 延伸阅读</span><h2>你可能还感兴趣的<em>深度文章</em></h2></div>
-      <div class="related-grid">            <div class="related-item">
+      <div class="related-grid">
+            <div class="related-item">
               <a href="article-dtc-website.html" class="related-link">
                 <div class="related-icon">🛒</div>
                 <div class="related-info">
-                  <div class="related-title">DTC独立站建设与运营完整指南</div>
-                  <div class="related-desc">独立站从0到1完整指南</div>
+                  <div class="related-title">🛒
+                
+                  DTC独立站建设与运营完整</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -158,8 +162,10 @@
               <a href="article-dtc-cro-diagnosis.html" class="related-link">
                 <div class="related-icon">📈</div>
                 <div class="related-info">
-                  <div class="related-title">独立站转化率诊断：12大维度系统优化</div>
-                  <div class="related-desc">转化率系统诊断方法</div>
+                  <div class="related-title">📈
+                
+                  独立站转化率诊断：12大维</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -168,8 +174,11 @@
               <a href="article-brand-overseas-roi-diagnosis.html" class="related-link">
                 <div class="related-icon">💰</div>
                 <div class="related-info">
-                  <div class="related-title">品牌出海财务ROI诊断</div>
-                  <div class="related-desc">投入产出比分析</div>
+                  <div class="related-title">💰
+                
+                  品牌出海财务ROI诊断
+ </div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -189,6 +198,7 @@
     </div>
   </section>
 </main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -229,5 +239,33 @@
   </div>
 </footer>
 <script src="assets/js/main.js"></script>
+<script>
+// 阅读进度条
+(function() {
+  var progressBar = document.getElementById('readingProgress');
+  var backToTop = document.getElementById('backToTop');
+  
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    
+    // 返回顶部按钮显隐
+    if (scrollTop > 400) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
 </body>
 </html>

@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 {"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},
 {"@type":"ListItem","position":2,"name":"深度文章","item":"https://juxin-consulting.help/blog.html"},
-{"@type":"ListItem","position":3,"name":"全域联动","item":"https://juxin-consulting.help/blog.html"},
+{"@type":"ListItem","position":3,"name":"全域联动","item":"https://juxin-consulting.help/blog.html#全域联动"},
 {"@type":"ListItem","position":4,"name":"全域SEO联动策略：独立站+亚马逊+TikTok+Google的搜索流量增长飞轮","item":"https://juxin-consulting.help/article-omnichannel-seo-strategy.html"}
 ]}
 </script>
@@ -42,6 +42,7 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="top-notice">
   <div class="container top-notice-inner">
     <span class="top-notice-badge">🔥 限时福利</span>
@@ -71,7 +72,7 @@
       <ol class="breadcrumb-list">
         <li><a href="index.html">首页</a></li>
         <li><a href="blog.html">深度文章</a></li>
-        <li><a href="blog.html#品牌出海">全域联动</a></li>
+        <li><a href="blog.html#全域联动">全域联动</a></li>
         <li class="breadcrumb-current">全域SEO联动策略：独立站+亚马逊+TikTok+Google的搜索流量增长飞轮</li>
       </ol>
     </div>
@@ -87,7 +88,7 @@
         </div>
         <h1 class="article-title">全域SEO联动策略：独立站+亚马逊+TikTok+Google的搜索流量增长飞轮</h1>
         <p class="article-subtitle">
-          SEO不是独立站的专利，而是全域流量的底层引擎。如何让独立站SEO、亚马逊SEO、TikTok搜索、Google搜索形成联动效应？本文系统拆解全域SEO的四层架构、五种联动模式、以及从0到1的落地路径，让搜索流量成为你的增长引擎。
+          SEO不是独立站的专利，而是全域流量的底层引擎。全域SEO四层架构（Google/亚马逊/社交/品牌）、五种联动模式（关键词矩阵/内容复用/流量导流/品牌增长/数据反馈）、从0到1落地路径。
         </p>
       </header>
       <div class="article-body">
@@ -262,12 +263,16 @@
   <section class="related-section section">
     <div class="container">
       <div class="section-header"><span class="section-tag">📖 延伸阅读</span><h2>你可能还感兴趣的<em>深度文章</em></h2></div>
-      <div class="related-grid">            <div class="related-item">
+      <div class="related-grid">
+            <div class="related-item">
               <a href="article-cross-channel-seo-content.html" class="related-link">
                 <div class="related-icon">🔍</div>
                 <div class="related-info">
-                  <div class="related-title">SEO+内容全域流量增长</div>
-                  <div class="related-desc">SEO内容全域增长方法论</div>
+                  <div class="related-title">🔍
+                
+                  SEO+内容全域流量增长
+</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -276,8 +281,10 @@
               <a href="article-dtc-seo-complete.html" class="related-link">
                 <div class="related-icon">🛒</div>
                 <div class="related-info">
-                  <div class="related-title">DTC独立站SEO完全指南</div>
-                  <div class="related-desc">独立站SEO完整指南</div>
+                  <div class="related-title">🛒
+                
+                  DTC独立站SEO完全指南</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -286,8 +293,11 @@
               <a href="article-cross-channel-data-cdp.html" class="related-link">
                 <div class="related-icon">📊</div>
                 <div class="related-info">
-                  <div class="related-title">全域数据打通与CDP建设</div>
-                  <div class="related-desc">全域数据体系建设</div>
+                  <div class="related-title">📊
+                
+                  全域数据打通与CDP建设
+</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -307,6 +317,7 @@
     </div>
   </section>
 </main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -347,5 +358,33 @@
   </div>
 </footer>
 <script src="assets/js/main.js"></script>
+<script>
+// 阅读进度条
+(function() {
+  var progressBar = document.getElementById('readingProgress');
+  var backToTop = document.getElementById('backToTop');
+  
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    
+    // 返回顶部按钮显隐
+    if (scrollTop > 400) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
 </body>
 </html>

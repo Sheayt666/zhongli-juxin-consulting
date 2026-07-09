@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 {"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},
 {"@type":"ListItem","position":2,"name":"深度文章","item":"https://juxin-consulting.help/blog.html"},
-{"@type":"ListItem","position":3,"name":"全域联动","item":"https://juxin-consulting.help/blog.html"},
+{"@type":"ListItem","position":3,"name":"全域联动","item":"https://juxin-consulting.help/blog.html#全域联动"},
 {"@type":"ListItem","position":4,"name":"全域归因体系：从最后点击到全链路归因，让每一分钱都花得明白","item":"https://juxin-consulting.help/article-omnichannel-attribution.html"}
 ]}
 </script>
@@ -42,6 +42,7 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="top-notice">
   <div class="container top-notice-inner">
     <span class="top-notice-badge">🔥 限时福利</span>
@@ -71,7 +72,7 @@
       <ol class="breadcrumb-list">
         <li><a href="index.html">首页</a></li>
         <li><a href="blog.html">深度文章</a></li>
-        <li><a href="blog.html#品牌出海">全域联动</a></li>
+        <li><a href="blog.html#全域联动">全域联动</a></li>
         <li class="breadcrumb-current">全域归因体系：从最后点击到全链路归因，让每一分钱都花得明白</li>
       </ol>
     </div>
@@ -87,7 +88,7 @@
         </div>
         <h1 class="article-title">全域归因体系：从最后点击到全链路归因，让每一分钱都花得明白</h1>
         <p class="article-subtitle">
-          广告费花了几百万，却不知道哪个渠道真正起了作用？最后点击归因害死人。本文系统拆解全域归因的完整体系：归因模型选型、数据打通、归因落地步骤、以及如何用归因指导预算分配，让每一分营销费用都花得明明白白。
+          广告费花了几百万不知道哪个渠道有用？6种归因模型对比、4层数据基础、4种算法归因、5步落地路径，系统拆解全域归因完整体系。
         </p>
       </header>
       <div class="article-body">
@@ -293,12 +294,16 @@
   <section class="related-section section">
     <div class="container">
       <div class="section-header"><span class="section-tag">📖 延伸阅读</span><h2>你可能还感兴趣的<em>深度文章</em></h2></div>
-      <div class="related-grid">            <div class="related-item">
+      <div class="related-grid">
+            <div class="related-item">
               <a href="article-cross-channel-data-cdp.html" class="related-link">
                 <div class="related-icon">📊</div>
                 <div class="related-info">
-                  <div class="related-title">全域数据打通与CDP建设</div>
-                  <div class="related-desc">全域数据体系建设</div>
+                  <div class="related-title">📊
+                
+                  全域数据打通与CDP建设
+</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -307,8 +312,11 @@
               <a href="article-cross-channel-diagnosis.html" class="related-link">
                 <div class="related-icon">🔗</div>
                 <div class="related-info">
-                  <div class="related-title">跨境全域增长诊断</div>
-                  <div class="related-desc">全域增长系统诊断方法</div>
+                  <div class="related-title">🔗
+                
+                  跨境全域增长诊断
+    </div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -317,8 +325,11 @@
               <a href="article-brand-overseas-roi-diagnosis.html" class="related-link">
                 <div class="related-icon">💰</div>
                 <div class="related-info">
-                  <div class="related-title">品牌出海财务ROI诊断</div>
-                  <div class="related-desc">投入产出比分析</div>
+                  <div class="related-title">💰
+                
+                  品牌出海财务ROI诊断
+ </div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -338,6 +349,7 @@
     </div>
   </section>
 </main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -378,5 +390,33 @@
   </div>
 </footer>
 <script src="assets/js/main.js"></script>
+<script>
+// 阅读进度条
+(function() {
+  var progressBar = document.getElementById('readingProgress');
+  var backToTop = document.getElementById('backToTop');
+  
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    
+    // 返回顶部按钮显隐
+    if (scrollTop > 400) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
 </body>
 </html>

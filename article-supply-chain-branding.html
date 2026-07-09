@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 {"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},
 {"@type":"ListItem","position":2,"name":"深度文章","item":"https://juxin-consulting.help/blog.html"},
-{"@type":"ListItem","position":3,"name":"品牌出海","item":"https://juxin-consulting.help/blog.html"},
+{"@type":"ListItem","position":3,"name":"品牌出海","item":"https://juxin-consulting.help/blog.html#品牌出海"},
 {"@type":"ListItem","position":4,"name":"供应链出海与品牌化：从OEM工厂到全球化品牌的进化路径","item":"https://juxin-consulting.help/article-supply-chain-branding.html"}
 ]}
 </script>
@@ -42,6 +42,7 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="top-notice">
   <div class="container top-notice-inner">
     <span class="top-notice-badge">🔥 限时福利</span>
@@ -81,22 +82,14 @@
 
       <header class="article-header">
         <div class="article-meta">
-          <span class="article-category">🏆 品牌出海</span>
+          <span class="article-category">🌏 品牌出海</span>
           <span class="article-read-time">⏱ 20分钟阅读</span>
           <span class="article-date">📅 2026年7月9日</span>
         </div>
-        <div class="article-toc">
-          <h3>目录</h3>
-          <ul>
-            <li><a href="#sec1">一、为什么供应链出海的3大模式</a></li>
-            <li><a href="#sec2">二、从OEM到OBM的5步路径</a></li>
-            <li><a href="#sec3">三、供应链优势如何转化为品牌优势</a></li>
-            <li><a href="#sec4">四、工厂转型品牌的常见坑</a></li>
-            <li><a href="#sec5">五、组织能力的转型升级</a></li>
-          </ul>
-        </div>
         <h1 class="article-title">供应链出海与品牌化：从OEM工厂到全球化品牌的进化路径</h1>
-        <p class="article-subtitle">做了10年OEM，利润率从20%降到5%，想做品牌但不知道从何下手？本文详解供应链企业从OEM到ODM到OBM的完整进化路径，以及工厂转型品牌的核心能力建设。</p>
+        <p class="article-subtitle">
+          工厂怎么转型做品牌？OEM到ODM到OBM的5步路径，供应链优势转化为品牌优势的3大方法，工厂转型的4大常见坑，组织能力转型升级方法。
+        </p>
       </header>
       <div class="article-body">
         <div class="intro-box">
@@ -247,12 +240,15 @@
   <section class="related-section section">
     <div class="container">
       <div class="section-header"><span class="section-tag">📖 延伸阅读</span><h2>你可能还感兴趣的<em>深度文章</em></h2></div>
-      <div class="related-grid">            <div class="related-item">
+      <div class="related-grid">
+            <div class="related-item">
               <a href="article-brand-overseas-strategy.html" class="related-link">
                 <div class="related-icon">🌏</div>
                 <div class="related-info">
-                  <div class="related-title">品牌出海战略规划：从0到1全球化</div>
-                  <div class="related-desc">品牌出海战略框架</div>
+                  <div class="related-title">🌏
+                
+                  品牌出海战略规划：从0到1</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -261,8 +257,11 @@
               <a href="article-cross-border-branding.html" class="related-link">
                 <div class="related-icon">🏗️</div>
                 <div class="related-info">
-                  <div class="related-title">跨境品牌建设方法论</div>
-                  <div class="related-desc">品牌建设系统方法</div>
+                  <div class="related-title">🏗️
+                
+                  跨境品牌建设方法论
+  </div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -271,8 +270,11 @@
               <a href="article-supply-chain.html" class="related-link">
                 <div class="related-icon">📦</div>
                 <div class="related-info">
-                  <div class="related-title">供应链优化与管理</div>
-                  <div class="related-desc">供应链管理方法论</div>
+                  <div class="related-title">📦
+                
+                  供应链优化与管理
+    </div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -286,12 +288,13 @@
       <h2>有具体的品牌出海问题想聊聊？</h2>
       <p>30分钟免费战略诊断，资深顾问一对一沟通，帮你梳理问题、找到方向。<br>不推销、不洗脑，就是纯粹的专业交流。</p>
       <div class="cta-buttons">
-        <a href="contact.html" class="btn btn-primary btn-lg"><span class="btn-icon">📅</span>预约免费咨询<span class="btn-arrow">→</span></a>
+        <a href="contact.html" class="btn btn-primary btn-lg"><span class="btn-icon">📅</span>预约免费诊断<span class="btn-arrow">→</span></a>
         <a href="cases.html" class="btn btn-secondary btn-lg">查看成功案例</a>
       </div>
     </div>
   </section>
 </main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -332,5 +335,33 @@
   </div>
 </footer>
 <script src="assets/js/main.js"></script>
+<script>
+// 阅读进度条
+(function() {
+  var progressBar = document.getElementById('readingProgress');
+  var backToTop = document.getElementById('backToTop');
+  
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    
+    // 返回顶部按钮显隐
+    if (scrollTop > 400) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
 </body>
 </html>

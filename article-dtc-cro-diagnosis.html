@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 {"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},
 {"@type":"ListItem","position":2,"name":"深度文章","item":"https://juxin-consulting.help/blog.html"},
-{"@type":"ListItem","position":3,"name":"品牌独立站","item":"https://juxin-consulting.help/blog.html"},
+{"@type":"ListItem","position":3,"name":"品牌独立站","item":"https://juxin-consulting.help/blog.html#品牌独立站"},
 {"@type":"ListItem","position":4,"name":"独立站转化率诊断：12大维度系统优化，从1%到5%的完整提升路径","item":"https://juxin-consulting.help/article-dtc-cro-diagnosis.html"}
 ]}
 </script>
@@ -42,6 +42,7 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="top-notice">
   <div class="container top-notice-inner">
     <span class="top-notice-badge">🔥 限时福利</span>
@@ -71,7 +72,7 @@
       <ol class="breadcrumb-list">
         <li><a href="index.html">首页</a></li>
         <li><a href="blog.html">深度文章</a></li>
-        <li><a href="blog.html#品牌出海">品牌独立站</a></li>
+        <li><a href="blog.html#品牌独立站">品牌独立站</a></li>
         <li class="breadcrumb-current">独立站转化率诊断：12大维度系统优化，从1%到5%的完整提升路径</li>
       </ol>
     </div>
@@ -87,14 +88,8 @@
         </div>
         <h1 class="article-title">独立站转化率诊断：12大维度系统优化，从1%到5%的完整提升路径</h1>
         <p class="article-subtitle">
-          花了大把广告费，流量来了就走？转化率卡在1%上不去？12大维度100+检查点的转化率诊断体系，帮你系统提升独立站转化率，让同样的流量产生3-5倍的订单。
+          独立站转化率低怎么办？12大维度100+检查点系统诊断：页面速度、移动端、首页、产品页、信任元素、结账流程、定价、用户旅程、内容、UGC、邮件、数据分析，系统提升转化率。
         </p>
-        <div class="article-hero-cta">
-          <a href="contact.html" class="btn btn-primary">
-            <span>🎯 获取专属转化率诊断</span>
-            <span class="btn-arrow">→</span>
-          </a>
-        </div>
       </header>
       <div class="article-body">
         <div class="intro-box">
@@ -251,12 +246,15 @@
   <section class="related-section section">
     <div class="container">
       <div class="section-header"><span class="section-tag">📖 延伸阅读</span><h2>你可能还感兴趣的<em>深度文章</em></h2></div>
-      <div class="related-grid">            <div class="related-item">
+      <div class="related-grid">
+            <div class="related-item">
               <a href="article-dtc-cro-conversion.html" class="related-link">
                 <div class="related-icon">📈</div>
                 <div class="related-info">
-                  <div class="related-title">CRO转化率优化：从访客到客户</div>
-                  <div class="related-desc">独立站CRO优化完整方法论</div>
+                  <div class="related-title">📈
+                
+                  CRO转化率优化：从访客到</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -265,8 +263,10 @@
               <a href="article-dtc-growth-diagnosis.html" class="related-link">
                 <div class="related-icon">🛒</div>
                 <div class="related-info">
-                  <div class="related-title">DTC独立站增长诊断：12维度全面评估</div>
-                  <div class="related-desc">独立站全面诊断方法论</div>
+                  <div class="related-title">🛒
+                
+                  DTC独立站增长诊断：12</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -275,8 +275,10 @@
               <a href="article-dtc-ux-design.html" class="related-link">
                 <div class="related-icon">🎨</div>
                 <div class="related-info">
-                  <div class="related-title">DTC独立站UX设计：用户体验优化</div>
-                  <div class="related-desc">用户体验设计指南</div>
+                  <div class="related-title">🎨
+                
+                  DTC独立站UX设计：用户</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -296,6 +298,7 @@
     </div>
   </section>
 </main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -336,5 +339,33 @@
   </div>
 </footer>
 <script src="assets/js/main.js"></script>
+<script>
+// 阅读进度条
+(function() {
+  var progressBar = document.getElementById('readingProgress');
+  var backToTop = document.getElementById('backToTop');
+  
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    
+    // 返回顶部按钮显隐
+    if (scrollTop > 400) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
 </body>
 </html>

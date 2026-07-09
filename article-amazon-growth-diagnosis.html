@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 {"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},
 {"@type":"ListItem","position":2,"name":"深度文章","item":"https://juxin-consulting.help/blog.html"},
-{"@type":"ListItem","position":3,"name":"亚马逊跨境","item":"https://juxin-consulting.help/blog.html"},
+{"@type":"ListItem","position":3,"name":"亚马逊跨境","item":"https://juxin-consulting.help/blog.html#亚马逊跨境"},
 {"@type":"ListItem","position":4,"name":"亚马逊增长诊断：9大维度全面评估你的亚马逊业务健康度","item":"https://juxin-consulting.help/article-amazon-growth-diagnosis.html"}
 ]}
 </script>
@@ -42,6 +42,7 @@
 </head>
 <body>
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="top-notice">
   <div class="container top-notice-inner">
     <span class="top-notice-badge">🔥 限时福利</span>
@@ -71,7 +72,7 @@
       <ol class="breadcrumb-list">
         <li><a href="index.html">首页</a></li>
         <li><a href="blog.html">深度文章</a></li>
-        <li><a href="blog.html#品牌出海">亚马逊跨境</a></li>
+        <li><a href="blog.html#亚马逊跨境">亚马逊跨境</a></li>
         <li class="breadcrumb-current">亚马逊增长诊断：9大维度全面评估你的亚马逊业务健康度</li>
       </ol>
     </div>
@@ -87,14 +88,8 @@
         </div>
         <h1 class="article-title">亚马逊增长诊断：9大维度全面评估你的亚马逊业务健康度</h1>
         <p class="article-subtitle">
-          为什么销量突然下滑？为什么ACOS居高不下？为什么竞品后来居上？9大维度60+指标的亚马逊诊断体系，帮你精准找到增长瓶颈，少走半年弯路。
+          亚马逊增长遇到瓶颈怎么办？9大维度60+指标系统诊断方法：选品、Listing、广告、Review、排名、供应链、竞品、品牌、组织，精准找到增长瓶颈，少走半年弯路。
         </p>
-        <div class="article-hero-cta">
-          <a href="contact.html" class="btn btn-primary">
-            <span>🎯 获取专属亚马逊诊断</span>
-            <span class="btn-arrow">→</span>
-          </a>
-        </div>
       </header>
       <div class="article-body">
         <div class="intro-box">
@@ -272,12 +267,15 @@
   <section class="related-section section">
     <div class="container">
       <div class="section-header"><span class="section-tag">📖 延伸阅读</span><h2>你可能还感兴趣的<em>深度文章</em></h2></div>
-      <div class="related-grid">            <div class="related-item">
+      <div class="related-grid">
+            <div class="related-item">
               <a href="article-amazon-advanced-ops.html" class="related-link">
                 <div class="related-icon">📦</div>
                 <div class="related-info">
-                  <div class="related-title">亚马逊精细化运营：选品到爆款打造</div>
-                  <div class="related-desc">亚马逊运营完整方法论</div>
+                  <div class="related-title">📦
+                
+                  亚马逊精细化运营：选品到爆</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -286,8 +284,10 @@
               <a href="article-cross-channel-diagnosis.html" class="related-link">
                 <div class="related-icon">🔗</div>
                 <div class="related-info">
-                  <div class="related-title">跨境全域增长诊断：8大维度健康度评估</div>
-                  <div class="related-desc">全域增长系统诊断方法</div>
+                  <div class="related-title">🔗
+                
+                  跨境全域增长诊断：8大维度</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -296,8 +296,10 @@
               <a href="article-amazon-ads-acos.html" class="related-link">
                 <div class="related-icon">📈</div>
                 <div class="related-info">
-                  <div class="related-title">亚马逊广告体系与ACOS优化</div>
-                  <div class="related-desc">亚马逊广告优化指南</div>
+                  <div class="related-title">📈
+                
+                  亚马逊广告体系与ACOS优</div>
+                  <div class="related-desc"></div>
                 </div>
                 <div class="related-arrow">→</div>
               </a>
@@ -317,6 +319,7 @@
     </div>
   </section>
 </main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -357,5 +360,33 @@
   </div>
 </footer>
 <script src="assets/js/main.js"></script>
+<script>
+// 阅读进度条
+(function() {
+  var progressBar = document.getElementById('readingProgress');
+  var backToTop = document.getElementById('backToTop');
+  
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    
+    // 返回顶部按钮显隐
+    if (scrollTop > 400) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+</script>
 </body>
 </html>
