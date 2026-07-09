@@ -1,43 +1,43 @@
+# robots.txt for 众力聚鑫咨询
+# https://juxin-consulting.help/
+
+# 说明：允许所有搜索引擎抓取全站内容
+# CSS/JS/图片等资源允许抓取，以便搜索引擎正确渲染页面
+
 User-agent: *
 Allow: /
-Disallow: /cgi-bin/
-Disallow: /admin/
 
-# Sitemap
-Sitemap: https://juxin-consulting.help/sitemap.xml
-
-# 百度
+# 百度蜘蛛
 User-agent: Baiduspider
 Allow: /
+
+# 百度移动蜘蛛
 User-agent: Baiduspider-mobile
 Allow: /
+
+# 百度图片蜘蛛
 User-agent: Baiduspider-image
 Allow: /
 
-# 谷歌
-User-agent: Googlebot
+# 神马搜索
+User-agent: Yisouspider
 Allow: /
-User-agent: Googlebot-Image
-Allow: /
-User-agent: Googlebot-Mobile
+
+# 360搜索
+User-agent: 360Spider
 Allow: /
 
 # 必应
 User-agent: bingbot
 Allow: /
 
-# 360
-User-agent: 360Spider
+# 谷歌
+User-agent: Googlebot
 Allow: /
 
 # 搜狗
 User-agent: Sogou spider
 Allow: /
 
-# 神马
-User-agent: Yisouspider
-Allow: /
-
-# 头条
-User-agent: Bytespider
-Allow: /
+# Sitemap 地址
+Sitemap: https://juxin-consulting.help/sitemap.xml
