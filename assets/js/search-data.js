@@ -407,5 +407,85 @@ const siteSearchData = [
     "category": "创业孵化",
     "readTime": "15分钟",
     "keywords": "创业合伙人 合伙人机制 股权分配 合伙人选择 创业团队 合伙人退出 联合创始人"
+  },
+  {
+    "title": "战略执行体系建设：BLM模型与战略解码落地的完整方法论",
+    "url": "article-strategy-execution-blm.html",
+    "description": "战略如何落地执行？本文详解BLM业务领先模型、战略解码、战略执行体系搭建的系统方法论，附真实咨询案例和工具模板。",
+    "category": "战略规划",
+    "readTime": "16分钟",
+    "keywords": "BLM模型 战略执行 战略解码 战略落地 业务领先模型 战略管理体系 战略执行体系"
+  },
+  {
+    "title": "集团管控体系设计：从母子公司管控到授权体系的系统方法",
+    "url": "article-group-governance.html",
+    "description": "集团管控怎么建？本文详解三大管控模式、母子公司治理、授权体系设计、事业部制改革的系统方法，附真实案例。",
+    "category": "战略规划",
+    "readTime": "15分钟",
+    "keywords": "集团管控 母子公司 管控模式 授权体系 事业部制 集团管理 企业管控"
+  },
+  {
+    "title": "企业转型变革管理：从战略调整到组织重塑的系统方法论",
+    "url": "article-business-transformation.html",
+    "description": "企业如何转型？本文详解从战略转型到组织重塑，从变革管理到文化重塑的完整方法论，附真实转型案例和避坑指南。",
+    "category": "战略规划",
+    "readTime": "15分钟",
+    "keywords": "企业转型 变革管理 组织变革 业务转型 第二曲线 转型战略 变革领导力"
+  },
+  {
+    "title": "胜任力模型构建与应用：从人才标准到发展体系的完整方法论",
+    "url": "article-competency-model.html",
+    "description": "胜任力模型怎么建？本文详解从建模方法到应用场景，从人才评估到发展体系的系统方法论，附真实案例和工具模板。",
+    "category": "组织管理",
+    "readTime": "15分钟",
+    "keywords": "胜任力模型 能力模型 人才标准 胜任力建模 人才发展 素质模型 能力评估"
+  },
+  {
+    "title": "企业大学建设与学习发展体系：从培训到人才赋能的系统方法",
+    "url": "article-corporate-university.html",
+    "description": "企业大学怎么建？本文详解从战略定位到课程体系，从学习地图到数字化平台的系统方法，附真实案例。",
+    "category": "组织管理",
+    "readTime": "14分钟",
+    "keywords": "企业大学 学习发展 培训体系 人才培养 学习地图 赋能体系 L&D"
+  },
+  {
+    "title": "组织发展OD实战指南：从组织诊断到效能提升的系统方法论",
+    "url": "article-organization-development.html",
+    "description": "OD是什么？怎么做？本文详解组织诊断、组织设计、组织能力建设、组织效能提升的系统方法论，附完整OD工具箱。",
+    "category": "组织管理",
+    "readTime": "16分钟",
+    "keywords": "组织发展 OD 组织诊断 组织效能 组织设计 组织能力 OD方法论"
+  },
+  {
+    "title": "ERP系统选型与实施完整指南：从需求调研到上线推广的全流程方法",
+    "url": "article-erp-selection.html",
+    "description": "ERP系统怎么选？本文详解从需求调研到选型评估，从实施方法论到上线推广的全流程指南，附主流厂商对比和案例。",
+    "category": "数字化转型",
+    "readTime": "16分钟",
+    "keywords": "ERP系统 企业资源规划 ERP选型 ERP实施 企业管理软件 SAP 用友 金蝶"
+  },
+  {
+    "title": "供应链数字化转型：从需求预测到智慧物流的系统方法论",
+    "url": "article-supply-chain-digital.html",
+    "description": "供应链怎么数字化？本文详解从需求预测到智能计划，从采购数字化到智慧物流的系统方法论，附真实案例。",
+    "category": "数字化转型",
+    "readTime": "15分钟",
+    "keywords": "供应链数字化 智慧供应链 供应链管理 数字化供应链 需求预测 智慧物流 SCM数字化"
+  },
+  {
+    "title": "Pre-IPO筹备完整指南：从股权架构到合规治理的上市准备方法论",
+    "url": "article-pre-ipo-preparation.html",
+    "description": "上市前要做哪些准备？本文详解Pre-IPO全流程：股权架构、公司治理、财务合规、法律合规、中介机构选择等关键事项。",
+    "category": "创业孵化",
+    "readTime": "16分钟",
+    "keywords": "Pre-IPO 上市准备 IPO筹备 股权架构 公司治理 合规治理 股改 上市辅导"
+  },
+  {
+    "title": "企业规模化增长：从PMF到指数级增长的系统方法论",
+    "url": "article-scale-growth.html",
+    "description": "企业怎么规模化？本文详解从PMF验证到增长引擎设计，从精益增长到组织能力升级的系统方法论，附真实案例。",
+    "category": "创业孵化",
+    "readTime": "15分钟",
+    "keywords": "规模化增长 PMF 指数增长 增长引擎 商业模式迭代 精益创业 增长黑客 可复制增长"
   }
 ];
