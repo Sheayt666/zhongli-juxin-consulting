@@ -5,8 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<meta name="description" content="众力聚鑫咨询100+成功案例，覆盖制造、零售、科技、外贸等15+行业。传统企业转型升级、初创企业从0到亿、亏损企业扭亏为盈等真实案例，平均业绩增长300%+。">
-<meta name="keywords" content="企业咨询案例,管理咨询成功案例,战略转型案例,业绩增长案例,组织变革案例,数字化转型案例,企业孵化成功案例,咨询公司案例">
+<meta name="description" content="众力聚鑫跨境品牌增长100+成功案例，覆盖独立站、亚马逊、TikTok、品牌出海等8大垂直品类。家居、3C、美妆、服装、户外等品类真实增长案例，平均营收增长280%+。">
+<meta name="keywords" content="跨境电商案例,独立站成功案例,亚马逊品牌案例,TikTok出海案例,品牌出海案例,DTC品牌增长,跨境代运营,工厂转型品牌">
 <meta name="author" content="众力聚鑫咨询">
 <meta name="robots" content="index,follow">
 <meta name="googlebot" content="index,follow">
@@ -14,21 +14,21 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="成功案例 - 众力聚鑫咨询">
-<meta property="og:description" content="100+企业咨询成功案例，平均业绩增长300%+。用结果说话，用数据证明。">
+<meta property="og:title" content="跨境品牌增长案例 - 众力聚鑫咨询">
+<meta property="og:description" content="100+跨境品牌成功案例，独立站/亚马逊/TikTok全渠道增长，平均营收增长280%+。">
 <meta property="og:url" content="https://juxin-consulting.help/cases.html">
 <meta property="og:site_name" content="众力聚鑫咨询">
 <meta property="og:locale" content="zh_CN">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="成功案例 - 众力聚鑫咨询">
-<meta name="twitter:description" content="100+企业成功案例，用数据证明实力">
+<meta name="twitter:title" content="跨境品牌增长案例 - 众力聚鑫咨询">
+<meta name="twitter:description" content="100+跨境品牌成功案例，用数据证明实力">
 
 <!-- Canonical -->
 <link rel="canonical" href="https://juxin-consulting.help/cases.html">
 
-<title>企业咨询成功案例_战略转型_业绩增长_组织变革案例_众力聚鑫</title><meta name="theme-color" content="#ffffff">
+<title>跨境电商品牌增长案例_独立站_亚马逊_TikTok品牌出海_众力聚鑫</title><meta name="theme-color" content="#ffffff">
 
 <!-- 性能优化：DNS预解析 -->
 <meta http-equiv="x-dns-prefetch-control" content="on">
@@ -196,6 +196,509 @@
 @media (max-width: 1200px) and (min-width: 901px) {
   #case-grid-pro { grid-template-columns: repeat(2,1fr) !important; }
 }
+
+/* ========== 跨境品牌案例页新增样式 ========== */
+
+/* 通用区域标签 */
+.cb-section-tag {
+  display: inline-block;
+  padding: 6px 18px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(139,92,246,0.1));
+  color: var(--accent);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+/* 筛选按钮 */
+.cb-filter-btn {
+  padding: 10px 22px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: var(--ink-soft);
+}
+.cb-filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+}
+.cb-filter-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+}
+
+/* 案例卡片网格 */
+.cb-case-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+/* 深度案例卡片 */
+.cb-case-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 1px solid var(--rule-light);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cb-case-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+  border-color: transparent;
+}
+
+/* 卡片顶部渐变区 */
+.cb-case-hero {
+  position: relative;
+  height: 180px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+  overflow: hidden;
+}
+.cb-case-hero-pattern {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+.cb-case-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.cb-case-tag {
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+.cb-case-hero-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+}
+.cb-case-category {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.95;
+}
+.cb-case-duration {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* 卡片内容区 */
+.cb-case-body {
+  padding: 28px;
+}
+.cb-case-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* 核心数据指标 */
+.cb-case-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 18px 0;
+  border-top: 1px solid var(--rule-light);
+  border-bottom: 1px solid var(--rule-light);
+  margin-bottom: 20px;
+}
+.cb-metric {
+  text-align: center;
+}
+.cb-metric-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.cb-metric-lbl {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* 案例内容段落 */
+.cb-case-section {
+  margin-bottom: 18px;
+}
+.cb-section-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.cb-section-text {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* 核心举措列表 */
+.cb-measures-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cb-measures-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.cb-measure-num {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.cb-measures-list li strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* 战略洞察 */
+.cb-insight {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fef3c7, #fef9c3);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border-left: 3px solid #f59e0b;
+}
+.cb-insight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.cb-insight-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+.cb-insight-text {
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 案例CTA按钮 */
+.cb-case-cta {
+  display: block;
+  text-align: center;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.25);
+}
+.cb-case-card:hover .cb-case-cta {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+}
+
+/* 更多案例 */
+.cb-more-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.25);
+}
+.cb-more-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+}
+
+/* 方法论网格 */
+.cb-method-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.cb-method-card {
+  background: #fff;
+  padding: 32px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--rule-light);
+  transition: all 0.3s ease;
+}
+.cb-method-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+  border-color: var(--accent);
+}
+.cb-method-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 18px;
+}
+.cb-method-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.cb-method-desc {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.cb-method-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule-light);
+}
+.cb-method-list li {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 5px 0;
+  padding-left: 16px;
+  position: relative;
+}
+.cb-method-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* 客户评价网格 */
+.cb-testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+.cb-testimonial-card {
+  background: linear-gradient(135deg, #fff, #fafbff);
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid var(--rule-light);
+  position: relative;
+  transition: all 0.3s ease;
+}
+.cb-testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+}
+.cb-testimonial-quote {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-size: 60px;
+  font-family: Georgia, serif;
+  color: rgba(37,99,235);
+  opacity: 0.1;
+  line-height: 1;
+  font-weight: 900;
+}
+.cb-testimonial-text {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+.cb-testimonial-stars {
+  font-size: 14px;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+.cb-testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.cb-testimonial-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.cb-testimonial-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.cb-testimonial-role {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.cb-testimonial-company {
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.8;
+}
+.cb-testimonial-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule-light);
+  font-size: 13px;
+}
+.cb-result-label {
+  color: var(--muted);
+  font-weight: 500;
+}
+.cb-result-value {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* CTA按钮 */
+.cb-cta-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: #fff;
+  color: var(--accent);
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+.cb-cta-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+.cb-cta-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 28px;
+  border: 2px solid rgba(255,255,255,0.4);
+  color: #fff;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.cb-cta-btn-ghost:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.6);
+}
+
+/* 响应式 */
+@media (max-width: 900px) {
+  .cb-case-grid { grid-template-columns: 1fr; gap: 24px; }
+  .cb-method-grid { grid-template-columns: 1fr; gap: 20px; }
+  .cb-testimonial-grid { grid-template-columns: 1fr; gap: 20px; }
+  .cb-case-metrics { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .cb-metric-val { font-size: 15px; }
+  .cb-case-title { font-size: 17px; }
+  .cb-case-hero { height: 150px; padding: 20px; }
+  .cb-case-body { padding: 22px; }
+  .cb-cta-br { display: none; }
+  .cb-cta-features { gap: 12px; }
+}
+@media (max-width: 600px) {
+  .cb-case-metrics { gap: 6px; }
+  .cb-metric-val { font-size: 13px; }
+  .cb-metric-lbl { font-size: 10px; }
+  .cb-testimonial-card { padding: 24px 20px; }
+  .cb-method-card { padding: 24px 20px; }
+}
+@media (max-width: 480px) {
+  .cb-filter-btn { padding: 8px 16px; font-size: 13px; }
+  .cb-cta-buttons { flex-direction: column; align-items: center; }
+  .cb-cta-btn-primary, .cb-cta-btn-ghost { width: 100%; justify-content: center; }
+}
+
+/* reveal 入场动画补充 */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
 </style>
 
 <script type="application/ld+json">
@@ -228,7 +731,7 @@
   "alternateName": "众力聚鑫",
   "url": "https://juxin-consulting.help",
   "logo": "https://juxin-consulting.help/assets/images/logo.png",
-  "description": "众力聚鑫咨询 - 15年专注企业管理咨询与项目孵化，提供战略咨询、组织变革、数字化转型、创业孵化等服务，绩效挂钩，不达目标不收尾款。",
+  "description": "众力聚鑫咨询 - 专注跨境品牌增长，提供独立站、亚马逊、TikTok全渠道品牌出海服务，100+品牌案例，平均增长280%+。",
   "foundingDate": "2011",
   "foundingLocation": "深圳",
   "numberOfEmployees": {
@@ -371,412 +874,527 @@
     </nav>
 
 
-<!-- Page Header - 升级 -->
-<section class="page-header" style="padding:80px 0 100px;background:linear-gradient(135deg, #eff6ff 0%, #f5f3ff 50%, #fef3c7 100%);position:relative;overflow:hidden;">
-  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 30%, rgba(59,130,246,0.08) 0%, transparent 40%),radial-gradient(circle at 80% 70%, rgba(139,92,246,0.08) 0%, transparent 40%);pointer-events:none;"></div>
-  <div class="container" style="position:relative;z-index:1;">
-    <div class="breadcrumb">
-      <a href="index.html">首页</a> / <span>成功案例</span>
+<!-- Hero 区域 - 跨境品牌增长 -->
+<section class="cb-hero" style="padding:80px 0 100px;background:linear-gradient(135deg, #eff6ff 0%, #f0f9ff 40%, #f0fdfa 100%);position:relative;overflow:hidden;">
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 30%, rgba(59,130,246,0.1) 0%, transparent 40%),radial-gradient(circle at 80% 70%, rgba(20,184,166,0.08) 0%, transparent 40%);pointer-events:none;"></div>
+  <div class="container" style="position:relative;z-index:1;text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <span style="background:rgba(37,99,235,0.1);color:#1d4ed8;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;">🌍 专注跨境品牌增长</span>
+      <span style="background:rgba(16,185,129,0.1);color:#059669;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;">🏆 100+品牌验证</span>
+      <span style="background:rgba(245,158,11,0.1);color:#d97706;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;">📈 数据真实可查</span>
     </div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
-      <span style="background:rgba(239,68,68,0.1);color:#dc2626;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;">🏆 15年深耕 · 100+企业验证</span>
-      <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;">⭐ 4.9/5 客户满意度</span>
-      <span style="background:rgba(16,185,129,0.1);color:#059669;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;">✅ 数据真实可查</span>
-    </div>
-    <h1 style="font-size:clamp(28px, 4.5vw, 48px);font-weight:800;margin-bottom:16px;line-height:1.3;">
-      还在<em style="color:var(--accent);">凭感觉</em>做企业？<br>
-      看看<span style="background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">100+企业</span>如何实现逆势增长
+    <h1 style="font-size:clamp(30px, 5vw, 52px);font-weight:800;margin-bottom:18px;line-height:1.25;">
+      跨境品牌增长案例
     </h1>
-    <p style="font-size:17px;color:var(--muted);max-width:680px;margin:0 auto 40px;line-height:1.8;">
-      所有案例均经客户授权脱敏处理，核心方法论和数据100%真实可查。
-      <strong style="color:var(--ink-soft);">与其自己摸索三年，不如看看别人怎么做到的。</strong>
+    <p style="font-size:clamp(16px, 2vw, 20px);color:var(--muted);max-width:720px;margin:0 auto 48px;line-height:1.7;font-weight:500;">
+      聚焦独立站、亚马逊、TikTok、品牌出海——从0到亿的跨境品牌实战方法论
     </p>
     <!-- 数据指标行 -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:800px;margin:0 auto;text-align:center;">
-      <div>
-        <div class="counter" data-target="100" data-suffix="+" style="font-size:clamp(24px, 3.5vw, 36px);font-weight:800;color:var(--accent);margin-bottom:4px;">0</div>
-        <div style="font-size:13px;color:var(--muted);">成功案例</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:900px;margin:0 auto;">
+      <div class="cb-stat-item reveal">
+        <div class="counter" data-target="100" data-suffix="+" style="font-size:clamp(26px, 4vw, 40px);font-weight:800;background:linear-gradient(135deg,#2563eb,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;">0</div>
+        <div style="font-size:14px;color:var(--muted);font-weight:500;">品牌案例</div>
       </div>
-      <div>
-        <div class="counter" data-target="15" data-suffix="+" style="font-size:clamp(24px, 3.5vw, 36px);font-weight:800;color:var(--accent2);margin-bottom:4px;">0</div>
-        <div style="font-size:13px;color:var(--muted);">行业覆盖</div>
+      <div class="cb-stat-item reveal reveal-delay-1">
+        <div class="counter" data-target="8" data-suffix="大" style="font-size:clamp(26px, 4vw, 40px);font-weight:800;background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;">0</div>
+        <div style="font-size:14px;color:var(--muted);font-weight:500;">垂直品类</div>
       </div>
-      <div>
-        <div class="counter" data-target="300" data-suffix="%+" style="font-size:clamp(24px, 3.5vw, 36px);font-weight:800;color:var(--gold);margin-bottom:4px;">0</div>
-        <div style="font-size:13px;color:var(--muted);">平均增长</div>
+      <div class="cb-stat-item reveal reveal-delay-2">
+        <div class="counter" data-target="280" data-suffix="%+" style="font-size:clamp(26px, 4vw, 40px);font-weight:800;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;">0</div>
+        <div style="font-size:14px;color:var(--muted);font-weight:500;">平均增长</div>
       </div>
-      <div>
-        <div class="counter" data-target="98" data-suffix="%" style="font-size:clamp(24px, 3.5vw, 36px);font-weight:800;color:var(--green);margin-bottom:4px;">0</div>
-        <div style="font-size:13px;color:var(--muted);">客户满意度</div>
+      <div class="cb-stat-item reveal reveal-delay-3">
+        <div class="counter" data-target="98" data-suffix="%" style="font-size:clamp(26px, 4vw, 40px);font-weight:800;background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;">0</div>
+        <div style="font-size:14px;color:var(--muted);font-weight:500;">客户续约率</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 案例列表 -->
-<section class="section alt" style="padding-top:0;">
+<!-- 跨境品牌案例列表 -->
+<section class="cb-cases-section" style="padding:80px 0;background:#fff;">
   <div class="container">
-    <!-- 行业筛选标签（纯HTML展示，点击感样式） -->
-    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
-      <span style="padding:8px 22px;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;background:var(--accent);color:#fff;">全部</span>
-      <span style="padding:8px 22px;border:1px solid var(--rule);background:#fff;border-radius:50px;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--ink-soft);">🏭 制造</span>
-      <span style="padding:8px 22px;border:1px solid var(--rule);background:#fff;border-radius:50px;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--ink-soft);">🛒 零售</span>
-      <span style="padding:8px 22px;border:1px solid var(--rule);background:#fff;border-radius:50px;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--ink-soft);">💻 科技</span>
-      <span style="padding:8px 22px;border:1px solid var(--rule);background:#fff;border-radius:50px;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--ink-soft);">🍜 餐饮</span>
-      <span style="padding:8px 22px;border:1px solid var(--rule);background:#fff;border-radius:50px;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--ink-soft);">🌍 外贸</span>
-      <span style="padding:8px 22px;border:1px solid var(--rule);background:#fff;border-radius:50px;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--ink-soft);">📦 其他</span>
-    </div>
-    <!-- 服务类型筛选器 -->
-    <div class="case-filter">
-      <button class="filter-btn active" data-filter="all">全部案例</button>
-      <button class="filter-btn" data-filter="supply">供应链转型</button>
-      <button class="filter-btn" data-filter="startup">创业孵化</button>
-      <button class="filter-btn" data-filter="growth">增长突破</button>
-      <button class="filter-btn" data-filter="turnaround">困境逆转</button>
+    <!-- 筛选标签 -->
+    <div class="cb-filter-wrap reveal" style="display:flex;justify-content:center;gap:10px;margin-bottom:60px;flex-wrap:wrap;">
+      <button class="cb-filter-btn active" data-cb-filter="all">全部</button>
+      <button class="cb-filter-btn" data-cb-filter="dropship">🛒 独立站</button>
+      <button class="cb-filter-btn" data-cb-filter="amazon">📦 亚马逊</button>
+      <button class="cb-filter-btn" data-cb-filter="tiktok">🎬 TikTok</button>
+      <button class="cb-filter-btn" data-cb-filter="brand">🌊 品牌出海</button>
+      <button class="cb-filter-btn" data-cb-filter="supply">🏭 供应链出海</button>
     </div>
 
-    <div class="case-detail-grid" id="case-grid-pro" style="grid-template-columns:repeat(3,1fr);gap:28px;">
-      <!-- 案例1：供应链转型 - 制造行业 -->
-      <div class="case-detail-card" data-category="supply" style="position:relative;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:none;box-shadow:var(--shadow-sm);">
-        <div style="position:absolute;top:20px;left:20px;z-index:2;">
-          <span style="background:var(--accent);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(37,99,235,0.3);">🏭 制造</span>
-        </div>
-        <div style="position:absolute;top:20px;right:20px;z-index:2;">
-          <span style="background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);color:var(--accent);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;">供应链转型</span>
-        </div>
-        <div class="case-detail-header" style="padding-top:64px;">
-          <h3 class="case-detail-title" style="font-size:18px;">传统家纺工厂的品牌逆袭之路</h3>
-          <p class="case-detail-subtitle">家居家纺 · 年度陪跑 · 24个月</p>
-        </div>
-        <div class="case-detail-body">
-          <div class="case-result-grid" style="grid-template-columns:repeat(3,1fr);margin:0 0 16px;padding:16px 0;border-top:1px solid var(--rule-light);border-bottom:none;">
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">+320%</div>
-              <div class="case-result-lbl">营收增长</div>
-            </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--green);">+8pct</div>
-              <div class="case-result-lbl">净利率</div>
-            </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--gold);">3亿</div>
-              <div class="case-result-lbl">品牌年营收</div>
-            </div>
-          </div>
-          <div class="case-detail-section" style="margin-bottom:16px;">
-            <p class="case-detail-text" style="font-size:13px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-              华东某家纺代工厂，做了15年OEM/ODM，利润越来越薄，2023年净利润率仅3.2%，产能闲置率达35%。
-            </p>
-          </div>
-          <div class="case-detail-section">
-            <div class="case-detail-label">核心举措</div>
-            <ul class="case-highlights" style="margin-bottom:16px;">
-              <li>品牌定位：聚焦细分品类，避开红海竞争</li>
-              <li>产品策略：以爆品带品牌，打造3款千万级单品</li>
-              <li>渠道布局：抖音+小红书+天猫全渠道布局</li>
-            </ul>
-          </div>
-          <a href="contact.html" style="display:block;text-align:center;padding:12px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 12px rgba(37,99,235,0.25);">查看详情 →</a>
-        </div>
-      </div>
+    <!-- 深度案例卡片网格 - 2列 -->
+    <div class="cb-case-grid">
 
-      <!-- 案例2：创业孵化 - 零售行业 -->
-      <div class="case-detail-card" data-category="startup" style="position:relative;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:none;box-shadow:var(--shadow-sm);">
-        <div style="position:absolute;top:20px;left:20px;z-index:2;">
-          <span style="background:var(--accent2);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(139,92,246,0.3);">🛒 零售</span>
+      <!-- 案例1：独立站品牌从0到年销8000万（家居品类） -->
+      <article class="cb-case-card reveal" data-cb-category="dropship brand">
+        <!-- 顶部渐变视觉区 -->
+        <div class="cb-case-hero" style="background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%);">
+          <div class="cb-case-hero-pattern"></div>
+          <div class="cb-case-tags">
+            <span class="cb-case-tag">🛒 独立站</span>
+            <span class="cb-case-tag">🌊 品牌出海</span>
+          </div>
+          <div class="cb-case-hero-bottom">
+            <div class="cb-case-category">家居品类 · 品牌孵化</div>
+            <div class="cb-case-duration">⏱ 18个月</div>
+          </div>
         </div>
-        <div style="position:absolute;top:20px;right:20px;z-index:2;">
-          <span style="background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);color:var(--accent2);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;">创业孵化</span>
-        </div>
-        <div class="case-detail-header" style="padding-top:64px;">
-          <h3 class="case-detail-title" style="font-size:18px;">家居新品牌从0到千万营收</h3>
-          <p class="case-detail-subtitle">家居生活 · 创业孵化 · 12个月</p>
-        </div>
-        <div class="case-detail-body">
-          <div class="case-result-grid" style="grid-template-columns:repeat(3,1fr);margin:0 0 16px;padding:16px 0;border-top:1px solid var(--rule-light);border-bottom:none;">
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">1500万</div>
-              <div class="case-result-lbl">首年营收</div>
+        <!-- 内容区 -->
+        <div class="cb-case-body">
+          <h3 class="cb-case-title">深圳家居品牌DTC独立站从0到年销8000万的增长密码</h3>
+          <!-- 核心数据 -->
+          <div class="cb-case-metrics">
+            <div class="cb-metric">
+              <div class="cb-metric-val">0→8000万</div>
+              <div class="cb-metric-lbl">年营收增长</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--gold);">6月</div>
-              <div class="case-result-lbl">产品上线</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#10b981;">18%→42%</div>
+              <div class="cb-metric-lbl">毛利率提升</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--green);">3.2x</div>
-              <div class="case-result-lbl">投入产出比</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#f59e0b;">35%+</div>
+              <div class="cb-metric-lbl">复购率</div>
             </div>
           </div>
-          <div class="case-detail-section" style="margin-bottom:16px;">
-            <p class="case-detail-text" style="font-size:13px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-              连续创业者，有产品想法但缺家居行业经验。团队只有3个人，没有供应链资源，没有渠道资源。
+          <!-- 项目背景 -->
+          <div class="cb-case-section">
+            <div class="cb-section-label">📋 项目背景</div>
+            <p class="cb-section-text">
+              深圳某家居代工厂，做了12年OEM，给欧美大牌代工，利润率持续走低。
+              2024年决定做自有品牌出海，但缺乏品牌运营和跨境电商经验。
             </p>
           </div>
-          <div class="case-detail-section">
-            <div class="case-detail-label">核心举措</div>
-            <ul class="case-highlights" style="margin-bottom:16px;">
-              <li>商业模式：从单品切入，验证PMF后快速扩展</li>
-              <li>产品设计：基于用户痛点，打造差异化爆款</li>
-              <li>冷启动：小红书+抖音，内容种草快速起量</li>
+          <!-- 核心举措 -->
+          <div class="cb-case-section">
+            <div class="cb-section-label">🎯 核心举措</div>
+            <ul class="cb-measures-list">
+              <li><span class="cb-measure-num">1</span><span><strong>品牌定位：</strong>聚焦"北欧极简+智能科技"细分赛道，避开红海</span></li>
+              <li><span class="cb-measure-num">2</span><span><strong>独立站搭建：</strong>Shopify+定制开发，打造沉浸式品牌体验</span></li>
+              <li><span class="cb-measure-num">3</span><span><strong>流量策略：</strong>Google SEO+Facebook广告+TikTok内容种草组合拳</span></li>
+              <li><span class="cb-measure-num">4</span><span><strong>转化优化：</strong>A/B测试+用户旅程优化，转化率从1.2%→3.8%</span></li>
+              <li><span class="cb-measure-num">5</span><span><strong>用户运营：</strong>EDM营销自动化+会员体系，LTV提升2.5倍</span></li>
+              <li><span class="cb-measure-num">6</span><span><strong>品牌建设：</strong>品牌故事+用户UGC+KOL种草，建立品牌护城河</span></li>
             </ul>
           </div>
-          <a href="contact.html" style="display:block;text-align:center;padding:12px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 12px rgba(37,99,235,0.25);">查看详情 →</a>
+          <!-- 战略洞察 -->
+          <div class="cb-insight">
+            <div class="cb-insight-icon">💡</div>
+            <div>
+              <div class="cb-insight-label">战略洞察</div>
+              <p class="cb-insight-text">工厂转型品牌的核心不是建个网站，而是从"产品思维"转向"用户思维"。</p>
+            </div>
+          </div>
+          <a href="contact.html" class="cb-case-cta">查看完整案例 →</a>
         </div>
-      </div>
+      </article>
 
-      <!-- 案例3：困境逆转 - 外贸行业 -->
-      <div class="case-detail-card" data-category="turnaround" style="position:relative;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:none;box-shadow:var(--shadow-sm);">
-        <div style="position:absolute;top:20px;left:20px;z-index:2;">
-          <span style="background:var(--red);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(239,68,68,0.3);">🌍 外贸</span>
+      <!-- 案例2：亚马逊新品牌12个月做到类目Top3（3C品类） -->
+      <article class="cb-case-card reveal reveal-delay-1" data-cb-category="amazon brand">
+        <div class="cb-case-hero" style="background:linear-gradient(135deg,#7c2d12 0%,#ea580c 50%,#f59e0b 100%);">
+          <div class="cb-case-hero-pattern"></div>
+          <div class="cb-case-tags">
+            <span class="cb-case-tag">📦 亚马逊</span>
+            <span class="cb-case-tag">🏆 品牌打造</span>
+          </div>
+          <div class="cb-case-hero-bottom">
+            <div class="cb-case-category">3C数码 · 品牌运营</div>
+            <div class="cb-case-duration">⏱ 12个月</div>
+          </div>
         </div>
-        <div style="position:absolute;top:20px;right:20px;z-index:2;">
-          <span style="background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);color:var(--red);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;">困境逆转</span>
-        </div>
-        <div class="case-detail-header" style="padding-top:64px;">
-          <h3 class="case-detail-title" style="font-size:18px;">亏损外贸企业12个月扭亏为盈</h3>
-          <p class="case-detail-subtitle">外贸制造 · 专项咨询 · 12个月</p>
-        </div>
-        <div class="case-detail-body">
-          <div class="case-result-grid" style="grid-template-columns:repeat(3,1fr);margin:0 0 16px;padding:16px 0;border-top:1px solid var(--rule-light);border-bottom:none;">
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--green);">+45%</div>
-              <div class="case-result-lbl">营收回升</div>
+        <div class="cb-case-body">
+          <h3 class="cb-case-title">深圳3C新品牌12个月登顶亚马逊类目Top3</h3>
+          <div class="cb-case-metrics">
+            <div class="cb-metric">
+              <div class="cb-metric-val">0→120万$</div>
+              <div class="cb-metric-lbl">月销售额</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--accent);">转正</div>
-              <div class="case-result-lbl">盈亏平衡</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#8b5cf6;">新品→Top3</div>
+              <div class="cb-metric-lbl">类目排名</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--gold);">-40%</div>
-              <div class="case-result-lbl">运营成本</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#10b981;">45%→18%</div>
+              <div class="cb-metric-lbl">ACOS优化</div>
             </div>
           </div>
-          <div class="case-detail-section" style="margin-bottom:16px;">
-            <p class="case-detail-text" style="font-size:13px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-              华南某外贸企业，主营电子产品出口。受地缘政治和汇率影响，2023年营收下滑30%，连续亏损。
+          <div class="cb-case-section">
+            <div class="cb-section-label">📋 项目背景</div>
+            <p class="cb-section-text">
+              深圳某3C创业团队，有优质供应链资源，但亚马逊运营经验为零。
+              从零开始做品牌，希望在红海中找到差异化突破口。
             </p>
           </div>
-          <div class="case-detail-section">
-            <div class="case-detail-label">核心举措</div>
-            <ul class="case-highlights" style="margin-bottom:16px;">
-              <li>紧急止血：砍亏损业务，优化人员结构</li>
-              <li>战略转型：从单一出口转向国内国际双循环</li>
-              <li>产品升级：高附加值产品占比提升到55%</li>
+          <div class="cb-case-section">
+            <div class="cb-section-label">🎯 核心举措</div>
+            <ul class="cb-measures-list">
+              <li><span class="cb-measure-num">1</span><span><strong>选品策略：</strong>利用数据工具找到"高需求低竞争"的细分品类</span></li>
+              <li><span class="cb-measure-num">2</span><span><strong>Listing优化：</strong>A9算法深度优化，关键词排名前10占比80%+</span></li>
+              <li><span class="cb-measure-num">3</span><span><strong>广告体系：</strong>SP+SB+SD组合打法，ACOS持续优化</span></li>
+              <li><span class="cb-measure-num">4</span><span><strong>Review管理：</strong>白帽合规玩法，星级4.7分+</span></li>
+              <li><span class="cb-measure-num">5</span><span><strong>品牌备案：</strong>Brand Registry+A+页面+品牌旗舰店</span></li>
+              <li><span class="cb-measure-num">6</span><span><strong>站外引流：</strong>Deal站+网红营销+独立站联动</span></li>
             </ul>
           </div>
-          <a href="contact.html" style="display:block;text-align:center;padding:12px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 12px rgba(37,99,235,0.25);">查看详情 →</a>
+          <div class="cb-insight">
+            <div class="cb-insight-icon">💡</div>
+            <div>
+              <div class="cb-insight-label">战略洞察</div>
+              <p class="cb-insight-text">亚马逊的终极竞争是品牌的竞争，白帽打法才能走得长远。</p>
+            </div>
+          </div>
+          <a href="contact.html" class="cb-case-cta">查看完整案例 →</a>
         </div>
-      </div>
+      </article>
 
-      <!-- 案例4：增长突破 - 餐饮行业 -->
-      <div class="case-detail-card" data-category="growth" style="position:relative;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:none;box-shadow:var(--shadow-sm);">
-        <div style="position:absolute;top:20px;left:20px;z-index:2;">
-          <span style="background:var(--gold);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(245,158,11,0.3);">🍜 餐饮</span>
+      <!-- 案例3：TikTok冷启动3个月百万粉丝（美妆品类） -->
+      <article class="cb-case-card reveal" data-cb-category="tiktok brand">
+        <div class="cb-case-hero" style="background:linear-gradient(135deg,#831843 0%,#ec4899 50%,#f472b6 100%);">
+          <div class="cb-case-hero-pattern"></div>
+          <div class="cb-case-tags">
+            <span class="cb-case-tag">🎬 TikTok</span>
+            <span class="cb-case-tag">💄 内容电商</span>
+          </div>
+          <div class="cb-case-hero-bottom">
+            <div class="cb-case-category">美妆个护 · 内容营销</div>
+            <div class="cb-case-duration">⏱ 6个月</div>
+          </div>
         </div>
-        <div style="position:absolute;top:20px;right:20px;z-index:2;">
-          <span style="background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);color:var(--green);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;">增长突破</span>
-        </div>
-        <div class="case-detail-header" style="padding-top:64px;">
-          <h3 class="case-detail-title" style="font-size:18px;">餐饮连锁三年从5家到100家</h3>
-          <p class="case-detail-subtitle">餐饮连锁 · 增长合伙人 · 36个月</p>
-        </div>
-        <div class="case-detail-body">
-          <div class="case-result-grid" style="grid-template-columns:repeat(3,1fr);margin:0 0 16px;padding:16px 0;border-top:1px solid var(--rule-light);border-bottom:none;">
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">100+</div>
-              <div class="case-result-lbl">门店数量</div>
+        <div class="cb-case-body">
+          <h3 class="cb-case-title">广州美妆品牌TikTok冷启动3个月涨粉百万</h3>
+          <div class="cb-case-metrics">
+            <div class="cb-metric">
+              <div class="cb-metric-val">0→120万</div>
+              <div class="cb-metric-lbl">粉丝增长</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--accent);">5亿</div>
-              <div class="case-result-lbl">年营收</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#10b981;">50万$</div>
+              <div class="cb-metric-lbl">月均GMV</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--accent2);">20x</div>
-              <div class="case-result-lbl">企业估值</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#f59e0b;">1:4.2</div>
+              <div class="cb-metric-lbl">投放ROI</div>
             </div>
           </div>
-          <div class="case-detail-section" style="margin-bottom:16px;">
-            <p class="case-detail-text" style="font-size:13px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-              某区域餐饮品牌，5家店，年营收约3000万。口味很好但扩张慢，单店模型不稳定，加盟体系不完善。
+          <div class="cb-case-section">
+            <div class="cb-section-label">📋 项目背景</div>
+            <p class="cb-section-text">
+              广州某美妆品牌，国内市场有一定基础，想拓展海外市场。
+              选择TikTok作为突破口，希望通过内容营销快速建立品牌认知。
             </p>
           </div>
-          <div class="case-detail-section">
-            <div class="case-detail-label">核心举措</div>
-            <ul class="case-highlights" style="margin-bottom:16px;">
-              <li>单店模型：打磨可复制的单店盈利模型</li>
-              <li>供应链：搭建中央厨房，标准化出品</li>
-              <li>加盟体系：从0到1搭建加盟体系</li>
+          <div class="cb-case-section">
+            <div class="cb-section-label">🎯 核心举措</div>
+            <ul class="cb-measures-list">
+              <li><span class="cb-measure-num">1</span><span><strong>账号定位：</strong>聚焦"美妆教程+产品测评"双内容线</span></li>
+              <li><span class="cb-measure-num">2</span><span><strong>内容矩阵：</strong>3个账号矩阵布局，覆盖不同用户圈层</span></li>
+              <li><span class="cb-measure-num">3</span><span><strong>爆款公式：</strong>痛点开场+产品展示+效果对比+CTA</span></li>
+              <li><span class="cb-measure-num">4</span><span><strong>达人合作：</strong>100+中小达人铺量+头部达人背书</span></li>
+              <li><span class="cb-measure-num">5</span><span><strong>直播带货：</strong>每天4小时直播，配合短视频引流</span></li>
+              <li><span class="cb-measure-num">6</span><span><strong>TikTok Shop：</strong>小店+独立站双轨承接流量转化</span></li>
             </ul>
           </div>
-          <a href="contact.html" style="display:block;text-align:center;padding:12px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 12px rgba(37,99,235,0.25);">查看详情 →</a>
+          <div class="cb-insight">
+            <div class="cb-insight-icon">💡</div>
+            <div>
+              <div class="cb-insight-label">战略洞察</div>
+              <p class="cb-insight-text">TikTok的核心是"内容即广告"，好的内容本身就是最好的流量。</p>
+            </div>
+          </div>
+          <a href="contact.html" class="cb-case-cta">查看完整案例 →</a>
         </div>
-      </div>
+      </article>
 
-      <!-- 案例5：供应链转型 - 制造行业 -->
-      <div class="case-detail-card" data-category="supply" style="position:relative;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:none;box-shadow:var(--shadow-sm);">
-        <div style="position:absolute;top:20px;left:20px;z-index:2;">
-          <span style="background:var(--accent);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(37,99,235,0.3);">🏭 制造</span>
+      <!-- 案例4：传统工厂品牌出海转型（家居品类） -->
+      <article class="cb-case-card reveal reveal-delay-1" data-cb-category="supply brand">
+        <div class="cb-case-hero" style="background:linear-gradient(135deg,#14532d 0%,#16a34a 50%,#22c55e 100%);">
+          <div class="cb-case-hero-pattern"></div>
+          <div class="cb-case-tags">
+            <span class="cb-case-tag">🏭 供应链出海</span>
+            <span class="cb-case-tag">🔄 品牌转型</span>
+          </div>
+          <div class="cb-case-hero-bottom">
+            <div class="cb-case-category">家居用品 · 品牌转型</div>
+            <div class="cb-case-duration">⏱ 18个月</div>
+          </div>
         </div>
-        <div style="position:absolute;top:20px;right:20px;z-index:2;">
-          <span style="background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);color:var(--accent);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;">供应链转型</span>
-        </div>
-        <div class="case-detail-header" style="padding-top:64px;">
-          <h3 class="case-detail-title" style="font-size:18px;">传统五金厂的数字化转型</h3>
-          <p class="case-detail-subtitle">五金制造 · 专项咨询 · 18个月</p>
-        </div>
-        <div class="case-detail-body">
-          <div class="case-result-grid" style="grid-template-columns:repeat(3,1fr);margin:0 0 16px;padding:16px 0;border-top:1px solid var(--rule-light);border-bottom:none;">
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;background:linear-gradient(135deg,#2563eb,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">+65%</div>
-              <div class="case-result-lbl">人均产值</div>
+        <div class="cb-case-body">
+          <h3 class="cb-case-title">义乌传统家居工厂品牌出海，18个月完成从OEM到OBM的跨越</h3>
+          <div class="cb-case-metrics">
+            <div class="cb-metric">
+              <div class="cb-metric-val">0→65%</div>
+              <div class="cb-metric-lbl">自有品牌占比</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--green);">+5pct</div>
-              <div class="case-result-lbl">净利率</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#10b981;">15%→38%</div>
+              <div class="cb-metric-lbl">毛利率提升</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--accent2);">-30%</div>
-              <div class="case-result-lbl">库存周转</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#f59e0b;">2亿→3.5亿</div>
+              <div class="cb-metric-lbl">年营收增长</div>
             </div>
           </div>
-          <div class="case-detail-section" style="margin-bottom:16px;">
-            <p class="case-detail-text" style="font-size:13px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-              广东某五金制造企业，20年历史，主要做建材五金。产品同质化严重，价格战激烈，利润率逐年下滑。
+          <div class="cb-case-section">
+            <div class="cb-section-label">📋 项目背景</div>
+            <p class="cb-section-text">
+              义乌某家居工厂，做了15年OEM/ODM，客户都是海外大买家，议价权弱，利润越来越薄。
+              老板意识到必须转型做自有品牌，但缺乏方法和团队。
             </p>
           </div>
-          <div class="case-detail-section">
-            <div class="case-detail-label">核心举措</div>
-            <ul class="case-highlights" style="margin-bottom:16px;">
-              <li>产品升级：从低端标准件转向中高端定制化</li>
-              <li>智能制造：引入MES系统，生产数字化管理</li>
-              <li>精益生产：推行精益管理，降低浪费</li>
+          <div class="cb-case-section">
+            <div class="cb-section-label">🎯 核心举措</div>
+            <ul class="cb-measures-list">
+              <li><span class="cb-measure-num">1</span><span><strong>战略顶层设计：</strong>OEM+品牌双轨制，分阶段推进转型</span></li>
+              <li><span class="cb-measure-num">2</span><span><strong>品牌定位：</strong>找到"高性价比设计感家居"的差异化定位</span></li>
+              <li><span class="cb-measure-num">3</span><span><strong>渠道布局：</strong>亚马逊+独立站+线下渠道全渠道布局</span></li>
+              <li><span class="cb-measure-num">4</span><span><strong>产品体系：</strong>从代工思维到品牌思维，建立研发体系</span></li>
+              <li><span class="cb-measure-num">5</span><span><strong>组织升级：</strong>组建跨境品牌团队，引入专业人才</span></li>
+              <li><span class="cb-measure-num">6</span><span><strong>供应链升级：</strong>柔性供应链改造，支撑小批量多批次</span></li>
             </ul>
           </div>
-          <a href="contact.html" style="display:block;text-align:center;padding:12px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 12px rgba(37,99,235,0.25);">查看详情 →</a>
+          <div class="cb-insight">
+            <div class="cb-insight-icon">💡</div>
+            <div>
+              <div class="cb-insight-label">战略洞察</div>
+              <p class="cb-insight-text">工厂转型品牌最难的不是钱，是老板的思维方式转变。</p>
+            </div>
+          </div>
+          <a href="contact.html" class="cb-case-cta">查看完整案例 →</a>
         </div>
-      </div>
+      </article>
 
-      <!-- 案例6：创业孵化 - 零售/其他行业 -->
-      <div class="case-detail-card" data-category="startup" style="position:relative;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:none;box-shadow:var(--shadow-sm);">
-        <div style="position:absolute;top:20px;left:20px;z-index:2;">
-          <span style="background:var(--green);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(16,185,129,0.3);">📦 其他</span>
+      <!-- 案例5：创业品牌从0到1成功出海（户外品类） -->
+      <article class="cb-case-card reveal" data-cb-category="brand dropship">
+        <div class="cb-case-hero" style="background:linear-gradient(135deg,#0c4a6e 0%,#0891b2 50%,#06b6d4 100%);">
+          <div class="cb-case-hero-pattern"></div>
+          <div class="cb-case-tags">
+            <span class="cb-case-tag">🚀 创业出海</span>
+            <span class="cb-case-tag">🥚 品牌孵化</span>
+          </div>
+          <div class="cb-case-hero-bottom">
+            <div class="cb-case-category">户外用品 · 创业孵化</div>
+            <div class="cb-case-duration">⏱ 12个月</div>
+          </div>
         </div>
-        <div style="position:absolute;top:20px;right:20px;z-index:2;">
-          <span style="background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);color:var(--accent2);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;">创业孵化</span>
-        </div>
-        <div class="case-detail-header" style="padding-top:64px;">
-          <h3 class="case-detail-title" style="font-size:18px;">宠物用品品牌的快速崛起</h3>
-          <p class="case-detail-subtitle">宠物用品 · 增长合伙人 · 24个月</p>
-        </div>
-        <div class="case-detail-body">
-          <div class="case-result-grid" style="grid-template-columns:repeat(3,1fr);margin:0 0 16px;padding:16px 0;border-top:1px solid var(--rule-light);border-bottom:none;">
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">8000万</div>
-              <div class="case-result-lbl">年营收</div>
+        <div class="cb-case-body">
+          <h3 class="cb-case-title">95后创业团队户外品牌出海，首年GMV破3000万</h3>
+          <div class="cb-case-metrics">
+            <div class="cb-metric">
+              <div class="cb-metric-val">3200万</div>
+              <div class="cb-metric-lbl">首年GMV</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--accent);">16x</div>
-              <div class="case-result-lbl">营收增长</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#8b5cf6;">60%</div>
+              <div class="cb-metric-lbl">独立站占比</div>
             </div>
-            <div class="case-result-item">
-              <div class="case-result-val" style="font-size:24px;color:var(--gold);">TOP5</div>
-              <div class="case-result-lbl">品类排名</div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#10b981;">28%</div>
+              <div class="cb-metric-lbl">用户复购率</div>
             </div>
           </div>
-          <div class="case-detail-section" style="margin-bottom:16px;">
-            <p class="case-detail-text" style="font-size:13px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-              宠物爱好者创业，从淘宝C店起步，做到年销500万后遇到瓶颈。团队小，缺乏专业运营能力。
+          <div class="cb-case-section">
+            <div class="cb-section-label">📋 项目背景</div>
+            <p class="cb-section-text">
+              三个95后创业者，有户外爱好，发现海外户外用品市场机会。
+              从零开始做品牌，资金有限，需要用最低成本验证PMF。
             </p>
           </div>
-          <div class="case-detail-section">
-            <div class="case-detail-label">核心举措</div>
-            <ul class="case-highlights" style="margin-bottom:16px;">
-              <li>品牌定位：细分人群切入，打造有温度的品牌</li>
-              <li>内容营销：抖音+小红书+B站全域内容种草</li>
-              <li>私域运营：搭建私域体系，复购率45%</li>
+          <div class="cb-case-section">
+            <div class="cb-section-label">🎯 核心举措</div>
+            <ul class="cb-measures-list">
+              <li><span class="cb-measure-num">1</span><span><strong>品类切入：</strong>从细分户外单品切入，验证PMF后扩展</span></li>
+              <li><span class="cb-measure-num">2</span><span><strong>品牌故事：</strong>"年轻、探索、环保"价值观，精准击中Z世代</span></li>
+              <li><span class="cb-measure-num">3</span><span><strong>社区运营：</strong>Instagram+Reddit+Discord，建立品牌社区</span></li>
+              <li><span class="cb-measure-num">4</span><span><strong>KOC营销：</strong>1000+海外户外爱好者种草，口碑裂变</span></li>
+              <li><span class="cb-measure-num">5</span><span><strong>众筹启动：</strong>Kickstarter众筹百万美金，验证+积累种子用户</span></li>
+              <li><span class="cb-measure-num">6</span><span><strong>全渠道增长：</strong>独立站+亚马逊+线下渠道，多渠道发力</span></li>
             </ul>
           </div>
-          <a href="contact.html" style="display:block;text-align:center;padding:12px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 12px rgba(37,99,235,0.25);">查看详情 →</a>
+          <div class="cb-insight">
+            <div class="cb-insight-icon">💡</div>
+            <div>
+              <div class="cb-insight-label">战略洞察</div>
+              <p class="cb-insight-text">新品牌的机会在于"小而美"，找准一个细分赛道做到极致。</p>
+            </div>
+          </div>
+          <a href="contact.html" class="cb-case-cta">查看完整案例 →</a>
         </div>
-      </div>
+      </article>
+
+      <!-- 案例6：多渠道联动品牌增长（服装品类） -->
+      <article class="cb-case-card reveal reveal-delay-1" data-cb-category="dropship amazon tiktok brand">
+        <div class="cb-case-hero" style="background:linear-gradient(135deg,#4c1d95 0%,#7c3aed 50%,#a855f7 100%);">
+          <div class="cb-case-hero-pattern"></div>
+          <div class="cb-case-tags">
+            <span class="cb-case-tag">🌍 全域联动</span>
+            <span class="cb-case-tag">📈 品牌增长</span>
+          </div>
+          <div class="cb-case-hero-bottom">
+            <div class="cb-case-category">时尚服装 · 全域增长</div>
+            <div class="cb-case-duration">⏱ 24个月</div>
+          </div>
+        </div>
+        <div class="cb-case-body">
+          <h3 class="cb-case-title">杭州服装品牌独立站+亚马逊+TikTok三驾马车，年销破2亿</h3>
+          <div class="cb-case-metrics">
+            <div class="cb-metric">
+              <div class="cb-metric-val">0→2.1亿</div>
+              <div class="cb-metric-lbl">年营收增长</div>
+            </div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#8b5cf6;">40/35/25</div>
+              <div class="cb-metric-lbl">独立站/亚马逊/TikTok</div>
+            </div>
+            <div class="cb-metric">
+              <div class="cb-metric-val" style="color:#f59e0b;">35%+</div>
+              <div class="cb-metric-lbl">品牌搜索占比</div>
+            </div>
+          </div>
+          <div class="cb-case-section">
+            <div class="cb-section-label">📋 项目背景</div>
+            <p class="cb-section-text">
+              杭州某服装品牌，国内做淘品牌遇到瓶颈，流量成本越来越高。
+              决定全面出海，走品牌化路线，打造具有东方美学的国际化品牌。
+            </p>
+          </div>
+          <div class="cb-case-section">
+            <div class="cb-section-label">🎯 核心举措</div>
+            <ul class="cb-measures-list">
+              <li><span class="cb-measure-num">1</span><span><strong>品牌战略：</strong>"东方美学+现代设计"的差异化品牌定位</span></li>
+              <li><span class="cb-measure-num">2</span><span><strong>独立站：</strong>品牌主阵地，打造沉浸式购物体验</span></li>
+              <li><span class="cb-measure-num">3</span><span><strong>亚马逊：</strong>销量主渠道，快速起量+获取用户数据</span></li>
+              <li><span class="cb-measure-num">4</span><span><strong>TikTok：</strong>内容+直播，品牌曝光+引流</span></li>
+              <li><span class="cb-measure-num">5</span><span><strong>数据中台：</strong>全域用户数据打通，精准营销</span></li>
+              <li><span class="cb-measure-num">6</span><span><strong>品牌资产：</strong>持续内容输出+用户运营，建立护城河</span></li>
+            </ul>
+          </div>
+          <div class="cb-insight">
+            <div class="cb-insight-icon">💡</div>
+            <div>
+              <div class="cb-insight-label">战略洞察</div>
+              <p class="cb-insight-text">出海的终极形态是品牌，多渠道联动才能建立真正的品牌壁垒。</p>
+            </div>
+          </div>
+          <a href="contact.html" class="cb-case-cta">查看完整案例 →</a>
+        </div>
+      </article>
+
     </div>
 
     <!-- 更多案例提示 -->
-    <div style="text-align:center;margin-top:60px;padding:40px;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--rule);">
-      <h3 style="font-size:20px;margin-bottom:8px;">想看更多行业案例？</h3>
-      <p style="color:var(--muted);margin-bottom:20px;font-size:14px;">我们服务过15+行业的100+企业，联系我们获取你所在行业的专属案例</p>
-      <a href="contact.html" class="btn btn-primary">获取行业案例 →</a>
+    <div class="cb-more-cases reveal" style="text-align:center;margin-top:70px;padding:48px 32px;background:linear-gradient(135deg,#eff6ff 0%,#f0f9ff 100%);border-radius:20px;border:1px solid #dbeafe;">
+      <h3 style="font-size:24px;margin-bottom:10px;color:var(--ink);">想看更多品类的增长案例？</h3>
+      <p style="color:var(--muted);margin-bottom:24px;font-size:15px;">我们服务过8大品类的100+跨境品牌，联系我们获取你所在品类的专属增长方案</p>
+      <a href="contact.html" class="cb-more-btn">获取品类方案 →</a>
     </div>
   </div>
 </section>
 
-<!-- 客户评价 - testimonial-grid-pro 风格 -->
-<section class="section" aria-labelledby="testimonial-title">
+<!-- 客户评价 - 跨境品牌客户 -->
+<section class="cb-testimonials" style="padding:100px 0;background:#fff;">
   <div class="container">
-    <div class="section-header">
-      <span class="section-tag">客 户 评 价</span>
-      <h2 id="testimonial-title">客户<em>怎么说</em>，比什么都重要</h2>
-      <p class="section-desc">来自真实客户的反馈，每一个案例背后都是一段真实的增长故事。</p>
+    <div class="cb-section-header reveal" style="text-align:center;margin-bottom:64px;">
+      <span class="cb-section-tag">客 户 评 价</span>
+      <h2 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:16px;line-height:1.3;">
+        听听<span style="background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">跨境品牌创始人</span>怎么说
+      </h2>
+      <p style="font-size:17px;color:var(--muted);max-width:680px;margin:0 auto;line-height:1.7;">
+        来自真实跨境品牌客户的反馈，每一个增长数据的背后都是一次成功的合作
+      </p>
     </div>
-    <div class="testimonial-grid testimonial-grid-pro">
-      <article class="testimonial-card">
-        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-        <p class="testimonial-text">
-          "做了十几年工厂，一直觉得自己懂生意。跟众力聚鑫合作后才发现，
-          以前是凭感觉做事，现在是靠体系增长。两年时间，
-          我们的自有品牌营收已经超过了代工业务。"
+
+    <div class="cb-testimonial-grid">
+      <article class="cb-testimonial-card reveal">
+        <div class="cb-testimonial-quote">"</div>
+        <p class="cb-testimonial-text">
+          做了12年OEM代工，一直想做自有品牌但不知道从哪下手。
+          跟众力聚鑫合作后，从品牌定位到独立站搭建，从流量策略到用户运营，
+          每一步都有专业团队带着走。18个月时间，自有品牌年营收做到8000万，
+          毛利率从18%提升到42%。这在以前想都不敢想。
         </p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar" aria-hidden="true">张</div>
+        <div class="cb-testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="cb-testimonial-author">
+          <div class="cb-testimonial-avatar" style="background:linear-gradient(135deg,#2563eb,#0ea5e9);">陈</div>
           <div>
-            <div class="testimonial-name">张总</div>
-            <div class="testimonial-role">某家纺集团董事长</div>
-            <div class="testimonial-company">年度陪跑客户 · 合作2年</div>
+            <div class="cb-testimonial-name">陈总</div>
+            <div class="cb-testimonial-role">创始人 & CEO</div>
+            <div class="cb-testimonial-company">深圳某家居DTC品牌 · 合作18个月</div>
           </div>
         </div>
-        <div class="testimonial-result">
-          <span class="result-label">合作成果：</span>
-          <span class="result-value">营收增长320%</span>
+        <div class="cb-testimonial-result">
+          <span class="cb-result-label">核心成果</span>
+          <span class="cb-result-value">年营收8000万 · 毛利率42%</span>
         </div>
       </article>
-      <article class="testimonial-card">
-        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-        <p class="testimonial-text">
-          "作为连续创业者，这次最踏实。不是那种教你做事的咨询，
-          而是真的下场帮你一起干的合伙人。从商业模式到团队搭建，
-          每一步都有专业指导，少走了太多弯路。"
+
+      <article class="cb-testimonial-card reveal reveal-delay-1">
+        <div class="cb-testimonial-quote">"</div>
+        <p class="cb-testimonial-text">
+          我们团队有供应链优势，但亚马逊运营完全是小白。
+          众力聚鑫的团队从选品开始手把手教，Listing优化、广告打法、Review管理，
+          体系非常完整。12个月时间做到类目Top3，ACOS从45%降到18%。
+          最关键的是，他们教的都是白帽玩法，睡得着觉。
         </p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar" aria-hidden="true">李</div>
+        <div class="cb-testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="cb-testimonial-author">
+          <div class="cb-testimonial-avatar" style="background:linear-gradient(135deg,#ea580c,#f59e0b);">林</div>
           <div>
-            <div class="testimonial-name">李总</div>
-            <div class="testimonial-role">家居新品牌创始人</div>
-            <div class="testimonial-company">孵化项目客户 · 合作1年</div>
+            <div class="cb-testimonial-name">林总</div>
+            <div class="cb-testimonial-role">联合创始人 & 运营总监</div>
+            <div class="cb-testimonial-company">深圳某3C品牌 · 合作12个月</div>
           </div>
         </div>
-        <div class="testimonial-result">
-          <span class="result-label">合作成果：</span>
-          <span class="result-value">首年营收1500万</span>
+        <div class="cb-testimonial-result">
+          <span class="cb-result-label">核心成果</span>
+          <span class="cb-result-value">类目Top3 · 月销120万美金</span>
         </div>
       </article>
-      <article class="testimonial-card">
-        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-        <p class="testimonial-text">
-          "企业最困难的时候遇到了众力聚鑫团队。不是鸡汤式的鼓励，
-          而是实打实的战略重组方案。12个月扭亏，
-          现在我们已经开始布局第二增长曲线了。"
+
+      <article class="cb-testimonial-card reveal reveal-delay-2">
+        <div class="cb-testimonial-quote">"</div>
+        <p class="cb-testimonial-text">
+          TikTok的玩法更新太快了，自己摸索踩了很多坑。
+          众力聚鑫的内容团队非常专业，从账号定位到爆款公式，从达人合作到直播带货，
+          一套完整的方法论。3个月涨粉120万，月GMV做到50万美金，ROI 1:4.2。
+          他们不仅做运营，更重要的是帮我们建立了内容能力。
         </p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar" aria-hidden="true">王</div>
+        <div class="cb-testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="cb-testimonial-author">
+          <div class="cb-testimonial-avatar" style="background:linear-gradient(135deg,#ec4899,#f472b6);">赵</div>
           <div>
-            <div class="testimonial-name">王总</div>
-            <div class="testimonial-role">某外贸企业CEO</div>
-            <div class="testimonial-company">专项咨询客户 · 合作1年</div>
+            <div class="cb-testimonial-name">赵女士</div>
+            <div class="cb-testimonial-role">品牌总监</div>
+            <div class="cb-testimonial-company">广州某美妆品牌 · 合作6个月</div>
           </div>
         </div>
-        <div class="testimonial-result">
-          <span class="result-label">合作成果：</span>
-          <span class="result-value">12个月扭亏为盈</span>
+        <div class="cb-testimonial-result">
+          <span class="cb-result-label">核心成果</span>
+          <span class="cb-result-value">120万粉丝 · ROI 1:4.2</span>
+        </div>
+      </article>
+
+      <article class="cb-testimonial-card reveal">
+        <div class="cb-testimonial-quote">"</div>
+        <p class="cb-testimonial-text">
+          做了15年工厂，习惯了接订单生产，做品牌完全是另一个世界。
+          众力聚鑫帮我们做了顶层设计，OEM和品牌双轨制，既保证了现金流，
+          又稳步推进品牌转型。18个月时间，自有品牌占比达到65%，
+          毛利率翻了一倍多。最难能可贵的是，他们帮我们团队建立了品牌思维。
+        </p>
+        <div class="cb-testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="cb-testimonial-author">
+          <div class="cb-testimonial-avatar" style="background:linear-gradient(135deg,#16a34a,#22c55e);">王</div>
+          <div>
+            <div class="cb-testimonial-name">王总</div>
+            <div class="cb-testimonial-role">董事长</div>
+            <div class="cb-testimonial-company">义乌某家居工厂 · 合作18个月</div>
+          </div>
+        </div>
+        <div class="cb-testimonial-result">
+          <span class="cb-result-label">核心成果</span>
+          <span class="cb-result-value">自有品牌占比65% · 毛利率38%</span>
         </div>
       </article>
     </div>
@@ -814,109 +1432,125 @@
     </section>
 
 
-<!-- 案例方法论 -->
-<section class="section">
+<!-- 案例方法论 - 6大体系化方法论 -->
+<section class="cb-methodology" style="padding:100px 0;background:linear-gradient(180deg,#f8fafc 0%,#fff 100%);">
   <div class="container">
-    <div class="section-header">
-      <span class="section-tag">我 们 的 方 法 论</span>
-      <h2>为什么我们能<em>持续拿到结果</em></h2>
-      <p class="section-desc">
-        15年实战经验，100+成功案例，我们总结出了一套可复制的增长方法论。
+    <div class="cb-section-header reveal" style="text-align:center;margin-bottom:64px;">
+      <span class="cb-section-tag">方 法 论 体 系</span>
+      <h2 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:16px;line-height:1.3;">
+        为什么我们的客户能实现<span style="background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">持续增长</span>？
+      </h2>
+      <p style="font-size:17px;color:var(--muted);max-width:680px;margin:0 auto;line-height:1.7;">
+        6大体系化方法论，从品牌定位到用户运营，从流量增长到数据驱动，确保每一个项目都能落地见效
       </p>
     </div>
-    <div class="service-grid">
-      <div class="service-card">
-        <div class="service-icon">🎯</div>
-        <h3>精准定位</h3>
-        <p>不贪大求全，找到最适合你的细分赛道，集中资源单点突破。</p>
+
+    <div class="cb-method-grid">
+      <div class="cb-method-card reveal">
+        <div class="cb-method-icon" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1d4ed8;">🎯</div>
+        <h3 class="cb-method-title">品牌定位体系</h3>
+        <p class="cb-method-desc">从市场分析、竞品研究到用户洞察，找到最适合你的差异化定位，避开红海竞争。</p>
+        <ul class="cb-method-list">
+          <li>市场趋势与机会分析</li>
+          <li>竞品格局与差异化定位</li>
+          <li>目标用户画像构建</li>
+          <li>品牌核心价值提炼</li>
+        </ul>
       </div>
-      <div class="service-card">
-        <div class="service-icon">⚡</div>
-        <h3>快速验证</h3>
-        <p>小步快跑，快速试错，用最小成本验证假设，再大规模投入。</p>
+      <div class="cb-method-card reveal reveal-delay-1">
+        <div class="cb-method-icon" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);color:#be185d;">💎</div>
+        <h3 class="cb-method-title">产品爆品体系</h3>
+        <p class="cb-method-desc">从用户研究、产品定义到爆品打造，用数据驱动产品决策，降低试错成本。</p>
+        <ul class="cb-method-list">
+          <li>用户痛点深度挖掘</li>
+          <li>爆品选型与验证</li>
+          <li>产品卖点提炼包装</li>
+          <li>产品矩阵规划设计</li>
+        </ul>
       </div>
-      <div class="service-card">
-        <div class="service-icon">📊</div>
-        <h3>数据驱动</h3>
-        <p>不靠感觉靠数据，建立数据指标体系，用数据指导决策。</p>
+      <div class="cb-method-card reveal reveal-delay-2">
+        <div class="cb-method-icon" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;">📈</div>
+        <h3 class="cb-method-title">流量增长体系</h3>
+        <p class="cb-method-desc">从公域引流到私域沉淀，构建多渠道流量矩阵，实现流量的可持续增长。</p>
+        <ul class="cb-method-list">
+          <li>Google/Facebook广告投放</li>
+          <li>SEO/内容营销引流</li>
+          <li>KOL/KOC种草营销</li>
+          <li>私域流量沉淀运营</li>
+        </ul>
       </div>
-      <div class="service-card">
-        <div class="service-icon">🔄</div>
-        <h3>闭环迭代</h3>
-        <p>计划-执行-检查-调整，持续优化，不断逼近最优解。</p>
+      <div class="cb-method-card reveal">
+        <div class="cb-method-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309;">⚡</div>
+        <h3 class="cb-method-title">转化优化体系</h3>
+        <p class="cb-method-desc">从用户旅程分析到转化率优化，通过数据驱动的A/B测试，持续提升转化效率。</p>
+        <ul class="cb-method-list">
+          <li>用户旅程分析优化</li>
+          <li>落地页转化率优化</li>
+          <li>A/B测试方法论</li>
+          <li>购物车挽回策略</li>
+        </ul>
       </div>
-      <div class="service-card">
-        <div class="service-icon">👥</div>
-        <h3>组织保障</h3>
-        <p>战略决定方向，组织决定成败。搭班子、带队伍、建体系。</p>
+      <div class="cb-method-card reveal reveal-delay-1">
+        <div class="cb-method-icon" style="background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#4338ca;">👥</div>
+        <h3 class="cb-method-title">用户运营体系</h3>
+        <p class="cb-method-desc">从首次购买到终身价值，通过精细化用户运营，提升复购率和用户LTV。</p>
+        <ul class="cb-method-list">
+          <li>EDM营销自动化</li>
+          <li>会员等级体系搭建</li>
+          <li>用户分层精细化运营</li>
+          <li>复购与口碑裂变</li>
+        </ul>
       </div>
-      <div class="service-card">
-        <div class="service-icon">🤝</div>
-        <h3>利益绑定</h3>
-        <p>绩效挂钩，风险共担，你的增长就是我们的成功。</p>
+      <div class="cb-method-card reveal reveal-delay-2">
+        <div class="cb-method-icon" style="background:linear-gradient(135deg,#cffafe,#a5f3fc);color:#0e7490;">📊</div>
+        <h3 class="cb-method-title">数据驱动体系</h3>
+        <p class="cb-method-desc">从数据采集分析到决策优化，建立完整的数据指标体系，用数据指导每一步决策。</p>
+        <ul class="cb-method-list">
+          <li>数据指标体系搭建</li>
+          <li>全域数据打通整合</li>
+          <li>数据分析与洞察</li>
+          <li>数据驱动决策机制</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 数据横幅 - stats-banner-pro 深色渐变 -->
-<section class="stats-banner stats-banner-pro" aria-label="核心数据">
-  <div class="container">
-    <div class="stats-banner-grid">
-      <div class="stats-banner-item">
-        <div class="stats-icon">⏱️</div>
-        <div class="num counter" data-target="15" data-suffix="年+">0</div>
-        <div class="label">行业深耕经验</div>
+<!-- CTA区域 - 跨境品牌增长诊断 -->
+<section class="cb-cta" style="padding:100px 0;background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%);position:relative;overflow:hidden;">
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0%, transparent 50%),radial-gradient(circle at 80% 80%, rgba(255,255,255,0.06) 0%, transparent 50%);pointer-events:none;"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="cb-cta-content reveal" style="text-align:center;max-width:720px;margin:0 auto;">
+      <div class="cb-cta-badge" style="display:inline-block;padding:8px 20px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:50px;font-size:14px;font-weight:600;color:#fff;margin-bottom:24px;">
+        🎯 限本月 · 前20名免费
       </div>
-      <div class="stats-banner-item">
-        <div class="stats-icon">🏢</div>
-        <div class="num counter" data-target="100" data-suffix="+">0</div>
-        <div class="label">服务企业客户</div>
-      </div>
-      <div class="stats-banner-item">
-        <div class="stats-icon">📈</div>
-        <div class="num counter" data-target="300" data-suffix="%+">0</div>
-        <div class="label">平均业绩增长</div>
-      </div>
-      <div class="stats-banner-item">
-        <div class="stats-icon">⭐</div>
-        <div class="num counter" data-target="98" data-suffix="%">0</div>
-        <div class="label">客户满意度</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 底部CTA - cta-section-pro 深色渐变高级感 -->
-<section class="cta-section cta-section-pro" aria-labelledby="cta-title">
-  <div class="container">
-    <div class="cta-content">
-      <div class="cta-badge">🎯 限本月 · 前20名免费</div>
-      <h2 id="cta-title">你的企业，也可以成为下一个成功案例</h2>
-      <p class="cta-desc">
-        预约一次免费的30分钟战略诊断，让我们的资深顾问帮你梳理问题、
-        找出核心瓶颈、给出初步建议——<strong>完全免费，没有任何推销</strong>。
+      <h2 style="font-size:clamp(28px,4.5vw,44px);font-weight:800;margin-bottom:18px;line-height:1.3;color:#fff;">
+        你的品牌也想实现这样的增长吗？
+      </h2>
+      <p style="font-size:17px;color:rgba(255,255,255,0.85);margin-bottom:36px;line-height:1.8;">
+        免费30分钟跨境品牌增长诊断，资深顾问1对1帮你梳理问题、<br class="cb-cta-br">
+        找到增长突破口、给出初步建议——<strong style="color:#fff;">完全免费，没有任何推销</strong>
       </p>
-      <div class="cta-features">
-        <div class="cta-feature">✓ 30分钟1对1深度沟通</div>
-        <div class="cta-feature">✓ 资深顾问亲自诊断</div>
-        <div class="cta-feature">✓ 输出初步改进建议</div>
-        <div class="cta-feature">✓ 全程无推销</div>
+      <div class="cb-cta-features" style="display:flex;justify-content:center;gap:24px;margin-bottom:40px;flex-wrap:wrap;">
+        <div style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:500;">✓ 30分钟1对1深度沟通</div>
+        <div style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:500;">✓ 跨境资深顾问诊断</div>
+        <div style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:500;">✓ 输出增长方案建议</div>
+        <div style="color:rgba(255,255,255,0.9);font-size:14px;font-weight:500;">✓ 全程无推销</div>
       </div>
-      <div class="cta-buttons">
-        <a href="contact.html" class="btn btn-primary btn-xl">
-          <span class="btn-icon">🚀</span>
+      <div class="cb-cta-buttons" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <a href="contact.html" class="cb-cta-btn-primary">
+          <span>🚀</span>
           立即预约免费诊断
-          <span class="btn-arrow">→</span>
+          <span>→</span>
         </a>
-        <a href="tencent://message/?uin=2629676609" class="btn btn-ghost">
-          <span class="btn-icon">📞</span>
+        <a href="tencent://message/?uin=2629676609" class="cb-cta-btn-ghost">
+          <span>📞</span>
           2629676609
         </a>
       </div>
-      <div class="cta-note">
-        <span class="cta-note-icon">⏰</span>
-        本月仅剩 <strong>12</strong> 个免费名额，约满即止
+      <div style="margin-top:28px;font-size:14px;color:rgba(255,255,255,0.7);">
+        <span style="font-size:16px;">⏰</span>
+        本月仅剩 <strong style="color:#fbbf24;font-size:18px;">12</strong> 个免费名额，约满即止
       </div>
     </div>
   </div>
@@ -1068,25 +1702,38 @@
 
 <script>
 (function() {
-  // 案例筛选
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const caseCards = document.querySelectorAll('.case-detail-card');
+  // 跨境案例筛选
+  const cbFilterBtns = document.querySelectorAll('.cb-filter-btn');
+  const cbCaseCards = document.querySelectorAll('.cb-case-card');
   
-  filterBtns.forEach(btn => {
+  cbFilterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      cbFilterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
-      const filter = btn.dataset.filter;
-      caseCards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.style.display = 'block';
+      const filter = btn.dataset.cbFilter;
+      cbCaseCards.forEach(card => {
+        const categories = (card.dataset.cbCategory || '').split(' ');
+        if (filter === 'all' || categories.includes(filter)) {
+          card.style.display = '';
         } else {
           card.style.display = 'none';
         }
       });
     });
   });
+
+  // 滚动入场动画 - reveal类
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  
+  revealElements.forEach(el => revealObserver.observe(el));
 
   // 数字滚动动画
   function animateCounters() {
