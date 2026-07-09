@@ -1471,5 +1471,85 @@ const siteSearchData = [
     "category": "品牌出海",
     "readTime": "18分钟",
     "keywords": "品牌故事,叙事营销,内容营销,品牌传播"
+  },
+  {
+    "title": "品牌出海预算规划完全指南：从10万到1000万，不同预算的打法与投入产出模型",
+    "url": "article-brand-overseas-budget-planning.html",
+    "description": "4个预算档位的出海打法、投入结构、预期回报、风险控制，帮你把每一分钱花在刀刃上",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "出海预算,预算规划,投入产出"
+  },
+  {
+    "title": "DTC独立站品牌增长案例深度解析：从0到千万美金的完整路径拆解",
+    "url": "article-dtc-brand-case-study.html",
+    "description": "3个真实DTC品牌案例深度拆解（家居/美妆/宠物），从0到1的完整路径、关键节点、踩过的坑、可复制方法论",
+    "category": "品牌独立站",
+    "readTime": "24分钟",
+    "keywords": "DTC案例,独立站案例,品牌增长"
+  },
+  {
+    "title": "独立站冷启动90天SOP：从0到第一个10万美金月销的完整执行手册",
+    "url": "article-dtc-90day-sop.html",
+    "description": "90天SOP执行手册：第1-30天建基础，31-60天验证PMF，61-90天放量增长，每天做什么全部列清楚",
+    "category": "品牌独立站",
+    "readTime": "25分钟",
+    "keywords": "独立站SOP,冷启动,执行手册"
+  },
+  {
+    "title": "独立站竞品分析完全指南：从流量到转化的12维度深度拆解方法论",
+    "url": "article-dtc-competitor-analysis.html",
+    "description": "12个维度深度拆解竞品：定位、产品、定价、流量、内容、转化、品牌、技术、物流、客服、私域、团队",
+    "category": "品牌独立站",
+    "readTime": "19分钟",
+    "keywords": "竞品分析,独立站竞品,竞争情报"
+  },
+  {
+    "title": "亚马逊品牌出海案例深度解析：从白牌到品类第一的完整路径",
+    "url": "article-amazon-brand-case-study.html",
+    "description": "3个亚马逊品牌案例深度拆解（3C/家居/健康），从铺货转型到精品到品牌、从0到BSR、可复制方法论",
+    "category": "亚马逊跨境",
+    "readTime": "22分钟",
+    "keywords": "亚马逊案例,品牌案例,BSR案例"
+  },
+  {
+    "title": "亚马逊新品30天打爆SOP：从0到BSR前10的完整执行手册",
+    "url": "article-amazon-30day-launch-sop.html",
+    "description": "30天打爆SOP：第1周启动积累Review，第2周增长找词，第3周冲刺冲排名，第4周维稳优化",
+    "category": "亚马逊跨境",
+    "readTime": "23分钟",
+    "keywords": "亚马逊SOP,新品推广,爆款打造"
+  },
+  {
+    "title": "亚马逊竞品分析完全指南：从选品到运营的10维度深度拆解",
+    "url": "article-amazon-competitor-analysis.html",
+    "description": "10个维度全面拆解竞品：Listing、销量、广告、Review、价格、供应链、品牌、站外、合规、团队",
+    "category": "亚马逊跨境",
+    "readTime": "18分钟",
+    "keywords": "亚马逊竞品,竞品分析,竞争研究"
+  },
+  {
+    "title": "TikTok品牌出海案例深度解析：从0到亿级播放的内容增长密码",
+    "url": "article-tiktok-brand-case-study.html",
+    "description": "3个TikTok品牌案例深度拆解（美妆/时尚/家居），从0到1起号、内容策略、达人合作、变现路径",
+    "category": "TK内容电商",
+    "readTime": "21分钟",
+    "keywords": "TikTok案例,内容电商,品牌出海"
+  },
+  {
+    "title": "TikTok账号冷启动30天SOP：从0到10万粉的完整执行手册",
+    "url": "article-tiktok-30day-launch-sop.html",
+    "description": "30天起号SOP：第1周定位测试，第2周找爆款公式，第3周批量产出，第4周变现启动，每天做什么列清楚",
+    "category": "TK内容电商",
+    "readTime": "22分钟",
+    "keywords": "TikTok,SOP,冷启动,起号方法"
+  },
+  {
+    "title": "全域增长数据看板搭建指南：从流量到利润的全链路指标体系",
+    "url": "article-omnichannel-dashboard.html",
+    "description": "4层指标体系、5大渠道数据打通、6个核心看板模板、工具选型与实施路径，一文讲透全域数据看板搭建",
+    "category": "全域联动",
+    "readTime": "18分钟",
+    "keywords": "数据看板,全域数据,增长指标,数据分析"
   }
 ];
