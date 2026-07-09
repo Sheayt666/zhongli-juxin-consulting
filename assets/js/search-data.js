@@ -1239,5 +1239,141 @@ const siteSearchData = [
     "category": "品牌出海",
     "readTime": "17分钟",
     "keywords": "品牌联名,DTC联名,跨界合作,品牌破圈,联名营销,增长加速器,KOL联名,IP联名"
+  },
+  {
+    "title": "跨境全域增长诊断：8大维度健康度评估",
+    "url": "article-cross-channel-diagnosis.html",
+    "description": "跨境增长遇到瓶颈？8大维度系统诊断方法，精准找到增长卡点",
+    "category": "品牌出海",
+    "readTime": "22分钟",
+    "keywords": "全域诊断,增长瓶颈,8大维度"
+  },
+  {
+    "title": "跨境品牌诊断与增长体系",
+    "url": "article-cross-border-brand-diagnosis.html",
+    "description": "品牌出海增长遇到瓶颈？系统诊断方法，精准找到增长卡点",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "品牌诊断,增长体系,品牌出海"
+  },
+  {
+    "title": "品牌出海财务ROI诊断：投入产出比分析与盈利模型构建",
+    "url": "article-brand-overseas-roi-diagnosis.html",
+    "description": "做品牌出海要花多少钱？多久能回本？7大财务维度诊断，构建可持续盈利模型",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "出海ROI,财务诊断,盈利模型"
+  },
+  {
+    "title": "跨境品类机会诊断：如何找到下一个爆品赛道？10维评估体系",
+    "url": "article-niche-opportunity-diagnosis.html",
+    "description": "跨境选品怎么选？10维评估体系，系统判断品类机会，选对赛道少走弯路",
+    "category": "品牌出海",
+    "readTime": "20分钟",
+    "keywords": "品类诊断,选品方法,爆品赛道"
+  },
+  {
+    "title": "跨境出海团队诊断：你的团队配置，决定了你能走多远",
+    "url": "article-cross-border-team-diagnosis.html",
+    "description": "为什么同样的产品和预算，有的团队做起来有的做不起来？7大维度系统诊断团队",
+    "category": "品牌出海",
+    "readTime": "18分钟",
+    "keywords": "跨境团队,团队诊断,组织架构"
+  },
+  {
+    "title": "品牌出海10大必死误区：90%的人死在第3个，你中了几个？",
+    "url": "article-brand-overseas-mistakes.html",
+    "description": "烧了几百万总结的品牌出海10大致命错误，每一个坑都价值百万",
+    "category": "品牌出海",
+    "readTime": "19分钟",
+    "keywords": "品牌出海避坑,出海误区,失败原因"
+  },
+  {
+    "title": "2026年做品牌出海，晚不晚？什么时候是最佳入场时机？",
+    "url": "article-overseas-timing.html",
+    "description": "现在做跨境还来得及吗？4大趋势分析、4个阶段机会窗口、入场信号自测",
+    "category": "品牌出海",
+    "readTime": "16分钟",
+    "keywords": "出海时机,2026跨境,趋势分析"
+  },
+  {
+    "title": "亚马逊还是独立站？90%的人第一步就选错了",
+    "url": "article-amazon-vs-dtc.html",
+    "description": "想做跨境先做亚马逊还是独立站？5种选亚马逊的情况、5种选独立站的情况",
+    "category": "品牌出海",
+    "readTime": "17分钟",
+    "keywords": "亚马逊vs独立站,渠道选择,跨境创业"
+  },
+  {
+    "title": "做跨境出海到底要多少钱？从5万到500万，6种启动方案全拆解",
+    "url": "article-cross-border-cost.html",
+    "description": "做跨境需要多少钱？6种预算启动方案全拆解，每一分钱花在哪都算清楚",
+    "category": "品牌出海",
+    "readTime": "16分钟",
+    "keywords": "跨境成本,出海预算,启动资金"
+  },
+  {
+    "title": "独立站转化率诊断：12大维度系统优化，从1%到5%的完整提升路径",
+    "url": "article-dtc-cro-diagnosis.html",
+    "description": "独立站转化率低怎么办？12大维度100+检查点系统诊断，系统提升转化率",
+    "category": "品牌独立站",
+    "readTime": "20分钟",
+    "keywords": "转化率诊断,CRO优化,独立站转化"
+  },
+  {
+    "title": "DTC独立站增长诊断：12维度全面评估增长健康度",
+    "url": "article-dtc-growth-diagnosis.html",
+    "description": "独立站增长遇到瓶颈？12大维度系统诊断，精准找到增长卡点",
+    "category": "品牌独立站",
+    "readTime": "18分钟",
+    "keywords": "DTC诊断,增长诊断,独立站运营"
+  },
+  {
+    "title": "独立站9个烧钱陷阱：80%的卖家钱都白花了，你中招了吗？",
+    "url": "article-dtc-money-pitfalls.html",
+    "description": "投了几十万广告费还亏钱？独立站的钱到底烧在哪了？9个最常见的烧钱陷阱",
+    "category": "品牌独立站",
+    "readTime": "18分钟",
+    "keywords": "独立站烧钱,独立站避坑,广告费浪费"
+  },
+  {
+    "title": "亚马逊增长诊断：9大维度全面评估你的亚马逊业务健康度",
+    "url": "article-amazon-growth-diagnosis.html",
+    "description": "亚马逊增长遇到瓶颈怎么办？9大维度60+指标系统诊断方法，精准找到增长瓶颈",
+    "category": "亚马逊跨境",
+    "readTime": "19分钟",
+    "keywords": "亚马逊诊断,亚马逊增长,ACOS优化"
+  },
+  {
+    "title": "亚马逊运营8大死穴：90%的卖家死在这，你踩了几个？",
+    "url": "article-amazon-fatal-mistakes.html",
+    "description": "做亚马逊几年越做越难？8个最致命的运营误区，每一个都可能让你前功尽弃",
+    "category": "亚马逊跨境",
+    "readTime": "18分钟",
+    "keywords": "亚马逊运营误区,亚马逊避坑,运营死穴"
+  },
+  {
+    "title": "TikTok增长诊断：8大维度破解流量密码，从播放量到GMV的完整诊断体系",
+    "url": "article-tiktok-growth-diagnosis.html",
+    "description": "TikTok做不起来怎么办？8大维度系统诊断，找到你的增长卡点",
+    "category": "TK内容电商",
+    "readTime": "19分钟",
+    "keywords": "TikTok诊断,TikTok增长,流量密码"
+  },
+  {
+    "title": "TikTok出海7大坑：90%的人钱都打了水漂，你踩了几个？",
+    "url": "article-tiktok-pitfalls.html",
+    "description": "看着别人TikTok做得好自己一做就踩坑？7个最常见的TikTok出海误区",
+    "category": "TK内容电商",
+    "readTime": "17分钟",
+    "keywords": "TikTok避坑,TikTok误区,短视频出海"
+  },
+  {
+    "title": "跨境供应链6大夺命坑：利润都被吃了，你却不知道",
+    "url": "article-supply-chain-pitfalls.html",
+    "description": "做了一年跨境没赚到钱？利润去哪了？6个最容易被忽略的供应链大坑",
+    "category": "供应链出海",
+    "readTime": "17分钟",
+    "keywords": "供应链坑,跨境供应链,库存积压"
   }
 ];
