@@ -1185,6 +1185,9 @@
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 {
+  transition-delay: 0.4s;
+}
 
 /* ========== 移动端响应式优化 ========== */
 
@@ -1355,7 +1358,7 @@
 }
 .article-index-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 24px;
   position: relative;
   z-index: 1;
