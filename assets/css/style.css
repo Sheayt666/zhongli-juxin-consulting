@@ -1563,3 +1563,28 @@
   color: var(--accent);
   font-weight: 600;
 }
+
+/* 查看更多入口 */
+.index-more {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+.index-more a {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  transition: all 0.3s;
+}
+.index-more a:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
