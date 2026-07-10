@@ -2732,3 +2732,303 @@ body main .article-content .container.article-container,
     padding: 24px 14px 32px !important;
   }
 }
+
+
+/* === 大幅减少留白：文章宽度优化 === */
+/* 文章内容宽度增加到1040px，大幅减少两侧留白 */
+body .article-content .article-container,
+body main .article-content .container.article-container,
+.article-content .article-container {
+  max-width: 1040px !important;
+  padding: 56px 40px 64px !important;
+}
+
+/* 面包屑导航宽度同步增加 */
+.breadcrumb-nav .container {
+  max-width: 1120px !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+/* 相关文章区域宽度增加 */
+.related-section .container {
+  max-width: 1200px !important;
+}
+
+/* CTA区域宽度增加 */
+.cta-section .container {
+  max-width: 720px !important;
+}
+
+/* 优化正文字号和行高，适配更宽的内容区 */
+.article-body {
+  font-size: 17px !important;
+  line-height: 1.95 !important;
+}
+
+.article-body p {
+  margin-bottom: 20px !important;
+}
+
+/* 标题大小适配更宽内容区 */
+.article-title {
+  font-size: clamp(30px, 5vw, 48px) !important;
+  line-height: 1.25 !important;
+  margin-bottom: 20px !important;
+}
+
+.article-subtitle {
+  font-size: 17px !important;
+  line-height: 1.8 !important;
+}
+
+.article-body h2 {
+  font-size: clamp(24px, 3.2vw, 32px) !important;
+  margin: 56px 0 24px !important;
+  line-height: 1.35 !important;
+}
+
+.article-body h3 {
+  font-size: clamp(20px, 2.4vw, 26px) !important;
+  margin: 40px 0 18px !important;
+  line-height: 1.45 !important;
+}
+
+.article-body h4 {
+  font-size: 19px !important;
+  margin: 32px 0 14px !important;
+}
+
+/* 列表样式优化 */
+.article-body ul,
+.article-body ol {
+  margin: 24px 0 !important;
+  padding-left: 32px !important;
+}
+
+.article-body ul li,
+.article-body ol li {
+  margin-bottom: 12px !important;
+  line-height: 1.85 !important;
+}
+
+/* 提示框内边距调整 */
+.intro-box,
+.method-box,
+.highlight-box,
+.summary-box,
+.warning-box {
+  padding: 28px 32px !important;
+  margin: 32px 0 !important;
+  font-size: 16px !important;
+  line-height: 1.85 !important;
+}
+
+/* 文章目录宽度适配 */
+.article-toc {
+  padding: 28px 32px !important;
+  margin: 36px 0 !important;
+}
+
+.article-toc ul li a {
+  font-size: 15px !important;
+  padding: 10px 14px !important;
+}
+
+/* 表格字号适配 */
+.article-table {
+  font-size: 15px !important;
+  margin: 32px 0 !important;
+}
+
+.article-table thead th {
+  padding: 16px 20px !important;
+  font-size: 15px !important;
+}
+
+.article-table tbody td {
+  padding: 14px 20px !important;
+}
+
+/* 文章meta信息 */
+.article-meta {
+  gap: 20px !important;
+  margin-bottom: 24px !important;
+  font-size: 14px !important;
+}
+
+.article-category {
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+}
+
+/* 文章头部间距 */
+.article-header {
+  margin-bottom: 56px !important;
+  padding-bottom: 36px !important;
+}
+
+/* 大屏适配 (1440px+) */
+@media (min-width: 1440px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 1080px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 1160px !important;
+  }
+  
+  .related-section .container {
+    max-width: 1240px !important;
+  }
+}
+
+/* 中屏适配 (1100-1280px) */
+@media (max-width: 1280px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 960px !important;
+    padding: 52px 32px 60px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 1040px !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+  
+  .related-section .container {
+    max-width: 1120px !important;
+  }
+}
+
+/* 平板端 (900-1100px) */
+@media (max-width: 1100px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 880px !important;
+    padding: 48px 28px 56px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 960px !important;
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+  
+  .related-section .container {
+    max-width: 1000px !important;
+  }
+  
+  .article-body {
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+  }
+  
+  .article-title {
+    font-size: clamp(28px, 4.5vw, 40px) !important;
+  }
+  
+  .article-body h2 {
+    font-size: clamp(22px, 3vw, 28px) !important;
+  }
+  
+  .article-body h3 {
+    font-size: clamp(19px, 2.2vw, 24px) !important;
+  }
+}
+
+/* 小平板/大手机 (640-900px) */
+@media (max-width: 900px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 100% !important;
+    padding: 40px 24px 48px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 100% !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  
+  .related-section .container {
+    max-width: 100% !important;
+  }
+  
+  .article-body {
+    font-size: 15.5px !important;
+    line-height: 1.85 !important;
+  }
+}
+
+/* 手机端 (380-640px) */
+@media (max-width: 640px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 32px 16px 40px !important;
+  }
+  
+  .article-body {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+  }
+  
+  .article-body p {
+    margin-bottom: 16px !important;
+  }
+  
+  .article-title {
+    font-size: clamp(24px, 7vw, 32px) !important;
+  }
+  
+  .article-body h2 {
+    font-size: clamp(20px, 5vw, 24px) !important;
+    margin: 40px 0 20px !important;
+  }
+  
+  .article-body h3 {
+    font-size: clamp(18px, 4.5vw, 20px) !important;
+  }
+  
+  .intro-box,
+  .method-box,
+  .highlight-box,
+  .summary-box,
+  .warning-box {
+    padding: 20px 22px !important;
+    margin: 24px 0 !important;
+    font-size: 14.5px !important;
+  }
+  
+  .article-meta {
+    gap: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  .article-header {
+    margin-bottom: 40px !important;
+    padding-bottom: 28px !important;
+  }
+}
+
+/* 小屏手机 (<380px) */
+@media (max-width: 380px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 28px 14px 36px !important;
+  }
+  
+  .article-body {
+    font-size: 14.5px !important;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  body .article-content .article-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}

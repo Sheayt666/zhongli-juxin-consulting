@@ -422,6 +422,115 @@
 }
 </style>
 <style>
+/* cases-width-large-optimized */
+/* 案例页面大幅宽度优化 */
+.cb-page-hero .container {
+  max-width: 1100px !important;
+}
+
+.cb-case-section .container {
+  max-width: 1280px !important;
+}
+
+.cb-filter-section .container {
+  max-width: 1280px !important;
+}
+
+.cb-case-grid {
+  max-width: 1280px !important;
+}
+
+/* 案例卡片内容宽度适配 */
+.cb-case-body {
+  padding: 28px 32px 32px !important;
+}
+
+.cb-case-hero {
+  padding: 36px 32px 28px !important;
+}
+
+.cb-case-metrics {
+  padding: 24px 32px !important;
+  gap: 16px !important;
+}
+
+.cb-metric-val {
+  font-size: 26px !important;
+}
+
+.cb-case-desc {
+  font-size: 15px !important;
+  line-height: 1.85 !important;
+}
+
+.cb-case-title {
+  font-size: 22px !important;
+}
+
+.cb-measure-item {
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+  padding: 10px 0 !important;
+}
+
+/* 响应式 */
+@media (max-width: 1280px) {
+  .cb-case-section .container,
+  .cb-filter-section .container {
+    max-width: 1200px !important;
+  }
+  
+  .cb-case-grid {
+    max-width: 1200px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .cb-case-section .container,
+  .cb-filter-section .container {
+    max-width: 100% !important;
+  }
+  
+  .cb-case-grid {
+    max-width: 100% !important;
+  }
+  
+  .cb-case-body {
+    padding: 24px 28px 28px !important;
+  }
+  
+  .cb-case-hero {
+    padding: 28px 28px 24px !important;
+  }
+  
+  .cb-case-metrics {
+    padding: 20px 28px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .cb-case-body {
+    padding: 20px 22px 24px !important;
+  }
+  
+  .cb-case-hero {
+    padding: 24px 22px 20px !important;
+  }
+  
+  .cb-case-metrics {
+    padding: 16px 22px !important;
+    gap: 10px !important;
+  }
+  
+  .cb-metric-val {
+    font-size: 20px !important;
+  }
+  
+  .cb-case-title {
+    font-size: 19px !important;
+  }
+}
+</style><style>
 /* cases-centering-optimized */
 /* 案例页面内容居中优化 */
 .cb-page-hero .container {
