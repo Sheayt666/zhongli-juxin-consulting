@@ -422,6 +422,120 @@
 }
 </style>
 <style>
+/* cases-align-homepage */
+/* 案例页面宽度对齐首页container */
+.cb-page-hero .container {
+  max-width: 1200px !important;
+}
+
+.cb-case-section .container {
+  max-width: 1200px !important;
+}
+
+.cb-filter-section .container {
+  max-width: 1200px !important;
+}
+
+.cb-case-grid {
+  max-width: 1200px !important;
+}
+
+/* 大屏优化 */
+@media (min-width: 1280px) {
+  .cb-page-hero .container {
+    max-width: 1200px !important;
+  }
+  
+  .cb-case-section .container,
+  .cb-filter-section .container {
+    max-width: 1200px !important;
+  }
+  
+  .cb-case-grid {
+    max-width: 1200px !important;
+  }
+  
+  .cb-case-body {
+    padding: 32px 36px 36px !important;
+  }
+  
+  .cb-case-hero {
+    padding: 40px 36px 32px !important;
+  }
+  
+  .cb-case-metrics {
+    padding: 28px 36px !important;
+    gap: 20px !important;
+  }
+  
+  .cb-metric-val {
+    font-size: 28px !important;
+  }
+  
+  .cb-case-title {
+    font-size: 24px !important;
+  }
+  
+  .cb-case-desc {
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+  }
+  
+  .cb-measure-item {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    padding: 12px 0 !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .cb-case-section .container,
+  .cb-filter-section .container {
+    max-width: 100% !important;
+  }
+  
+  .cb-case-grid {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .cb-case-body {
+    padding: 28px 28px 32px !important;
+  }
+  
+  .cb-case-hero {
+    padding: 32px 28px 26px !important;
+  }
+  
+  .cb-case-metrics {
+    padding: 24px 28px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .cb-case-body {
+    padding: 24px 22px 28px !important;
+  }
+  
+  .cb-case-hero {
+    padding: 28px 22px 22px !important;
+  }
+  
+  .cb-case-metrics {
+    padding: 20px 22px !important;
+    gap: 12px !important;
+  }
+  
+  .cb-metric-val {
+    font-size: 22px !important;
+  }
+  
+  .cb-case-title {
+    font-size: 20px !important;
+  }
+}
+</style><style>
 /* cases-width-large-optimized */
 /* 案例页面大幅宽度优化 */
 .cb-page-hero .container {

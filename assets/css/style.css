@@ -3032,3 +3032,261 @@ body main .article-content .container.article-container,
     padding: 0 !important;
   }
 }
+
+
+/* === 对齐首页宽度：留白最少 === */
+/* 文章内容宽度与首页container一致，两侧留白最少 */
+body .article-content .article-container,
+body main .article-content .container.article-container,
+.article-content .article-container {
+  max-width: 1152px !important;
+  padding: 56px 24px 64px !important;
+}
+
+/* 面包屑导航与首页同宽 */
+.breadcrumb-nav .container {
+  max-width: 1200px !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* 相关文章区域与首页同宽 */
+.related-section .container {
+  max-width: 1200px !important;
+}
+
+/* CTA区域内容宽度 */
+.cta-section .container {
+  max-width: 800px !important;
+}
+
+/* 大宽屏阅读体验优化 */
+@media (min-width: 1280px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 1152px !important;
+    padding: 64px 24px 72px !important;
+  }
+  
+  .article-body {
+    font-size: 17px !important;
+    line-height: 1.95 !important;
+  }
+  
+  .article-body p {
+    margin-bottom: 22px !important;
+  }
+  
+  .article-title {
+    font-size: clamp(32px, 3.5vw, 50px) !important;
+  }
+  
+  .article-body h2 {
+    font-size: clamp(26px, 2.5vw, 34px) !important;
+    margin: 64px 0 28px !important;
+  }
+  
+  .article-body h3 {
+    font-size: clamp(21px, 2vw, 27px) !important;
+    margin: 44px 0 20px !important;
+  }
+  
+  .article-body h4 {
+    font-size: 20px !important;
+    margin: 36px 0 16px !important;
+  }
+  
+  .article-subtitle {
+    font-size: 18px !important;
+    line-height: 1.8 !important;
+  }
+  
+  .article-meta {
+    gap: 24px !important;
+    font-size: 14px !important;
+    margin-bottom: 28px !important;
+  }
+  
+  .article-header {
+    margin-bottom: 64px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .article-toc {
+    padding: 32px 36px !important;
+    margin: 40px 0 !important;
+  }
+  
+  .article-toc ul li a {
+    font-size: 15px !important;
+    padding: 10px 16px !important;
+  }
+  
+  .intro-box,
+  .method-box,
+  .highlight-box,
+  .summary-box,
+  .warning-box {
+    padding: 32px 36px !important;
+    margin: 36px 0 !important;
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+  }
+  
+  .article-table {
+    font-size: 15px !important;
+    margin: 36px 0 !important;
+  }
+  
+  .article-table thead th {
+    padding: 18px 24px !important;
+    font-size: 15px !important;
+  }
+  
+  .article-table tbody td {
+    padding: 16px 24px !important;
+  }
+  
+  .article-body ul,
+  .article-body ol {
+    margin: 28px 0 !important;
+    padding-left: 36px !important;
+  }
+  
+  .article-body ul li,
+  .article-body ol li {
+    margin-bottom: 14px !important;
+    line-height: 1.9 !important;
+  }
+}
+
+/* 1200-1280px */
+@media (min-width: 1200px) and (max-width: 1280px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 1152px !important;
+  }
+}
+
+/* 900-1200px */
+@media (min-width: 900px) and (max-width: 1200px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: calc(100% - 48px) !important;
+    padding: 52px 24px 60px !important;
+  }
+  
+  .article-body {
+    font-size: 16.5px !important;
+    line-height: 1.9 !important;
+  }
+}
+
+/* 640-900px */
+@media (max-width: 900px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 100% !important;
+    padding: 44px 20px 52px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 100% !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  .related-section .container {
+    max-width: 100% !important;
+  }
+  
+  .article-body {
+    font-size: 16px !important;
+    line-height: 1.85 !important;
+  }
+}
+
+/* 380-640px */
+@media (max-width: 640px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 32px 16px 40px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  .article-body {
+    font-size: 15.5px !important;
+    line-height: 1.8 !important;
+  }
+  
+  .article-body p {
+    margin-bottom: 16px !important;
+  }
+  
+  .article-title {
+    font-size: clamp(24px, 7vw, 32px) !important;
+  }
+  
+  .article-body h2 {
+    font-size: clamp(20px, 5.5vw, 24px) !important;
+    margin: 40px 0 20px !important;
+  }
+  
+  .article-body h3 {
+    font-size: clamp(18px, 5vw, 20px) !important;
+  }
+  
+  .article-header {
+    margin-bottom: 40px !important;
+    padding-bottom: 28px !important;
+  }
+  
+  .article-meta {
+    gap: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  .intro-box,
+  .method-box,
+  .highlight-box,
+  .summary-box,
+  .warning-box {
+    padding: 22px 24px !important;
+    margin: 28px 0 !important;
+    font-size: 15px !important;
+  }
+  
+  .article-toc {
+    padding: 20px 22px !important;
+    margin: 28px 0 !important;
+  }
+  
+  .article-toc ul li a {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+}
+
+/* <380px */
+@media (max-width: 380px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 28px 14px 36px !important;
+  }
+  
+  .article-body {
+    font-size: 15px !important;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  body .article-content .article-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
