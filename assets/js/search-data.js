@@ -1552,4 +1552,53 @@ const siteSearchData = [
     "readTime": "18分钟",
     "keywords": "数据看板,全域数据,增长指标,数据分析"
   }
+,
+  {
+    "title": "深圳家居品牌DTC独立站从0到年销8000万的增长密码",
+    "url": "case-dtc-homeware.html",
+    "description": "深圳家居代工厂品牌出海案例，18个月从0做到年销8000万，毛利率从18%提升到42%",
+    "category": "成功案例",
+    "readTime": "15分钟",
+    "keywords": "独立站案例,DTC品牌,家居出海,品牌孵化,增长案例"
+  },
+  {
+    "title": "深圳3C新品牌12个月登顶亚马逊类目Top3",
+    "url": "case-amazon-3c.html",
+    "description": "3C创业团队亚马逊品牌打造案例，12个月月销120万美金，ACOS从45%优化到18%",
+    "category": "成功案例",
+    "readTime": "15分钟",
+    "keywords": "亚马逊案例,3C品牌,ACOS优化,品牌运营,跨境电商"
+  },
+  {
+    "title": "广州美妆品牌TikTok冷启动3个月涨粉百万",
+    "url": "case-tiktok-beauty.html",
+    "description": "美妆品牌TikTok内容电商案例，3个月矩阵涨粉120万，月GMV 50万美金，投放ROI 1:4.2",
+    "category": "成功案例",
+    "readTime": "15分钟",
+    "keywords": "TikTok案例,美妆出海,内容电商,短视频营销,直播带货"
+  },
+  {
+    "title": "义乌传统家居工厂品牌出海，18个月完成从OEM到OBM的跨越",
+    "url": "case-supply-chain-transformation.html",
+    "description": "传统工厂品牌转型案例，18个月自有品牌占比从0到65%，毛利率从15%提升到38%",
+    "category": "成功案例",
+    "readTime": "18分钟",
+    "keywords": "工厂转型,OEM转OBM,供应链出海,品牌转型,传统企业转型"
+  },
+  {
+    "title": "95后创业团队户外品牌出海，首年GMV破3000万",
+    "url": "case-startup-outdoor.html",
+    "description": "95后创业团队户外品牌出海案例，100万启动资金，首年GMV 3200万，独立站占比60%",
+    "category": "成功案例",
+    "readTime": "15分钟",
+    "keywords": "创业出海,户外品牌,众筹启动,DTC品牌,小团队创业"
+  },
+  {
+    "title": "杭州服装品牌独立站+亚马逊+TikTok三驾马车，年销破2亿",
+    "url": "case-omnichannel-fashion.html",
+    "description": "服装品牌全域增长案例，2年时间年销2.1亿，独立站40%+亚马逊35%+TikTok25%渠道结构",
+    "category": "成功案例",
+    "readTime": "18分钟",
+    "keywords": "全域增长,服装品牌,多渠道联动,品牌出海,东方美学"
+  }
 ];
