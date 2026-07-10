@@ -2637,3 +2637,98 @@ body main .article-content .container.article-container,
     padding: 0 !important;
   }
 }
+
+
+/* === 文章宽度优化（减少留白） === */
+/* 增加内容宽度，减少两侧留白，提升阅读舒适度 */
+body .article-content .article-container,
+body main .article-content .container.article-container,
+.article-content .article-container {
+  max-width: 920px !important;
+  padding: 56px 32px 64px !important;
+}
+
+/* 面包屑导航宽度同步调整 */
+.breadcrumb-nav .container {
+  max-width: 980px !important;
+}
+
+/* 相关文章区域宽度调整 */
+.related-section .container {
+  max-width: 1080px !important;
+}
+
+/* 文章正文字号微调，适配更宽的内容区 */
+.article-body {
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.article-body p {
+  margin-bottom: 18px;
+}
+
+/* 标题大小微调 */
+.article-title {
+  font-size: clamp(28px, 4.5vw, 42px);
+}
+
+.article-body h2 {
+  font-size: clamp(22px, 3vw, 28px);
+}
+
+.article-body h3 {
+  font-size: clamp(19px, 2.2vw, 23px);
+}
+
+/* 平板端适配 */
+@media (max-width: 1100px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 860px !important;
+    padding: 48px 28px 56px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 920px !important;
+  }
+  
+  .related-section .container {
+    max-width: 1000px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    max-width: 100% !important;
+    padding: 40px 24px 48px !important;
+  }
+  
+  .breadcrumb-nav .container {
+    max-width: 100% !important;
+  }
+  
+  .related-section .container {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 28px 16px 36px !important;
+  }
+  
+  .article-body {
+    font-size: 15px;
+    line-height: 1.85;
+  }
+}
+
+@media (max-width: 380px) {
+  body .article-content .article-container,
+  body main .article-content .container.article-container {
+    padding: 24px 14px 32px !important;
+  }
+}
