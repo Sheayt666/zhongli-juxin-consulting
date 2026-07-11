@@ -1551,8 +1551,239 @@ const siteSearchData = [
     "category": "全域联动",
     "readTime": "18分钟",
     "keywords": "数据看板,全域数据,增长指标,数据分析"
-  }
-,
+  },
+  {
+    "title": "跨境品牌心智占领与差异化定位深度方法论",
+    "url": "article-brand-overseas-mind-share.html",
+    "description": "从认知科学和消费者行为学角度，系统拆解跨境品牌如何在海外消费者心智中建立差异化认知，涵盖品牌心智模型、品类占位策略、差异化锚点设计、认知壁垒构建等深度方法。",
+    "category": "品牌出海",
+    "readTime": "18分钟",
+    "keywords": "品牌心智,差异化定位,品类占位,品牌认知,跨境品牌定位,品牌差异化"
+  },
+  {
+    "title": "跨境品牌定价权与溢价策略深度解析",
+    "url": "article-brand-overseas-pricing-power.html",
+    "description": "从经济学和消费心理学角度，系统拆解跨境品牌如何建立定价权和溢价能力，涵盖价格锚定策略、价值感知塑造、溢价模型设计、价格阶梯管理、动态定价体系等深度方法。",
+    "category": "品牌出海",
+    "readTime": "16分钟",
+    "keywords": "品牌定价权,品牌溢价,定价策略,价格锚定,溢价模型,跨境品牌定价"
+  },
+  {
+    "title": "跨境品牌危机公关与声誉管理体系",
+    "url": "article-brand-overseas-crisis-pr.html",
+    "description": "系统拆解跨境品牌在海外市场面临的公关危机类型、应对策略和声誉管理体系，涵盖危机预警机制、舆情监控体系、危机响应SOP、声誉修复策略、跨文化公关沟通等深度方法。",
+    "category": "品牌出海",
+    "readTime": "17分钟",
+    "keywords": "品牌危机公关,声誉管理,舆情监控,危机响应,跨境公关,品牌声誉"
+  },
+  {
+    "title": "DTC品牌定价策略与利润模型深度设计",
+    "url": "article-dtc-pricing-profit-model.html",
+    "description": "从消费者心理定价、竞争定价、价值定价三个维度，系统拆解DTC独立站品牌如何设计科学的定价体系和利润模型，涵盖价格弹性分析、锚定效应应用、产品矩阵定价、订阅制定价、动态定价算法等深度方法。",
+    "category": "品牌独立站",
+    "readTime": "18分钟",
+    "keywords": "DTC定价策略,独立站定价,利润模型,价格弹性,订阅制定价,动态定价,品牌溢价"
+  },
+  {
+    "title": "独立站技术架构选型与性能优化体系",
+    "url": "article-dtc-tech-architecture.html",
+    "description": "从技术选型到性能优化，系统拆解DTC独立站的技术架构体系，涵盖Shopify vs WooCommerce vs Headless Commerce选型、CDN配置、Core Web Vitals优化、支付系统集成、数据追踪架构、安全合规等深度方法。",
+    "category": "品牌独立站",
+    "readTime": "16分钟",
+    "keywords": "独立站技术架构,Shopify开发,网站性能优化,Core Web Vitals,Headless Commerce,CDN加速"
+  },
+  {
+    "title": "DTC供应链与履约体系全链路设计",
+    "url": "article-dtc-supply-fulfillment.html",
+    "description": "系统拆解DTC独立站的供应链和履约体系设计，涵盖供应商管理、库存规划、海外仓布局、物流方案选型、退换货逆向物流、履约成本优化、时效提升等深度方法。",
+    "category": "品牌独立站",
+    "readTime": "17分钟",
+    "keywords": "DTC供应链,独立站物流,海外仓,履约体系,逆向物流,库存管理,跨境物流"
+  },
+  {
+    "title": "TikTok Shop东南亚vs美区市场策略深度对比",
+    "url": "article-tiktok-sea-vs-us.html",
+    "description": "系统对比TikTok Shop东南亚六国与美国市场的差异，从市场规模、消费特征、品类机会、竞争格局、运营策略、物流支付、达人生态等维度深度拆解。",
+    "category": "TK内容电商",
+    "readTime": "18分钟",
+    "keywords": "TikTok Shop东南亚,TikTok Shop美区,TikTok跨境电商,TikTok Shop运营,东南亚电商,美国电商"
+  },
+  {
+    "title": "TikTok达人经济生态与建联体系深度解析",
+    "url": "article-tiktok-creator-economy.html",
+    "description": "系统拆解TikTok达人经济的完整生态链，涵盖达人分级体系、佣金结构设计、建联话术模板、达人矩阵搭建、内容共创流程、效果归因分析、长期关系维护等深度方法。",
+    "category": "TK内容电商",
+    "readTime": "17分钟",
+    "keywords": "TikTok达人营销,达人建联,达人矩阵,TikTok KOL,达人佣金,内容共创,达人经济"
+  },
+  {
+    "title": "TikTok直播团队搭建与排品SOP深度指南",
+    "url": "article-tiktok-live-team-sop.html",
+    "description": "从0到1系统拆解TikTok直播带货的团队搭建和排品策略，涵盖直播团队角色配置、主播培训体系、直播间场景搭建、排品逻辑设计、直播话术SOP、数据复盘方法、直播投流策略等深度方法。",
+    "category": "TK内容电商",
+    "readTime": "16分钟",
+    "keywords": "TikTok直播,直播带货,直播团队,排品策略,直播SOP,直播投流,TikTok Live"
+  },
+  {
+    "title": "亚马逊品牌注册与IP保护全体系深度指南",
+    "url": "article-amazon-brand-registry-ip.html",
+    "description": "系统拆解亚马逊品牌注册的完整流程和IP保护策略，涵盖品牌备案条件与流程、商标注册全球布局、版权与专利保护、品牌旗舰店搭建、A+页面与品牌故事、Project Zero与透明计划、侵权投诉与维权策略等深度方法。",
+    "category": "亚马逊跨境",
+    "readTime": "18分钟",
+    "keywords": "亚马逊品牌注册,品牌备案,亚马逊IP保护,商标注册,亚马逊品牌旗舰店,Project Zero,侵权维权"
+  },
+  {
+    "title": "亚马逊库存周转与现金流管理体系",
+    "url": "article-amazon-inventory-cashflow.html",
+    "description": "系统拆解亚马逊卖家的库存管理与现金流体系，涵盖库存规划模型、FBA备货策略、库存周转率优化、滞销库存处理、现金流预测模型、资金周转加速、汇率风险管理、利润核算体系等深度方法。",
+    "category": "亚马逊跨境",
+    "readTime": "17分钟",
+    "keywords": "亚马逊库存管理,FBA备货,库存周转,现金流管理,资金周转,亚马逊利润核算,汇率风险"
+  },
+  {
+    "title": "亚马逊多站点全球化布局策略深度解析",
+    "url": "article-amazon-multi-marketplace.html",
+    "description": "系统拆解亚马逊全球多站点布局策略，涵盖北美/欧洲/日本/中东/印度/拉美六大区域市场分析、多站点选品策略、全球化品牌一致性管理、跨站点物流体系、VAT与税务合规、多站点团队管理、全球定价策略等深度方法。",
+    "category": "亚马逊跨境",
+    "readTime": "16分钟",
+    "keywords": "亚马逊多站点,亚马逊全球化,亚马逊全球开店,多站点运营,亚马逊欧洲站,亚马逊日本站,跨境税务"
+  },
+  {
+    "title": "独立站+亚马逊+TK三引擎驱动品牌增长模型",
+    "url": "article-cross-channel-three-engine.html",
+    "description": "系统拆解独立站、亚马逊、TikTok三大渠道协同驱动的品牌增长模型，涵盖三引擎各自定位与分工、渠道间流量流转设计、数据打通与归因体系、产品矩阵跨渠道布局、定价协调策略、库存共享与分仓体系、品牌一致性管理、三引擎增长飞轮等深度方法。",
+    "category": "全域联动打法",
+    "readTime": "18分钟",
+    "keywords": "三引擎驱动,独立站+亚马逊+TikTok,多渠道协同,全域增长,渠道联动,品牌增长飞轮,跨渠道运营"
+  },
+  {
+    "title": "全域品牌触点管理与体验设计体系",
+    "url": "article-cross-channel-touchpoint-experience.html",
+    "description": "系统拆解跨境品牌的全域触点管理与体验设计体系，涵盖品牌触点全景地图、触点体验标准设计、跨渠道体验一致性管理、用户旅程编排、触点数据采集与分析、体验痛点诊断、NPS与体验指标体系、触点优化迭代等深度方法。",
+    "category": "全域联动打法",
+    "readTime": "17分钟",
+    "keywords": "品牌触点管理,用户体验设计,全域体验,触点地图,用户旅程,NPS,跨渠道体验,品牌体验"
+  },
+  {
+    "title": "跨境品牌生命周期管理与阶段跃迁策略",
+    "url": "article-brand-overseas-lifecycle.html",
+    "description": "从品牌四阶段生命周期出发，系统拆解各阶段核心任务、增长引擎切换、二次增长曲线设计与跨市场异步管理。",
+    "category": "品牌出海",
+    "readTime": "18分钟",
+    "keywords": "品牌生命周期,品牌增长曲线,品牌焕新,品牌阶段管理,跨境品牌增长,品牌二次增长"
+  },
+  {
+    "title": "跨境品牌忠诚度体系与用户终身价值深度设计",
+    "url": "article-brand-overseas-loyalty-system.html",
+    "description": "从LTV经济学角度，系统拆解忠诚度分层模型、积分会员体系、复购触发机制、超级用户培养与KOC生态建设。",
+    "category": "品牌出海",
+    "readTime": "17分钟",
+    "keywords": "品牌忠诚度,用户终身价值,LTV,会员体系,用户复购,品牌社群,超级用户"
+  },
+  {
+    "title": "跨境品牌内容矩阵与全域传播体系深度构建",
+    "url": "article-brand-overseas-content-matrix.html",
+    "description": "从内容战略角度，系统拆解三层内容架构、多平台适配、内容生产工业化、传播节奏设计与UGC/PUGC生态。",
+    "category": "品牌出海",
+    "readTime": "16分钟",
+    "keywords": "品牌内容矩阵,内容战略,全域传播,内容工业化,UGC运营,品牌内容,内容归因"
+  },
+  {
+    "title": "DTC品牌私域社群运营与用户资产深度体系",
+    "url": "article-dtc-private-community.html",
+    "description": "从社群经济和用户资产管理角度，系统拆解社群架构设计、分层运营、裂变机制、超级用户培养与私域变现路径。",
+    "category": "品牌独立站",
+    "readTime": "18分钟",
+    "keywords": "DTC私域,社群运营,用户资产,私域流量,品牌社群,用户裂变,私域变现"
+  },
+  {
+    "title": "独立站数据指标体系与增长分析深度指南",
+    "url": "article-dtc-data-metrics.html",
+    "description": "从数据驱动增长角度，系统拆解北极星指标、AARRR漏斗、LTV/CAC模型、归因模型、Cohort分析与AB测试体系。",
+    "category": "品牌独立站",
+    "readTime": "17分钟",
+    "keywords": "独立站数据,数据指标体系,AARRR,LTV CAC,归因模型,GA4,Cohort分析,AB测试"
+  },
+  {
+    "title": "DTC品牌众筹冷启动与从0到1破局策略",
+    "url": "article-dtc-crowdfunding-launch.html",
+    "description": "从众筹营销角度，系统拆解Kickstarter/Indiegogo选型、产品验证、页面转化、预热Email列表与众筹后流量承接。",
+    "category": "品牌独立站",
+    "readTime": "16分钟",
+    "keywords": "DTC众筹,Kickstarter,Indiegogo,冷启动,众筹营销,品牌破局,众筹预热"
+  },
+  {
+    "title": "TikTok内容工业化生产与爆款工厂体系深度解析",
+    "url": "article-tiktok-content-factory.html",
+    "description": "从内容工业化和爆款复制角度，系统拆解选题漏斗、脚本模板库、拍摄剪辑SOP、素材AB测试与AI辅助内容生产。",
+    "category": "TK内容电商",
+    "readTime": "18分钟",
+    "keywords": "TikTok内容,内容工业化,爆款工厂,内容SOP,脚本模板,素材AB测试,TikTok爆款"
+  },
+  {
+    "title": "TikTok Shop选品策略与供应链适配深度指南",
+    "url": "article-tiktok-product-supply.html",
+    "description": "从选品逻辑和供应链匹配角度，系统拆解爆款选品模型、数据化选品工具、小单快反模式与品控管理体系。",
+    "category": "TK内容电商",
+    "readTime": "17分钟",
+    "keywords": "TikTok选品,TikTok Shop选品,供应链柔性,小单快反,品控管理,选品模型,数据化选品"
+  },
+  {
+    "title": "TikTok算法机制深度拆解与流量获取策略",
+    "url": "article-tiktok-algorithm-mechanics.html",
+    "description": "从算法原理角度，系统拆解FYP推荐逻辑、内容评分维度、流量池晋级机制、冷启动策略与完播率互动率优化。",
+    "category": "TK内容电商",
+    "readTime": "16分钟",
+    "keywords": "TikTok算法,For You Page,流量池,冷启动,完播率,账号权重,TikTok流量获取"
+  },
+  {
+    "title": "亚马逊Deal促销策略与站内外活动深度规划",
+    "url": "article-amazon-deal-promotion.html",
+    "description": "从促销策略角度，系统拆解LD/BD/7DD/Prime专享折扣选型、申报条件、利润测算、站内外联动与排名维护。",
+    "category": "亚马逊跨境",
+    "readTime": "18分钟",
+    "keywords": "亚马逊Deal,Lightning Deal,Best Deal,促销策略,亚马逊Coupon,Prime专享折扣"
+  },
+  {
+    "title": "亚马逊BSR排名机制与流量获取深度策略",
+    "url": "article-amazon-ranking-traffic.html",
+    "description": "从搜索排名角度，系统拆解BSR算法核心因素、A9搜索权重、自然流量获取、PPC优化与关联流量获取。",
+    "category": "亚马逊跨境",
+    "readTime": "17分钟",
+    "keywords": "亚马逊BSR,亚马逊排名,A9算法,自然流量,PPC广告,关联流量,站外引流"
+  },
+  {
+    "title": "亚马逊防跟卖与品牌保护实战体系",
+    "url": "article-amazon-anti-hijack.html",
+    "description": "从品牌保护角度，系统拆解跟卖类型识别、Brand Registry、Project Zero、Test Buy取证、投诉维权SOP与品牌壁垒构建。",
+    "category": "亚马逊跨境",
+    "readTime": "16分钟",
+    "keywords": "亚马逊防跟卖,跟卖投诉,Brand Registry,Project Zero,Test Buy,品牌保护,亚马逊维权"
+  },
+  {
+    "title": "全域内容协同与SEO联动增长深度策略",
+    "url": "article-cross-channel-content-synergy.html",
+    "description": "从内容协同角度，系统拆解跨渠道内容资产复用、SEO与内容营销联动、UGC跨平台传播与关键词全域布局。",
+    "category": "全域联动打法",
+    "readTime": "18分钟",
+    "keywords": "内容协同,SEO联动,全域内容,内容资产复用,UGC传播,关键词布局,内容归因"
+  },
+  {
+    "title": "跨渠道用户资产管理与CDP数据中台深度体系",
+    "url": "article-cross-channel-user-asset.html",
+    "description": "从用户资产管理角度，系统拆解One ID、CDP平台选型、用户画像、跨渠道分群、自动化营销与隐私合规。",
+    "category": "全域联动打法",
+    "readTime": "17分钟",
+    "keywords": "CDP,用户资产管理,跨渠道数据,One ID,用户画像,自动化营销,数据中台,隐私合规"
+  },
+  {
+    "title": "全域竞品情报体系与竞争策略深度设计",
+    "url": "article-cross-channel-competitive-intel.html",
+    "description": "从竞品情报角度，系统拆解竞品识别分级、跨渠道监控、Listing与广告情报、定价追踪、品牌声量与差异化竞争。",
+    "category": "全域联动打法",
+    "readTime": "16分钟",
+    "keywords": "竞品情报,竞品分析,竞争策略,竞品监控,SWOT分析,差异化竞争,品牌声量"
+  },
   {
     "title": "深圳家居品牌DTC独立站从0到年销8000万的增长密码",
     "url": "case-dtc-homeware.html",
