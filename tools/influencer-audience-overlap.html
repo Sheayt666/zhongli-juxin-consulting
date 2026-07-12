@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="受众重合度分析器：多人达人粉丝重叠率+去重触达+最优达人组合，CSS重合度韦恩图，去重触达计算，最优组合推荐。免费达人营销工具。">
+<meta name="keywords" content="受众重合,粉丝重叠,去重触达,达人组合,韦恩图,受众分析,KOL组合">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-audience-overlap.html">
+<title>受众重合度分析器 - 韦恩图·去重触达·最优组合 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.venn-wrap{display:flex;justify-content:center;align-items:center;min-height:340px;position:relative;margin:16px 0}
+.venn-stage{position:relative;width:320px;height:300px}
+.venn-circle{position:absolute;border-radius:50%;display:flex;align-items:flex-start;justify-content:center;padding-top:14px;font-size:13px;font-weight:700;color:#fff;mix-blend-mode:multiply}
+.venn-label{position:absolute;font-size:12px;font-weight:600;color:var(--ink-soft);background:#fff;padding:3px 10px;border-radius:8px;box-shadow:var(--shadow-sm);white-space:nowrap}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:120px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.combo-card{padding:16px 18px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px;background:var(--surface)}
+.combo-card.best{border-color:#10b981;background:linear-gradient(135deg,#ecfdf5,#f0fdf4);box-shadow:0 4px 14px rgba(16,185,129,.15)}
+.combo-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.combo-title{font-weight:700;font-size:15px;color:var(--ink)}
+.combo-badge{font-size:11px;padding:3px 10px;border-radius:20px;background:#10b981;color:#fff;font-weight:600}
+.overlap-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rule-light);font-size:13px}
+.overlap-bar-track{height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden;flex:1;margin:0 12px}
+.overlap-bar-fill{height:100%;border-radius:4px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"受众重合度分析器","description":"多人达人粉丝重叠率+去重触达+最优达人组合，CSS韦恩图与去重触达计算。","url":"https://juxin-consulting.help/tools/influencer-audience-overlap.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="influencer_audience_overlap">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">›</span>
+      <a href="influencer-profile-analyzer.html" class="step">达人画像</a><span class="arrow">›</span>
+      <a href="influencer-commission-calc.html" class="step">佣金计算</a><span class="arrow">›</span>
+      <a href="influencer-roi-tracker.html" class="step">ROI追踪</a><span class="arrow">›</span>
+      <a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">›</span>
+      <a href="influencer-outreach-template.html" class="step">触达模板</a><span class="arrow">›</span>
+      <a href="influencer-content-brief.html" class="step">内容简报</a><span class="arrow">›</span>
+      <a href="influencer-sample-tracker.html" class="step">样品寄送</a><span class="arrow">›</span>
+      <a href="influencer-contract-generator.html" class="step">合同生成</a><span class="arrow">›</span>
+      <a href="influencer-database.html" class="step">达人资源库</a><span class="arrow">›</span>
+      <a href="influencer-content-amplifier.html" class="step">内容放大</a><span class="arrow">›</span>
+      <span class="step current">受众重合</span><span class="arrow">›</span>
+      <a href="affiliate-program-builder.html" class="step">联盟分销</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具</span>
+      <h1>受众重合度<em>分析器</em></h1>
+      <p class="tool-hero-desc">分析多位达人粉丝重叠率，计算去重触达，CSS韦恩图直观呈现重叠关系，基于触达效率与重叠率推荐最优达人组合，避免预算浪费在重复触达上。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 达人受众数据</h2>
+          <p class="calc-form-subtitle">填写3位达人粉丝量及两两重合率，实时计算去重触达与最优组合</p>
+          <div class="fee-rule-box" style="margin-bottom:18px"><h4>👥 达人受众规模</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>达人A 名称</label><input type="text" id="nameA" value="BeautyQueen" oninput="OVL.calc()"></div>
+            <div class="calc-field"><label>达人A 粉丝数</label><input type="number" id="folA" value="120000" min="0" oninput="OVL.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>达人B 名称</label><input type="text" id="nameB" value="FitGuru" oninput="OVL.calc()"></div>
+            <div class="calc-field"><label>达人B 粉丝数</label><input type="number" id="folB" value="95000" min="0" oninput="OVL.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>达人C 名称</label><input type="text" id="nameC" value="StyleIcon" oninput="OVL.calc()"></div>
+            <div class="calc-field"><label>达人C 粉丝数</label><input type="number" id="folC" value="70000" min="0" oninput="OVL.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px"><h4>🔗 两两受众重合率</h4></div>
+          <div class="calc-field"><label>A ∩ B 重合率 <span class="hint">(%)</span></label><input type="range" id="ovAB" value="18" min="0" max="80" oninput="OVL.calc()"><span id="ovABv" style="font-size:13px;color:#4f46e5;font-weight:600">18%</span></div>
+          <div class="calc-field"><label>A ∩ C 重合率 <span class="hint">(%)</span></label><input type="range" id="ovAC" value="12" min="0" max="80" oninput="OVL.calc()"><span id="ovACv" style="font-size:13px;color:#4f46e5;font-weight:600">12%</span></div>
+          <div class="calc-field"><label>B ∩ C 重合率 <span class="hint">(%)</span></label><input type="range" id="ovBC" value="25" min="0" max="80" oninput="OVL.calc()"><span id="ovBCv" style="font-size:13px;color:#4f46e5;font-weight:600">25%</span></div>
+          <div class="calc-field"><label>三人共同重合 A ∩ B ∩ C <span class="hint">(%)</span></label><input type="range" id="ovABC" value="6" min="0" max="50" oninput="OVL.calc()"><span id="ovABCv" style="font-size:13px;color:#4f46e5;font-weight:600">6%</span></div>
+          <div class="fee-rule-box" style="margin-top:20px"><h4>💰 合作成本(用于组合效率)</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>达人A 合作费 <span class="hint">($)</span></label><input type="number" id="costA" value="2000" min="0" oninput="OVL.calc()"></div>
+            <div class="calc-field"><label>达人B 合作费 <span class="hint">($)</span></label><input type="number" id="costB" value="1500" min="0" oninput="OVL.calc()"></div>
+          </div>
+          <div class="calc-field"><label>达人C 合作费 <span class="hint">($)</span></label><input type="number" id="costC" value="1200" min="0" oninput="OVL.calc()"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="vennSection">
+        <h3>🎯 受众重合韦恩图</h3>
+        <div class="venn-wrap"><div class="venn-stage" id="vennStage"></div></div>
+        <div id="vennLegend" style="text-align:center;font-size:12px;color:var(--muted)"></div>
+      </div>
+      <div class="section-block" id="overlapSection">
+        <h3>📊 重合率明细</h3>
+        <div id="overlapDetail"></div>
+      </div>
+      <div class="section-block" id="comboSection">
+        <h3>🏆 最优达人组合推荐</h3>
+        <div id="comboList"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="influencer-content-amplifier.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 内容放大</span></a>
+        <a href="affiliate-program-builder.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">联盟分销 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-audience-overlap.html">受众重合度分析器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var OVL=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function pct(id){return num(id)/100;}
+  function fmt(n){return n>=1000?(n/1000).toFixed(1)+'K':Math.round(n);}
+  function calc(){
+    var nA=$('nameA').value||'A',nB=$('nameB').value||'B',nC=$('nameC').value||'C';
+    var fA=num('folA'),fB=num('folB'),fC=num('folC');
+    var ovAB=pct('ovAB'),ovAC=pct('ovAC'),ovBC=pct('ovBC'),ovABC=pct('ovABC');
+    $('ovABv').textContent=(ovAB*100).toFixed(0)+'%';
+    $('ovACv').textContent=(ovAC*100).toFixed(0)+'%';
+    $('ovBCv').textContent=(ovBC*100).toFixed(0)+'%';
+    $('ovABCv').textContent=(ovABC*100).toFixed(0)+'%';
+    // inclusion-exclusion
+    var rawSum=fA+fB+fC;
+    var pairAB=fA*ovAB,pairAC=fA*ovAC,pairBC=fB*ovBC;
+    var triple=Math.min(fA,fB,fC)*ovABC;
+    var dedup=rawSum-(pairAB+pairAC+pairBC)+triple*3;
+    if(dedup<rawSum*0.4)dedup=rawSum*0.4;
+    var overlapLost=rawSum-dedup;
+    var overlapRate=rawSum>0?overlapLost/rawSum:0;
+    var costA=num('costA'),costB=num('costB'),costC=num('costC');
+    renderResult(dedup,overlapLost,overlapRate,rawSum);
+    renderVenn(nA,nB,nC,fA,fB,fC,ovAB,ovAC,ovBC);
+    renderOverlap(nA,nB,nC,ovAB,ovAC,ovBC,pairAB,pairAC,pairBC);
+    renderCombo(nA,nB,nC,fA,fB,fC,costA,costB,costC,ovAB,ovAC,ovBC,dedup);
+  }
+  function renderResult(dedup,lost,rate,raw){
+    var col=rate>0.3?'#ef4444':rate>0.18?'#f59e0b':'#10b981';
+    $('resultCard').innerHTML='<h3>📊 去重触达结果</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+fmt(dedup)+'</div><div class="rsb-lbl">去重触达</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#64748b">'+fmt(raw)+'</div><div class="rsb-lbl">原始触达合计</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">'+fmt(lost)+'</div><div class="rsb-lbl">重复触达浪费</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">'+(rate*100).toFixed(0)+'%</div><div class="rsb-lbl">重合率</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 去重触达=|A∪B∪C|，按容斥原理计算。重合率>30%说明达人受众高度重叠，建议更换组合；<18%为优质低重叠组合。</div>';
+  }
+  function renderVenn(nA,nB,nC,fA,fB,fC,ovAB,ovAC,ovBC){
+    // scale circle size by follower
+    var max=Math.max(fA,fB,fC,1);
+    var rA=Math.sqrt(fA/max)*95+30,rB=Math.sqrt(fB/max)*95+30,rC=Math.sqrt(fC/max)*95+30;
+    // positions for 3-circle venn
+    var cx=160,cy=150;
+    var dAB=rA*0.5+rB*0.5- (ovAB*60);
+    var posA={x:cx-dAB*0.5,y:cy-30};
+    var posB={x:cx+dAB*0.5,y:cy-30};
+    var posC={x:cx,y:cy+rC*0.4};
+    $('vennStage').innerHTML=
+      '<div class="venn-circle" style="left:'+(posA.x-rA)+'px;top:'+(posA.y-rA)+'px;width:'+(rA*2)+'px;height:'+(rA*2)+'px;background:rgba(79,70,229,.55)">'+nA+'<br><small>'+fmt(fA)+'</small></div>'+
+      '<div class="venn-circle" style="left:'+(posB.x-rB)+'px;top:'+(posB.y-rB)+'px;width:'+(rB*2)+'px;height:'+(rB*2)+'px;background:rgba(16,185,129,.55)">'+nB+'<br><small>'+fmt(fB)+'</small></div>'+
+      '<div class="venn-circle" style="left:'+(posC.x-rC)+'px;top:'+(posC.y-rC)+'px;width:'+(rC*2)+'px;height:'+(rC*2)+'px;background:rgba(245,158,11,.55)">'+nC+'<br><small>'+fmt(fC)+'</small></div>';
+    $('vennLegend').innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#4f46e5;margin-right:4px;vertical-align:middle"></span>'+nA+' &nbsp; '+
+      '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#10b981;margin-right:4px;vertical-align:middle"></span>'+nB+' &nbsp; '+
+      '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;margin-right:4px;vertical-align:middle"></span>'+nC+' &nbsp; 圆面积∝粉丝量，重叠区域∝重合率';
+  }
+  function renderOverlap(nA,nB,nC,ovAB,ovAC,ovBC,pAB,pAC,pBC){
+    var items=[
+      {pair:nA+' ∩ '+nB,rate:ovAB,count:pAB,col:'#4f46e5'},
+      {pair:nA+' ∩ '+nC,rate:ovAC,count:pAC,col:'#10b981'},
+      {pair:nB+' ∩ '+nC,rate:ovBC,count:pBC,col:'#f59e0b'}
+    ];
+    $('overlapDetail').innerHTML=items.map(function(i){
+      var sev=i.rate>0.3?'<span style="color:#ef4444;font-weight:600">高重叠</span>':i.rate>0.18?'<span style="color:#f59e0b;font-weight:600">中重叠</span>':'<span style="color:#10b981;font-weight:600">低重叠</span>';
+      return '<div class="overlap-row"><span style="font-weight:600;min-width:120px">'+i.pair+'</span>'+
+        '<div class="overlap-bar-track"><div class="overlap-bar-fill" style="width:'+(i.rate/0.8*100)+'%;background:'+i.col+'"></div></div>'+
+        '<span style="min-width:80px;text-align:right">'+(i.rate*100).toFixed(0)+'% ('+fmt(i.count)+'人)</span>'+
+        '<span style="min-width:70px;text-align:right">'+sev+'</span></div>';
+    }).join('');
+  }
+  function renderCombo(nA,nB,nC,fA,fB,fC,cA,cB,cC,ovAB,ovAC,ovBC,totalDedup){
+    var combos=[
+      {names:[nA],fol:[fA],cost:cA},
+      {names:[nB],fol:[fB],cost:cB},
+      {names:[nC],fol:[fC],cost:cC},
+      {names:[nA,nB],fol:[fA,fB],cost:cA+cB,ov:ovAB},
+      {names:[nA,nC],fol:[fA,fC],cost:cA+cC,ov:ovAC},
+      {names:[nB,nC],fol:[fB,fC],cost:cB+cC,ov:ovBC},
+      {names:[nA,nB,nC],fol:[fA,fB,fC],cost:cA+cB+cC,ov:(ovAB+ovAC+ovBC)/3}
+    ];
+    combos.forEach(function(c){
+      var raw=c.fol.reduce(function(s,f){return s+f;},0);
+      if(c.names.length===1){c.reach=raw;c.eff=c.cost>0?c.reach/c.cost:0;}
+      else if(c.names.length===2){c.reach=raw*(1-c.ov*0.7);c.eff=c.cost>0?c.reach/c.cost:0;}
+      else{c.reach=totalDedup;c.eff=c.cost>0?c.reach/c.cost:0;}
+    });
+    combos.sort(function(a,b){return b.eff-a.eff;});
+    var best=combos[0];
+    $('comboList').innerHTML=combos.map(function(c,idx){
+      var isBest=idx===0;
+      return '<div class="combo-card'+(isBest?' best':'')+'">'+
+        (isBest?'<span class="combo-badge" style="position:absolute;top:-8px;right:12px">最优组合</span>':'')+
+        '<div class="combo-head"><span class="combo-title">'+c.names.join(' + ')+'</span><span style="font-size:13px;color:'+(isBest?'#10b981':'var(--muted)')+';font-weight:600">触达效率 '+fmt(c.eff)+'人/$</span></div>'+
+        '<div style="font-size:13px;color:var(--ink-soft)">去重触达：<strong>'+fmt(c.reach)+'</strong> 人 · 总成本：<strong>$'+c.cost+'</strong> · 单次触达成本：<strong>$'+(c.cost>0?(c.cost/c.reach).toFixed(4):0)+'</strong></div>'+
+        '</div>';
+    }).join('');
+  }
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',OVL.init);}else{OVL.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

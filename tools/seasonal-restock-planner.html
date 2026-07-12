@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="旺季补货规划器：Prime Day/黑五/圣诞备货量+时间节点+资金占用分析，CSS旺季日历与备货计划表。免费补货全链路工具。">
+<meta name="keywords" content="旺季补货,Prime Day,黑五,圣诞备货,旺季日历,备货计划,资金占用">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/seasonal-restock-planner.html">
+<title>旺季补货规划器 - Prime Day·黑五·圣诞备货 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:20px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.season-calendar{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:16px}
+.season-month{padding:8px 4px;border-radius:8px;text-align:center;font-size:11px;font-weight:600;min-height:60px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.season-normal{background:var(--bg-soft);color:var(--muted)}
+.season-peak{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e}
+.season-hype{background:linear-gradient(135deg,#fecaca,#fca5a5);color:#991b1b}
+.season-month .sm-name{font-size:12px}
+.season-month .sm-event{font-size:10px;font-weight:700}
+.restock-plan-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.restock-plan-table th{background:#4f46e5;color:#fff;padding:10px;text-align:left;font-weight:600;border-radius:6px 6px 0 0}
+.restock-plan-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.restock-plan-table tr:hover td{background:var(--bg-soft)}
+.event-card{border-radius:12px;padding:16px;margin-bottom:12px;border-left:4px solid;transition:all .2s}
+.event-card:hover{box-shadow:var(--shadow-md)}
+.event-card.prime{border-color:#f59e0b;background:#fffbeb}
+.event-card.bf{border-color:#ef4444;background:#fef2f2}
+.event-card.christmas{border-color:#10b981;background:#f0fdf4}
+.event-card .ec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.event-card .ec-name{font-size:15px;font-weight:700}
+.event-card .ec-date{font-size:12px;color:var(--muted)}
+.event-card .ec-detail{display:flex;gap:16px;flex-wrap:wrap;font-size:13px}
+.event-card .ec-detail span{color:var(--muted)}
+.event-card .ec-detail strong{color:var(--ink)}
+.capital-bar{display:flex;height:24px;border-radius:6px;overflow:hidden;margin-top:8px}
+.capital-segment{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"旺季补货规划器","description":"Prime Day/黑五/圣诞备货量+时间节点+资金占用分析。","url":"https://juxin-consulting.help/tools/seasonal-restock-planner.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="seasonal_restock_planner">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📦</span><span class="workflow-name">补货全链路工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="restock-simulator.html" class="step">补货模拟</a><span class="arrow">→</span>
+      <a href="multi-channel-restock.html" class="step">多渠道补货</a><span class="arrow">→</span>
+      <a href="overseas-warehouse-compare.html" class="step">海外仓对比</a><span class="arrow">→</span>
+      <a href="fnsku-generator.html" class="step">FNSKU生成</a><span class="arrow">→</span>
+      <a href="sta-packing-calc.html" class="step">STA装箱</a><span class="arrow">→</span>
+      <a href="first-mile-cost-allocator.html" class="step">头程分摊</a><span class="arrow">→</span>
+      <a href="awd-restock-calc.html" class="step">AWD补货</a><span class="arrow">→</span>
+      <a href="inventory-audit.html" class="step">库存盘点</a><span class="arrow">→</span>
+      <a href="stockout-cost-calc.html" class="step">断货成本</a><span class="arrow">→</span>
+      <a href="overstock-alert.html" class="step">滞销预警</a><span class="arrow">→</span>
+      <a href="lead-time-forecaster.html" class="step">交期预测</a><span class="arrow">→</span>
+      <span class="step current">旺季补货</span><span class="arrow">→</span>
+      <a href="restock-alert-system.html" class="step">补货预警</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📦 补货全链路工具 · 标准版</span>
+      <h1>旺季<em>补货规划器</em></h1>
+      <p class="tool-hero-desc">针对Prime Day、黑五网一、圣诞等旺季进行备货量计算，时间节点倒推，资金占用分析，CSS旺季日历可视化。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 基础参数</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>日均销量（件）</label><input type="number" id="dailySales" value="100" oninput="SRP.calc()"></div>
+            <div class="calc-field"><label>产品成本（元/件）</label><input type="number" id="unitCost" value="35" oninput="SRP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>交货周期（天）</label><input type="number" id="leadTime" value="40" oninput="SRP.calc()"></div>
+            <div class="calc-field"><label>安全库存天数</label><input type="number" id="safetyDays" value="7" oninput="SRP.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>🔥 旺季倍率配置</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>Prime Day销量倍率</label><input type="number" id="primeMult" value="5" step="0.5" oninput="SRP.calc()"></div>
+            <div class="calc-field"><label>Prime Day持续天数</label><input type="number" id="primeDays" value="2" oninput="SRP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>黑五网一销量倍率</label><input type="number" id="bfMult" value="8" step="0.5" oninput="SRP.calc()"></div>
+            <div class="calc-field"><label>黑五网一持续天数</label><input type="number" id="bfDays" value="5" oninput="SRP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>圣诞销量倍率</label><input type="number" id="xmasMult" value="4" step="0.5" oninput="SRP.calc()"></div>
+            <div class="calc-field"><label>圣诞持续天数</label><input type="number" id="xmasDays" value="14" oninput="SRP.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 旺季备货汇总</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <div class="capital-bar" id="capitalBar"></div>
+      </div>
+
+      <div class="section-block" id="calendarSection">
+        <h3>📅 旺季日历</h3>
+        <div class="season-calendar" id="seasonCalendar"></div>
+      </div>
+
+      <div class="section-block" id="eventsSection">
+        <h3>🎯 旺季活动详情</h3>
+        <div id="eventCards"></div>
+      </div>
+
+      <div class="section-block" id="planSection">
+        <h3>📋 备货计划表</h3>
+        <table class="restock-plan-table" id="planTable"></table>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="lead-time-forecaster.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 交期预测</span></a>
+        <a href="restock-alert-system.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">补货预警 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="seasonal-restock-planner.html">旺季补货</a></li><li><a href="lead-time-forecaster.html">交期预测</a></li><li><a href="restock-alert-system.html">补货预警</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var SRP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function fmt(n){return Math.round(n).toLocaleString('zh-CN');}
+  function calc(){
+    var daily=v('dailySales'),cost=v('unitCost'),lead=v('leadTime'),safety=v('safetyDays');
+    var primeM=v('primeMult'),primeD=v('primeDays'),bfM=v('bfMult'),bfD=v('bfDays'),xmasM=v('xmasMult'),xmasD=v('xmasDays');
+    var events=[
+      {name:'Prime Day',date:'7月',mult:primeM,days:primeD,cls:'prime',color:'#f59e0b',orderDate:'5月中旬',deliveryDate:'6月底'},
+      {name:'黑五网一',date:'11月',mult:bfM,days:bfD,cls:'bf',color:'#ef4444',orderDate:'9月中旬',deliveryDate:'10月底'},
+      {name:'圣诞季',date:'12月',mult:xmasM,days:xmasD,cls:'christmas',color:'#10b981',orderDate:'10月初',deliveryDate:'11月初'}
+    ];
+    events.forEach(function(e){
+      e.qty=Math.round(daily*e.mult*e.days+daily*safety);
+      e.capital=Math.round(e.qty*cost);
+      e.totalDays=Math.ceil(lead+safety);
+    });
+    var totalQty=events.reduce(function(s,e){return s+e.qty;},0);
+    var totalCapital=events.reduce(function(s,e){return s+e.capital;},0);
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">旺季总备货量</div><div class="rh-value">'+fmt(totalQty)+'件</div></div>'+
+      '<div class="result-detail"><span>总资金占用</span><strong>¥'+fmt(totalCapital)+'</strong></div>'+
+      events.map(function(e){return '<div class="result-detail"><span>'+e.name+'</span><strong>'+fmt(e.qty)+'件 / ¥'+fmt(e.capital)+'</strong></div>';}).join('');
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+fmt(totalQty)+'</div><div class="rsb-lbl">总备货量（件）</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">¥'+fmt(totalCapital/10000)+'</div><div class="rsb-lbl">总资金（万元）</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">3</div><div class="rsb-lbl">旺季活动数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+lead+'</div><div class="rsb-lbl">交货周期（天）</div></div>';
+    var capHtml='';
+    events.forEach(function(e){
+      var pct=totalCapital>0?(e.capital/totalCapital*100):0;
+      capHtml+='<div class="capital-segment" style="width:'+pct+'%;background:'+e.color+'">'+e.name+' '+pct.toFixed(0)+'%</div>';
+    });
+    $('capitalBar').innerHTML=capHtml;
+    var months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    var monthEvents={6:{event:'Prime Day',cls:'season-hype'},4:{event:'PD备货',cls:'season-peak'},5:{event:'PD发货',cls:'season-peak'},10:{event:'黑五网一',cls:'season-hype'},8:{event:'BF备货',cls:'season-peak'},9:{event:'BF发货',cls:'season-peak'},11:{event:'圣诞备货',cls:'season-peak'},11.5:{event:'圣诞季',cls:'season-hype'}};
+    var calHtml='';
+    for(var m=0;m<12;m++){
+      var ev=monthEvents[m];
+      if(m===6)calHtml+='<div class="season-month season-hype"><div class="sm-name">'+months[m]+'</div><div class="sm-event">Prime Day</div></div>';
+      else if(m===10)calHtml+='<div class="season-month season-hype"><div class="sm-name">'+months[m]+'</div><div class="sm-event">黑五网一</div></div>';
+      else if(m===11)calHtml+='<div class="season-month season-hype"><div class="sm-name">'+months[m]+'</div><div class="sm-event">圣诞季</div></div>';
+      else if(m===4||m===5)calHtml+='<div class="season-month season-peak"><div class="sm-name">'+months[m]+'</div><div class="sm-event">PD备货发货</div></div>';
+      else if(m===8||m===9)calHtml+='<div class="season-month season-peak"><div class="sm-name">'+months[m]+'</div><div class="sm-event">BF备货发货</div></div>';
+      else if(m===7)calHtml+='<div class="season-month season-peak"><div class="sm-name">'+months[m]+'</div><div class="sm-event">圣诞备货</div></div>';
+      else calHtml+='<div class="season-month season-normal"><div class="sm-name">'+months[m]+'</div></div>';
+    }
+    $('seasonCalendar').innerHTML=calHtml;
+    $('eventCards').innerHTML=events.map(function(e){
+      return '<div class="event-card '+e.cls+'"><div class="ec-header"><div class="ec-name">'+e.name+'</div><div class="ec-date">'+e.date+'</div></div><div class="ec-detail"><span>销量倍率: <strong>'+e.mult+'x</strong></span><span>持续天数: <strong>'+e.days+'天</strong></span><span>备货量: <strong>'+fmt(e.qty)+'件</strong></span><span>资金占用: <strong>¥'+fmt(e.capital)+'</strong></span><span>下单时间: <strong>'+e.orderDate+'</strong></span><span>到货时间: <strong>'+e.deliveryDate+'</strong></span></div></div>';
+    }).join('');
+    $('planTable').innerHTML=
+      '<tr><th>旺季活动</th><th>时间</th><th>销量倍率</th><th>持续天数</th><th>日均销量</th><th>备货量</th><th>资金占用</th><th>最晚下单日</th><th>预计到货日</th></tr>'+
+      events.map(function(e){
+        var dailyEvent=daily*e.mult;
+        return '<tr><td><strong>'+e.name+'</strong></td><td>'+e.date+'</td><td>'+e.mult+'x</td><td>'+e.days+'天</td><td>'+fmt(dailyEvent)+'</td><td><strong>'+fmt(e.qty)+'</strong></td><td>¥'+fmt(e.capital)+'</td><td>'+e.orderDate+'</td><td>'+e.deliveryDate+'</td></tr>';
+      }).join('')+
+      '<tr style="background:#e0e7ff;font-weight:700"><td colspan="5">合计</td><td>'+fmt(totalQty)+'</td><td>¥'+fmt(totalCapital)+'</td><td colspan="2">-</td></tr>';
+  }
+  return{calc:calc};
+})();
+SRP.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

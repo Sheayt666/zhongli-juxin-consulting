@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="差评实时预警系统：输入ASIN和评论监控数据，生成差评即时预警卡片，订单信息匹配建议，快速响应SOP和CSS告警面板。">
+<title>差评实时预警系统 - 跨境电商评论监控工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.alert-panel{background:linear-gradient(135deg,var(--red-bg),#fee2e2);border:2px solid var(--red);border-radius:var(--radius-lg);padding:24px;margin-bottom:16px}
+.alert-panel.high{background:linear-gradient(135deg,var(--red-bg),#fee2e2);border-color:var(--red)}
+.alert-panel.medium{background:linear-gradient(135deg,var(--gold-bg),#fef3c7);border-color:var(--gold)}
+.alert-panel.low{background:linear-gradient(135deg,var(--accent-bg),#e0e7ff);border-color:var(--accent)}
+.alert-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.alert-icon{font-size:36px}
+.alert-title{font-size:18px;font-weight:800}
+.alert-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.alert-content{font-size:14px;color:var(--ink-soft);line-height:1.7;padding:12px;background:rgba(255,255,255,.7);border-radius:var(--radius-sm);margin-bottom:12px}
+.sop-list{list-style:none;padding:0;counter-reset:sop}
+.sop-list li{padding:12px 12px 12px 48px;position:relative;font-size:14px;border-bottom:1px solid var(--rule-light);counter-increment:sop}
+.sop-list li::before{content:counter(sop);position:absolute;left:12px;top:12px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sop-list li:last-child{border-bottom:none}
+.review-input-row{display:grid;grid-template-columns:1fr 1fr 1fr 2fr;gap:8px;margin-bottom:8px;align-items:center}
+.review-input-row input,.review-input-row select{padding:8px 10px;border:1px solid var(--rule);border-radius:6px;font-size:13px}
+.match-card{padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);margin-bottom:8px;font-size:13px}
+.match-card .mc-label{font-weight:600;color:var(--ink);margin-bottom:4px}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">差评实时预警系统</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">🚨 客户运营工具</span><h1>差评实时<em>预警系统</em></h1><p class="tool-hero-desc">实时监控差评动态，生成预警卡片，匹配订单信息，提供快速响应SOP</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">👥</span><span class="workflow-name">客户运营工作流</span></div><div class="workflow-nav-steps"><a href="variation-strategy.html" class="step">变体策略</a><span class="arrow">→</span><a href="listing-split-test.html" class="step">Listing测试</a><span class="arrow">→</span><a href="refund-rate-calculator.html" class="step">退款率</a><span class="arrow">→</span><a href="customer-ltv.html" class="step">客户LTV</a><span class="arrow">→</span><a href="review-response-generator.html" class="step">评论回复</a><span class="arrow">→</span><a href="review-request-automation.html" class="step">索评自动化</a><span class="arrow">→</span><a href="negative-review-alert-system.html" class="step current">差评预警</a><span class="arrow">→</span><a href="buyer-message-manager.html" class="step">站内信</a><span class="arrow">→</span><a href="feedback-management-system.html" class="step">Feedback管理</a><span class="arrow">→</span><a href="customer-journey-mapper.html" class="step">客户旅程</a><span class="arrow">→</span><a href="review-velocity-tracker.html" class="step">评论增速</a><span class="arrow">→</span><a href="post-purchase-engagement.html" class="step">购后互动</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>🚨 输入评论监控数据</h2>
+<div class="form-row">
+<div class="form-group"><label>ASIN</label><input type="text" id="asin" value="B08XYZ1234" oninput="checkAlerts()"></div>
+<div class="form-group"><label>当前评分</label><input type="number" id="currentRating" value="4.2" step="0.1" min="1" max="5" oninput="checkAlerts()"></div>
+</div>
+<div class="form-group"><label>评论监控数据 (每行: 评分,日期,评论内容摘要)</label><textarea id="reviewData" rows="6" oninput="checkAlerts()">1,2026-07-10,产品用了一周就坏了,质量很差
+2,2026-07-08,与描述不符,尺寸偏小
+5,2026-07-05,非常好用,推荐购买
+1,2026-07-03,收到时已经损坏,包装太差
+3,2026-06-28,一般般,性价比还行</textarea></div>
+<div class="form-group"><label>差评阈值 (≤几星触发预警)</label><select id="threshold" onchange="checkAlerts()"><option value="2">≤2星</option><option value="3">≤3星</option><option value="1">≤1星</option></select></div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="review-request-automation.html" class="related-card"><span class="ricon">⭐</span><span class="rtext">索评自动化</span></a><a href="review-velocity-tracker.html" class="related-card"><span class="ricon">📈</span><span class="rtext">评论增速追踪</span></a><a href="feedback-management-system.html" class="related-card"><span class="ricon">📊</span><span class="rtext">Feedback管理</span></a><a href="review-response-generator.html" class="related-card"><span class="ricon">💬</span><span class="rtext">评论回复生成</span></a><a href="buyer-message-manager.html" class="related-card"><span class="ricon">📨</span><span class="rtext">站内信管理</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+function checkAlerts(){
+var asin=document.getElementById('asin').value.trim();
+var rating=parseFloat(document.getElementById('currentRating').value)||0;
+var reviewText=document.getElementById('reviewData').value.trim();
+var threshold=parseInt(document.getElementById('threshold').value)||2;
+if(!asin||!reviewText){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">🚨</div><p>输入ASIN和评论监控数据<br>查看差评预警与响应SOP</p></div>';return;}
+var reviews=[];
+reviewText.split('\n').forEach(function(line){
+line=line.trim();
+if(!line)return;
+var parts=line.split(',');
+if(parts.length>=3){
+reviews.push({stars:parseInt(parts[0])||0,date:parts[1].trim(),content:parts.slice(2).join(',').trim()});
+}
+});
+var negativeReviews=reviews.filter(function(r){return r.stars<=threshold;});
+var positiveReviews=reviews.filter(function(r){return r.stars>=4;});
+var neutralReviews=reviews.filter(function(r){return r.stars>threshold&&r.stars<4;});
+var avgRating=reviews.length>0?(reviews.reduce(function(s,r){return s+r.stars;},0)/reviews.length).toFixed(1):0;
+var negativeRate=reviews.length>0?Math.round(negativeReviews.length/reviews.length*100):0;
+var alertLevel=negativeRate>=40?'high':negativeRate>=20?'medium':'low';
+var alertColor=alertLevel==='high'?'red':alertLevel==='medium'?'gold':'accent';
+var html='';
+negativeReviews.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+negativeReviews.forEach(function(r){
+var daysAgo=Math.floor((new Date('2026-07-12')-new Date(r.date))/(1000*60*60*24));
+var urgency=daysAgo<=1?'high':daysAgo<=3?'medium':'low';
+html+='<div class="alert-panel '+urgency+'">';
+html+='<div class="alert-header"><div class="alert-icon">'+(r.stars<=1?'🔴':'🟡')+'</div><div><div class="alert-title">'+r.stars+'星差评预警</div><div class="alert-meta">ASIN: '+asin+' | 日期: '+r.date+' | '+daysAgo+'天前</div></div></div>';
+html+='<div class="alert-content">"'+r.content+'"</div>';
+html+='<div class="match-card"><div class="mc-label">🔍 订单匹配建议</div>';
+html+='查找 '+r.date+' 前后3天内的订单记录，匹配买家信息。检查该订单是否有物流异常、包装破损或产品批次问题。</div>';
+html+='<div class="match-card"><div class="mc-label">⚡ 快速响应SOP</div>';
+html+='<ol class="sop-list" style="padding-left:0;list-style:none;counter-reset:sop">';
+html+='<li>24小时内公开回复评论(专业态度，不争辩)</li>';
+html+='<li>通过订单号查找买家，私信沟通解决方案</li>';
+html+='<li>提供退换货或部分退款补偿(合规范围内)</li>';
+html+='<li>记录问题根因(质量/物流/描述不符)</li>';
+html+='<li>联系供应商/物流排查系统性问题</li>';
+html+='<li>优化Listing描述或图片避免误导</li>';
+html+='<li>若涉及恶意差评，收集证据向亚马逊举报</li>';
+html+='</ol></div>';
+html+='</div>';
+});
+html+='<div class="result-card"><h3 style="font-size:18px;font-weight:700;margin-bottom:16px">📊 评论健康度分析</h3>';
+html+='<div class="stat-grid">';
+html+='<div class="stat-card"><div class="sc-num '+alertColor+'">'+avgRating+'</div><div class="sc-label">平均评分</div></div>';
+html+='<div class="stat-card"><div class="sc-num red">'+negativeReviews.length+'</div><div class="sc-label">差评数(≤'+threshold+'星)</div></div>';
+html+='<div class="stat-card"><div class="sc-num green">'+positiveReviews.length+'</div><div class="sc-label">好评数(≥4星)</div></div>';
+html+='<div class="stat-card"><div class="sc-num '+alertColor+'">'+negativeRate+'%</div><div class="sc-label">差评率</div></div>';
+html+='</div>';
+html+='<div style="padding:16px;border-radius:var(--radius-md);background:'+(alertLevel==='high'?'var(--red-bg)':alertLevel==='medium'?'var(--gold-bg)':'var(--green-bg)')+';border:1px solid '+(alertLevel==='high'?'#fecaca':alertLevel==='medium'?'#fde68a':'#d1fae5')+'">';
+html+='<h4 style="font-size:14px;font-weight:700;color:'+(alertLevel==='high'?'var(--red)':alertLevel==='medium'?'var(--gold)':'var(--green)')+';margin-bottom:8px">'+(alertLevel==='high'?'🔴 高风险 - 差评率≥40%，需立即干预':alertLevel==='medium'?'🟡 中风险 - 差评率20-40%，密切关注':'🟢 低风险 - 差评率<20%，状态正常')+'</h4>';
+html+='<p style="font-size:13px;color:var(--ink-soft)">'+(alertLevel==='high'?'差评率过高，可能影响转化率和BSR排名。建议立即启动差评响应SOP，排查产品质量问题。':alertLevel==='medium'?'差评率偏高，建议关注趋势变化。提前准备响应模板，避免恶化。':'评论状态健康，继续保持产品质量和客户服务。')+'</p>';
+html+='</div>';
+html+='<div style="margin-top:16px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);font-size:13px;color:var(--muted)">💡 建议：差评响应黄金时间为24小时内。公开回复展示专业态度，私信解决实际问题。差评率>30%将显著影响转化率，需从源头(产品质量/描述准确性/物流)解决问题。</div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var alertData=JSON.parse(localStorage.getItem('jx_neg_review_alerts')||'[]');
+alertData.unshift({asin:asin,level:alertLevel,negativeCount:negativeReviews.length,time:Date.now()});
+if(alertData.length>20)alertData=alertData.slice(0,20);
+localStorage.setItem('jx_neg_review_alerts',JSON.stringify(alertData));
+}
+checkAlerts();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="品牌搜索量追踪器：品牌词12月搜索量，搜索趋势SVG折线图，品牌认知度评分，竞品品牌对比。">
+<title>品牌搜索量追踪器 - SVG折线图·认知度评分·竞品对比 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.month-input{display:flex;flex-direction:column;gap:4px}.month-input label{font-size:11px;font-weight:600;color:var(--muted)}.month-input input{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px;font-family:inherit}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.chart-container{width:100%;overflow-x:auto}.comp-table{width:100%;border-collapse:collapse;font-size:13px}.comp-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px}.comp-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}.comp-table input{width:70px;padding:5px 8px;border:1px solid var(--rule);border-radius:6px;font-size:12px;font-family:inherit}
+.score-ring{display:flex;align-items:center;gap:24px;justify-content:center}.ring-wrap{position:relative;width:120px;height:120px}.ring-svg{transform:rotate(-90deg)}.ring-val{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.ring-val .rv-num{font-size:32px;font-weight:800}.ring-val .rv-lbl{font-size:11px;color:var(--muted)}.score-desc{max-width:300px}.score-desc h3{font-size:16px;font-weight:700;margin-bottom:8px}.score-desc p{font-size:13px;color:var(--muted)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.month-grid{grid-template-columns:repeat(3,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W7 品牌增长工作流</div><div class="workflow-steps">
+<a href="brand-registry-check.html" class="workflow-step">品牌注册</a><a href="brand-health-score.html" class="workflow-step">品牌健康</a><a href="external-traffic-calculator.html" class="workflow-step">外部流量</a><a href="product-matrix.html" class="workflow-step">产品矩阵</a><a href="social-content.html" class="workflow-step">社交内容</a><a href="brand-store-builder.html" class="workflow-step">旗舰店建设</a><a href="brand-analytics-reporter.html" class="workflow-step">品牌分析</a><a href="customer-segmentation-engine.html" class="workflow-step">客户分群</a><a href="brand-search-volume-tracker.html" class="workflow-step active">搜索量追踪</a><a href="storefront-traffic-analyzer.html" class="workflow-step">旗舰店流量</a><a href="brand-loyalty-scorer.html" class="workflow-step">忠诚度评分</a><a href="cross-sell-analyzer.html" class="workflow-step">交叉销售</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W7 品牌增长</a><span>/</span>品牌搜索量追踪器</div>
+<div class="tool-header"><span class="tool-badge">W7 品牌增长工作流</span><h1>品牌搜索量<em>追踪器</em></h1><p>品牌词12个月搜索量SVG趋势折线图，品牌认知度综合评分，竞品品牌搜索量对比分析。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotal">0</div><div class="stat-lbl">年度总搜索量</div></div>
+<div class="stat-card"><div class="stat-val success" id="sGrowth">0%</div><div class="stat-lbl">同比增长</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sAvg">0</div><div class="stat-lbl">月均搜索量</div></div>
+<div class="stat-card"><div class="stat-val primary" id="sScore">0</div><div class="stat-lbl">认知度评分</div></div>
+</div>
+
+<div class="card"><h2>品牌词12个月搜索量</h2><div class="month-grid" id="monthGrid"></div><div style="margin-top:12px"><button class="btn btn-secondary" onclick="BST.loadSample()">载入示例</button></div></div>
+<div class="card"><h2>搜索趋势折线图 (SVG)</h2><div class="chart-container" id="chartContainer"></div></div>
+<div class="card"><h2>品牌认知度评分</h2><div class="score-ring" id="scoreRing"></div></div>
+<div class="card"><h2>竞品品牌搜索量对比</h2>
+<div style="overflow-x:auto"><table class="comp-table"><thead><tr><th>品牌</th><th>月搜索量</th><th>环比</th><th>市场份额</th><th>操作</th></tr></thead><tbody id="compBody"></tbody></table></div>
+<div style="margin-top:12px"><button class="btn btn-secondary" onclick="BST.addComp()">+ 添加竞品</button></div>
+</div>
+
+<div class="related-grid">
+<a href="brand-analytics-reporter.html" class="related-card"><span class="rc-icon">📈</span><div><h4>品牌分析报告</h4><p>品牌数据洞察</p></div></a>
+<a href="brand-health-score.html" class="related-card"><span class="rc-icon">💚</span><div><h4>品牌健康分</h4><p>品牌健康评估</p></div></a>
+<a href="brand-loyalty-scorer.html" class="related-card"><span class="rc-icon">❤</span><div><h4>忠诚度评分</h4><p>品牌忠诚度</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const BST={
+  months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+  data:[],comps:[],
+  init(){
+    document.getElementById('monthGrid').innerHTML=this.months.map((m,i)=>`<div class="month-input"><label>${m}</label><input type="number" id="m${i}" value="0" step="50" min="0" oninput="BST.calc()"></div>`).join('');
+    this.loadSample();
+  },
+  loadSample(){
+    const sample=[3200,3500,3800,4200,4500,4100,4800,5200,5500,6100,6800,7500];
+    sample.forEach((v,i)=>{const el=document.getElementById('m'+i);if(el)el.value=v;});
+    this.comps=[
+      {name:'TechNova (我)',monthly:7500,mom:10.3,color:'#4f46e5'},
+      {name:'Competitor A',monthly:12000,mom:5.2,color:'#ef4444'},
+      {name:'Competitor B',monthly:5800,mom:-2.1,color:'#f59e0b'},
+    ];
+    this.calc();
+  },
+  addComp(){ this.comps.push({name:'竞品'+(this.comps.length),monthly:0,mom:0,color:'#94a3b8'}); this.calc(); },
+  updateComp(i,f,v){ this.comps[i][f]=f==='name'?v:(parseFloat(v)||0); this.calc(); },
+  delComp(i){ this.comps.splice(i,1); this.calc(); },
+  calc(){
+    this.data=this.months.map((m,i)=>({month:m,value:parseFloat(document.getElementById('m'+i).value)||0}));
+    const total=this.data.reduce((s,d)=>s+d.value,0);
+    const avg=total/12;
+    const h1=this.data.slice(0,6).reduce((s,d)=>s+d.value,0);
+    const h2=this.data.slice(6).reduce((s,d)=>s+d.value,0);
+    const growth=h1>0?((h2-h1)/h1*100):0;
+    const score=Math.min(100,Math.round(avg/100+growth*0.5+20));
+    document.getElementById('sTotal').textContent=total.toLocaleString();
+    document.getElementById('sGrowth').textContent=(growth>=0?'+':'')+growth.toFixed(1)+'%';
+    document.getElementById('sGrowth').className='stat-val '+(growth>=0?'success':'danger');
+    document.getElementById('sAvg').textContent=Math.round(avg).toLocaleString();
+    document.getElementById('sScore').textContent=score;
+    this.renderChart();
+    this.renderScore(score,avg,growth);
+    this.renderComp();
+  },
+  renderChart(){
+    const w=800,h=320,pad=40;
+    const max=Math.max(...this.data.map(d=>d.value),1);
+    const xStep=(w-pad*2)/(this.data.length-1);
+    const points=this.data.map((d,i)=>({x:pad+i*xStep,y:h-pad-(d.value/max)*(h-pad*2)}));
+    const pathD=points.map((p,i)=>(i===0?'M':'L')+p.x+','+p.y).join(' ');
+    const areaD=pathD+` L${points[points.length-1].x},${h-pad} L${pad},${h-pad} Z`;
+    let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.3"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>`;
+    for(let i=0;i<=4;i++){const gy=h-pad-i*(h-pad*2)/4;const val=max*i/4;svg+=`<line x1="${pad}" y1="${gy}" x2="${w-pad}" y2="${gy}" stroke="#e2e8f0" stroke-dasharray="4,4"/><text x="${pad-8}" y="${gy+4}" text-anchor="end" font-size="10" fill="#94a3b8">${Math.round(val)}</text>`;}
+    svg+=`<path d="${areaD}" fill="url(#ag)"/><path d="${pathD}" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round"/>`;
+    points.forEach((p,i)=>{svg+=`<circle cx="${p.x}" cy="${p.y}" r="4" fill="#fff" stroke="#4f46e5" stroke-width="2"/><text x="${p.x}" y="${h-pad+18}" text-anchor="middle" font-size="10" fill="#64748b">${this.data[i].month}</text>`;if(this.data[i].value>0)svg+=`<text x="${p.x}" y="${p.y-10}" text-anchor="middle" font-size="10" fill="#4f46e5" font-weight="600">${this.data[i].value}</text>`;});
+    svg+='</svg>';
+    document.getElementById('chartContainer').innerHTML=svg;
+  },
+  renderScore(score,avg,growth){
+    const r=50,circ=2*Math.PI*r;
+    const offset=circ*(1-score/100);
+    const color=score>=70?'#10b981':score>=40?'#f59e0b':'#ef4444';
+    const label=score>=70?'品牌认知度强':score>=40?'品牌认知度中等':'品牌认知度弱';
+    const desc=score>=70?'品牌搜索量持续增长，消费者品牌认知度高，建议继续加大品牌推广':score>=40?'品牌有一定认知度但增长空间大，建议增加品牌广告和内容营销投入':'品牌认知度较低，需要系统性品牌建设，从产品口碑和社交媒体入手';
+    document.getElementById('scoreRing').innerHTML=`
+      <div class="ring-wrap"><svg class="ring-svg" width="120" height="120"><circle cx="60" cy="60" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="10"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset .8s"/></svg><div class="ring-val"><div class="rv-num" style="color:${color}">${score}</div><div class="rv-lbl">/ 100</div></div></div>
+      <div class="score-desc"><h3 style="color:${color}">${label}</h3><p>${desc}</p><p style="margin-top:8px;font-size:12px">月均搜索量: ${Math.round(avg).toLocaleString()} | 同比增长: ${growth>=0?'+':''}${growth.toFixed(1)}%</p></div>`;
+  },
+  renderComp(){
+    const total=this.comps.reduce((s,c)=>s+c.monthly,0);
+    document.getElementById('compBody').innerHTML=this.comps.map((c,i)=>{
+      const pct=total>0?(c.monthly/total*100):0;
+      return `<tr><td><input type="text" value="${c.name}" style="width:120px" oninput="BST.updateComp(${i},'name',this.value)"></td><td><input type="number" value="${c.monthly}" step="100" min="0" oninput="BST.updateComp(${i},'monthly',this.value)"></td><td><input type="number" value="${c.mom}" step="0.1" oninput="BST.updateComp(${i},'mom',this.value)"></td><td><div style="display:flex;align-items:center;gap:8px"><div style="height:8px;flex:1;background:var(--rule-light);border-radius:4px;overflow:hidden;min-width:80px"><div style="height:100%;width:${pct}%;background:${c.color};border-radius:4px"></div></div><span style="font-weight:700;width:40px">${pct.toFixed(1)}%</span></div></td><td><button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="BST.delComp(${i})">删除</button></td></tr>`;
+    }).join('');
+  }
+};
+BST.init();
+</script>
+</body>
+</html>

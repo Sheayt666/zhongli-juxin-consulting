@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="UGC内容管理器：客户评价/图片/视频收集+授权管理+内容分发+展示策略，CSS UGC看板可视化，跨境卖家用户生成内容管理工具。">
+<title>UGC内容管理器 - 收集授权分发展示策略 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.ugc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.ugc-card{border:1px solid var(--rule);border-radius:14px;overflow:hidden;background:#fff;transition:all .2s}
+.ugc-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
+.ugc-thumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,#f0f4ff,#f8fafc)}
+.ugc-thumb.review{background:linear-gradient(135deg,#ecfdf5,#f0fdf4)}
+.ugc-thumb.image{background:linear-gradient(135deg,#eef2ff,#f0f4ff)}
+.ugc-thumb.video{background:linear-gradient(135deg,#fff7ed,#fffbeb)}
+.ugc-body{padding:14px}
+.ugc-body h4{font-size:14px;font-weight:700;margin:0 0 4px;color:var(--ink)}
+.ugc-body .ugc-meta{font-size:11px;color:var(--muted);margin-bottom:8px}
+.ugc-body .ugc-snippet{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ugc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.ugc-tag{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.tag-approved{background:#ecfdf5;color:#059669}
+.tag-pending{background:#fffbeb;color:#d97706}
+.tag-rejected{background:#fef2f2;color:#dc2626}
+.auth-table{width:100%;border-collapse:collapse;font-size:13px}
+.auth-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.auth-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.auth-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700}
+.auth-yes{background:#ecfdf5;color:#059669}
+.auth-no{background:#fef2f2;color:#dc2626}
+.auth-pending{background:#fffbeb;color:#d97706}
+.dist-channel{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1px solid var(--rule);margin-bottom:8px}
+.dist-channel:hover{background:var(--bg-soft)}
+.dist-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dist-body{flex:1}.dist-body h4{font-size:13px;font-weight:700;margin:0 0 2px}.dist-body p{font-size:11px;color:var(--muted);margin:0}
+.dist-status{font-size:12px;font-weight:700;padding:4px 12px;border-radius:8px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.ugc-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W39 内容营销工作流</div><div class="workflow-steps">
+  <a href="content-calendar-planner.html" class="workflow-step">日历规划</a><a href="social-post-scheduler.html" class="workflow-step">发布排期</a><a href="content-pillar-builder.html" class="workflow-step">内容支柱</a><a href="video-script-optimizer.html" class="workflow-step">视频脚本</a><a href="hashtag-research-tool.html" class="workflow-step">标签研究</a><a href="content-repurpose-planner.html" class="workflow-step">内容复用</a><a href="engagement-rate-predictor.html" class="workflow-step">互动预测</a><a href="content-audit-checklist.html" class="workflow-step">内容审计</a><a href="brand-voice-guide-generator.html" class="workflow-step">品牌语音</a><a href="content-roi-tracker.html" class="workflow-step">ROI追踪</a><a href="blog-seo-optimizer.html" class="workflow-step">博客SEO</a><a href="ugc-content-manager.html" class="workflow-step active">UGC管理</a><a href="content-distribution-planner.html" class="workflow-step">内容分发</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W39 内容营销</a><span class="sep">›</span><span class="current">UGC内容管理器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">📸</span>UGC内容管理器 UGC Content Manager</h1>
+  <p>用户生成内容（UGC）全流程管理，客户评价/图片/视频收集，使用授权管理，内容分发至多渠道，展示策略优化，CSS UGC看板可视化。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">UGC总数</div><div class="mc-value" id="mTotal">0</div></div>
+    <div class="metric-card success"><div class="mc-label">已授权</div><div class="mc-value" id="mAuth">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">待审核</div><div class="mc-value" id="mPending">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">授权率</div><div class="mc-value" id="mRate">0%</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📥 UGC收集配置</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>月均评价数</label><input type="number" id="monthlyReviews" value="150" oninput="UGCM.calc()"></div>
+      <div class="jx-field"><label>含图片比例 <span class="hint">(%)</span></label><input type="number" id="imgRatio" value="25" oninput="UGCM.calc()"></div>
+      <div class="jx-field"><label>含视频比例 <span class="hint">(%)</span></label><input type="number" id="vidRatio" value="8" oninput="UGCM.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>主动征集率 <span class="hint">(%)</span></label><input type="number" id="solicitRate" value="15" oninput="UGCM.calc()"></div>
+      <div class="jx-field"><label>授权请求发送率 <span class="hint">(%)</span></label><input type="number" id="authReqRate" value="60" oninput="UGCM.calc()"></div>
+      <div class="jx-field"><label>授权同意率 <span class="hint">(%)</span></label><input type="number" id="authAgreeRate" value="45" oninput="UGCM.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🗂️ UGC内容看板</h2>
+    <div class="ugc-grid" id="ugcGrid"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 授权管理表</h2>
+    <div style="overflow-x:auto"><table class="auth-table" id="authTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📡 内容分发渠道</h2>
+    <div id="distList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 UGC管理建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="content-repurpose-planner.html" class="rt-card"><div class="rt-icon">🔄</div><div><h5>内容复用</h5><p>内容再利用</p></div></a>
+      <a href="engagement-rate-predictor.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>互动预测</h5><p>互动率预估</p></div></a>
+      <a href="content-distribution-planner.html" class="rt-card"><div class="rt-icon">📡</div><div><h5>内容分发</h5><p>多渠道分发</p></div></a>
+      <a href="social-post-scheduler.html" class="rt-card"><div class="rt-icon">📅</div><div><h5>发布排期</h5><p>社交媒体</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="ugc-content-manager.html">UGC管理</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var UGCM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var UGC_ITEMS=[
+    {type:'review',icon:'⭐',title:'5星好评 - 蓝牙耳机',author:'John D.',date:'2026-07-10',snippet:'Sound quality is amazing for the price! Battery lasts over 30 hours. Highly recommend.',tags:['approved'],rating:5},
+    {type:'image',icon:'📷',title:'买家秀 - 厨房收纳架',author:'Sarah M.',date:'2026-07-09',snippet:'Installed in my kitchen, fits perfectly. Sharing photos for other buyers.',tags:['approved'],rating:5},
+    {type:'video',icon:'🎬',title:'开箱视频 - 无人机',author:'TechReviewer',date:'2026-07-08',snippet:'Just posted an unboxing and first flight test. Great product overall!',tags:['pending'],rating:4},
+    {type:'review',icon:'⭐',title:'4星评价 - 瑜伽垫',author:'Emily K.',date:'2026-07-07',snippet:'Good grip and cushioning. Wishes it came in more colors but very satisfied.',tags:['approved'],rating:4},
+    {type:'image',icon:'📷',title:'使用场景 - 露营帐篷',author:'Mike R.',date:'2026-07-06',snippet:'Took it camping last weekend. Easy setup, kept us dry in light rain.',tags:['approved'],rating:5},
+    {type:'review',icon:'⭐',title:'3星评价 - 手机壳',author:'Lisa T.',date:'2026-07-05',snippet:'Nice design but the case is a bit loose on one side. Decent for the price.',tags:['pending'],rating:3},
+    {type:'video',icon:'🎬',title:'对比评测 - 智能手表',author:'FitLife',date:'2026-07-04',snippet:'Compared 3 smartwatches in this price range. This one has the best battery life.',tags:['approved'],rating:5},
+    {type:'image',icon:'📷',title:'搭配分享 - 太阳镜',author:'Anna L.',date:'2026-07-03',snippet:'Love how these look! Perfect for summer. Sharing my outfit coordination.',tags:['rejected'],rating:5}
+  ];
+
+  var AUTH_RECORDS=[
+    {customer:'John D.',type:'文字评价',requested:'2026-07-10',status:'yes',usage:'Listing详情页+广告素材',expires:'永久'},
+    {customer:'Sarah M.',type:'图片+评价',requested:'2026-07-09',status:'yes',usage:'社交媒体+产品页',expires:'2027-07-09'},
+    {customer:'TechReviewer',type:'视频',requested:'2026-07-08',status:'pending',usage:'待定',expires:'-'},
+    {customer:'Emily K.',type:'文字评价',requested:'2026-07-07',status:'yes',usage:'Listing评价区',expires:'永久'},
+    {customer:'Mike R.',type:'图片+评价',requested:'2026-07-06',status:'yes',usage:'产品页+邮件营销',expires:'2027-07-06'},
+    {customer:'Lisa T.',type:'文字评价',requested:'2026-07-05',status:'pending',usage:'待定',expires:'-'},
+    {customer:'FitLife',type:'视频',requested:'2026-07-04',status:'yes',usage:'广告素材+社媒',expires:'2027-07-04'},
+    {customer:'Anna L.',type:'图片',requested:'2026-07-03',status:'no',usage:'-',expires:'-'}
+  ];
+
+  var DIST=[
+    {icon:'🏪',color:'#4f46e5',name:'Amazon Listing',desc:'评价区+产品图片+A+页面',status:'已对接',statusColor:'#10b981'},
+    {icon:'📱',color:'#8b5cf6',name:'社交媒体',desc:'Instagram/Facebook/TikTok分享',status:'已对接',statusColor:'#10b981'},
+    {icon:'📧',color:'#06b6d4',name:'邮件营销',desc:'EDM中的客户见证板块',status:'部分对接',statusColor:'#f59e0b'},
+    {icon:'🌐',color:'#10b981',name:'品牌官网',desc:'客户评价墙+使用场景展示',status:'已对接',statusColor:'#10b981'},
+    {icon:'📺',color:'#ef4444',name:'PPC广告',desc:'UGC素材用于 Sponsored Brands',status:'待对接',statusColor:'#dc2626'},
+    {icon:'📦',color:'#f59e0b',name:'包装卡片',desc:'感谢卡上印制UGC二维码',status:'计划中',statusColor:'#d97706'}
+  ];
+
+  function calc(){
+    var reviews=num('monthlyReviews'),imgR=num('imgRatio'),vidR=num('vidRatio');
+    var solicit=num('solicitRate'),authReq=num('authReqRate'),authAgree=num('authAgreeRate');
+    var totalUGC=Math.round(reviews*(1+imgR/100+vidR/100));
+    var solicitedUGC=Math.round(reviews*solicit/100);
+    var authSent=Math.round(totalUGC*authReq/100);
+    var authReceived=Math.round(authSent*authAgree/100);
+    var authRate=authSent>0?Math.round(authReceived/authSent*100):0;
+    var pending=authSent-authReceived;
+
+    $('mTotal').textContent=totalUGC;
+    $('mAuth').textContent=authReceived;
+    $('mPending').textContent=pending;
+    $('mRate').textContent=authRate+'%';
+
+    renderGrid();
+    renderAuth();
+    renderDist();
+    renderTips(reviews,totalUGC,solicitedUGC,authSent,authReceived,authRate,imgR,vidR,solicit,authReq,authAgree);
+    save();
+  }
+
+  function renderGrid(){
+    var h='';
+    UGC_ITEMS.forEach(function(u){
+      var tagMap={approved:'tag-approved',pending:'tag-pending',rejected:'tag-rejected'};
+      var tagText={approved:'已授权',pending:'待审核',rejected:'已拒绝'};
+      var stars='⭐'.repeat(u.rating);
+      h+='<div class="ugc-card"><div class="ugc-thumb '+u.type+'">'+u.icon+'</div><div class="ugc-body"><h4>'+u.title+'</h4><div class="ugc-meta">'+u.author+' · '+u.date+' · '+stars+'</div><div class="ugc-snippet">'+u.snippet+'</div><div class="ugc-tags"><span class="ugc-tag '+(tagMap[u.tags[0]]||'')+'">'+(tagText[u.tags[0]]||'')+'</span></div></div></div>';
+    });
+    $('ugcGrid').innerHTML=h;
+  }
+
+  function renderAuth(){
+    var h='<thead><tr><th>客户</th><th>内容类型</th><th>请求日期</th><th>授权状态</th><th>使用范围</th><th>有效期</th></tr></thead><tbody>';
+    AUTH_RECORDS.forEach(function(r){
+      var badge=r.status==='yes'?'auth-yes':r.status==='pending'?'auth-pending':'auth-no';
+      var text=r.status==='yes'?'已授权':r.status==='pending'?'待回复':'已拒绝';
+      h+='<tr><td><strong>'+r.customer+'</strong></td><td>'+r.type+'</td><td>'+r.requested+'</td><td><span class="auth-badge '+badge+'">'+text+'</span></td><td style="font-size:12px">'+r.usage+'</td><td style="font-size:12px">'+r.expires+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('authTable').innerHTML=h;
+  }
+
+  function renderDist(){
+    var h='';
+    DIST.forEach(function(d){
+      h+='<div class="dist-channel"><div class="dist-icon" style="background:'+d.color+'15">'+d.icon+'</div><div class="dist-body"><h4>'+d.name+'</h4><p>'+d.desc+'</p></div><div class="dist-status" style="background:'+d.statusColor+'15;color:'+d.statusColor+'">'+d.status+'</div></div>';
+    });
+    $('distList').innerHTML=h;
+  }
+
+  function renderTips(reviews,totalUGC,solicited,authSent,authReceived,authRate,imgR,vidR,solicit,authReq,authAgree){
+    var tips=[];
+    tips.push('月均收到 '+reviews+' 条评价，含图片 '+imgR+'%/视频 '+vidR+'%，UGC总量约 '+totalUGC+' 条/月。');
+    tips.push('主动征集率 '+solicit+'%，月征集 '+solicited+' 条UGC；授权请求发送 '+authSent+' 份，获得授权 '+authReceived+' 份，授权率 '+authRate+'%。');
+    if(authRate<50)tips.push('授权率 '+authRate+'% 偏低，建议优化授权请求话术，提供小礼品或折扣码激励客户授权。');
+    else tips.push('授权率 '+authRate+'% 良好，继续保持当前征集策略，定期跟进未回复客户。');
+    tips.push('UGC收集策略：售后7天邮件征集评价+图片，包裹内附UGC征集卡片，社交媒体举办#MyBrandChallenge活动，激励用户分享。');
+    tips.push('授权管理要点：每次使用UGC前确认授权状态，记录使用范围和期限，到期前30天续签，保留授权截图作为凭证。');
+    tips.push('内容分发优先级：Amazon Listing评价区 > 社交媒体 > 品牌官网 > 邮件营销 > PPC广告素材 > 线下物料。');
+    tips.push('展示策略：产品页优先展示带图片的5星评价，社媒使用UGC+品牌内容1:3比例，广告素材A/B测试UGC vs 品牌素材效果。');
+    tips.push('合规提醒：使用UGC需明确授权范围，不得修改原始内容误导消费者，标注真实评价者信息，遵守平台UGC使用政策。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_ugcm_data',JSON.stringify({monthlyReviews:num('monthlyReviews'),imgRatio:num('imgRatio'),vidRatio:num('vidRatio'),solicitRate:num('solicitRate'),authReqRate:num('authReqRate'),authAgreeRate:num('authAgreeRate')}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_ugcm_data'));if(d){['monthlyReviews','imgRatio','vidRatio','solicitRate','authReqRate','authAgreeRate'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',UGCM.init)}else{UGCM.init()}
+</script>
+</body>
+</html>

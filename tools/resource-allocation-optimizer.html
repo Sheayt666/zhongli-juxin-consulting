@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="资源分配优化器（深度版）：资金/人力/库存跨项目最优配置，ROI最大化模型，CSS资源分配矩阵，敏感性分析。跨境卖家战略资源管理利器。">
+<title>资源分配优化器 - ROI最大化·分配矩阵·敏感性分析 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.proj-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 40px;gap:8px;align-items:center;padding:10px 12px;border-radius:10px;border:1px solid var(--rule);margin-bottom:8px;transition:all .2s}.proj-row.header{background:var(--bg);font-size:12px;font-weight:700;color:var(--muted);border:none}.proj-row:not(.header):hover{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.08)}.proj-row .proj-del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;opacity:.5}.proj-row .proj-del:hover{opacity:1}.proj-row input{border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%;font-family:inherit}.proj-row input[type=number]{text-align:right}
+.btn-add{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:12px}.btn-add:hover{background:var(--primary-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.alloc-matrix{display:grid;grid-template-columns:120px repeat(var(--cols,3),1fr);gap:1px;background:var(--rule);border-radius:var(--radius);overflow:hidden;margin-top:16px}.alloc-cell{background:var(--surface);padding:12px;text-align:center;font-size:13px}.alloc-cell.header{background:var(--primary);color:#fff;font-weight:700}.alloc-cell.label{background:var(--bg);font-weight:600;text-align:left}.alloc-cell .ac-val{font-size:16px;font-weight:800}.alloc-cell .ac-pct{font-size:11px;color:var(--muted)}
+.alloc-bar-wrap{height:28px;border-radius:8px;overflow:hidden;display:flex;gap:2px;background:var(--rule-light);margin:16px 0}.alloc-bar-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .4s;overflow:hidden;white-space:nowrap}
+.sensitivity-table{width:100%;border-collapse:collapse;margin-top:12px}.sensitivity-table th,.sensitivity-table td{padding:10px 14px;text-align:center;font-size:13px;border:1px solid var(--rule)}.sensitivity-table th{background:var(--primary-bg);color:var(--primary);font-weight:700}.sensitivity-table td:first-child{font-weight:600;text-align:left;background:var(--bg)}.sensitivity-table .best{background:var(--success-bg);color:var(--success);font-weight:700}.sensitivity-table .worst{background:var(--danger-bg);color:var(--danger)}
+.optimization-result{padding:20px;border-radius:var(--radius);background:linear-gradient(135deg,var(--primary-bg),var(--success-bg));border:1px solid #c7d2fe;margin-bottom:16px}.optimization-result h3{font-size:16px;font-weight:700;margin-bottom:8px}.optimization-result .or-val{font-size:32px;font-weight:900;color:var(--primary)}.optimization-result .or-desc{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.recommendation-list{display:flex;flex-direction:column;gap:10px}.rec-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:10px;border-left:4px solid}.rec-item.up{border-left-color:var(--success)}.rec-item.down{border-left-color:var(--danger)}.rec-item.keep{border-left-color:var(--primary)}.rec-item .rec-icon{font-size:20px}.rec-item .rec-info{flex:1}.rec-item .rec-info h4{font-size:13px;font-weight:700}.rec-item .rec-info p{font-size:12px;color:var(--muted)}.rec-item .rec-val{font-size:18px;font-weight:800;flex-shrink:0}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.proj-row{grid-template-columns:1fr 80px 80px 80px 30px;font-size:12px}.proj-row .col-hide{display:none}.related-grid{grid-template-columns:1fr}.alloc-matrix{font-size:11px}.alloc-cell{padding:8px 6px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W8 战略决策工作流</div><div class="workflow-steps">
+<a href="market-entry-evaluator.html" class="workflow-step">市场进入</a><a href="competitive-advantage.html" class="workflow-step">竞争优势</a><a href="market-share.html" class="workflow-step">市场份额</a><a href="annual-budget-planner.html" class="workflow-step">年度预算</a><a href="referral-fee.html" class="workflow-step">佣金计算</a><a href="market-trend-forecaster.html" class="workflow-step">趋势预测</a><a href="competitor-landscape-mapper.html" class="workflow-step">竞争格局</a><a href="category-opportunity-analyzer.html" class="workflow-step">类目机会</a><a href="resource-allocation-optimizer.html" class="workflow-step active">资源优化</a><a href="growth-strategy-roadmap.html" class="workflow-step">增长路线图</a><a href="scenario-planner.html" class="workflow-step">场景规划</a><a href="okr-goal-framework.html" class="workflow-step">OKR目标</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W8 战略决策</a><span>/</span>资源分配优化器</div>
+<div class="tool-header"><span class="tool-badge">W8 战略决策工作流 · 深度版</span><h1>资源分配<em>优化器</em></h1><p>资金/人力/库存跨项目最优配置，ROI最大化模型，CSS资源分配矩阵，敏感性分析，实现战略资源效率最大化。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotalROI">0%</div><div class="stat-lbl">加权综合ROI</div></div>
+<div class="stat-card"><div class="stat-val success" id="sTotalReturn">$0</div><div class="stat-lbl">预期总回报</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sTotalInvest">$0</div><div class="stat-lbl">总投入</div></div>
+<div class="stat-card"><div class="stat-val primary" id="sEfficiency">0</div><div class="stat-lbl">资源效率指数</div></div>
+</div>
+
+<div class="card">
+<h2>总资源池设定</h2>
+<div class="form-grid">
+<div class="form-field"><label>可用资金 <span class="hint">($)</span></label><input type="number" id="totalBudget" value="100000" step="5000" oninput="Alloc.calc()"></div>
+<div class="form-field"><label>可用人力 <span class="hint">(人)</span></label><input type="number" id="totalPeople" value="5" step="1" oninput="Alloc.calc()"></div>
+<div class="form-field"><label>可用库容 <span class="hint">(件)</span></label><input type="number" id="totalInventory" value="10000" step="500" oninput="Alloc.calc()"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>项目配置</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">添加各项目/产品线的投入需求和预期ROI，系统自动计算最优资源分配方案。</p>
+<div class="proj-row header">
+<span>项目名称</span><span>资金需求($)</span><span>人力需求</span><span>库存需求(件)</span><span>预期ROI(%)</span><span>风险等级</span><span class="col-hide">优先级</span><span></span>
+</div>
+<div id="projList"></div>
+<button class="btn-add" onclick="Alloc.add()">+ 添加项目</button>
+</div>
+
+<div class="card">
+<h2>最优分配方案</h2>
+<div class="optimization-result" id="optResult"></div>
+<div class="alloc-bar-wrap" id="allocBar"></div>
+<div id="allocMatrixWrap"></div>
+</div>
+
+<div class="card">
+<h2>资源分配建议</h2>
+<div class="recommendation-list" id="recList"></div>
+</div>
+
+<div class="card">
+<h2>敏感性分析</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">ROI变动 +/-20% 对总回报的影响，识别最敏感的项目。</p>
+<div style="overflow-x:auto"><table class="sensitivity-table" id="sensTable"></table></div>
+</div>
+
+<div class="related-grid">
+<a href="annual-budget-planner.html" class="related-card"><span class="rc-icon">💰</span><div><h4>年度预算规划</h4><p>年度预算编制</p></div></a>
+<a href="scenario-planner.html" class="related-card"><span class="rc-icon">🎲</span><div><h4>场景规划器</h4><p>三场景预测</p></div></a>
+<a href="growth-strategy-roadmap.html" class="related-card"><span class="rc-icon">🗺</span><div><h4>增长路线图</h4><p>3年增长路径</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Alloc={
+  data:[],
+  colors:['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#84cc16'],
+  riskColors:{low:'var(--success)',med:'var(--warning)',high:'var(--danger)'},
+  init(){
+    this.data=[
+      {name:'产品线A-家居',budget:30000,people:2,inventory:3000,roi:35,risk:'low',priority:1},
+      {name:'产品线B-电子',budget:40000,people:2,inventory:4000,roi:45,risk:'med',priority:2},
+      {name:'产品线C-户外',budget:20000,people:1,inventory:2000,roi:28,risk:'med',priority:3},
+      {name:'产品线D-宠物',budget:15000,people:1,inventory:1500,roi:50,risk:'high',priority:4}
+    ];
+    this.render();
+  },
+  add(){
+    const idx=this.data.length+1;
+    this.data.push({name:'新项目'+idx,budget:10000,people:1,inventory:1000,roi:30,risk:'med',priority:idx});
+    this.render();
+  },
+  del(i){this.data.splice(i,1);this.render()},
+  update(i,field,val){this.data[i][field]=field==='name'||field==='risk'?val:parseFloat(val)||0;this.calc()},
+  render(){
+    const list=document.getElementById('projList');
+    list.innerHTML=this.data.map((p,i)=>{
+      return `<div class="proj-row">
+      <input type="text" value="${p.name}" oninput="Alloc.update(${i},'name',this.value)">
+      <input type="number" value="${p.budget}" step="1000" oninput="Alloc.update(${i},'budget',this.value)">
+      <input type="number" value="${p.people}" step="1" oninput="Alloc.update(${i},'people',this.value)">
+      <input type="number" value="${p.inventory}" step="100" oninput="Alloc.update(${i},'inventory',this.value)">
+      <input type="number" value="${p.roi}" step="1" oninput="Alloc.update(${i},'roi',this.value)">
+      <select style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;font-family:inherit" onchange="Alloc.update(${i},'risk',this.value)">
+      <option value="low" ${p.risk==='low'?'selected':''}>低</option>
+      <option value="med" ${p.risk==='med'?'selected':''}>中</option>
+      <option value="high" ${p.risk==='high'?'selected':''}>高</option>
+      </select>
+      <input type="number" value="${p.priority}" step="1" min="1" class="col-hide" oninput="Alloc.update(${i},'priority',this.value)">
+      <button class="proj-del" onclick="Alloc.del(${i})">×</button>
+      </div>`;
+    }).join('');
+    this.calc();
+  },
+  calc(){
+    const totalBudget=parseFloat(document.getElementById('totalBudget').value)||0;
+    const totalPeople=parseInt(document.getElementById('totalPeople').value)||0;
+    const totalInv=parseInt(document.getElementById('totalInventory').value)||0;
+    const riskFactor={low:1.0,med:0.8,high:0.6};
+    const scored=this.data.map((p,i)=>{
+      const riskScore=p.roi*riskFactor[p.risk];
+      const budgetNeed=Math.min(p.budget,totalBudget);
+      const allocBudget=(p.budget/this.data.reduce((s,d)=>s+d.budget,0))*totalBudget;
+      const allocPeople=Math.round((p.people/this.data.reduce((s,d)=>s+d.people,0))*totalPeople);
+      const allocInv=Math.round((p.inventory/this.data.reduce((s,d)=>s+d.inventory,0))*totalInv);
+      const expectedReturn=allocBudget*(p.roi/100)*riskFactor[p.risk];
+      return{...p,idx:i,riskScore,allocBudget,allocPeople,allocInv,expectedReturn,efficiency:expectedReturn/allocBudget*100};
+    });
+    scored.sort((a,b)=>b.riskScore-a.riskScore);
+    const totalReturn=scored.reduce((s,d)=>s+d.expectedReturn,0);
+    const totalInvest=scored.reduce((s,d)=>s+d.allocBudget,0);
+    const weightedROI=totalInvest>0?(totalReturn/totalInvest*100):0;
+    const efficiency=scored.reduce((s,d)=>s+d.efficiency,0)/scored.length;
+    document.getElementById('sTotalROI').textContent=weightedROI.toFixed(1)+'%';
+    document.getElementById('sTotalReturn').textContent='$'+Math.round(totalReturn).toLocaleString();
+    document.getElementById('sTotalInvest').textContent='$'+Math.round(totalInvest).toLocaleString();
+    document.getElementById('sEfficiency').textContent=efficiency.toFixed(1);
+    const optResult=document.getElementById('optResult');
+    optResult.innerHTML=`<h3>最优配置方案</h3><div class="or-val">${weightedROI.toFixed(1)}%</div><div class="or-desc">加权综合ROI · 总投入 $${Math.round(totalInvest).toLocaleString()} · 预期回报 $${Math.round(totalReturn).toLocaleString()} · 净收益 $${Math.round(totalReturn-totalInvest).toLocaleString()}</div>`;
+    const allocBar=document.getElementById('allocBar');
+    allocBar.innerHTML=scored.map((p,i)=>{
+      const color=this.colors[i%this.colors.length];
+      const pct=p.allocBudget/totalInvest*100;
+      return `<div class="alloc-bar-seg" style="width:${pct}%;background:${color}" title="${p.name}: $${Math.round(p.allocBudget).toLocaleString()}">${pct>8?p.name:''}</div>`;
+    }).join('');
+    const matrixWrap=document.getElementById('allocMatrixWrap');
+    matrixWrap.innerHTML=`
+    <div class="alloc-matrix" style="--cols:${scored.length}">
+    <div class="alloc-cell header"></div>
+    ${scored.map(p=>`<div class="alloc-cell header">${p.name}</div>`).join('')}
+    <div class="alloc-cell label">资金分配</div>
+    ${scored.map(p=>`<div class="alloc-cell"><div class="ac-val" style="color:var(--primary)">$${(p.allocBudget/1000).toFixed(0)}K</div><div class="ac-pct">${(p.allocBudget/totalInvest*100).toFixed(1)}%</div></div>`).join('')}
+    <div class="alloc-cell label">人力分配</div>
+    ${scored.map(p=>`<div class="alloc-cell"><div class="ac-val" style="color:var(--success)">${p.allocPeople}人</div><div class="ac-pct">${(p.allocPeople/totalPeople*100).toFixed(0)}%</div></div>`).join('')}
+    <div class="alloc-cell label">库存分配</div>
+    ${scored.map(p=>`<div class="alloc-cell"><div class="ac-val" style="color:var(--warning)">${p.allocInv}件</div><div class="ac-pct">${(p.allocInv/totalInv*100).toFixed(1)}%</div></div>`).join('')}
+    <div class="alloc-cell label">预期回报</div>
+    ${scored.map(p=>`<div class="alloc-cell"><div class="ac-val" style="color:var(--success)">$${(p.expectedReturn/1000).toFixed(0)}K</div><div class="ac-pct">ROI ${(p.efficiency).toFixed(0)}%</div></div>`).join('')}
+    <div class="alloc-cell label">风险调整后ROI</div>
+    ${scored.map(p=>{const adjRoi=p.roi*riskFactor[p.risk];return `<div class="alloc-cell"><div class="ac-val" style="color:${this.riskColors[p.risk]}">${adjRoi.toFixed(0)}%</div><div class="ac-pct">${p.risk==='low'?'低风险':p.risk==='med'?'中风险':'高风险'}</div></div>`}).join('')}
+    </div>`;
+    const recList=document.getElementById('recList');
+    const recs=[];
+    scored.forEach(p=>{
+      if(p.efficiency>=weightedROI*1.1){
+        recs.push({type:'up',icon:'📈',name:p.name,info:`效率指数${p.efficiency.toFixed(0)}%，高于平均${(p.efficiency-weightedROI).toFixed(0)}个百分点`,val:`+${(p.efficiency-weightedROI).toFixed(0)}%`});
+      }else if(p.efficiency<weightedROI*0.8){
+        recs.push({type:'down',icon:'⚠️',name:p.name,info:`效率指数${p.efficiency.toFixed(0)}%，低于平均${(weightedROI-p.efficiency).toFixed(0)}个百分点，建议减少投入`,val:`-${(weightedROI-p.efficiency).toFixed(0)}%`});
+      }else{
+        recs.push({type:'keep',icon:'✅',name:p.name,info:`效率指数${p.efficiency.toFixed(0)}%，与平均水平持平`,val:'维持'});
+      }
+    });
+    recList.innerHTML=recs.map(r=>`<div class="rec-item ${r.type}">
+    <span class="rec-icon">${r.icon}</span>
+    <div class="rec-info"><h4>${r.name}</h4><p>${r.info}</p></div>
+    <span class="rec-val" style="color:${r.type==='up'?'var(--success)':r.type==='down'?'var(--danger)':'var(--primary)'}">${r.val}</span>
+    </div>`).join('');
+    const sensData=scored.map(p=>{
+      const base=p.expectedReturn;
+      const up20=p.allocBudget*((p.roi*1.2)/100)*riskFactor[p.risk];
+      const down20=p.allocBudget*((p.roi*0.8)/100)*riskFactor[p.risk];
+      return{name:p.name,base,up20,down20,delta:up20-down20};
+    });
+    const table=document.getElementById('sensTable');
+    table.innerHTML=`<thead><tr><th>项目</th><th>ROI -20% 回报</th><th>基准回报</th><th>ROI +20% 回报</th><th>波动范围</th></tr></thead>
+    <tbody>${sensData.map(d=>{
+      const max=Math.max(...sensData.map(s=>s.delta));
+      const isMost=d.delta===max;
+      return `<tr ${isMost?'class="best"':''}>
+      <td>${d.name}</td>
+      <td>$${Math.round(d.down20).toLocaleString()}</td>
+      <td>$${Math.round(d.base).toLocaleString()}</td>
+      <td>$${Math.round(d.up20).toLocaleString()}</td>
+      <td ${isMost?'style="font-weight:700"':''}>$${Math.round(d.delta).toLocaleString()} ${isMost?'⚠ 最敏感':''}</td>
+      </tr>`;
+    }).join('')}
+    <tr style="background:var(--bg);font-weight:700"><td>合计</td><td>$${Math.round(sensData.reduce((s,d)=>s+d.down20,0)).toLocaleString()}</td><td>$${Math.round(sensData.reduce((s,d)=>s+d.base,0)).toLocaleString()}</td><td>$${Math.round(sensData.reduce((s,d)=>s+d.up20,0)).toLocaleString()}</td><td>$${Math.round(sensData.reduce((s,d)=>s+d.delta,0)).toLocaleString()}</td></tr>
+    </tbody>`;
+  }
+};
+Alloc.init();
+</script>
+</body>
+</html>

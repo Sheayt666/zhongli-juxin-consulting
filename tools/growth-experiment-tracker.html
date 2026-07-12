@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="增长实验追踪器：创建和追踪增长实验，记录假设、结果和效果，实验看板、效果排序、知识沉淀，CSS实验矩阵，localStorage持久化。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="增长实验,AB测试,实验看板,知识沉淀,增长分析,experiment">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/growth-experiment-tracker.html">
+<title>增长实验追踪器 - 实验看板·效果排序·知识沉淀 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.get-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.get-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.exp-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.exp-form-row .calc-field{margin-bottom:0}
+.exp-form-row-full{margin-bottom:12px}
+.exp-form-row-full .calc-field{margin-bottom:0}
+.btn-add{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-add:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.kanban-col{background:var(--bg-soft);border-radius:12px;padding:12px;min-height:200px}
+.kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--rule)}
+.kanban-col-header .kch-title{font-size:13px;font-weight:700;color:var(--ink)}
+.kanban-col-header .kch-count{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700;background:#fff;border:1px solid var(--rule)}
+.kanban-col.hypothesis{border-top:4px solid #6366f1}
+.kanban-col.running{border-top:4px solid #f59e0b}
+.kanban-col.completed{border-top:4px solid #10b981}
+.kanban-col.archived{border-top:4px solid #94a3b8}
+.exp-card{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s;position:relative}
+.exp-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
+.exp-card .ec-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.exp-card .ec-hypothesis{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:6px}
+.exp-card .ec-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.exp-card .ec-impact{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px}
+.exp-card .ec-impact.high{background:#fee2e2;color:#dc2626}
+.exp-card .ec-impact.mid{background:#fef3c7;color:#d97706}
+.exp-card .ec-impact.low{background:#d1fae5;color:#059669}
+.exp-card .ec-actions{display:flex;gap:4px;margin-top:6px}
+.exp-card .ec-actions button{padding:3px 8px;font-size:10px;border-radius:6px;border:1px solid var(--rule);background:#fff;cursor:pointer;color:var(--ink-soft);transition:all .2s}
+.exp-card .ec-actions button:hover{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.exp-card .ec-actions button.del:hover{background:#ef4444;border-color:#ef4444}
+.rank-table{width:100%;border-collapse:collapse}
+.rank-table th{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:10px 12px;font-size:12px;font-weight:600;text-align:left}
+.rank-table th:first-child{border-radius:8px 0 0 0}
+.rank-table th:last-child{border-radius:0 8px 0 0}
+.rank-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--rule-light)}
+.rank-table tr:hover td{background:var(--bg-soft)}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:800;color:#fff}
+.rank-badge.r1{background:#ef4444}
+.rank-badge.r2{background:#f59e0b}
+.rank-badge.r3{background:#4f46e5}
+.rank-badge.r4{background:#10b981}
+.lifestyle-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.lifestyle-badge.win{background:#d1fae5;color:#059669}
+.lifestyle-badge.lose{background:#fee2e2;color:#dc2626}
+.lifestyle-badge.inconclusive{background:#fef3c7;color:#d97706}
+.lifestyle-badge.pending{background:#e0e7ff;color:#4f46e5}
+.knowledge-card{padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);border-left:4px solid #10b981;margin-bottom:10px}
+.knowledge-card .kc-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.knowledge-card .kc-insight{font-size:12px;color:var(--muted);line-height:1.6}
+.knowledge-card .kc-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;background:#d1fae5;color:#059669;margin-top:6px}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.related-grid a{display:block;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;text-align:center;transition:all .2s}
+.related-grid a:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;transform:translateY(-2px)}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.stat-card{flex:1;min-width:100px;padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.stat-card .sc-val{font-size:24px;font-weight:800}
+.stat-card .sc-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.kanban{grid-template-columns:1fr}.exp-form-row{grid-template-columns:1fr}.related-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"增长实验追踪器","description":"创建和追踪增长实验，记录假设、结果和效果，实验看板、效果排序、知识沉淀，CSS实验矩阵，localStorage持久化。","url":"https://juxin-consulting.help/tools/growth-experiment-tracker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"增长实验追踪器","item":"https://juxin-consulting.help/tools/growth-experiment-tracker.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="growth_experiment">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 增长分析工作流 · 标准版</span>
+      <h1>增长实验 <em>追踪器</em></h1>
+      <p class="tool-hero-desc">创建和追踪增长实验全生命周期，记录假设、设计、结果和洞察。四列看板（假设→进行中→已完成→归档），效果排序表，知识沉淀卡片，数据通过localStorage持久化保存。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第10步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <a href="growth-driver-decomposer.html" class="step">增长拆解</a><span class="arrow">→</span>
+      <a href="funnel-conversion-analyzer.html" class="step">漏斗转化</a><span class="arrow">→</span>
+      <a href="viral-coefficient-calculator.html" class="step">病毒系数</a><span class="arrow">→</span>
+      <a href="ltv-prediction-model.html" class="step">LTV预测</a><span class="arrow">→</span>
+      <span class="step current">增长实验</span><span class="arrow">→</span>
+      <a href="market-share-growth-tracker.html" class="step">市场份额</a><span class="arrow">→</span>
+      <a href="unit-economics-builder.html" class="step">单位经济</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="get-section">
+        <h3>➕ 创建新实验</h3>
+        <div class="exp-form-row">
+          <div class="calc-field"><label>实验名称</label><input type="text" id="expName" placeholder="如：主图A/B测试" style="width:100%"></div>
+          <div class="calc-field"><label>影响等级</label><select id="expImpact" style="width:100%"><option value="high">高影响</option><option value="mid">中影响</option><option value="low">低影响</option></select></div>
+        </div>
+        <div class="exp-form-row-full">
+          <div class="calc-field"><label>假设 <span class="hint">(If... Then... Because...)</span></label><input type="text" id="expHypothesis" placeholder="如：如果将主图从白底改为场景图，CTR将提升15%，因为场景图更能展示使用场景" style="width:100%"></div>
+        </div>
+        <div class="exp-form-row">
+          <div class="calc-field"><label>目标指标</label><input type="text" id="expMetric" placeholder="如：CTR" style="width:100%"></div>
+          <div class="calc-field"><label>预期提升 <span class="hint">(%)</span></label><input type="number" id="expExpected" placeholder="如：15" step="0.1" style="width:100%"></div>
+        </div>
+        <div style="margin-top:12px"><button class="btn-add" onclick="GET.addExp()">+ 添加实验</button></div>
+      </div>
+
+      <div class="get-section">
+        <h3>📊 实验统计</h3>
+        <div class="stat-row" id="statRow"></div>
+      </div>
+
+      <div class="get-section">
+        <h3>📋 实验看板</h3>
+        <div class="kanban" id="kanban"></div>
+      </div>
+
+      <div class="get-section">
+        <h3>🏆 完成实验效果排序</h3>
+        <table class="rank-table" id="rankTable"><thead><tr><th>排名</th><th>实验名称</th><th>目标指标</th><th>预期提升</th><th>实际提升</th><th>结果</th><th>洞察</th></tr></thead><tbody id="rankBody"></tbody></table>
+      </div>
+
+      <div class="get-section">
+        <h3>💡 知识沉淀</h3>
+        <div id="knowledgeWrap"></div>
+      </div>
+
+      <div class="get-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="ab-test-planner.html">A/B测试规划器</a>
+          <a href="funnel-conversion-analyzer.html">漏斗转化分析</a>
+          <a href="ltv-prediction-model.html">LTV预测模型</a>
+          <a href="growth-driver-decomposer.html">增长拆解器</a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="ltv-prediction-model.html" class="wbn-btn prev">← 上一步：LTV预测</a>
+        <a href="market-share-growth-tracker.html" class="wbn-btn next">下一步：市场份额 →</a>
+      </div>
+      <div style="text-align:center;margin:20px auto;max-width:1152px"><a href="index.html" style="display:inline-block;padding:10px 28px;border-radius:50px;background:var(--bg-soft);color:var(--ink-soft);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--rule)">← 返回工具中心</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-rate.html">增长率计算</a></li><li><a href="cohort-analysis.html">同期群分析</a></li><li><a href="retention-rate.html">留存率分析</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var GET=(function(){
+  'use strict';
+  var SK='jx_growth_experiments';
+  var experiments=[];
+  var SEED=[
+    {id:'e1',name:'主图场景化测试',hypothesis:'将白底主图改为生活场景图，CTR将提升15%',impact:'high',metric:'CTR',expected:15,status:'completed',actual:22,result:'win',insight:'场景图显著提升CTR，用户更容易代入使用场景',category:'图片优化'},
+    {id:'e2',name:'标题关键词重组',hypothesis:'将高搜索量关键词前置，搜索排名将提升',impact:'mid',metric:'搜索排名',expected:10,status:'completed',actual:8,result:'win',insight:'关键词前置有效但效果低于预期，需结合Listing整体优化',category:'SEO优化'},
+    {id:'e3',name:'价格心理测试$29.99vs$30',hypothesis:'$29.99比$30转化率更高',impact:'low',metric:'转化率',expected:5,status:'completed',actual:2,result:'inconclusive',insight:'差异不显著，需更大样本量验证',category:'定价策略'},
+    {id:'e4',name:'A+页面视频添加',hypothesis:'添加产品演示视频，加购率将提升20%',impact:'high',metric:'加购率',expected:20,status:'running',actual:0,result:'pending',insight:'',category:'内容优化'},
+    {id:'e5',name:'Coupon力度测试',hypothesis:'10% Coupon比5% Coupon增量销售更多',impact:'mid',metric:'销量',expected:25,status:'hypothesis',actual:0,result:'pending',insight:'',category:'促销策略'}
+  ];
+  function load(){try{var d=localStorage.getItem(SK);experiments=d?JSON.parse(d):SEED.slice();}catch(e){experiments=SEED.slice();}}
+  function save(){try{localStorage.setItem(SK,JSON.stringify(experiments));}catch(e){}}
+  function genId(){return 'e'+Date.now();}
+  function addExp(){
+    var name=document.getElementById('expName').value.trim();
+    if(!name){alert('请输入实验名称');return;}
+    var exp={
+      id:genId(),
+      name:name,
+      hypothesis:document.getElementById('expHypothesis').value.trim()||'待补充',
+      impact:document.getElementById('expImpact').value,
+      metric:document.getElementById('expMetric').value.trim()||'待设定',
+      expected:parseFloat(document.getElementById('expExpected').value)||0,
+      status:'hypothesis',
+      actual:0,
+      result:'pending',
+      insight:'',
+      category:'自定义'
+    };
+    experiments.unshift(exp);
+    save();
+    document.getElementById('expName').value='';
+    document.getElementById('expHypothesis').value='';
+    document.getElementById('expMetric').value='';
+    document.getElementById('expExpected').value='';
+    render();
+  }
+  function moveStatus(id,newStatus){
+    experiments.forEach(function(e){if(e.id===id){e.status=newStatus;if(newStatus==='completed'&&e.result==='pending'){e.result='win';}}});
+    save();render();
+  }
+  function setResult(id,result){
+    experiments.forEach(function(e){if(e.id===id){e.result=result;}});
+    save();render();
+  }
+  function setActual(id){
+    var val=prompt('输入实际提升百分比:');
+    if(val===null)return;
+    var num=parseFloat(val)||0;
+    experiments.forEach(function(e){if(e.id===id){e.actual=num;}});
+    save();render();
+  }
+  function setInsight(id){
+    var val=prompt('输入实验洞察:');
+    if(val===null)return;
+    experiments.forEach(function(e){if(e.id===id){e.insight=val;}});
+    save();render();
+  }
+  function delExp(id){
+    if(!confirm('确认删除此实验？'))return;
+    experiments=experiments.filter(function(e){return e.id!==id;});
+    save();render();
+  }
+  function renderStats(){
+    var total=experiments.length;
+    var hyp=experiments.filter(function(e){return e.status==='hypothesis';}).length;
+    var run=experiments.filter(function(e){return e.status==='running';}).length;
+    var done=experiments.filter(function(e){return e.status==='completed';}).length;
+    var win=experiments.filter(function(e){return e.result==='win';}).length;
+    var winRate=done>0?(win/done*100).toFixed(0):0;
+    var html='<div class="stat-card"><div class="sc-val" style="color:#4f46e5">'+total+'</div><div class="sc-lbl">总实验数</div></div>';
+    html+='<div class="stat-card"><div class="sc-val" style="color:#6366f1">'+hyp+'</div><div class="sc-lbl">假设阶段</div></div>';
+    html+='<div class="stat-card"><div class="sc-val" style="color:#f59e0b">'+run+'</div><div class="sc-lbl">进行中</div></div>';
+    html+='<div class="stat-card"><div class="sc-val" style="color:#10b981">'+done+'</div><div class="sc-lbl">已完成</div></div>';
+    html+='<div class="stat-card"><div class="sc-val" style="color:#10b981">'+winRate+'%</div><div class="sc-lbl">胜率</div></div>';
+    document.getElementById('statRow').innerHTML=html;
+  }
+  function renderKanban(){
+    var cols=[
+      {key:'hypothesis',title:'假设阶段',cls:'hypothesis'},
+      {key:'running',title:'进行中',cls:'running'},
+      {key:'completed',title:'已完成',cls:'completed'},
+      {key:'archived',title:'已归档',cls:'archived'}
+    ];
+    var html='';
+    cols.forEach(function(col){
+      var items=experiments.filter(function(e){return e.status===col.key;});
+      html+='<div class="kanban-col '+col.cls+'">';
+      html+='<div class="kanban-col-header"><span class="kch-title">'+col.title+'</span><span class="kch-count">'+items.length+'</span></div>';
+      items.forEach(function(e){
+        html+='<div class="exp-card">';
+        html+='<div class="ec-title">'+e.name+'</div>';
+        html+='<div class="ec-hypothesis">'+e.hypothesis+'</div>';
+        html+='<div class="ec-meta"><span>'+e.metric+'</span><span class="ec-impact '+e.impact+'">'+(e.impact==='high'?'高':e.impact==='mid'?'中':'低')+'</span></div>';
+        html+='<div class="ec-actions">';
+        if(col.key==='hypothesis'){html+='<button onclick="GET.moveStatus(\''+e.id+'\',\'running\')">→ 进行</button>';}
+        if(col.key==='running'){html+='<button onclick="GET.moveStatus(\''+e.id+'\',\'completed\')">→ 完成</button>';}
+        if(col.key==='completed'){
+          html+='<button onclick="GET.setActual(\''+e.id+'\')">填结果</button>';
+          html+='<button onclick="GET.setInsight(\''+e.id+'\')">填洞察</button>';
+          html+='<button onclick="GET.moveStatus(\''+e.id+'\',\'archived\')">归档</button>';
+        }
+        html+='<button class="del" onclick="GET.delExp(\''+e.id+'\')">删除</button>';
+        html+='</div></div>';
+      });
+      html+='</div>';
+    });
+    document.getElementById('kanban').innerHTML=html;
+  }
+  function renderRank(){
+    var completed=experiments.filter(function(e){return e.status==='completed'||e.status==='archived';});
+    completed.sort(function(a,b){return b.actual-a.actual;});
+    var html='';
+    if(completed.length===0){
+      html='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">暂无已完成实验</td></tr>';
+    }else{
+      completed.forEach(function(e,i){
+        var rankCls=i<3?'r'+(i+1):'r4';
+        var resultBadge=e.result==='win'?'<span class="lifestyle-badge win">胜利</span>':e.result==='lose'?'<span class="lifestyle-badge lose">失败</span>':e.result==='inconclusive'?'<span class="lifestyle-badge inconclusive">无显著</span>':'<span class="lifestyle-badge pending">待定</span>';
+        html+='<tr>';
+        html+='<td><span class="rank-badge '+rankCls+'">'+(i+1)+'</span></td>';
+        html+='<td>'+e.name+'</td>';
+        html+='<td>'+e.metric+'</td>';
+        html+='<td>'+e.expected+'%</td>';
+        html+='<td>'+(e.actual>0?e.actual+'%':'-')+'</td>';
+        html+='<td>'+resultBadge+'</td>';
+        html+='<td style="font-size:12px;color:var(--muted);max-width:200px">'+(e.insight||'-')+'</td>';
+        html+='</tr>';
+      });
+    }
+    document.getElementById('rankBody').innerHTML=html;
+  }
+  function renderKnowledge(){
+    var winners=experiments.filter(function(e){return e.result==='win'&&e.insight;});
+    var html='';
+    if(winners.length===0){
+      html='<p style="text-align:center;color:var(--muted);padding:20px">暂无知识沉淀，完成实验并填写洞察后将自动生成</p>';
+    }else{
+      winners.forEach(function(e){
+        html+='<div class="knowledge-card">';
+        html+='<div class="kc-title">'+e.name+'</div>';
+        html+='<div class="kc-insight">'+e.insight+'</div>';
+        html+='<span class="kc-tag">'+e.category+'</span>';
+        html+='</div>';
+      });
+    }
+    document.getElementById('knowledgeWrap').innerHTML=html;
+  }
+  function render(){renderStats();renderKanban();renderRank();renderKnowledge();}
+  function init(){load();render();}
+  return {addExp:addExp,moveStatus:moveStatus,setResult:setResult,setActual:setActual,setInsight:setInsight,delExp:delExp,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',GET.init);}else{GET.init();}
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="自然排名预估器：输入关键词难度与当前排名，预估提升到目标位所需单量与时间预测，CSS排名路径图可视化，跨境卖家SEO排名提升工具。">
+<title>自然排名预估器 - 排名提升单量时间预测路径图 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2624}
+.path-chart{padding:20px 0;overflow-x:auto}
+.path-track{display:flex;align-items:flex-end;gap:0;min-width:600px;height:260px;position:relative;padding:0 20px}
+.path-axis{position:absolute;left:0;bottom:0;top:0;width:40px;display:flex;flex-direction:column-reverse;justify-content:space-between;font-size:10px;color:var(--muted);padding-bottom:20px;padding-top:0}
+.path-node{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;min-width:60px}
+.path-bar{width:60%;border-radius:6px 6px 0 0;transition:height .5s;position:relative;display:flex;align-items:flex-start;justify-content:center;min-height:4px}
+.path-bar.current{background:linear-gradient(180deg,#f59e0b,#fbbf24)}
+.path-bar.target{background:linear-gradient(180deg,#10b981,#34d399);opacity:.3;border:2px dashed #10b981;border-bottom:none}
+.path-dot{position:absolute;top:-12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.path-label{font-size:11px;color:var(--ink);margin-top:8px;text-align:center;font-weight:600;line-height:1.3}
+.path-week{font-size:10px;color:var(--muted);margin-top:2px}
+.path-connector{position:absolute;top:50%;height:3px;background:linear-gradient(90deg,#f59e0b,#10b981);border-radius:2px;z-index:0}
+.milestone-table{width:100%;border-collapse:collapse;font-size:13px}
+.milestone-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.milestone-table th.num{text-align:right}
+.milestone-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.milestone-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.rank-input{display:flex;align-items:center;gap:8px}
+.rank-input input{width:80px}
+.factor-card{padding:12px 14px;border-radius:10px;background:var(--bg-soft);margin-bottom:8px}
+.factor-card .fc-head{display:flex;justify-content:space-between;margin-bottom:6px}
+.factor-card .fc-name{font-size:13px;font-weight:700;color:var(--ink)}
+.factor-card .fc-val{font-size:13px;font-weight:800;color:#4f46e5}
+.factor-bar{height:8px;border-radius:4px;background:var(--rule-light);overflow:hidden}
+.factor-bar-fill{height:100%;border-radius:4px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W37 关键词深度工作流</div><div class="workflow-steps">
+  <a href="keyword-research-matrix.html" class="workflow-step">研究矩阵</a>
+  <a href="search-volume-estimator.html" class="workflow-step">搜索量</a>
+  <a href="keyword-difficulty-scorer.html" class="workflow-step">难度评分</a>
+  <a href="long-tail-keyword-finder.html" class="workflow-step">长尾词</a>
+  <a href="keyword-cluster-builder.html" class="workflow-step">聚类构建</a>
+  <a href="competitor-keyword-intersection.html" class="workflow-step">竞品交集</a>
+  <a href="keyword-trend-forecaster.html" class="workflow-step">趋势预测</a>
+  <a href="ppc-keyword-mapper.html" class="workflow-step">PPC映射</a>
+  <a href="search-term-report-analyzer.html" class="workflow-step">搜索词报告</a>
+  <a href="keyword-canibalization-checker.html" class="workflow-step">蚕食检查</a>
+  <a href="asin-reverse-lookup.html" class="workflow-step">ASIN反查</a>
+  <a href="keyword-grouping-dedup.html" class="workflow-step">分组去重</a>
+  <a href="organic-ranking-estimator.html" class="workflow-step active">排名预估</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W37 关键词</a><span class="sep">›</span><span class="current">自然排名预估器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">📈</span>自然排名预估器 Organic Ranking Estimator</h1>
+  <p>输入关键词难度与当前排名，预估提升到目标排名所需日均单量与时间周期，CSS排名路径图可视化排名提升里程碑，帮助跨境卖家制定SEO排名提升策略与资源投入计划。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card warning"><div class="mc-label">当前排名</div><div class="mc-value" id="mCurrent">#0</div></div>
+    <div class="metric-card success"><div class="mc-label">目标排名</div><div class="mc-value" id="mTarget">#0</div></div>
+    <div class="metric-card"><div class="mc-label">需日均单量</div><div class="mc-value" id="mSales">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">预计周期</div><div class="mc-value" id="mWeeks">0周</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 排名参数输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>关键词</label><input type="text" id="keyword" value="bluetooth earbuds" oninput="ORE.calc()"></div>
+      <div class="jx-field"><label>关键词难度 <span class="hint">(1-100)</span></label><input type="number" id="difficulty" value="75" min="1" max="100" oninput="ORE.calc()"></div>
+      <div class="jx-field"><label>月搜索量</label><input type="number" id="volume" value="185000" step="1000" oninput="ORE.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>当前排名 <span class="hint">(#)</span></label><input type="number" id="currentRank" value="35" min="1" oninput="ORE.calc()"></div>
+      <div class="jx-field"><label>目标排名 <span class="hint">(#)</span></label><input type="number" id="targetRank" value="3" min="1" oninput="ORE.calc()"></div>
+      <div class="jx-field"><label>当前日均销量</label><input type="number" id="currentSales" value="8" min="0" oninput="ORE.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 排名提升路径图</h2>
+    <div class="path-chart"><div class="path-track" id="pathTrack"></div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 排名里程碑计划</h2>
+    <div style="overflow-x:auto"><table class="milestone-table" id="milestoneTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎚️ 排名影响因素</h2>
+    <div id="factorList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 排名提升策略</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="keyword-difficulty-scorer.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>关键词难度评分</h5><p>难度评估</p></div></a>
+      <a href="asin-reverse-lookup.html" class="rt-card"><div class="rt-icon">🔎</div><div><h5>ASIN反查</h5><p>竞品排名</p></div></a>
+      <a href="search-volume-estimator.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>搜索量估算</h5><p>搜索量预估</p></div></a>
+      <a href="ppc-keyword-mapper.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>PPC关键词映射</h5><p>广告助攻</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="organic-ranking-estimator.html">排名预估</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var ORE=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  function calc(){
+    var diff=num('difficulty'),vol=num('volume');
+    var cur=num('currentRank'),tgt=num('targetRank'),curSales=num('currentSales');
+    //排名越靠前需要的销量越高；难度越高需要的销量越多
+    //Top1所需日均销量估算：vol/10000 * (1+diff/100)
+    var top1Sales=Math.round(vol/10000*(1+diff/100));
+    //目标排名所需销量：top1Sales * (1 - (tgt-1)/50)
+    var targetSales=Math.round(top1Sales*(1-(tgt-1)/50));
+    //当前排名对应销量
+    var curRankSales=Math.round(top1Sales*(1-(cur-1)/50));
+    //需要增加的日均销量
+    var needSales=Math.max(0,targetSales-curSales);
+    //每周可提升的名次：难度越高提升越慢
+    var rankPerWeek=Math.max(0.5,5-diff/20);
+    var totalRankGap=cur-tgt;
+    var weeks=Math.ceil(totalRankGap/rankPerWeek);
+    $('mCurrent').textContent='#'+cur;
+    $('mTarget').textContent='#'+tgt;
+    $('mSales').textContent=needSales+'/天';
+    $('mWeeks').textContent=weeks+'周';
+    renderPath(cur,tgt,weeks,top1Sales);
+    renderMilestones(cur,tgt,rankPerWeek,top1Sales,curSales);
+    renderFactors(diff,vol,cur,tgt);
+    renderTips(diff,vol,cur,tgt,curSales,needSales,weeks,top1Sales);
+    save();
+  }
+
+  function renderPath(cur,tgt,weeks,top1Sales){
+    //生成里程碑节点
+    var milestones=[];
+    var steps=Math.min(6,Math.max(3,Math.ceil((cur-tgt)/5)));
+    for(var i=0;i<=steps;i++){
+      var rank=Math.round(cur+(tgt-cur)*i/steps);
+      var week=Math.round(weeks*i/steps);
+      milestones.push({rank:rank,week:week});
+    }
+    //排名映射到柱高：rank 1→100%, rank 50+→10%
+    var heightPct=function(r){return Math.max(10,100-(r-1)/49*90)};
+    var h='<div class="path-axis"><span>#50+</span><span>#25</span><span>#10</span><span>#3</span><span>#1</span></div>';
+    milestones.forEach(function(m,i){
+      var h_pct=heightPct(m.rank);
+      var isTarget=i===milestones.length-1;
+      var isCurrent=i===0;
+      var color=isCurrent?'#f59e0b':isTarget?'#10b981':'#4f46e5';
+      h+='<div class="path-node">';
+      h+='<div class="path-dot" style="background:'+color+';top:'+(100-h_pct)*2.4+'px">'+(i===0?'现':isTarget?'标':'W'+m.week)+'</div>';
+      h+='<div class="path-bar '+(isCurrent?'current':isTarget?'target':'')+'" style="height:'+h_pct+'%;background:'+color+(isTarget?'':'')+'"></div>';
+      h+='<div class="path-label">#'+m.rank+'</div>';
+      h+='<div class="path-week">'+(i===0?'当前':isTarget?'目标':'第'+m.week+'周')+'</div>';
+      h+='</div>';
+    });
+    $('pathTrack').innerHTML=h;
+  }
+
+  function renderMilestones(cur,tgt,rankPerWeek,top1Sales,curSales){
+    var milestones=[];
+    var rank=cur;var week=0;
+    while(rank>tgt){
+      week++;
+      var newRank=Math.max(tgt,Math.round(rank-rankPerWeek));
+      var targetSales=Math.round(top1Sales*(1-(newRank-1)/50));
+      var needAdd=Math.max(0,targetSales-curSales);
+      milestones.push({week:week,from:rank,to:newRank,needSales:targetSales,addSales:needAdd});
+      rank=newRank;
+      if(week>20)break;
+    }
+    var h='<thead><tr><th>周次</th><th class="num">起始排名</th><th class="num">目标排名</th><th class="num">需日均销量</th><th class="num">需增加销量</th><th>关键动作</th></tr></thead><tbody>';
+    milestones.forEach(function(m){
+      var action=m.to<=3?'巩固Top3，加大PPC+Coupon冲量':m.to<=10?'冲击Top10，优化转化率+评论':m.to<=20?'提升至Top20，增加广告曝光':m.to<=30?'进入Top30，积累基础销量':'初期积累阶段';
+      h+='<tr><td>第'+m.week+'周</td><td class="num">#'+m.from+'</td><td class="num">#'+m.to+'</td><td class="num">'+m.needSales+'/天</td><td class="num" style="color:#dc2626">+'+m.addSales+'</td><td style="font-size:12px">'+action+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('milestoneTable').innerHTML=h;
+  }
+
+  function renderFactors(diff,vol,cur,tgt){
+    var factors=[
+      {name:'关键词难度',val:diff,max:100,color:diff>70?'#dc2626':diff>40?'#f59e0b':'#10b981',desc:diff>70?'高难度，需大量资源':diff>40?'中等难度，可突破':'低难度，易提升'},
+      {name:'搜索量规模',val:Math.min(100,vol/2000),max:100,color:'#4f46e5',desc:vol>100000?'大词，流量价值高':vol>20000?'中词，性价比好':'小词，精准但量小'},
+      {name:'排名提升幅度',val:Math.min(100,(cur-tgt)/cur*100),max:100,color:cur-tgt>20?'#dc2626':'#f59e0b',desc:(cur-tgt)+'名提升'+(cur-tgt>20?'，跨度大需持久战':'，可中短期达成')},
+      {name:'竞争强度',val:diff*0.8+20,max:100,color:'#8b5cf6',desc:diff>70?'竞争激烈，头部稳固':diff>40?'竞争中等，有机会':'竞争弱，蓝海机会'}
+    ];
+    var h='';
+    factors.forEach(function(f){
+      h+='<div class="factor-card"><div class="fc-head"><span class="fc-name">'+f.name+'</span><span class="fc-val">'+Math.round(f.val)+'/100</span></div>';
+      h+='<div class="factor-bar"><div class="factor-bar-fill" style="width:'+f.val+'%;background:'+f.color+'"></div></div>';
+      h+='<div style="font-size:11px;color:var(--muted);margin-top:4px">'+f.desc+'</div></div>';
+    });
+    $('factorList').innerHTML=h;
+  }
+
+  function renderTips(diff,vol,cur,tgt,curSales,needSales,weeks,top1Sales){
+    var tips=[];
+    tips.push('关键词「'+$('keyword').value+'」难度'+diff+'，月搜索量'+vol.toLocaleString()+'，当前排名#'+cur+'，目标#'+tgt+'。');
+    tips.push('达到#'+tgt+'需日均销量约 '+top1Sales+' 单/天，当前 '+curSales+' 单/天，需增加 '+needSales+' 单/天。');
+    tips.push('预计需 '+weeks+' 周完成排名提升，每周约提升 '+Math.max(0.5,5-diff/20).toFixed(1)+' 个名次。');
+    if(diff>70)tips.push('关键词难度'+diff+'属高难度，头部竞品稳固，建议先攻克长尾词积累权重，再逐步攻坚主词。');
+    else if(diff<40)tips.push('关键词难度'+diff+'较低，是蓝海机会词，建议加大投入快速抢占排名。');
+    if(cur-tgt>20)tips.push('排名跨度较大（'+(cur-tgt)+'名），建议分阶段设定里程碑，先冲Top20再Top10最后Top3。');
+    tips.push('排名提升三要素：①PPC广告放量（精准+词组匹配）②转化率优化（Listing+Coupon+评论）③销量增速（保持日均销量稳定增长）。');
+    tips.push('建议搭配Coupon促销+PPC精准投放，前2周集中冲量建立历史销量权重，亚马逊算法会逐步提升自然排名。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){var d={};['keyword','difficulty','volume','currentRank','targetRank','currentSales'].forEach(function(id){d[id]=$(id).value});try{localStorage.setItem('jx_ore_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_ore_data'));if(d)Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ORE.init)}else{ORE.init()}
+</script>
+</body>
+</html>

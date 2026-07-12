@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="进出口合规指南：输入目标国家和产品类型，查看准入要求、许可证清单、申报流程、清关文档清单和CSS流程图。">
+<title>进出口合规指南 - 跨境电商准入与清关工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.compliance-section{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:24px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.compliance-section h4{font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--accent-bg);display:flex;align-items:center;gap:8px}
+.flow-chart{display:flex;align-items:center;gap:0;margin:20px 0;flex-wrap:wrap}
+.flow-step{flex:1;min-width:120px;padding:16px 12px;background:var(--accent-bg);border-radius:var(--radius-md);text-align:center;position:relative;margin-right:24px}
+.flow-step:last-child{margin-right:0}
+.flow-step::after{content:'→';position:absolute;right:-18px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--accent);font-weight:700}
+.flow-step:last-child::after{display:none}
+.flow-step .fs-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.flow-step .fs-title{font-size:13px;font-weight:600;color:var(--accent)}
+.flow-step .fs-desc{font-size:11px;color:var(--muted);margin-top:4px}
+.req-list{list-style:none;padding:0}
+.req-list li{padding:8px 0;font-size:14px;color:var(--ink-soft);display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid var(--rule-light)}
+.req-list li:last-child{border-bottom:none}
+.req-list li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+.req-list li.conditional::before{content:'⚠';color:var(--gold)}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px}
+.doc-chip{padding:12px 14px;background:var(--bg-soft);border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;display:flex;align-items:center;gap:8px}
+.doc-chip .dc-icon{font-size:18px}
+.doc-chip .dc-name{font-weight:500;color:var(--ink-soft)}
+.doc-chip.mandatory{border-left:3px solid var(--red)}
+.doc-chip.conditional{border-left:3px solid var(--gold)}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">进出口合规指南</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📋 物流合规工具</span><h1>进出口<em>合规指南</em></h1><p class="tool-hero-desc">选择目标国家和产品类型，查看准入要求、许可证清单、申报流程和清关文档清单</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">🚚</span><span class="workflow-name">物流合规工作流</span></div><div class="workflow-nav-steps"><a href="first-mile-shipping.html" class="step">头程运费</a><span class="arrow">→</span><a href="supplier-comparison.html" class="step">供应商比价</a><span class="arrow">→</span><a href="vat-calculator.html" class="step">VAT关税</a><span class="arrow">→</span><a href="tax-profit-calculator.html" class="step">税务利润</a><span class="arrow">→</span><a href="payment-fee.html" class="step">收款费率</a><span class="arrow">→</span><a href="currency-converter.html" class="step">汇率转换</a><span class="arrow">→</span><a href="hs-code-lookup.html" class="step">HS编码</a><span class="arrow">→</span><a href="customs-duty-calculator.html" class="step">关税计算</a><span class="arrow">→</span><a href="shipping-route-optimizer.html" class="step">路线优化</a><span class="arrow">→</span><a href="fba-label-batch-generator.html" class="step">FBA标签</a><span class="arrow">→</span><a href="dangerous-goods-checker.html" class="step">危险品检查</a><span class="arrow">→</span><a href="import-export-compliance-guide.html" class="step current">进出口合规</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>📋 输入合规查询条件</h2>
+<div class="form-row">
+<div class="form-group"><label>目标国家/地区</label><select id="country" onchange="genGuide()"><option value="US">美国</option><option value="EU">欧盟</option><option value="UK">英国</option><option value="JP">日本</option><option value="AU">澳洲</option><option value="CA">加拿大</option></select></div>
+<div class="form-group"><label>产品类型</label><select id="prodType" onchange="genGuide()"><option value="electronics">电子电器</option><option value="textile">纺织服装</option><option value="beauty">美妆个护</option><option value="food">食品饮料</option><option value="toys">玩具</option><option value="home">家居用品</option><option value="supplement">保健品</option></select></div>
+</div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="hs-code-lookup.html" class="related-card"><span class="ricon">🔍</span><span class="rtext">HS编码查询器</span></a><a href="customs-duty-calculator.html" class="related-card"><span class="ricon">💰</span><span class="rtext">关税计算器</span></a><a href="dangerous-goods-checker.html" class="related-card"><span class="ricon">⚠️</span><span class="rtext">危险品检查器</span></a><a href="vat-calculator.html" class="related-card"><span class="ricon">🧾</span><span class="rtext">VAT关税计算器</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+var COMPLIANCE_DATA={
+US:{
+electronics:{requirements:['FCC认证 (强制)','UL安全认证 (建议)','FDA注册 (如含无线功能)','Prop 65加州警告标签 (如适用)','产品标签: 英文标识','原产地标签: Made in China'],'documents':['商业发票(Commercial Invoice)','装箱单(Packing List)','提单(B/L)','原产地证(CO)','FCC符合性声明','产品测试报告','保险单(如需)'],'license':'一般无需进口许可，但含无线电设备需FCC ID注册','process':['准备合规文件','安排国际运输','到港报关申报','缴纳关税','FDA/FCC查验(抽检)','放行提货']},
+textile:{requirements:['纤维成分标签 (Textile Fiber Products Identification Act)','原产地标签: Made in China','护理标签 (Care Labeling Rule)','尺寸标签','阻燃测试 (儿童睡衣强制)','CPSC检测 (儿童产品)','铅含量检测 (儿童产品)'],'documents':['商业发票','装箱单','提单','原产地证','纤维成分测试报告','阻燃测试报告(如适用)'],'license':'无需进口许可','process':['准备标签合规','安排运输','报关申报','缴税','CPSC查验(抽检)','放行']},
+beauty:{requirements:['FDA设施注册 (MoCRA)','产品列表备案 (MoCRA)','成分标签 (INCI)','FDA化妆品FDA 2118表','Prop 65警告 (如适用)','禁止成分核查'],'documents':['商业发票','装箱单','提单','FDA注册证明','产品配方表','安全性评估报告'],'license':'FDA化妆品设施注册(强制)','process':['FDA设施注册','产品备案','准备文件','安排运输','报关申报','FDA查验','放行']}
+},
+EU:{
+electronics:{requirements:['CE标志 (强制)','RoHS合规','REACH合规','WEEE注册','能效标签 (ERP指令)','德国包装法 (VerpackG)','电池法 (BattG, 含电池产品)','GPSR通用产品安全法规'],'documents':['商业发票','装箱单','提单','CE符合性声明','技术文档(TCF)','RoHS测试报告','REACH SVHC声明','欧代授权书'],'license':'CE认证强制，需指定欧盟授权代表','process':['CE认证','指定欧代','WEEE注册','包装法注册','安排运输','报关申报','缴税','海关查验','放行']},
+beauty:{requirements:['CPNP通报 (强制)','责任人指定 (EU Responsible Person)','成分标签 (INCI)','REACH合规','禁止成分核查 (CMR物质)','纳米材料标注','动物实验禁令核查'],'documents':['商业发票','装箱单','提单','CPNP通报确认','产品安全评估(PIF)','REACH声明','欧代授权书'],'license':'CPNP通报强制','process':['指定欧盟责任人','CPNP通报','编制PIF','准备文件','安排运输','报关申报','缴税','放行']}
+},
+UK:{
+electronics:{requirements:['UKCA标志 (强制, 脱欧后)','UK RoHS合规','UK REACH合规','UK WEEE注册','英国包装法','能效标签'],'documents':['商业发票','装箱单','提单','UKCA符合性声明','RoHS测试报告','英代授权书'],'license':'UKCA认证强制','process':['UKCA认证','指定英代','WEEE注册','安排运输','报关申报','缴税','查验','放行']}
+},
+JP:{
+electronics:{requirements:['PSE认证 (电气产品)','技适认证 (无线产品)','VCCI认证 (IT设备)','JIS标准符合','日本标签法'],'documents':['商业发票','装箱单','提单','PSE认证证书','JIS测试报告'],'license':'PSE认证(电气产品强制)','process':['PSE/技适认证','准备标签','安排运输','报关申报','缴税','JET查验(抽检)','放行']}
+},
+AU:{
+electronics:{requirements:['RCM标志 (强制)','SAA认证 (电气安全)','EMC合规','能效标签 (GEMS)','ACMA备案 (无线产品)'],'documents':['商业发票','装箱单','提单','RCM符合性声明','SAA认证证书','EMC测试报告'],'license':'RCM注册强制','process':['SAA/RCM认证','ACMA备案','安排运输','报关申报','缴税','查验','放行']}
+}
+};
+var COUNTRY_NAMES={US:'美国',EU:'欧盟',UK:'英国',JP:'日本',AU:'澳洲',CA:'加拿大'};
+var TYPE_NAMES={electronics:'电子电器',textile:'纺织服装',beauty:'美妆个护',food:'食品饮料',toys:'玩具',home:'家居用品',supplement:'保健品'};
+function genGuide(){
+var country=document.getElementById('country').value;
+var prodType=document.getElementById('prodType').value;
+var data=COMPLIANCE_DATA[country]&&COMPLIANCE_DATA[country][prodType];
+if(!data)data={requirements:['请查询具体产品类目的准入要求'],'documents':['商业发票','装箱单','提单','原产地证'],'license':'需根据具体产品确认','process':['准备文件','安排运输','报关申报','缴税','查验','放行']};
+var html='<div class="compliance-section"><h4>📌 '+COUNTRY_NAMES[country]+' — '+TYPE_NAMES[prodType]+' 准入要求</h4>';
+html+='<ul class="req-list">';
+data.requirements.forEach(function(r){html+='<li>'+r+'</li>';});
+html+='</ul></div>';
+html+='<div class="compliance-section"><h4>📄 许可证与注册要求</h4>';
+html+='<p style="font-size:14px;color:var(--ink-soft);line-height:1.8">'+data.license+'</p></div>';
+html+='<div class="compliance-section"><h4>🔄 申报流程</h4>';
+html+='<div class="flow-chart">';
+data.process.forEach(function(step,i){
+var parts=step.split('(');
+var title=parts[0].trim();
+var desc=parts[1]?parts[1].replace(')',''):'';
+html+='<div class="flow-step"><div class="fs-num">'+(i+1)+'</div><div class="fs-title">'+title+'</div>'+(desc?'<div class="fs-desc">'+desc+'</div>':'')+'</div>';
+});
+html+='</div></div>';
+html+='<div class="compliance-section"><h4>📋 清关文档清单</h4>';
+html+='<div class="doc-grid">';
+data.documents.forEach(function(doc){
+var isMandatory=doc.indexOf('商业')>-1||doc.indexOf('装箱')>-1||doc.indexOf('提单')>-1||doc.indexOf('符合')>-1||doc.indexOf('认证')>-1||doc.indexOf('注册')>-1||doc.indexOf('通报')>-1||doc.indexOf('授权')>-1;
+html+='<div class="doc-chip '+(isMandatory?'mandatory':'conditional')+'"><span class="dc-icon">'+(isMandatory?'📋':'📎')+'</span><span class="dc-name">'+doc+'</span></div>';
+});
+html+='</div></div>';
+html+='<div style="padding:16px;background:var(--accent-bg);border-radius:var(--radius-md);font-size:13px;color:var(--accent);line-height:1.8">💡 合规建议：1) 提前3-6个月启动认证流程；2) 保留所有测试报告原件；3) 委托专业报关行处理清关；4) 定期关注目的国法规更新；5) 考虑使用合规咨询服化降低风险。</div>';
+document.getElementById('resultArea').innerHTML=html;
+}
+genGuide();
+
+</script>
+</body>
+</html>

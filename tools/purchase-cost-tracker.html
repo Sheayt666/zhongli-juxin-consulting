@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="采购成本追踪器：价格变动记录、汇率影响、成本趋势SVG折线图、降本进度。免费在线跨境电商采购成本管理工具。">
+<meta name="keywords" content="采购成本追踪,价格趋势,汇率影响,降本进度,SVG折线图,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/purchase-cost-tracker.html">
+<title>采购成本追踪器 - 价格趋势SVG·汇率影响·降本进度 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pct-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pct-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.chart-box{background:var(--bg-soft);border-radius:12px;padding:20px;margin-top:8px}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px}
+.chart-legend .cl-item{display:flex;align-items:center;gap:6px;color:var(--ink-soft)}
+.chart-legend .cl-dot{width:14px;height:3px;border-radius:2px}
+.fx-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.fx-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.fx-card .fc-label{font-size:12px;color:var(--muted)}
+.fx-card .fc-val{font-size:20px;font-weight:800;margin-top:4px}
+.fx-card .fc-impact{font-size:12px;margin-top:6px;font-weight:600}
+.progress-box{margin-top:12px}
+.progress-track{height:14px;border-radius:7px;background:var(--rule-light);overflow:hidden}
+.progress-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,#4f46e5,#10b981);transition:width .5s}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px}
+.cost-table th{background:var(--bg-soft);padding:10px;text-align:left;font-weight:600;border-bottom:2px solid var(--rule)}
+.cost-table td{padding:10px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.trend-up{color:#ef4444;font-weight:700}.trend-down{color:#10b981;font-weight:700}
+.btn-add{padding:8px 18px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"采购成本追踪器","description":"价格变动记录、汇率影响、成本趋势SVG折线图、降本进度。","url":"https://juxin-consulting.help/tools/purchase-cost-tracker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"采购成本追踪器","item":"https://juxin-consulting.help/tools/purchase-cost-tracker.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="purchase_cost_tracker">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">💰 采购管理工作流</span>
+      <h1>采购成本 <em>追踪器</em></h1>
+      <p class="tool-hero-desc">记录各SKU采购价历史变动，核算汇率波动对采购成本的影响，SVG折线图可视化价格趋势，追踪年度降本目标进度，数据本地持久化管理。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第12步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a><span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a><span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a><span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本</a><span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a><span class="arrow">→</span>
+      <a href="supplier-database-search-w18.html" class="step">供应商搜索</a><span class="arrow">→</span>
+      <a href="purchase-order-manager.html" class="step">采购订单</a><span class="arrow">→</span>
+      <a href="supplier-performance-scorecard-w18.html" class="step">供应商记分卡</a><span class="arrow">→</span>
+      <a href="price-negotiation-strategist.html" class="step">价格谈判</a><span class="arrow">→</span>
+      <a href="incoming-qc-manager.html" class="step">来料质检</a><span class="arrow">→</span>
+      <a href="supplier-risk-monitor.html" class="step">供应商风险</a><span class="arrow">→</span>
+      <span class="step current">采购成本</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 成本参数</h2>
+          <p class="calc-form-subtitle">填写汇率与降本目标</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>期初汇率 <span class="hint">(USD/CNY)</span></label><input type="number" id="fxStart" value="7.10" step="0.01" oninput="PCT.calc()"></div>
+            <div class="calc-field"><label>当前汇率 <span class="hint">(USD/CNY)</span></label><input type="number" id="fxNow" value="7.25" step="0.01" oninput="PCT.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>年度降本目标 <span class="hint">(%)</span></label><input type="number" id="target" value="10" oninput="PCT.calc()"></div>
+            <div class="calc-field"><label>已实现降本 <span class="hint">(%)</span></label><input type="number" id="achieved" value="6.5" step="0.1" oninput="PCT.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="pct-section">
+        <h3>📉 采购价格趋势（SVG折线图）</h3>
+        <div class="chart-box" id="chartBox"></div>
+        <div class="chart-legend">
+          <div class="cl-item"><div class="cl-dot" style="background:#4f46e5"></div>SKU-A 蓝牙耳机</div>
+          <div class="cl-item"><div class="cl-dot" style="background:#10b981"></div>SKU-B 充电盒</div>
+          <div class="cl-item"><div class="cl-dot" style="background:#f59e0b"></div>SKU-C 硅胶耳塞</div>
+        </div>
+      </div>
+
+      <div class="pct-section">
+        <h3>💱 汇率影响分析</h3>
+        <div class="fx-box" id="fxBox"></div>
+      </div>
+
+      <div class="pct-section">
+        <h3>📊 价格变动记录</h3>
+        <table class="cost-table">
+          <thead><tr><th>月份</th><th>SKU-A</th><th>SKU-B</th><th>SKU-C</th><th>环比变化</th></tr></thead>
+          <tbody id="costTable"></tbody>
+        </table>
+      </div>
+
+      <div class="pct-section">
+        <h3>🎯 降本进度</h3>
+        <div class="progress-box" id="progBox"></div>
+      </div>
+
+      <div class="pct-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="cost-reduction.html" class="related-card"><span class="related-card-icon">📉</span><div class="related-card-content"><h5>降本工具</h5><p>成本优化</p></div></a>
+          <a href="price-negotiation-strategist.html" class="related-card"><span class="related-card-icon">💬</span><div class="related-card-content"><h5>价格谈判</h5><p>谈判策略</p></div></a>
+          <a href="purchase-order-manager.html" class="related-card"><span class="related-card-icon">📝</span><div class="related-card-content"><h5>采购订单管理</h5><p>PO追踪</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="supplier-risk-monitor.html" class="wbn-btn prev">← 上一步：供应商风险</a>
+        <a href="index.html" class="wbn-btn next">返回工具中心 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="purchase-cost-tracker.html">采购成本追踪</a></li><li><a href="cost-reduction.html">降本工具</a></li><li><a href="purchase-order-manager.html">采购订单</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PCT=(function(){
+  'use strict';
+  var MONTHS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var SKU_A=[9.2,9.0,9.0,8.8,8.8,8.5,8.5,8.3,8.3,8.2,8.2,8.0];
+  var SKU_B=[2.6,2.6,2.5,2.5,2.4,2.4,2.3,2.3,2.3,2.2,2.2,2.2];
+  var SKU_C=[0.18,0.18,0.17,0.17,0.16,0.16,0.15,0.15,0.15,0.15,0.14,0.14];
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function drawChart(){
+    var W=720,H=280,padL=50,padR=20,padT=20,padB=40;
+    var allVals=SKU_A.concat(SKU_B);
+    var minV=Math.min.apply(null,allVals)*0.9,maxV=Math.max.apply(null,allVals)*1.05;
+    var xStep=(W-padL-padR)/(MONTHS.length-1);
+    function yScale(val){return padT+(H-padT-padB)*(1-(val-minV)/(maxV-minV));}
+    function xScale(i){return padL+i*xStep;}
+    function path(data){return data.map(function(d,i){return (i===0?'M':'L')+xScale(i)+','+yScale(d);}).join(' ');}
+    var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">';
+    // grid
+    for(var i=0;i<=4;i++){var gy=padT+(H-padT-padB)*i/4;var gv=(maxV-(maxV-minV)*i/4).toFixed(1);svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#e2e8f0" stroke-width="1"/>';svg+='<text x="'+(padL-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#94a3b8">'+gv+'</text>';}
+    // x labels
+    MONTHS.forEach(function(m,i){svg+='<text x="'+xScale(i)+'" y="'+(H-padB+18)+'" text-anchor="middle" font-size="10" fill="#94a3b8">'+m+'</text>';});
+    // lines
+    svg+='<path d="'+path(SKU_A)+'" fill="none" stroke="#4f46e5" stroke-width="2.5"/>';
+    svg+='<path d="'+path(SKU_B)+'" fill="none" stroke="#10b981" stroke-width="2.5"/>';
+    svg+='<path d="'+path(SKU_C.map(function(x){return x*40;}))+'" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4,3"/>';
+    // dots SKU_A
+    SKU_A.forEach(function(d,i){svg+='<circle cx="'+xScale(i)+'" cy="'+yScale(d)+'" r="3" fill="#4f46e5"/>';});
+    SKU_B.forEach(function(d,i){svg+='<circle cx="'+xScale(i)+'" cy="'+yScale(d)+'" r="3" fill="#10b981"/>';});
+    svg+='</svg>';
+    document.getElementById('chartBox').innerHTML=svg;
+  }
+  function calc(){
+    var fxS=v('fxStart'),fxN=v('fxNow'),tgt=v('target'),ach=v('achieved');
+    var fxChg=((fxN-fxS)/fxS*100);
+    var fxImpact=fxChg>0?'人民币升值，采购成本上升':'人民币贬值，采购成本下降';
+    // 以SKU-A为例计算汇率影响
+    var costUsd=8.5;
+    var costCnyStart=costUsd*fxS,costCnyNow=costUsd*fxN;
+    var cnyDiff=costCnyNow-costCnyStart;
+    document.getElementById('fxBox').innerHTML=
+      '<div class="fx-card"><div class="fc-label">汇率变动</div><div class="fc-val" style="color:'+(fxChg>0?'#ef4444':'#10b981')+'">'+(fxChg>0?'+':'')+fxChg.toFixed(2)+'%</div><div class="fc-impact" style="color:'+(fxChg>0?'#ef4444':'#10b981')+'">'+fxImpact+'</div></div>'+
+      '<div class="fx-card"><div class="fc-label">单件成本影响（SKU-A $8.5）</div><div class="fc-val">¥'+cnyDiff.toFixed(2)+'</div><div class="fc-impact">期初¥'+costCnyStart.toFixed(2)+' → 当前¥'+costCnyNow.toFixed(2)+'</div></div>';
+    var progPct=Math.round(ach/tgt*100);
+    var progColor=progPct>=100?'#10b981':(progPct>=60?'#4f46e5':'#f59e0b');
+    document.getElementById('progBox').innerHTML=
+      '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:var(--muted)">已实现降本 '+ach+'% / 目标 '+tgt+'%</span><span style="font-size:13px;font-weight:700;color:'+progColor+'">'+progPct+'%</span></div>'+
+      '<div class="progress-track"><div class="progress-fill" style="width:'+Math.min(100,progPct)+'%;background:linear-gradient(90deg,#4f46e5,'+progColor+')"></div></div>'+
+      '<p style="font-size:12px;color:var(--muted);margin-top:10px">💡 '+(progPct>=100?'已超额完成降本目标！':(progPct>=60?'降本进度良好，保持节奏':'降本进度滞后，需加强谈判与替代供应商开发'))+'</p>';
+    var th='';
+    for(var i=0;i<12;i++){
+      var chgA=i>0?((SKU_A[i]-SKU_A[i-1])/SKU_A[i-1]*100):0;
+      var chgB=i>0?((SKU_B[i]-SKU_B[i-1])/SKU_B[i-1]*100):0;
+      var chgC=i>0?((SKU_C[i]-SKU_C[i-1])/SKU_C[i-1]*100):0;
+      var avgChg=i>0?((chgA+chgB+chgC)/3):0;
+      th+='<tr><td>'+MONTHS[i]+'</td><td>$'+SKU_A[i].toFixed(2)+'</td><td>$'+SKU_B[i].toFixed(2)+'</td><td>$'+SKU_C[i].toFixed(2)+'</td><td>'+(i===0?'-':'<span class="'+(avgChg>0?'trend-up':'trend-down')+'">'+(avgChg>0?'+':'')+avgChg.toFixed(1)+'%</span>')+'</td></tr>';
+    }
+    document.getElementById('costTable').innerHTML=th;
+    var totalDropA=((SKU_A[0]-SKU_A[11])/SKU_A[0]*100);
+    document.getElementById('resultCard').innerHTML=
+      '<h3>💰 成本概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">SKU-A年度降幅</div><div class="ri-value positive">'+totalDropA.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">汇率影响</div><div class="ri-value" style="color:'+(fxChg>0?'#ef4444':'#10b981')+'">'+(fxChg>0?'+':'')+fxChg.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">降本进度</div><div class="ri-value" style="color:'+progColor+'">'+progPct+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">年化节省(估)</div><div class="ri-value positive">$'+(8.5*0.065*12000).toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>'+
+      '</div><div class="result-note">💡 '+(progPct>=100?'降本目标已达成':(fxChg>0?'汇率上行侵蚀降本成果，建议锁汇或美元结算':'汇率利好，叠加降本成效显著'))+'</div>';
+  }
+  function init(){drawChart();calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PCT.init);}else{PCT.init();}
+</script>
+</body>
+</html>

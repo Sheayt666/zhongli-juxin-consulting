@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="心理定价分析器：$9.99效应分析、锚定策略、价格区间建议、CSS心理感知图。免费在线跨境电商心理定价工具。">
+<meta name="keywords" content="心理定价,9.99效应,锚定策略,价格区间,心理感知,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/psychological-pricing-analyzer.html">
+<title>心理定价分析器 - $9.99效应·锚定策略·价格区间 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.ppa-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.ppa-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.price-ladder{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.ladder-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);transition:all .2s}
+.ladder-row.recommended{background:#ecfdf5;border:2px solid #10b981}
+.ladder-row .lr-price{font-size:22px;font-weight:800;min-width:90px;color:var(--ink)}
+.ladder-row.recommended .lr-price{color:#10b981}
+.ladder-row .lr-info{flex:1}
+.ladder-row .lr-tactic{font-size:13px;font-weight:600;color:var(--ink)}
+.ladder-row .lr-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.ladder-row .lr-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#eef2ff;color:#4f46e5}
+.ladder-row.recommended .lr-tag{background:#10b981;color:#fff}
+.anchoring-box{padding:20px;border-radius:12px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;margin-bottom:12px}
+.anchoring-box .ab-title{font-size:14px;font-weight:700;margin-bottom:8px;color:#4f46e5}
+.anchoring-box .ab-text{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.percept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.percept-card{padding:18px;border-radius:12px;text-align:center;color:#fff}
+.percept-card.low{background:linear-gradient(135deg,#10b981,#059669)}
+.percept-card.mid{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+.percept-card.high{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.percept-card .pc-tier{font-size:13px;opacity:.9}
+.percept-card .pc-range{font-size:20px;font-weight:800;margin-top:4px}
+.percept-card .pc-percept{font-size:11px;opacity:.85;margin-top:4px}
+.strategy-list{list-style:none;padding:0;margin:0}
+.strategy-list li{padding:12px 0 12px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.6}
+.strategy-list li:last-child{border-bottom:none}
+.strategy-list li::before{content:'🧠';position:absolute;left:0;top:12px;font-size:14px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.percept-grid{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"心理定价分析器","description":"$9.99效应分析、锚定策略、价格区间建议、CSS心理感知图。","url":"https://juxin-consulting.help/tools/psychological-pricing-analyzer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"心理定价分析器","item":"https://juxin-consulting.help/tools/psychological-pricing-analyzer.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="psychological_pricing_analyzer">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🧠 定价策略工作流</span>
+      <h1>心理定价 <em>分析器</em></h1>
+      <p class="tool-hero-desc">分析$9.99尾数效应与左位效应，构建价格锚定策略，划分低/中/高三档价格区间感知，输出心理定价阶梯建议，提升消费者价格接受度与转化率。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第8步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <a href="price-elasticity-tester.html" class="step">价格弹性</a><span class="arrow">→</span>
+      <a href="repricing-rules-engine.html" class="step">自动调价</a><span class="arrow">→</span>
+      <span class="step current">心理定价</span><span class="arrow">→</span>
+      <a href="price-war-simulator.html" class="step">价格战模拟</a><span class="arrow">→</span>
+      <a href="coupon-deal-optimizer.html" class="step">Coupon优化</a><span class="arrow">→</span>
+      <a href="multi-variant-pricing-strategy.html" class="step">多变体定价</a><span class="arrow">→</span>
+      <a href="price-history-analyzer.html" class="step">价格历史</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入产品价格</h2>
+          <p class="calc-form-subtitle">输入当前售价与成本</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>当前售价 <span class="hint">($)</span></label><input type="number" id="price" value="25.00" step="0.01" oninput="PPA.calc()"></div>
+            <div class="calc-field"><label>产品成本 <span class="hint">($)</span></label><input type="number" id="cost" value="9.00" step="0.01" oninput="PPA.calc()"></div>
+          </div>
+          <div class="calc-field"><label>产品定位</label><select id="position" onchange="PPA.calc()"><option value="value">性价比/大众</option><option value="mid" selected>中端/品质</option><option value="premium">高端/精品</option></select></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="ppa-section">
+        <h3>🪜 心理定价阶梯</h3>
+        <div class="price-ladder" id="priceLadder"></div>
+      </div>
+
+      <div class="ppa-section">
+        <h3>⚓ 锚定策略分析</h3>
+        <div id="anchorWrap"></div>
+      </div>
+
+      <div class="ppa-section">
+        <h3>🎨 价格区间心理感知</h3>
+        <div class="percept-grid" id="perceptGrid"></div>
+      </div>
+
+      <div class="ppa-section">
+        <h3>🧠 心理定价策略清单</h3>
+        <ul class="strategy-list" id="strategyList"></ul>
+      </div>
+
+      <div class="ppa-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="price-elasticity-tester.html" class="related-card"><span class="related-card-icon">📈</span><div class="related-card-content"><h5>价格弹性测试</h5><p>弹性系数</p></div></a>
+          <a href="multi-variant-pricing-strategy.html" class="related-card"><span class="related-card-icon">🔀</span><div class="related-card-content"><h5>多变体定价</h5><p>价格梯度</p></div></a>
+          <a href="coupon-deal-optimizer.html" class="related-card"><span class="related-card-icon">🎟️</span><div class="related-card-content"><h5>Coupon优化</h5><p>折扣ROI</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="repricing-rules-engine.html" class="wbn-btn prev">← 上一步：自动调价</a>
+        <a href="price-war-simulator.html" class="wbn-btn next">下一步：价格战模拟 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="psychological-pricing-analyzer.html">心理定价分析</a></li><li><a href="price-elasticity-tester.html">价格弹性</a></li><li><a href="price-history-analyzer.html">价格历史</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PPA=(function(){
+  'use strict';
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function n(id){return parseFloat(document.getElementById(id).value)||0;}
+  function charmPrice(p){var t=Math.floor(p)-0.01;return t;}
+  function calc(){
+    var price=n('price'),cost=n('cost'),pos=v('position');
+    // 阶梯
+    var ladders=[
+      {price:charmPrice(price*0.85),tactic:'引流价（9.99尾数）',desc:'低于主价位85%，吸引价格敏感用户，提升流量与转化',tag:'引流'},
+      {price:charmPrice(price),tactic:'主推价（9.99尾数）',desc:'核心价位，$'+charmPrice(price).toFixed(2)+'比$'+price.toFixed(0)+'心理感知低一档',tag:'主推',recommended:true},
+      {price:charmPrice(price*1.15),tactic:'锚定价（9.99尾数）',desc:'高于主推价15%，提升主推价的性价比感知',tag:'锚定'},
+      {price:Math.ceil(price*1.3)-0.01,tactic:'高端价（整数+9.99）',desc:'提升品牌溢价感，过滤价格敏感客户',tag:'溢价'}
+    ];
+    var lh='';
+    ladders.forEach(function(l){
+      var margin=((l.price-cost)/l.price*100).toFixed(0);
+      lh+='<div class="ladder-row'+(l.recommended?' recommended':'')+'"><div class="lr-price">$'+l.price.toFixed(2)+'</div><div class="lr-info"><div class="lr-tactic">'+l.tactic+'</div><div class="lr-desc">'+l.desc+' · 毛利率'+margin+'%</div></div><div class="lr-tag">'+l.tag+'</div></div>';
+    });
+    document.getElementById('priceLadder').innerHTML=lh;
+    // 锚定
+    var anchor=charmPrice(price*1.3);
+    var main=charmPrice(price);
+    var ah='<div class="anchoring-box"><div class="ab-title">⚓ 锚定效应应用</div><div class="ab-text">展示锚定价 <strong>$'+anchor.toFixed(2)+'</strong>（划线价），主推价 <strong>$'+main.toFixed(2)+'</strong> 显得优惠 $'+(anchor-main).toFixed(2)+'（折扣'+((anchor-main)/anchor*100).toFixed(0)+'%）。消费者以锚定价为参照，感知主推价"便宜了一档"，转化率可提升15-25%。</div></div>';
+    ah+='<div class="anchoring-box"><div class="ab-title">🔢 左位效应分析</div><div class="ab-text">$'+main.toFixed(2)+' 的首位数字是'+Math.floor(main/10)+'，而 $'+price.toFixed(2)+' 的首位是'+Math.floor(price/10)+'。虽然差额仅$'+(price-main).toFixed(2)+'，但消费者"左位读取"习惯使其感知为更低的价格区间。建议所有价位采用 .99 或 .95 尾数。</div></div>';
+    document.getElementById('anchorWrap').innerHTML=ah;
+    // 价格区间感知
+    var tiers=[
+      {tier:'经济感知区',range:'$'+(price*0.6).toFixed(0)+' ~ $'+(price*0.85).toFixed(0),percept:'便宜/性价比/大众',cls:'low'},
+      {tier:'品质感知区',range:'$'+(price*0.85).toFixed(0)+' ~ $'+(price*1.15).toFixed(0),percept:'合理/品质/主流',cls:'mid'},
+      {tier:'高端感知区',range:'$'+(price*1.15).toFixed(0)+' ~ $'+(price*1.5).toFixed(0),percept:'高端/精品/溢价',cls:'high'}
+    ];
+    var ph='';
+    tiers.forEach(function(t){ph+='<div class="percept-card '+t.cls+'"><div class="pc-tier">'+t.tier+'</div><div class="pc-range">'+t.range+'</div><div class="pc-percept">'+t.percept+'</div></div>';});
+    document.getElementById('perceptGrid').innerHTML=ph;
+    // 策略清单
+    var strategies=[
+      pos==='premium'?'高端定位建议采用整数定价（如$39），削弱价格敏感度，强化品质感':'中低端定位建议采用.99尾数定价，利用左位效应提升转化',
+      '设置划线价（List Price）制造锚定对比，划线价建议高于实付价20-30%',
+      'Bundle组合定价时，总价应低于单品之和的90%，体现组合优惠感知',
+      'Coupon面额建议为$1-$3或5%-10%，避免过大折扣削弱价值感知',
+      '价格避免$X.00整数结尾，消费者对整数价格敏感度更高',
+      'Tiered定价提供3档选择（好/更好/最好），中间档为主推，多数客户选中间档（妥协效应）'
+    ];
+    var sh='';strategies.forEach(function(s){sh+='<li>'+s+'</li>';});
+    document.getElementById('strategyList').innerHTML=sh;
+    // 结果卡
+    var recPrice=charmPrice(price);
+    var margin=((recPrice-cost)/recPrice*100).toFixed(0);
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🧠 心理定价建议</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">推荐售价</div><div class="ri-value" style="color:#10b981">$'+recPrice.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">建议划线价</div><div class="ri-value" style="color:#f59e0b">$'+anchor.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">感知折扣</div><div class="ri-value positive">'+((anchor-recPrice)/anchor*100).toFixed(0)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">毛利率</div><div class="ri-value positive">'+margin+'%</div></div>'+
+      '</div><div class="result-note">💡 采用$'+recPrice.toFixed(2)+'心理定价（.99尾数），配合$'+anchor.toFixed(2)+'划线锚定价，消费者感知优惠'+((anchor-recPrice)/anchor*100).toFixed(0)+'%，预计转化率提升15-25%</div>';
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PPA.init);}else{PPA.init();}
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="自动响应路由器：关键词匹配+智能分配+优先级排序+升级机制，CSS路由规则图与分配矩阵。免费客服管理工具。">
+<meta name="keywords" content="自动路由,智能分配,关键词匹配,优先级排序,升级机制,客服管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/auto-response-router.html">
+<title>自动响应路由器 - 关键词匹配·智能分配·升级机制 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.routing-flow{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.flow-stage{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.flow-stage .fs-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.fs-icon.incoming{background:#dbeafe;color:#2563eb}
+.fs-icon.keyword{background:#fef3c7;color:#d97706}
+.fs-icon.route{background:#e0e7ff;color:#4f46e5}
+.fs-icon.assign{background:#d1fae5;color:#059669}
+.fs-icon.escalate{background:#fee2e2;color:#dc2626}
+.flow-stage .fs-content{flex:1}
+.flow-stage .fs-title{font-size:14px;font-weight:700}
+.flow-stage .fs-desc{font-size:12px;color:var(--muted)}
+.flow-arrow-down{text-align:center;color:#c7d2fe;font-size:20px}
+.rule-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.rule-table th{background:#4f46e5;color:#fff;padding:10px;text-align:left;font-weight:600;border-radius:6px 6px 0 0}
+.rule-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.rule-table tr:hover td{background:var(--bg-soft)}
+.assignment-matrix{display:grid;grid-template-columns:auto repeat(4,1fr);gap:4px;margin-top:16px}
+.am-header{background:#4f46e5;color:#fff;padding:10px;text-align:center;font-size:12px;font-weight:600;border-radius:6px}
+.am-label{background:var(--bg-soft);padding:10px;text-align:center;font-size:12px;font-weight:600;color:var(--ink-soft);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.am-cell{padding:12px;border-radius:6px;font-size:12px;text-align:center;min-height:50px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.simulator-box{padding:20px;background:var(--bg-soft);border-radius:12px;border:1px solid var(--rule-light);margin-top:16px}
+.sim-result{padding:16px;border-radius:10px;margin-top:12px;border-left:4px solid}
+.sim-result.auto{border-color:#10b981;background:#f0fdf4}
+.sim-result.escalate{border-color:#ef4444;background:#fef2f2}
+.sim-result .sr-route{font-size:14px;font-weight:700;margin-bottom:4px}
+.sim-result .sr-detail{font-size:13px;color:var(--ink-soft)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"自动响应路由器","description":"关键词匹配+智能分配+优先级排序+升级机制。","url":"https://juxin-consulting.help/tools/auto-response-router.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="auto_response_router">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎧</span><span class="workflow-name">客服管理工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="email-template-generator.html" class="step">邮件模板</a><span class="arrow">→</span>
+      <a href="review-statistics.html" class="step">评价统计</a><span class="arrow">→</span>
+      <a href="rma-tracker.html" class="step">退货追踪</a><span class="arrow">→</span>
+      <a href="customer-ticket-manager.html" class="step">工单管理</a><span class="arrow">→</span>
+      <a href="refund-report-generator.html" class="step">退款报告</a><span class="arrow">→</span>
+      <a href="voc-analysis.html" class="step">VOC分析</a><span class="arrow">→</span>
+      <a href="cs-sla-calc.html" class="step">SLA计算</a><span class="arrow">→</span>
+      <a href="faq-generator.html" class="step">FAQ生成</a><span class="arrow">→</span>
+      <a href="negative-review-recovery.html" class="step">差评挽回</a><span class="arrow">→</span>
+      <a href="cs-kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span>
+      <a href="multi-store-inbox.html" class="step">多店铺收件箱</a><span class="arrow">→</span>
+      <span class="step current">自动路由</span><span class="arrow">→</span>
+      <a href="customer-satisfaction-survey.html" class="step">满意度调查</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎧 客服管理工具 · 标准版</span>
+      <h1>自动响应<em>路由器</em></h1>
+      <p class="tool-hero-desc">基于关键词匹配的智能工单路由，自动分配至对应团队，优先级排序与SLA升级机制，CSS路由流程图与分配矩阵可视化。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 路由规则配置</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>SLA响应时限（小时）</label><input type="number" id="slaHours" value="24" oninput="ARR.calc()"></div>
+            <div class="calc-field"><label>升级阈值（小时）</label><input type="number" id="escalateHours" value="20" oninput="ARR.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box" style="margin-top:20px"><h4>🔍 关键词路由规则</h4></div>
+
+          <div class="fee-rule-box">
+            <h4>退款/退货类</h4>
+            <p style="font-size:12px;color:var(--muted)">关键词：退款、退货、换货、破损、损坏、不符 → 分配至【售后团队】</p>
+          </div>
+          <div class="fee-rule-box">
+            <h4>产品咨询类</h4>
+            <p style="font-size:12px;color:var(--muted)">关键词：尺寸、规格、材质、功能、使用方法 → 分配至【产品客服】</p>
+          </div>
+          <div class="fee-rule-box">
+            <h4>物流查询类</h4>
+            <p style="font-size:12px;color:var(--muted)">关键词：物流、快递、发货、到货、追踪 → 分配至【物流团队】</p>
+          </div>
+          <div class="fee-rule-box">
+            <h4>投诉/差评类</h4>
+            <p style="font-size:12px;color:var(--muted)">关键词：差评、投诉、失望、垃圾、假货 → 分配至【高级客服】+ 升级</p>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="flowSection">
+        <h3>🔄 路由流程图</h3>
+        <div class="routing-flow" id="routingFlow"></div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 路由统计</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block" id="ruleSection">
+        <h3>📋 路由规则表</h3>
+        <table class="rule-table" id="ruleTable"></table>
+      </div>
+
+      <div class="section-block" id="matrixSection">
+        <h3>📊 分配矩阵</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">纵轴：工单类型 | 横轴：优先级</p>
+        <div class="assignment-matrix" id="assignmentMatrix"></div>
+      </div>
+
+      <div class="section-block" id="simSection">
+        <h3>🧪 路由模拟器</h3>
+        <div class="simulator-box">
+          <div class="calc-field"><label>输入客户消息内容</label><textarea id="simInput" rows="3" placeholder="如：我收到的产品有破损，要求退款" oninput="ARR.simulate()">我收到的产品有破损，要求退款</textarea></div>
+          <div id="simResult"></div>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="multi-store-inbox.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 多店铺收件箱</span></a>
+        <a href="customer-satisfaction-survey.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">满意度调查 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="auto-response-router.html">自动路由</a></li><li><a href="multi-store-inbox.html">多店铺收件箱</a></li><li><a href="customer-satisfaction-survey.html">满意度调查</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var ARR=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var rules=[
+    {category:'退款/退货',keywords:['退款','退货','换货','破损','损坏','不符','质量问题'],team:'售后团队',priority:'high',autoReply:true,color:'#ef4444'},
+    {category:'产品咨询',keywords:['尺寸','规格','材质','功能','使用方法','说明书','参数'],team:'产品客服',priority:'medium',autoReply:true,color:'#3b82f6'},
+    {category:'物流查询',keywords:['物流','快递','发货','到货','追踪','运输','配送'],team:'物流团队',priority:'medium',autoReply:true,color:'#f59e0b'},
+    {category:'投诉/差评',keywords:['差评','投诉','失望','垃圾','假货','欺骗','维权'],team:'高级客服',priority:'critical',autoReply:false,color:'#dc2626'},
+    {category:'账户问题',keywords:['登录','密码','账户','注册','绑定'],team:'技术支持',priority:'medium',autoReply:true,color:'#8b5cf6'},
+    {category:'优惠券/促销',keywords:['优惠券','折扣','促销','活动','满减'],team:'运营团队',priority:'low',autoReply:true,color:'#10b981'}
+  ];
+  var stats={autoRouted:0,escalated:0,total:156};
+  function calc(){
+    var sla=v('slaHours'),esc=v('escalateHours');
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">SLA响应时限</div><div class="rh-value">'+sla+'小时</div></div>'+
+      '<div class="result-detail"><span>升级阈值</span><strong>'+esc+'小时</strong></div>'+
+      '<div class="result-detail"><span>路由规则数</span><strong>'+rules.length+'类</strong></div>'+
+      '<div class="result-detail"><span>自动回复率</span><strong>'+Math.round(rules.filter(function(r){return r.autoReply;}).length/rules.length*100)+'%</strong></div>'+
+      '<div class="result-detail"><span>覆盖关键词</span><strong>'+rules.reduce(function(s,r){return s+r.keywords.length;},0)+'个</strong></div>';
+    $('routingFlow').innerHTML=
+      '<div class="flow-stage"><div class="fs-icon incoming">📥</div><div class="fs-content"><div class="fs-title">客户消息接入</div><div class="fs-desc">站内信/邮件/评价等多渠道消息统一接入</div></div></div>'+
+      '<div class="flow-arrow-down">↓</div>'+
+      '<div class="flow-stage"><div class="fs-icon keyword">🔍</div><div class="fs-content"><div class="fs-title">关键词匹配</div><div class="fs-desc">NLP提取消息关键词，匹配'+rules.length+'类路由规则</div></div></div>'+
+      '<div class="flow-arrow-down">↓</div>'+
+      '<div class="flow-stage"><div class="fs-icon route">🔀</div><div class="fs-content"><div class="fs-title">智能路由分配</div><div class="fs-desc">根据匹配结果自动分配至对应团队，设置优先级</div></div></div>'+
+      '<div class="flow-arrow-down">↓</div>'+
+      '<div class="flow-stage"><div class="fs-icon assign">✅</div><div class="fs-content"><div class="fs-title">自动回复/人工处理</div><div class="fs-desc">常见问题自动回复模板，复杂问题转人工处理</div></div></div>'+
+      '<div class="flow-arrow-down">↓</div>'+
+      '<div class="flow-stage"><div class="fs-icon escalate">🚨</div><div class="fs-content"><div class="fs-title">SLA超时升级</div><div class="fs-desc">超过'+esc+'小时未响应自动升级至高级客服</div></div></div>';
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+stats.total+'</div><div class="rsb-lbl">月度工单数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">85%</div><div class="rsb-lbl">自动路由率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">12%</div><div class="rsb-lbl">人工处理率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">3%</div><div class="rsb-lbl">升级处理率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+sla+'h</div><div class="rsb-lbl">平均响应时间</div></div>';
+    $('ruleTable').innerHTML=
+      '<tr><th>类别</th><th>关键词</th><th>分配团队</th><th>优先级</th><th>自动回复</th><th>SLA</th></tr>'+
+      rules.map(function(r){
+        return '<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+r.color+';margin-right:6px"></span><strong>'+r.category+'</strong></td><td>'+r.keywords.join('、')+'</td><td>'+r.team+'</td><td><span style="color:'+ (r.priority==='critical'?'#ef4444':r.priority==='high'?'#f59e0b':'#10b981')+';font-weight:600">'+r.priority.toUpperCase()+'</span></td><td>'+(r.autoReply?'✅ 是':'❌ 否')+'</td><td>'+sla+'h</td></tr>';
+      }).join('');
+    var priorities=['critical','high','medium','low'];
+    var priorityLabels={critical:'紧急',high:'高',medium:'中',low:'低'};
+    var html='<div class="am-header"></div>';
+    priorities.forEach(function(p){html+='<div class="am-header">'+priorityLabels[p]+'</div>';});
+    rules.forEach(function(r){
+      html+='<div class="am-label">'+r.category+'</div>';
+      priorities.forEach(function(p){
+        var match=r.priority===p;
+        html+='<div class="am-cell" style="background:'+(match?r.color+'22':'transparent')+';color:'+(match?r.color:'#94a3b8')+';font-weight:'+(match?'700':'400')+'">'+(match?r.team:'-')+'</div>';
+      });
+    });
+    $('assignmentMatrix').innerHTML=html;
+    simulate();
+  }
+  function simulate(){
+    var text=($('simInput').value||'').toLowerCase();
+    var matched=null;
+    for(var i=0;i<rules.length;i++){
+      for(var j=0;j<rules[i].keywords.length;j++){
+        if(text.indexOf(rules[i].keywords[j])>=0){matched=rules[i];break;}
+      }
+      if(matched)break;
+    }
+    if(matched){
+      var isEscalate=matched.priority==='critical';
+      $('simResult').innerHTML=
+        '<div class="sim-result '+(isEscalate?'escalate':'auto')+'">'+
+        '<div class="sr-route">路由结果 → '+matched.team+' ['+matched.category+']</div>'+
+        '<div class="sr-detail">优先级：'+matched.priority.toUpperCase()+' | 匹配关键词：'+matched.keywords.filter(function(k){return text.indexOf(k)>=0;}).join('、')+' | '+(matched.autoReply?'自动回复模板已触发':'需人工处理')+(isEscalate?' | 已触发升级机制':'')+'</div></div>';
+    }else{
+      $('simResult').innerHTML='<div class="sim-result auto" style="border-color:#94a3b8;background:#f9fafb"><div class="sr-route">未匹配路由规则</div><div class="sr-detail">分配至【通用客服】队列，由人工判断处理</div></div>';
+    }
+  }
+  return{calc:calc,simulate:simulate};
+})();
+ARR.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

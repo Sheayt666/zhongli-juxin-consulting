@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="产品表现整合分析器：多维度整合评分，CSS评分矩阵，深度诊断卡片。">
+<title>产品表现整合分析器 - 多维评分·诊断卡片 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.sku-table{width:100%;border-collapse:collapse;font-size:13px}.sku-table th{text-align:left;padding:10px 8px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:11px;white-space:nowrap}.sku-table td{padding:8px;border-bottom:1px solid var(--rule-light)}.sku-table input{width:60px;padding:5px 6px;border:1px solid var(--rule);border-radius:6px;font-size:12px;font-family:inherit}.sku-table input:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid #fecaca}
+.score-matrix{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}.score-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:all .2s}.score-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}.sc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sc-name{font-size:15px;font-weight:700;color:var(--ink)}.sc-total{font-size:24px;font-weight:800}.sc-dims{display:flex;flex-direction:column;gap:8px}.sc-dim{display:flex;align-items:center;gap:8px}.sc-dim-label{width:70px;font-size:12px;color:var(--muted);flex-shrink:0}.sc-dim-bar{flex:1;height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden}.sc-dim-fill{height:100%;border-radius:4px;transition:width .6s}.sc-dim-val{width:36px;font-size:12px;font-weight:700;text-align:right}
+.diag-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:16px;margin-bottom:12px;border-left:4px solid}.diag-card.good{border-left-color:var(--success)}.diag-card.warn{border-left-color:var(--warning)}.diag-card.bad{border-left-color:var(--danger)}.diag-title{font-size:14px;font-weight:700;margin-bottom:6px}.diag-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W6 运营数据工作流</div><div class="workflow-steps">
+<a href="sales-estimator.html" class="workflow-step">销量估算</a><a href="bsr-tracker.html" class="workflow-step">BSR追踪</a><a href="conversion-funnel.html" class="workflow-step">转化漏斗</a><a href="review-analyzer.html" class="workflow-step">评论分析</a><a href="profit-calendar.html" class="workflow-step">利润日历</a><a href="real-time-sales-dashboard.html" class="workflow-step">实时仪表盘</a><a href="product-performance-integrator.html" class="workflow-step active">表现整合</a><a href="session-page-analyzer.html" class="workflow-step">会话分析</a><a href="ad-attribution-analyzer.html" class="workflow-step">广告归因</a><a href="buy-box-win-rate-monitor.html" class="workflow-step">购物车监控</a><a href="traffic-source-breakdown.html" class="workflow-step">流量拆解</a><a href="daily-ops-report-generator.html" class="workflow-step">日报生成</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W6 运营数据</a><span>/</span>产品表现整合分析器</div>
+<div class="tool-header"><span class="tool-badge">W6 运营数据工作流</span><h1>产品表现<em>整合分析器</em></h1><p>各SKU销量/库存/流量/广告/转化数据多维度整合评分，CSS评分矩阵一目了然，深度诊断卡片精准定位问题与机会。</p></div>
+
+<div class="card"><h2>SKU多维度数据输入 (0-100分)</h2>
+<div style="overflow-x:auto"><table class="sku-table"><thead><tr><th>SKU</th><th>销量</th><th>库存</th><th>流量</th><th>广告</th><th>转化</th><th>评分</th><th></th></tr></thead><tbody id="skuBody"></tbody></table></div>
+<div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-secondary" onclick="Perf.add()">+ 添加SKU</button><button class="btn btn-secondary" onclick="Perf.loadSample()">载入示例</button></div>
+</div>
+
+<div class="card"><h2>整合评分矩阵</h2><div class="score-matrix" id="matrixWrap"></div></div>
+<div class="card"><h2>深度诊断</h2><div id="diagWrap"></div></div>
+
+<div class="related-grid">
+<a href="real-time-sales-dashboard.html" class="related-card"><span class="rc-icon">📊</span><div><h4>实时仪表盘</h4><p>实时销售监控</p></div></a>
+<a href="session-page-analyzer.html" class="related-card"><span class="rc-icon">👁</span><div><h4>会话分析器</h4><p>Sessions与Page Views</p></div></a>
+<a href="ad-attribution-analyzer.html" class="related-card"><span class="rc-icon">🎯</span><div><h4>广告归因分析</h4><p>增量归因分析</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Perf={
+  data:[],
+  dims:['销量','库存','流量','广告','转化'],
+  colors:['#4f46e5','#10b981','#06b6d4','#f59e0b','#ec4899'],
+  init(){ this.loadSample(); },
+  loadSample(){
+    this.data=[
+      {id:1,name:'SKU-A01',sales:85,inventory:70,traffic:80,advertising:65,conversion:75},
+      {id:2,name:'SKU-B02',sales:92,inventory:45,traffic:88,advertising:78,conversion:82},
+      {id:3,name:'SKU-C03',sales:55,inventory:90,traffic:50,advertising:40,conversion:60},
+      {id:4,name:'SKU-D04',sales:70,inventory:85,traffic:65,advertising:72,conversion:68},
+    ];
+    this.render();
+  },
+  add(){ this.data.push({id:Date.now(),name:'SKU-'+String(this.data.length+1).padStart(2,'0'),sales:50,inventory:50,traffic:50,advertising:50,conversion:50}); this.render(); },
+  update(id,f,v){ const s=this.data.find(x=>x.id===id); if(s)s[f]=Math.min(100,Math.max(0,parseFloat(v)||0)); this.render(); },
+  del(id){ this.data=this.data.filter(s=>s.id!==id); this.render(); },
+  render(){
+    document.getElementById('skuBody').innerHTML=this.data.map(s=>{
+      const vals=[s.sales,s.inventory,s.traffic,s.advertising,s.conversion];
+      const total=vals.reduce((a,b)=>a+b,0)/5;
+      return `<tr><td><input type="text" value="${s.name}" style="width:80px" oninput="Perf.update(${s.id},'name',this.value)"></td>
+      ${['sales','inventory','traffic','advertising','conversion'].map(f=>`<td><input type="number" value="${s[f]}" min="0" max="100" oninput="Perf.update(${s.id},'${f}',this.value)"></td>`).join('')}
+      <td><strong style="color:${total>=75?'var(--success)':total>=50?'var(--warning)':'var(--danger)'}">${total.toFixed(0)}</strong></td>
+      <td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="Perf.del(${s.id})">删除</button></td></tr>`;
+    }).join('');
+    this.calc();
+  },
+  calc(){
+    const items=this.data.map(s=>{
+      const vals=[s.sales,s.inventory,s.traffic,s.advertising,s.conversion];
+      const total=vals.reduce((a,b)=>a+b,0)/5;
+      return {...s,vals,total};
+    });
+    items.sort((a,b)=>b.total-a.total);
+    this.renderMatrix(items);
+    this.renderDiag(items);
+  },
+  renderMatrix(items){
+    document.getElementById('matrixWrap').innerHTML=items.map(s=>{
+      const color=s.total>=75?'var(--success)':s.total>=50?'var(--warning)':'var(--danger)';
+      return `<div class="score-card" style="border-top:4px solid ${color}">
+        <div class="sc-header"><span class="sc-name">${s.name}</span><span class="sc-total" style="color:${color}">${s.total.toFixed(0)}</span></div>
+        <div class="sc-dims">${this.dims.map((d,i)=>{
+          const v=s.vals[i];
+          const c=v>=75?'#10b981':v>=50?'#f59e0b':'#ef4444';
+          return `<div class="sc-dim"><span class="sc-dim-label">${d}</span><div class="sc-dim-bar"><div class="sc-dim-fill" style="width:${v}%;background:${c}"></div></div><span class="sc-dim-val">${v}</span></div>`;
+        }).join('')}</div>
+      </div>`;
+    }).join('');
+  },
+  renderDiag(items){
+    let html='';
+    items.forEach(s=>{
+      const issues=[];
+      if(s.inventory<50&&s.sales>70)issues.push({type:'bad',title:`${s.name} 库存预警`,desc:`销量评分${s.sales}但库存仅${s.inventory}，预计${Math.round(s.inventory/s.sales*14)}天内断货，建议立即补货`});
+      if(s.advertising>70&&s.conversion<50)issues.push({type:'bad',title:`${s.name} 广告效率低`,desc:`广告投入评分${s.advertising}但转化仅${s.conversion}，ACOS可能过高，建议优化关键词和Listing`});
+      if(s.traffic>75&&s.conversion<55)issues.push({type:'warn',title:`${s.name} 流量转化率低`,desc:`流量充足(${s.traffic})但转化偏低(${s.conversion})，检查价格竞争力和图片质量`});
+      if(s.total>=75)issues.push({type:'good',title:`${s.name} 表现优秀`,desc:`综合评分${s.total.toFixed(0)}，建议加大广告预算和库存备货以放大优势`});
+      if(s.total<50)issues.push({type:'bad',title:`${s.name} 表现不佳`,desc:`综合评分仅${s.total.toFixed(0)}，建议考虑优化或淘汰该SKU`});
+      issues.forEach(i=>{html+=`<div class="diag-card ${i.type}"><div class="diag-title">${i.title}</div><div class="diag-desc">${i.desc}</div></div>`;});
+    });
+    document.getElementById('diagWrap').innerHTML=html||'<div style="text-align:center;color:var(--muted);padding:24px">暂无诊断数据</div>';
+  }
+};
+Perf.init();
+</script>
+</body>
+</html>

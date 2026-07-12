@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FBA索赔追踪器：7种索赔类型追踪、状态时间线、成功率分析、金额汇总，支持localStorage本地存储。">
+<title>FBA索赔追踪器 - 7类索赔·时间线·成功率分析 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}
+.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}
+.workflow-steps{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}
+.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;background:transparent;border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}
+.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+/* 面包屑 */
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb span{margin:0 6px;color:var(--rule)}
+/* 标题区 */
+.tool-header{padding:24px 0 32px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}
+.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px;letter-spacing:-.5px}
+.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+/* 卡片 */
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+/* 表单 */
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.form-field{display:flex;flex-direction:column;gap:6px}
+.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}
+.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;color:var(--ink);background:#fff;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-actions{display:flex;gap:12px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.35)}
+.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid #fecaca}
+.btn-danger:hover{background:var(--danger);color:#fff}
+/* 统计卡片 */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}
+.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--ink)}
+.stat-card .stat-val.success{color:var(--success)}
+.stat-card .stat-val.warning{color:var(--warning)}
+.stat-card .stat-val.primary{color:var(--primary)}
+.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+/* 表格 */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.data-table td{padding:12px;border-bottom:1px solid var(--rule-light)}
+.data-table tr:hover td{background:var(--rule-light)}
+.badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
+.badge-pending{background:var(--warning-bg);color:var(--warning)}
+.badge-submitted{background:var(--primary-bg);color:var(--primary)}
+.badge-approved{background:var(--success-bg);color:var(--success)}
+.badge-rejected{background:var(--danger-bg);color:var(--danger)}
+.type-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:#f1f5f9;color:var(--ink-soft)}
+/* 时间线 */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--rule)}
+.timeline-item{position:relative;padding-bottom:20px}
+.timeline-item::before{content:'';position:absolute;left:-26px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid #fff;box-shadow:0 0 0 2px var(--primary)}
+.timeline-item.success::before{background:var(--success);box-shadow:0 0 0 2px var(--success)}
+.timeline-item.danger::before{background:var(--danger);box-shadow:0 0 0 2px var(--danger)}
+.timeline-item.warning::before{background:var(--warning);box-shadow:0 0 0 2px var(--warning)}
+.timeline-date{font-size:12px;color:var(--muted);font-weight:600}
+.timeline-title{font-size:14px;font-weight:600;color:var(--ink)}
+.timeline-desc{font-size:13px;color:var(--muted)}
+/* 饼图 */
+.pie-wrap{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center}
+.conic-pie{width:180px;height:180px;border-radius:50%;position:relative;flex-shrink:0;box-shadow:var(--shadow-lg)}
+.conic-pie::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:var(--surface)}
+.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1}
+.pie-center .pc-val{font-size:20px;font-weight:800;color:var(--ink)}
+.pie-center .pc-lbl{font-size:11px;color:var(--muted)}
+.pie-legend{display:flex;flex-direction:column;gap:8px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:13px}
+.legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0}
+.legend-item .l-name{color:var(--ink-soft);flex:1}
+.legend-item .l-val{font-weight:700;color:var(--ink)}
+/* 成功率条 */
+.success-bar-wrap{margin-top:12px}
+.success-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.success-bar-row .sbr-label{width:100px;font-size:13px;color:var(--ink-soft);flex-shrink:0}
+.success-bar-track{flex:1;height:24px;background:var(--rule-light);border-radius:6px;overflow:hidden;position:relative}
+.success-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:700;color:#fff;transition:width .8s ease}
+.success-bar-row .sbr-val{width:60px;font-size:13px;font-weight:700;text-align:right}
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}
+.footer a{color:var(--primary);font-weight:600;text-decoration:none}
+.footer a:hover{text-decoration:underline}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}
+.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}
+.related-card .rc-icon{font-size:24px;flex-shrink:0}
+.related-card h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav">
+  <div class="workflow-nav-inner">
+    <div class="workflow-label">W5 财务利润工作流</div>
+    <div class="workflow-steps">
+      <a href="fba-calculator.html" class="workflow-step">FBA利润</a>
+      <a href="margin-markup.html" class="workflow-step">利润率</a>
+      <a href="roi-payback.html" class="workflow-step">ROI回本</a>
+      <a href="break-even-volume.html" class="workflow-step">盈亏平衡</a>
+      <a href="cash-flow-forecast.html" class="workflow-step">现金流预测</a>
+      <a href="fba-refund-claim-tracker.html" class="workflow-step active">索赔追踪</a>
+      <a href="fee-breakdown-decomposer.html" class="workflow-step">费用拆解</a>
+      <a href="sku-profit-analyzer.html" class="workflow-step">SKU分析</a>
+      <a href="multi-country-vat-calculator.html" class="workflow-step">VAT计算</a>
+      <a href="reimbursement-finder.html" class="workflow-step">赔偿查找</a>
+      <a href="profit-trend-analyzer.html" class="workflow-step">利润趋势</a>
+      <a href="cost-optimization-advisor.html" class="workflow-step">成本优化</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../index.html">首页</a><span>/</span>
+    <a href="index.html">工具中心</a><span>/</span>
+    <a href="#">W5 财务利润</a><span>/</span>
+    FBA索赔追踪器
+  </div>
+
+  <div class="tool-header">
+    <span class="tool-badge">W5 财务利润工作流 · 深度版</span>
+    <h1>FBA<em>索赔追踪器</em></h1>
+    <p>7种索赔类型全追踪：丢失/损坏/退货问题/费用多收/重量差异/尺寸差异/过期。状态时间线、成功率分析、金额汇总，数据本地存储不丢失。</p>
+  </div>
+
+  <!-- 统计概览 -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-val primary" id="statTotal">0</div><div class="stat-lbl">索赔总数</div></div>
+    <div class="stat-card"><div class="stat-val success" id="statApproved">$0</div><div class="stat-lbl">已批准金额</div></div>
+    <div class="stat-card"><div class="stat-val warning" id="statPending">$0</div><div class="stat-lbl">待处理金额</div></div>
+    <div class="stat-card"><div class="stat-val" id="statRate">0%</div><div class="stat-lbl">成功率</div></div>
+  </div>
+
+  <!-- 输入表单 -->
+  <div class="card">
+    <h2>添加 / 编辑索赔记录</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>索赔类型</label>
+        <select id="claimType">
+          <option value="丢失">库存丢失 (Lost Inventory)</option>
+          <option value="损坏">仓库损坏 (Damaged)</option>
+          <option value="退货问题">退货问题 (Return Issue)</option>
+          <option value="费用多收">费用多收 (Fee Overcharge)</option>
+          <option value="重量差异">重量差异 (Weight Discrepancy)</option>
+          <option value="尺寸差异">尺寸差异 (Dimension Discrepancy)</option>
+          <option value="过期">过期商品 (Expired)</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>ASIN</label>
+        <input type="text" id="asin" placeholder="如 B08XYZ1234" oninput="Tracker.onInput()">
+      </div>
+      <div class="form-field">
+        <label>数量 <span class="hint">(件)</span></label>
+        <input type="number" id="qty" placeholder="如 10" min="0" value="0" oninput="Tracker.onInput()">
+      </div>
+      <div class="form-field">
+        <label>索赔金额 <span class="hint">($)</span></label>
+        <input type="number" id="amount" placeholder="如 150.00" step="0.01" min="0" value="0" oninput="Tracker.onInput()">
+      </div>
+      <div class="form-field">
+        <label>提交日期</label>
+        <input type="date" id="claimDate" oninput="Tracker.onInput()">
+      </div>
+      <div class="form-field">
+        <label>状态</label>
+        <select id="status">
+          <option value="pending">待提交 (Pending)</option>
+          <option value="submitted">已提交 (Submitted)</option>
+          <option value="approved">已批准 (Approved)</option>
+          <option value="rejected">已拒绝 (Rejected)</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>FBA仓库 <span class="hint">(可选)</span></label>
+        <input type="text" id="warehouse" placeholder="如 FBA-ATL3" oninput="Tracker.onInput()">
+      </div>
+      <div class="form-field">
+        <label>Case ID <span class="hint">(可选)</span></label>
+        <input type="text" id="caseId" placeholder="如 1234567890" oninput="Tracker.onInput()">
+      </div>
+      <div class="form-field">
+        <label>备注 <span class="hint">(可选)</span></label>
+        <input type="text" id="note" placeholder="补充说明" oninput="Tracker.onInput()">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="Tracker.save()">保存索赔记录</button>
+      <button class="btn btn-secondary" onclick="Tracker.resetForm()">清空表单</button>
+      <button class="btn btn-secondary" onclick="Tracker.loadSample()">载入示例数据</button>
+      <button class="btn btn-danger" onclick="Tracker.clearAll()">清空全部</button>
+    </div>
+  </div>
+
+  <!-- 索赔列表 -->
+  <div class="card">
+    <h2>索赔记录看板</h2>
+    <div id="claimTableWrap">
+      <div class="empty-state" id="emptyState">
+        <div class="es-icon">📋</div>
+        <p>暂无索赔记录，请添加或载入示例数据</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成功率分析 -->
+  <div class="card">
+    <h2>成功率分析 (按索赔类型)</h2>
+    <div id="successAnalysis"></div>
+  </div>
+
+  <!-- 金额分布饼图 -->
+  <div class="card">
+    <h2>索赔金额分布</h2>
+    <div class="pie-wrap" id="pieWrap">
+      <div class="empty-state">
+        <div class="es-icon">📊</div>
+        <p>添加索赔记录后显示金额分布</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 时间线 -->
+  <div class="card">
+    <h2>索赔状态时间线</h2>
+    <div class="timeline" id="timeline">
+      <div class="empty-state">
+        <div class="es-icon">🕐</div>
+        <p>暂无时间线数据</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 相关工具 -->
+  <div class="related-grid">
+    <a href="reimbursement-finder.html" class="related-card"><span class="rc-icon">🔍</span><div><h4>赔偿查找器</h4><p>自动核查异常库存项</p></div></a>
+    <a href="fee-breakdown-decomposer.html" class="related-card"><span class="rc-icon">💰</span><div><h4>费用拆解器</h4><p>FBA费用明细可视化</p></div></a>
+    <a href="fba-calculator.html" class="related-card"><span class="rc-icon">📦</span><div><h4>FBA利润计算器</h4><p>三产品对比利润计算</p></div></a>
+  </div>
+
+  <div class="footer">
+    <p><a href="index.html">← 返回工具中心</a></p>
+  </div>
+</div>
+
+<script>
+const Tracker = {
+  data: [],
+  editId: null,
+  STORAGE_KEY: 'jx_fba_claims',
+
+  init() {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    if (saved) {
+      try { this.data = JSON.parse(saved); } catch(e) { this.data = []; }
+    }
+    document.getElementById('claimDate').value = new Date().toISOString().slice(0,10);
+    this.render();
+  },
+
+  save() {
+    const claim = {
+      id: this.editId || Date.now(),
+      type: document.getElementById('claimType').value,
+      asin: document.getElementById('asin').value.trim() || '—',
+      qty: parseInt(document.getElementById('qty').value) || 0,
+      amount: parseFloat(document.getElementById('amount').value) || 0,
+      date: document.getElementById('claimDate').value,
+      status: document.getElementById('status').value,
+      warehouse: document.getElementById('warehouse').value.trim() || '—',
+      caseId: document.getElementById('caseId').value.trim() || '—',
+      note: document.getElementById('note').value.trim() || '',
+      createdAt: new Date().toISOString()
+    };
+    if (this.editId) {
+      const idx = this.data.findIndex(c => c.id === this.editId);
+      if (idx >= 0) this.data[idx] = claim;
+      this.editId = null;
+    } else {
+      this.data.unshift(claim);
+    }
+    this.persist();
+    this.resetForm();
+    this.render();
+  },
+
+  edit(id) {
+    const c = this.data.find(c => c.id === id);
+    if (!c) return;
+    this.editId = id;
+    document.getElementById('claimType').value = c.type;
+    document.getElementById('asin').value = c.asin === '—' ? '' : c.asin;
+    document.getElementById('qty').value = c.qty;
+    document.getElementById('amount').value = c.amount;
+    document.getElementById('claimDate').value = c.date;
+    document.getElementById('status').value = c.status;
+    document.getElementById('warehouse').value = c.warehouse === '—' ? '' : c.warehouse;
+    document.getElementById('caseId').value = c.caseId === '—' ? '' : c.caseId;
+    document.getElementById('note').value = c.note;
+    window.scrollTo({top:0,behavior:'smooth'});
+  },
+
+  del(id) {
+    this.data = this.data.filter(c => c.id !== id);
+    this.persist();
+    this.render();
+  },
+
+  resetForm() {
+    this.editId = null;
+    document.getElementById('asin').value = '';
+    document.getElementById('qty').value = '0';
+    document.getElementById('amount').value = '0';
+    document.getElementById('warehouse').value = '';
+    document.getElementById('caseId').value = '';
+    document.getElementById('note').value = '';
+    document.getElementById('claimDate').value = new Date().toISOString().slice(0,10);
+  },
+
+  loadSample() {
+    const types = ['丢失','损坏','退货问题','费用多收','重量差异','尺寸差异','过期'];
+    const statuses = ['approved','submitted','pending','rejected','approved','approved','submitted'];
+    const samples = [];
+    for (let i = 0; i < 8; i++) {
+      const t = types[i % 7];
+      samples.push({
+        id: Date.now() + i,
+        type: t,
+        asin: 'B08' + Math.random().toString(36).substr(2,7).toUpperCase(),
+        qty: Math.floor(Math.random()*20)+1,
+        amount: Math.round((Math.random()*300+20)*100)/100,
+        date: new Date(Date.now()-i*86400000*3).toISOString().slice(0,10),
+        status: statuses[i % 7],
+        warehouse: 'FBA-' + ['ATL3','PHX5','IND9','EWR4'][i%4],
+        caseId: '10' + Math.floor(Math.random()*900000000+100000000),
+        note: '',
+        createdAt: new Date().toISOString()
+      });
+    }
+    this.data = samples;
+    this.persist();
+    this.render();
+  },
+
+  clearAll() {
+    if (!confirm('确定清空所有索赔记录？此操作不可撤销。')) return;
+    this.data = [];
+    this.persist();
+    this.render();
+  },
+
+  persist() {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
+  },
+
+  onInput() {},
+
+  render() {
+    this.renderStats();
+    this.renderTable();
+    this.renderSuccessAnalysis();
+    this.renderPie();
+    this.renderTimeline();
+  },
+
+  renderStats() {
+    const total = this.data.length;
+    const approved = this.data.filter(c => c.status === 'approved');
+    const pending = this.data.filter(c => c.status === 'pending' || c.status === 'submitted');
+    const approvedAmt = approved.reduce((s,c) => s + c.amount, 0);
+    const pendingAmt = pending.reduce((s,c) => s + c.amount, 0);
+    const decided = this.data.filter(c => c.status === 'approved' || c.status === 'rejected').length;
+    const rate = decided > 0 ? (approved.length / decided * 100) : 0;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statApproved').textContent = '$' + approvedAmt.toFixed(2);
+    document.getElementById('statPending').textContent = '$' + pendingAmt.toFixed(2);
+    document.getElementById('statRate').textContent = rate.toFixed(1) + '%';
+  },
+
+  renderTable() {
+    const wrap = document.getElementById('claimTableWrap');
+    if (this.data.length === 0) {
+      wrap.innerHTML = '<div class="empty-state"><div class="es-icon">📋</div><p>暂无索赔记录，请添加或载入示例数据</p></div>';
+      return;
+    }
+    const statusMap = {pending:['待提交','badge-pending'],submitted:['已提交','badge-submitted'],approved:['已批准','badge-approved'],rejected:['已拒绝','badge-rejected']};
+    let html = '<table class="data-table"><thead><tr><th>类型</th><th>ASIN</th><th>数量</th><th>金额</th><th>日期</th><th>状态</th><th>仓库</th><th>操作</th></tr></thead><tbody>';
+    this.data.forEach(c => {
+      const [sLabel, sClass] = statusMap[c.status] || ['未知','badge-pending'];
+      html += `<tr>
+        <td><span class="type-tag">${c.type}</span></td>
+        <td>${c.asin}</td>
+        <td>${c.qty}</td>
+        <td><strong>$${c.amount.toFixed(2)}</strong></td>
+        <td>${c.date}</td>
+        <td><span class="badge ${sClass}">${sLabel}</span></td>
+        <td>${c.warehouse}</td>
+        <td><button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="Tracker.edit(${c.id})">编辑</button> <button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="Tracker.del(${c.id})">删除</button></td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  },
+
+  renderSuccessAnalysis() {
+    const wrap = document.getElementById('successAnalysis');
+    const types = ['丢失','损坏','退货问题','费用多收','重量差异','尺寸差异','过期'];
+    const colors = ['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899'];
+    let html = '';
+    types.forEach((t, i) => {
+      const items = this.data.filter(c => c.type === t);
+      if (items.length === 0) return;
+      const approved = items.filter(c => c.status === 'approved').length;
+      const decided = items.filter(c => c.status === 'approved' || c.status === 'rejected').length;
+      const rate = decided > 0 ? (approved / decided * 100) : 0;
+      html += `<div class="success-bar-row">
+        <span class="sbr-label">${t}</span>
+        <div class="success-bar-track">
+          <div class="success-bar-fill" style="width:${rate}%;background:${colors[i]}">${items.length}件</div>
+        </div>
+        <span class="sbr-val">${rate.toFixed(0)}%</span>
+      </div>`;
+    });
+    if (!html) html = '<div class="empty-state"><div class="es-icon">📈</div><p>添加索赔记录后显示成功率分析</p></div>';
+    wrap.innerHTML = html;
+  },
+
+  renderPie() {
+    const wrap = document.getElementById('pieWrap');
+    const types = ['丢失','损坏','退货问题','费用多收','重量差异','尺寸差异','过期'];
+    const colors = ['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899'];
+    const amounts = types.map(t => this.data.filter(c => c.type === t).reduce((s,c) => s + c.amount, 0));
+    const total = amounts.reduce((s,a) => s + a, 0);
+    if (total === 0) {
+      wrap.innerHTML = '<div class="empty-state"><div class="es-icon">📊</div><p>添加索赔记录后显示金额分布</p></div>';
+      return;
+    }
+    let gradParts = [];
+    let cumPct = 0;
+    let legendHtml = '';
+    types.forEach((t, i) => {
+      if (amounts[i] === 0) return;
+      const pct = (amounts[i] / total * 100);
+      gradParts.push(`${colors[i]} ${cumPct}% ${cumPct + pct}%`);
+      cumPct += pct;
+      legendHtml += `<div class="legend-item"><span class="legend-dot" style="background:${colors[i]}"></span><span class="l-name">${t}</span><span class="l-val">$${amounts[i].toFixed(2)}</span></div>`;
+    });
+    wrap.innerHTML = `<div class="conic-pie" style="background:conic-gradient(${gradParts.join(',')})"><div class="pie-center"><div class="pc-val">$${total.toFixed(0)}</div><div class="pc-lbl">索赔总额</div></div></div><div class="pie-legend">${legendHtml}</div>`;
+  },
+
+  renderTimeline() {
+    const wrap = document.getElementById('timeline');
+    if (this.data.length === 0) {
+      wrap.innerHTML = '<div class="empty-state"><div class="es-icon">🕐</div><p>暂无时间线数据</p></div>';
+      return;
+    }
+    const sorted = [...this.data].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 12);
+    const statusClass = {approved:'success',rejected:'danger',pending:'warning',submitted:''};
+    const statusLabel = {approved:'已批准',rejected:'已拒绝',pending:'待提交',submitted:'已提交'};
+    let html = '';
+    sorted.forEach(c => {
+      html += `<div class="timeline-item ${statusClass[c.status]||''}">
+        <div class="timeline-date">${c.date} · ${statusLabel[c.status]}</div>
+        <div class="timeline-title">${c.type} — ${c.asin} · $${c.amount.toFixed(2)}</div>
+        <div class="timeline-desc">数量: ${c.qty}件 | 仓库: ${c.warehouse}${c.caseId !== '—' ? ' | Case: '+c.caseId : ''}${c.note ? ' | '+c.note : ''}</div>
+      </div>`;
+    });
+    wrap.innerHTML = html;
+  }
+};
+Tracker.init();
+</script>
+</body>
+</html>

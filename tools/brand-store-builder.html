@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="品牌旗舰店建设器：店铺模块规划（Hero/产品矩阵/品牌故事/视频/社交），模块布局编辑器，转化优化建议。">
+<title>品牌旗舰店建设器 - 模块规划·布局编辑·优化建议 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.module-list{display:flex;flex-direction:column;gap:10px}.module-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--rule-light);cursor:pointer;transition:all .2s}.module-item:hover{border-color:var(--primary);box-shadow:var(--shadow)}.module-item.selected{background:var(--primary-bg);border-color:var(--primary)}.module-icon{font-size:24px;flex-shrink:0}.module-info{flex:1}.module-info h4{font-size:14px;font-weight:700}.module-info p{font-size:12px;color:var(--muted)}.module-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--rule);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}.module-item.selected .module-check{background:var(--primary);border-color:var(--primary);color:#fff}
+.store-preview{background:linear-gradient(135deg,#f8fafc,#e2e8f0);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)}.preview-hero{background:linear-gradient(135deg,#4f46e5,#6366f1);padding:40px;text-align:center;color:#fff}.preview-hero h3{font-size:24px;font-weight:800;margin-bottom:8px}.preview-hero p{font-size:14px;opacity:.9}.preview-section{padding:24px;border-bottom:1px solid var(--rule-light)}.preview-section:last-child{border-bottom:none}.preview-section h4{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--ink)}.preview-products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.preview-product{background:#fff;border-radius:8px;padding:16px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,.06)}.preview-product .pp-img{width:60px;height:60px;border-radius:8px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);margin:0 auto 8px}.preview-product .pp-name{font-size:12px;font-weight:600}.preview-product .pp-price{font-size:14px;font-weight:700;color:var(--primary);margin-top:4px}
+.optimization-list{display:flex;flex-direction:column;gap:10px}.opt-item{display:flex;gap:12px;padding:14px;border-radius:var(--radius);border-left:4px solid}.opt-item.good{background:var(--success-bg);border-left-color:var(--success)}.opt-item.warn{background:var(--warning-bg);border-left-color:var(--warning)}.opt-item.bad{background:var(--danger-bg);border-left-color:var(--danger)}.opt-icon{font-size:20px;flex-shrink:0}.opt-text h4{font-size:13px;font-weight:700;margin-bottom:2px}.opt-text p{font-size:12px;color:var(--muted)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.preview-products{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W7 品牌增长工作流</div><div class="workflow-steps">
+<a href="brand-registry-check.html" class="workflow-step">品牌注册</a><a href="brand-health-score.html" class="workflow-step">品牌健康</a><a href="external-traffic-calculator.html" class="workflow-step">外部流量</a><a href="product-matrix.html" class="workflow-step">产品矩阵</a><a href="social-content.html" class="workflow-step">社交内容</a><a href="brand-store-builder.html" class="workflow-step active">旗舰店建设</a><a href="brand-analytics-reporter.html" class="workflow-step">品牌分析</a><a href="customer-segmentation-engine.html" class="workflow-step">客户分群</a><a href="brand-search-volume-tracker.html" class="workflow-step">搜索量追踪</a><a href="storefront-traffic-analyzer.html" class="workflow-step">旗舰店流量</a><a href="brand-loyalty-scorer.html" class="workflow-step">忠诚度评分</a><a href="cross-sell-analyzer.html" class="workflow-step">交叉销售</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W7 品牌增长</a><span>/</span>品牌旗舰店建设器</div>
+<div class="tool-header"><span class="tool-badge">W7 品牌增长工作流 · 深度版</span><h1>品牌<em>旗舰店建设器</em></h1><p>店铺模块规划（Hero/产品矩阵/品牌故事/视频/社交），模块布局编辑器，CSS店铺预览，转化优化建议，流量分析集成。</p></div>
+
+<div class="card"><h2>品牌信息输入</h2><div class="form-grid">
+<div class="form-field"><label>品牌名称</label><input type="text" id="brandName" value="TechNova" oninput="Store.gen()"></div>
+<div class="form-field"><label>品牌Slogan</label><input type="text" id="slogan" value="Innovation for Everyday Life" oninput="Store.gen()"></div>
+<div class="form-field"><label>产品1名称</label><input type="text" id="p1" value="无线耳机 Pro" oninput="Store.gen()"></div>
+<div class="form-field"><label>产品1价格 ($)</label><input type="number" id="p1price" value="79.99" step="0.01" oninput="Store.gen()"></div>
+<div class="form-field"><label>产品2名称</label><input type="text" id="p2" value="智能手表 X" oninput="Store.gen()"></div>
+<div class="form-field"><label>产品2价格 ($)</label><input type="number" id="p2price" value="129.99" step="0.01" oninput="Store.gen()"></div>
+<div class="form-field"><label>产品3名称</label><input type="text" id="p3" value="便携充电宝" oninput="Store.gen()"></div>
+<div class="form-field"><label>产品3价格 ($)</label><input type="number" id="p3price" value="39.99" step="0.01" oninput="Store.gen()"></div>
+</div></div>
+
+<div class="card"><h2>店铺模块选择</h2><div class="module-list" id="moduleList"></div></div>
+<div class="card"><h2>CSS店铺预览</h2><div class="store-preview" id="storePreview"></div></div>
+<div class="card"><h2>转化优化建议</h2><div class="optimization-list" id="optList"></div></div>
+
+<div class="related-grid">
+<a href="storefront-traffic-analyzer.html" class="related-card"><span class="rc-icon">📊</span><div><h4>旗舰店流量分析</h4><p>页面流量分析</p></div></a>
+<a href="brand-analytics-reporter.html" class="related-card"><span class="rc-icon">📈</span><div><h4>品牌分析报告</h4><p>品牌数据分析</p></div></a>
+<a href="brand-loyalty-scorer.html" class="related-card"><span class="rc-icon">❤</span><div><h4>忠诚度评分</h4><p>品牌忠诚度评估</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Store={
+  modules:[
+    {id:'hero',name:'Hero横幅',icon:'🖼',desc:'品牌主视觉横幅，展示品牌形象和核心卖点',selected:true},
+    {id:'products',name:'产品矩阵',icon:'📦',desc:'多产品展示模块，支持网格和轮播布局',selected:true},
+    {id:'story',name:'品牌故事',icon:'📖',desc:'品牌历程和价值观叙述，增强情感连接',selected:true},
+    {id:'video',name:'视频模块',icon:'🎥',desc:'品牌视频或产品演示视频',selected:false},
+    {id:'social',name:'社交证明',icon:'📷',desc:'社交媒体UGC内容和KOL推荐',selected:false},
+    {id:'reviews',name:'评价展示',icon:'⭐',desc:'精选客户评价和高分Review展示',selected:true},
+    {id:'comparison',name:'产品对比',icon:'⚖',desc:'多产品功能对比表格',selected:false},
+    {id:'faq',name:'FAQ模块',icon:'❓',desc:'常见问题解答，减少客服压力',selected:false},
+  ],
+  gen(){
+    const brand=document.getElementById('brandName').value||'Brand';
+    const slogan=document.getElementById('slogan').value||'';
+    const products=[
+      {name:document.getElementById('p1').value||'产品1',price:parseFloat(document.getElementById('p1price').value)||0},
+      {name:document.getElementById('p2').value||'产品2',price:parseFloat(document.getElementById('p2price').value)||0},
+      {name:document.getElementById('p3').value||'产品3',price:parseFloat(document.getElementById('p3price').value)||0},
+    ];
+    this.renderModules();
+    this.renderPreview(brand,slogan,products);
+    this.renderOpt();
+  },
+  renderModules(){
+    document.getElementById('moduleList').innerHTML=this.modules.map(m=>
+      `<div class="module-item ${m.selected?'selected':''}" onclick="Store.toggle('${m.id}')"><span class="module-icon">${m.icon}</span><div class="module-info"><h4>${m.name}</h4><p>${m.desc}</p></div><div class="module-check">${m.selected?'✓':''}</div></div>`
+    ).join('');
+  },
+  toggle(id){
+    const m=this.modules.find(x=>x.id===id);
+    if(m)m.selected=!m.selected;
+    this.gen();
+  },
+  renderPreview(brand,slogan,products){
+    const sel=this.modules.filter(m=>m.selected);
+    let html='';
+    if(sel.find(m=>m.id==='hero')){
+      html+=`<div class="preview-hero"><h3>${brand}</h3><p>${slogan}</p></div>`;
+    }
+    if(sel.find(m=>m.id==='products')){
+      html+=`<div class="preview-section"><h4> featured Products</h4><div class="preview-products">${products.map(p=>`<div class="preview-product"><div class="pp-img"></div><div class="pp-name">${p.name}</div><div class="pp-price">$${p.price.toFixed(2)}</div></div>`).join('')}</div></div>`;
+    }
+    if(sel.find(m=>m.id==='story')){
+      html+=`<div class="preview-section"><h4>Our Story</h4><p style="color:var(--muted);font-size:13px">${brand}致力于为用户提供创新、高品质的科技产品。我们相信科技应该融入日常生活，让每个瞬间更加美好。</p></div>`;
+    }
+    if(sel.find(m=>m.id==='video')){
+      html+=`<div class="preview-section"><h4>Brand Video</h4><div style="height:120px;background:linear-gradient(135deg,#1e293b,#334155);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px">▶ Play Video</div></div>`;
+    }
+    if(sel.find(m=>m.id==='social')){
+      html+=`<div class="preview-section"><h4>Social Proof</h4><div style="display:flex;gap:8px">${[1,2,3,4].map(()=>`<div style="flex:1;height:80px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);border-radius:8px"></div>`).join('')}</div></div>`;
+    }
+    if(sel.find(m=>m.id==='reviews')){
+      html+=`<div class="preview-section"><h4>Customer Reviews</h4><div style="display:flex;gap:12px">${products.slice(0,2).map(()=>`<div style="flex:1;background:#fff;padding:12px;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.06)"><div style="color:#f59e0b">★★★★★</div><p style="font-size:12px;color:var(--muted);margin-top:4px">"Great product, highly recommend!"</p></div>`).join('')}</div></div>`;
+    }
+    if(sel.find(m=>m.id==='comparison')){
+      html+=`<div class="preview-section"><h4>Product Comparison</h4><table style="width:100%;font-size:12px"><tr style="background:var(--bg)"><th style="padding:8px;text-align:left">Feature</th>${products.map(p=>`<th style="padding:8px">${p.name}</th>`).join('')}</tr><tr><td style="padding:8px">Price</td>${products.map(p=>`<td style="padding:8px;text-align:center">$${p.price.toFixed(2)}</td>`).join('')}</tr></table></div>`;
+    }
+    if(sel.find(m=>m.id==='faq')){
+      html+=`<div class="preview-section"><h4>FAQ</h4><div style="font-size:13px;color:var(--muted)"><p>Q: 配送需要多长时间？ A: 通常2-3个工作日</p><p>Q: 支持退换吗？ A: 30天无理由退换</p></div></div>`;
+    }
+    document.getElementById('storePreview').innerHTML=html||'<div style="padding:40px;text-align:center;color:var(--muted)">请选择至少一个模块</div>';
+  },
+  renderOpt(){
+    const sel=this.modules.filter(m=>m.selected);
+    const opts=[];
+    if(!sel.find(m=>m.id==='hero'))opts.push({type:'bad',icon:'🚨',title:'缺少Hero横幅',desc:'Hero横幅是旗舰店的第一印象，强烈建议添加'});
+    if(!sel.find(m=>m.id==='products'))opts.push({type:'bad',icon:'🚨',title:'缺少产品矩阵',desc:'产品展示是旗舰店核心模块，必须添加'});
+    if(sel.find(m=>m.id==='video'))opts.push({type:'good',icon:'✅',title:'视频模块已启用',desc:'视频可提升用户停留时间30%+，转化率提升15%+'});
+    else opts.push({type:'warn',icon:'⚠️',title:'建议添加视频模块',desc:'品牌视频能显著提升用户参与度和品牌信任度'});
+    if(sel.find(m=>m.id==='social'))opts.push({type:'good',icon:'✅',title:'社交证明已启用',desc:'UGC内容增强品牌信任感，提升社交转化'});
+    if(sel.find(m=>m.id==='reviews'))opts.push({type:'good',icon:'✅',title:'评价展示已启用',desc:'客户评价是强有力的转化催化剂'});
+    if(sel.find(m=>m.id==='faq'))opts.push({type:'good',icon:'✅',title:'FAQ模块已启用',desc:'减少客服咨询，提升购物决策效率'});
+    if(sel.length<3)opts.push({type:'warn',icon:'⚠️',title:'模块数量偏少',desc:`仅${sel.length}个模块，建议至少4-5个模块以丰富店铺内容`});
+    if(sel.length>=6)opts.push({type:'good',icon:'✅',title:'模块丰富',desc:`${sel.length}个模块，店铺内容丰富，用户体验佳`});
+    opts.push({type:'warn',icon:'💡',title:'优化建议',desc:'确保所有图片使用高分辨率(1200px+)，移动端体验流畅，定期更新内容'});
+    opts.push({type:'warn',icon:'💡',title:'流量策略',desc:'结合品牌推广广告(Sponsored Brands)引流到旗舰店，设置专属优惠提高转化'});
+    document.getElementById('optList').innerHTML=opts.map(o=>`<div class="opt-item ${o.type}"><span class="opt-icon">${o.icon}</span><div class="opt-text"><h4>${o.title}</h4><p>${o.desc}</p></div></div>`).join('');
+  }
+};
+Store.gen();
+</script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="数据可视化构建器：图表类型智能推荐+交互式Dashboard+故事线叙述，CSS可视化预览，跨境卖家数据可视化工具。">
+<title>数据可视化构建器 - 图表推荐Dashboard故事线 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.chart-recommend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.chart-rec-card{border:2px solid var(--rule);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.chart-rec-card:hover{border-color:#4f46e5;box-shadow:0 4px 12px rgba(79,70,229,.1);transform:translateY(-2px)}
+.chart-rec-card.recommended{border-color:#10b981;background:#ecfdf5}
+.chart-rec-card .cr-icon{font-size:32px;margin-bottom:8px}
+.chart-rec-card h4{font-size:14px;font-weight:700;margin:0 0 4px}
+.chart-rec-card p{font-size:11px;color:var(--muted);margin:0}
+.chart-rec-card .cr-badge{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:8px;font-size:10px;font-weight:700}
+.cr-badge-rec{background:#10b981;color:#fff}
+.cr-badge-ok{background:#f1f5f9;color:#64748b}
+/* Dashboard预览 */
+.dash-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.dash-widget{border:1px solid var(--rule);border-radius:14px;padding:16px;background:#fff}
+.dash-widget.wide{grid-column:span 2}
+.dash-widget.full{grid-column:span 3}
+.dash-widget h5{font-size:13px;font-weight:700;margin:0 0 10px;color:var(--ink)}
+.dash-kpi{display:flex;align-items:baseline;gap:8px}
+.dash-kpi .dk-val{font-size:28px;font-weight:800;color:#4f46e5}
+.dash-kpi .dk-change{font-size:13px;font-weight:700;padding:2px 8px;border-radius:6px}
+.dk-up{background:#ecfdf5;color:#059669}
+.dk-down{background:#fef2f2;color:#dc2626}
+.dash-bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px;margin-top:8px}
+.dash-bar-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.dash-bar-fill{width:100%;border-radius:4px 4px 0 0;transition:height .4s;min-height:4px}
+.dash-bar-label{font-size:9px;color:var(--muted);margin-top:4px}
+.dash-line-chart{height:100px;position:relative;margin-top:8px}
+.dash-pie{display:flex;align-items:center;gap:12px;margin-top:8px}
+.dash-pie-ring{width:80px;height:80px;border-radius:50%;flex-shrink:0}
+.dash-pie-legend{font-size:11px}
+.dash-pie-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.dash-pie-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.story-step{display:flex;gap:14px;padding:14px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px}
+.story-num{width:32px;height:32px;border-radius:8px;background:#4f46e5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.story-body h4{font-size:14px;font-weight:700;margin:0 0 4px}.story-body p{font-size:12px;color:var(--muted);margin:0 0 6px}.story-body .story-chart{font-size:11px;padding:4px 10px;border-radius:6px;background:#eef2ff;color:#4f46e5;font-weight:600;display:inline-block}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.dash-preview{grid-template-columns:1fr}.dash-widget.wide,.dash-widget.full{grid-column:span 1}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+  <a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step">趋势分解</a><a href="anomaly-detector.html" class="workflow-step">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a><a href="predictive-analytics-engine.html" class="workflow-step">预测引擎</a><a href="correlation-analysis-tool.html" class="workflow-step">相关分析</a><a href="data-visualization-builder.html" class="workflow-step active">可视化构建</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W40 数据分析</a><span class="sep">›</span><span class="current">数据可视化构建器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🎨</span>数据可视化构建器 Data Visualization Builder</h1>
+  <p>数据维度分析，图表类型智能推荐，交互式Dashboard构建预览，数据故事线叙述设计，CSS可视化预览各类图表效果，帮助选择最佳数据呈现方式。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">推荐图表数</div><div class="mc-value" id="mCharts">0</div></div>
+    <div class="metric-card success"><div class="mc-label">Dashboard组件</div><div class="mc-value" id="mWidgets">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">故事步骤</div><div class="mc-value" id="mSteps">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">数据维度</div><div class="mc-value" id="mDims">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 数据特征输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>数据类型</label><select id="dataType" onchange="DVB.calc()"><option value="timeseries">时间序列</option><option value="category">分类对比</option><option value="composition">构成分析</option><option value="distribution">分布分析</option><option value="correlation">关系分析</option><option value="geographic">地理分布</option></select></div>
+      <div class="jx-field"><label>变量维度</label><select id="dimensions" onchange="DVB.calc()"><option value="1">单变量</option><option value="2">双变量</option><option value="3">三变量</option><option value="multi">多变量(>3)</option></select></div>
+      <div class="jx-field"><label>数据点数量</label><input type="number" id="dataPoints" value="12" oninput="DVB.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>分析目的</label><select id="purpose" onchange="DVB.calc()"><option value="trend">展示趋势</option><option value="compare">对比差异</option><option value="compose">展示构成</option><option value="outlier">发现异常</option><option value="relation">探索关系</option><option value="funnel">转化漏斗</option></select></div>
+      <div class="jx-field"><label>展示场景</label><select id="scene" onchange="DVB.calc()"><option value="dashboard">数据看板</option><option value="report">分析报告</option><option value="presentation">演示汇报</option><option value="realtime">实时监控</option></select></div>
+      <div class="jx-field"><label>受众</label><select id="audience" onchange="DVB.calc()"><option value="exec">管理层</option><option value="analyst">数据分析师</option><option value="ops">运营团队</option><option value="client">客户/投资人</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 智能图表推荐</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">根据数据类型和分析目的，推荐最佳图表类型</p>
+    <div class="chart-recommend" id="chartRecommend"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🖥️ Dashboard预览</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">交互式数据看板布局预览，点击组件可查看详情</p>
+    <div class="dash-preview" id="dashPreview"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📖 数据故事线设计</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">将数据洞察组织为有逻辑的叙事流程，引导受众理解关键结论</p>
+    <div id="storyLine"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 可视化设计建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="benchmark-dashboard.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>基准看板</h5><p>指标看板</p></div></a>
+      <a href="kpi-tree-builder.html" class="rt-card"><div class="rt-icon">🌳</div><div><h5>KPI树</h5><p>指标分解</p></div></a>
+      <a href="sales-data-explorer.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>销售探索</h5><p>数据探索</p></div></a>
+      <a href="automated-insight-generator.html" class="rt-card"><div class="rt-icon">💡</div><div><h5>自动洞察</h5><p>智能洞察</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="data-visualization-builder.html">可视化构建</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var DVB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var CHART_TYPES=[
+    {icon:'📈',name:'折线图',best:['timeseries','trend'],ok:['correlation'],desc:'展示数据随时间变化趋势'},
+    {icon:'📊',name:'柱状图',best:['category','compare'],ok:['timeseries','composition'],desc:'对比不同类别数据大小'},
+    {icon:'🥧',name:'饼图/环形图',best:['composition','compose'],ok:[],desc:'展示各部分占总体的比例'},
+    {icon:'📉',name:'面积图',best:['timeseries','composition'],ok:['trend'],desc:'展示趋势变化及累计量'},
+    {icon:' scatter'.trim(),name:'散点图',best:['correlation','relation'],ok:['distribution'],desc:'展示两个变量的关系'},
+    {icon:'🔥',name:'热力图',best:['correlation','distribution'],ok:['category'],desc:'用颜色深浅表示数值大小'},
+    {icon:'📉',name:'漏斗图',best:['funnel'],ok:['composition'],desc:'展示转化流程各阶段流失'},
+    {icon:'🎯',name:'雷达图',best:['category','compare'],ok:['composition'],desc:'多维度综合对比'},
+    {icon:'🗺️',name:'地理图',best:['geographic'],ok:['distribution'],desc:'按地理位置展示数据分布'},
+    {icon:'💧',name:'瀑布图',best:['composition'],ok:['compare'],desc:'展示数据增减变化过程'}
+  ];
+
+  var STORY=[
+    {title:'背景设定',desc:'展示整体业务概况和关键指标当前状态',chart:'KPI卡 + 趋势折线图'},
+    {title:'发现问题',desc:'通过对比分析揭示异常或下降趋势',chart:'对比柱状图 + 异常标记'},
+    {title:'深入分析',desc:'拆解问题根因，多维度交叉分析',chart:'瀑布图 + 热力图'},
+    {title:'关键洞察',desc:'提炼核心发现，高亮最重要的数据点',chart:'散点图 + 注释'},
+    {title:'行动建议',desc:'基于数据洞察提出具体行动方案',chart:'漏斗图 + 目标线'}
+  ];
+
+  function calc(){
+    var dataType=$('dataType').value,purpose=$('purpose').value;
+    var dims=$('dimensions').value,points=num('dataPoints');
+    var scene=$('scene').value,audience=$('audience').value;
+
+    //推荐图表
+    var recommended=CHART_TYPES.filter(function(c){return c.best.indexOf(dataType)>=0||c.best.indexOf(purpose)>=0});
+    var okCharts=CHART_TYPES.filter(function(c){return c.ok.indexOf(dataType)>=0||c.ok.indexOf(purpose)>=0});
+    var allRec=recommended.concat(okCharts);
+    var totalCharts=allRec.length;
+
+    $('mCharts').textContent=totalCharts;
+    $('mWidgets').textContent=6;
+    $('mSteps').textContent=STORY.length;
+    $('mDims').textContent=dims==='multi'?'>3':dims;
+
+    renderChartRec(recommended,okCharts);
+    renderDash();
+    renderStory();
+    renderTips(dataType,purpose,dims,points,scene,audience);
+    save();
+  }
+
+  function renderChartRec(rec,ok){
+    var h='';
+    rec.forEach(function(c){
+      h+='<div class="chart-rec-card recommended"><div class="cr-icon">'+c.icon+'</div><h4>'+c.name+'</h4><p>'+c.desc+'</p><span class="cr-badge cr-badge-rec">推荐</span></div>';
+    });
+    ok.forEach(function(c){
+      if(rec.indexOf(c)<0){
+        h+='<div class="chart-rec-card"><div class="cr-icon">'+c.icon+'</div><h4>'+c.name+'</h4><p>'+c.desc+'</p><span class="cr-badge cr-badge-ok">可选</span></div>';
+      }
+    });
+    $('chartRecommend').innerHTML=h;
+  }
+
+  function renderDash(){
+    var colors=['#4f46e5','#6366f1','#818cf8','#a5b4fc','#c7d2fe','#e0e7ff'];
+    var months=['1月','2月','3月','4月','5月','6月'];
+    var salesData=[65,72,68,80,85,92];
+    var maxSales=Math.max.apply(null,salesData);
+
+    var h='';
+    //KPI组件
+    h+='<div class="dash-widget"><h5>月销售额</h5><div class="dash-kpi"><span class="dk-val">$92K</span><span class="dk-change dk-up">+12%</span></div></div>';
+    h+='<div class="dash-widget"><h5>订单量</h5><div class="dash-kpi"><span class="dk-val">1,842</span><span class="dk-change dk-up">+8%</span></div></div>';
+    h+='<div class="dash-widget"><h5>ACoS</h5><div class="dash-kpi"><span class="dk-val">18.5%</span><span class="dk-change dk-down">-2.3%</span></div></div>';
+    //柱状图
+    h+='<div class="dash-widget wide"><h5>月度销售趋势</h5><div class="dash-bar-chart">';
+    salesData.forEach(function(v,i){
+      h+='<div class="dash-bar-item"><div class="dash-bar-fill" style="height:'+(v/maxSales*80)+'px;background:'+colors[i]+'" ></div><div class="dash-bar-label">'+months[i]+'</div></div>';
+    });
+    h+='</div></div>';
+    //饼图
+    h+='<div class="dash-widget"><h5>渠道占比</h5><div class="dash-pie"><div class="dash-pie-ring" style="background:conic-gradient(#4f46e5 0% 45%,#10b981 45% 70%,#f59e0b 70% 88%,#ef4444 88% 100%)"></div><div class="dash-pie-legend"><div class="dash-pie-legend-item"><span class="dash-pie-dot" style="background:#4f46e5"></span>自然搜索 45%</div><div class="dash-pie-legend-item"><span class="dash-pie-dot" style="background:#10b981"></span>PPC 25%</div><div class="dash-pie-legend-item"><span class="dash-pie-dot" style="background:#f59e0b"></span>直接 18%</div><div class="dash-pie-legend-item"><span class="dash-pie-dot" style="background:#ef4444"></span>其他 12%</div></div></div></div>';
+    //全宽趋势
+    h+='<div class="dash-widget full"><h5>转化漏斗</h5><div style="display:flex;align-items:center;gap:4px;height:60px;margin-top:8px">';
+    var funnel=[{label:'曝光',val:100,color:'#4f46e5'},{label:'点击',val:45,color:'#6366f1'},{label:'加购',val:18,color:'#818cf8'},{label:'购买',val:8,color:'#a5b4fc'}];
+    funnel.forEach(function(f,i){
+      var w=100-i*20;
+      h+='<div style="flex:1;text-align:center"><div style="background:'+f.color+';height:'+(f.val*0.5)+'px;border-radius:6px;margin:0 auto;width:'+w+'%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">'+f.val+'%</div><div style="font-size:10px;color:var(--muted);margin-top:4px">'+f.label+'</div></div>';
+      if(i<funnel.length-1)h+='<div style="font-size:14px;color:#cbd5e1">→</div>';
+    });
+    h+='</div></div>';
+
+    $('dashPreview').innerHTML=h;
+  }
+
+  function renderStory(){
+    var h='';
+    STORY.forEach(function(s,i){
+      h+='<div class="story-step"><div class="story-num">'+(i+1)+'</div><div class="story-body"><h4>'+s.title+'</h4><p>'+s.desc+'</p><span class="story-chart">推荐图表：'+s.chart+'</span></div></div>';
+    });
+    $('storyLine').innerHTML=h;
+  }
+
+  function renderTips(dt,pp,dm,pts,sc,au){
+    var tips=[];
+    var dtLabel={timeseries:'时间序列',category:'分类对比',composition:'构成分析',distribution:'分布分析',correlation:'关系分析',geographic:'地理分布'}[dt];
+    var ppLabel={trend:'展示趋势',compare:'对比差异',compose:'展示构成',outlier:'发现异常',relation:'探索关系',funnel:'转化漏斗'}[pp];
+    var auLabel={exec:'管理层',analyst:'数据分析师',ops:'运营团队',client:'客户/投资人'}[au];
+    tips.push('数据类型「'+dtLabel+'」，分析目的「'+ppLabel+'」，变量维度'+(dm==='multi'?'>3':dm)+'，数据点'+pts+'个，展示场景'+sc+'，受众「'+auLabel+'」。');
+    tips.push('图表选择原则：时间序列用折线/面积图，分类对比用柱状图，构成分析用饼图/堆叠图，关系分析用散点图/热力图，转化用漏斗图。');
+    tips.push('管理层看板设计：简洁为主，突出KPI和趋势，每页不超过5个组件，颜色不超过3种主色，关键数据放大显示。');
+    tips.push('数据故事线5步法：背景设定→发现问题→深入分析→关键洞察→行动建议，每步配一个核心图表，形成逻辑闭环。');
+    tips.push('颜色使用规范：品牌色(#4f46e5)为主，成功/警告/危险语义色固定，避免彩虹色，色盲友好（避免红绿同时使用区分数据）。');
+    tips.push('交互设计建议：悬停显示详细数据，点击下钻查看明细，时间范围选择器，数据筛选器，导出功能支持PNG/CSV。');
+    tips.push('响应式适配：桌面端3列网格，平板端2列，手机端单列纵向排列，图表自适应容器宽度，最小宽度300px。');
+    tips.push('数据标注建议：异常值添加注释标记，关键转折点标注原因，目标线/基准线辅助参考，趋势线帮助识别方向。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_dvb_data',JSON.stringify({dataType:$('dataType').value,dimensions:$('dimensions').value,dataPoints:num('dataPoints'),purpose:$('purpose').value,scene:$('scene').value,audience:$('audience').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_dvb_data'));if(d){['dataType','dimensions','purpose','scene','audience'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});if(d.dataPoints)$('dataPoints').value=d.dataPoints}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',DVB.init)}else{DVB.init()}
+</script>
+</body>
+</html>

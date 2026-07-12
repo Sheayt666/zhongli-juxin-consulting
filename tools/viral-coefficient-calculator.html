@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="病毒系数计算器：输入邀请率和接受率计算K因子，自传播增长模型，CSS增长曲线可视化，判断产品是否具备病毒传播能力。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="病毒系数,K因子,自传播,增长模型,推荐率,viral coefficient">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/viral-coefficient-calculator.html">
+<title>病毒系数计算器 - K因子·自传播模型·CSS增长曲线 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.vcc-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.vcc-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.k-gauge-wrap{display:flex;align-items:center;gap:32px;justify-content:center;padding:24px 0;flex-wrap:wrap}
+.k-gauge{width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.k-gauge::before{content:'';position:absolute;width:130px;height:130px;border-radius:50%;background:#fff}
+.k-gauge-inner{position:relative;z-index:1;text-align:center}
+.k-gauge-inner .kg-val{font-size:40px;font-weight:800;line-height:1}
+.k-gauge-inner .kg-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.k-info .ki-status{font-size:22px;font-weight:800;margin-bottom:8px}
+.k-info .ki-desc{font-size:14px;color:var(--muted);line-height:1.7;max-width:320px}
+.growth-curve-chart{padding:20px 0}
+.growth-bar-chart{display:flex;align-items:flex-end;gap:6px;height:240px;padding:20px 10px 30px;border-bottom:2px solid var(--rule);overflow-x:auto}
+.gbc-col{display:flex;flex-direction:column;align-items:center;min-width:50px;flex:1;height:100%;justify-content:flex-end}
+.gbc-bar{width:100%;max-width:40px;border-radius:4px 4px 0 0;transition:height .5s;min-height:2px}
+.gbc-bar.viral{background:linear-gradient(180deg,#34d399,#059669)}
+.gbc-bar.linear{background:linear-gradient(180deg,#818cf8,#4f46e5)}
+.gbc-val{font-size:10px;font-weight:700;color:var(--ink);margin-bottom:2px;white-space:nowrap}
+.gbc-label{font-size:10px;color:var(--muted);margin-top:4px}
+.legend{display:flex;gap:20px;justify-content:center;margin-top:12px;font-size:12px}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.formula-box{padding:20px;border-radius:12px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;margin-top:16px}
+.formula-box .fb-title{font-size:14px;font-weight:700;color:#4f46e5;margin-bottom:10px}
+.formula-line{font-size:16px;font-family:'Courier New',monospace;color:var(--ink);margin-bottom:8px;padding:8px 12px;background:#fff;border-radius:8px;border:1px solid var(--rule-light)}
+.strategy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.strategy-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);border-left:4px solid #4f46e5}
+.strategy-card .sc-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.strategy-card .sc-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.strategy-card .sc-impact{font-size:12px;font-weight:700;color:#10b981;margin-top:8px}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.related-grid a{display:block;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;text-align:center;transition:all .2s}
+.related-grid a:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;transform:translateY(-2px)}
+@media(max-width:768px){.strategy-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:repeat(2,1fr)}.k-gauge-wrap{flex-direction:column;gap:16px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"病毒系数计算器","description":"输入邀请率和接受率计算K因子，自传播增长模型，CSS增长曲线可视化，判断产品是否具备病毒传播能力。","url":"https://juxin-consulting.help/tools/viral-coefficient-calculator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"病毒系数计算器","item":"https://juxin-consulting.help/tools/viral-coefficient-calculator.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="viral_coefficient">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 增长分析工作流 · 标准版</span>
+      <h1>病毒系数 <em>计算器</em></h1>
+      <p class="tool-hero-desc">计算K因子（病毒系数）= 每用户邀请数 x 邀请接受率，判断产品是否具备自传播能力，CSS增长曲线对比病毒增长与线性增长，提供提升K因子的策略建议。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第8步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <a href="growth-driver-decomposer.html" class="step">增长拆解</a><span class="arrow">→</span>
+      <a href="funnel-conversion-analyzer.html" class="step">漏斗转化</a><span class="arrow">→</span>
+      <span class="step current">病毒系数</span><span class="arrow">→</span>
+      <a href="ltv-prediction-model.html" class="step">LTV预测</a><span class="arrow">→</span>
+      <a href="growth-experiment-tracker.html" class="step">增长实验</a><span class="arrow">→</span>
+      <a href="market-share-growth-tracker.html" class="step">市场份额</a><span class="arrow">→</span>
+      <a href="unit-economics-builder.html" class="step">单位经济</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入病毒传播参数</h2>
+          <p class="calc-form-subtitle">填写用户邀请行为数据，实时计算K因子</p>
+          <div class="calc-field"><label>每用户邀请数 <span class="hint">(i)</span></label><input type="number" id="invites" value="3" step="0.1" min="0" oninput="VCC.calc()"></div>
+          <div class="calc-field"><label>邀请接受率 <span class="hint">(c, %)</span></label><input type="number" id="acceptRate" value="15" step="1" min="0" max="100" oninput="VCC.calc()"></div>
+          <div class="calc-field"><label>初始用户数 <span class="hint">(N0)</span></label><input type="number" id="initialUsers" value="1000" step="10" min="1" oninput="VCC.calc()"></div>
+          <div class="calc-field"><label>模拟周期 <span class="hint">(代)</span></label><input type="number" id="generations" value="10" step="1" min="1" max="20" oninput="VCC.calc()"></div>
+          <div class="fee-rule-box"><h4>📐 K因子公式</h4><ul><li>K = i x c（每用户邀请数 x 邀请接受率）</li><li>K > 1：病毒增长，用户指数级增长</li><li>K = 1：稳定增长，每代用户不变</li><li>K < 1：需要外部获客，无法自传播</li><li>通常K > 0.5已算优秀的推荐效果</li></ul></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="vcc-section">
+        <h3>🦠 K因子仪表盘</h3>
+        <div class="k-gauge-wrap" id="gaugeWrap"></div>
+      </div>
+
+      <div class="vcc-section">
+        <h3>📐 公式拆解</h3>
+        <div class="formula-box" id="formulaBox"></div>
+      </div>
+
+      <div class="vcc-section">
+        <h3>📈 CSS增长曲线（病毒增长 vs 线性增长）</h3>
+        <div class="growth-curve-chart">
+          <div class="growth-bar-chart" id="growthChart"></div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>病毒增长（K因子驱动）</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#4f46e5"></div>线性增长（固定获客）</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vcc-section">
+        <h3>💡 提升K因子策略</h3>
+        <div class="strategy-grid" id="strategyGrid"></div>
+      </div>
+
+      <div class="vcc-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="funnel-conversion-analyzer.html">漏斗转化分析</a>
+          <a href="ltv-prediction-model.html">LTV预测模型</a>
+          <a href="growth-experiment-tracker.html">增长实验追踪</a>
+          <a href="retention-rate.html">留存率分析</a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="funnel-conversion-analyzer.html" class="wbn-btn prev">← 上一步：漏斗转化</a>
+        <a href="ltv-prediction-model.html" class="wbn-btn next">下一步：LTV预测 →</a>
+      </div>
+      <div style="text-align:center;margin:20px auto;max-width:1152px"><a href="index.html" style="display:inline-block;padding:10px 28px;border-radius:50px;background:var(--bg-soft);color:var(--ink-soft);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--rule)">← 返回工具中心</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-rate.html">增长率计算</a></li><li><a href="cohort-analysis.html">同期群分析</a></li><li><a href="retention-rate.html">留存率分析</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var VCC=(function(){
+  'use strict';
+  var SK='jx_viral_coefficient';
+  function v(id){var el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
+  function fmt(n){return n.toLocaleString('en-US',{maximumFractionDigits:0});}
+  function calc(){
+    var i=v('invites'),c=v('acceptRate')/100,n0=v('initialUsers'),gen=v('generations');
+    if(gen>20)gen=20;
+    var k=i*c;
+    var status, color, desc;
+    if(k>=1){status='病毒增长';color='#10b981';desc='K >= 1，产品具备自传播能力，用户将指数级增长。这是病毒式增长的理想状态。';}
+    else if(k>=0.5){status='强推荐效果';color='#4f46e5';desc='0.5 <= K < 1，推荐效果优秀，但仍需外部获客补充。提升接受率可突破临界点。';}
+    else if(k>=0.1){status='弱推荐效果';color='#f59e0b';desc='0.1 <= K < 0.5，有一定推荐效果但不足以驱动增长。需优化分享机制和激励设计。';}
+    else{status='无自传播';color='#ef4444';desc='K < 0.1，几乎没有自传播能力。完全依赖付费获客，需重新设计推荐机制。';}
+    // Result card
+    var html='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val" style="color:'+color+'">'+k.toFixed(3)+'</div><div class="rsb-lbl">K因子</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+i.toFixed(1)+'</div><div class="rsb-lbl">每用户邀请数</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+(c*100).toFixed(0)+'%</div><div class="rsb-lbl">邀请接受率</div></div>';
+    html+='</div>';
+    var totalUsers=0;
+    for(var g=0;g<=gen;g++){totalUsers+=n0*Math.pow(k,g);}
+    html+='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val" style="color:'+color+'">'+status+'</div><div class="rsb-lbl">传播状态</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+fmt(totalUsers)+'</div><div class="rsb-lbl">'+gen+'代后总用户</div></div>';
+    html+='</div>';
+    document.getElementById('resultCard').innerHTML=html;
+    // Gauge
+    var kPct=Math.min(k/2*100,100);
+    var gh='<div class="k-gauge" style="background:conic-gradient('+color+' 0deg '+kPct*3.6+'deg, #e0e7ff '+(kPct*3.6)+'deg 360deg)">';
+    gh+='<div class="k-gauge-inner"><div class="kg-val" style="color:'+color+'">'+k.toFixed(3)+'</div><div class="kg-lbl">K因子</div></div></div>';
+    gh+='<div class="k-info"><div class="ki-status" style="color:'+color+'">'+status+'</div><div class="ki-desc">'+desc+'</div></div>';
+    document.getElementById('gaugeWrap').innerHTML=gh;
+    // Formula
+    var fh='<div class="fb-title">K因子计算公式</div>';
+    fh+='<div class="formula-line">K = i x c</div>';
+    fh+='<div class="formula-line">K = '+i.toFixed(1)+' x '+(c*100).toFixed(0)+'% = <strong style="color:'+color+'">'+k.toFixed(3)+'</strong></div>';
+    fh+='<div class="formula-line">第'+gen+'代用户 = N0 x K^'+gen+' = '+fmt(n0)+' x '+k.toFixed(3)+'^'+gen+' = '+fmt(n0*Math.pow(k,gen))+'</div>';
+    fh+='<div class="formula-line">总用户 = sum(N0 x K^n) = '+fmt(totalUsers)+'</div>';
+    document.getElementById('formulaBox').innerHTML=fh;
+    // Growth chart
+    var maxVal=0;
+    var viralData=[],linearData=[];
+    for(var g=0;g<=gen;g++){
+      var vu=n0*Math.pow(k,g);
+      var lu=n0;
+      viralData.push(vu);
+      linearData.push(lu);
+      if(vu>maxVal)maxVal=vu;
+    }
+    maxVal=Math.max(maxVal,n0);
+    var ch='';
+    for(var g=0;g<=gen;g++){
+      var vh=maxVal>0?viralData[g]/maxVal*100:0;
+      var lh=maxVal>0?linearData[g]/maxVal*100:0;
+      ch+='<div class="gbc-col">';
+      if(vh>=lh){
+        ch+='<div class="gbc-val">'+fmt(viralData[g])+'</div>';
+        ch+='<div class="gbc-bar viral" style="height:'+Math.max(vh,2)+'%"></div>';
+        ch+='<div class="gbc-bar linear" style="height:'+Math.max(lh,2)+'%;margin-top:2px"></div>';
+      }else{
+        ch+='<div class="gbc-val">'+fmt(viralData[g])+'</div>';
+        ch+='<div class="gbc-bar viral" style="height:'+Math.max(vh,2)+'%"></div>';
+        ch+='<div class="gbc-bar linear" style="height:'+Math.max(lh,2)+'%;margin-top:2px"></div>';
+      }
+      ch+='<div class="gbc-label">G'+g+'</div></div>';
+    }
+    document.getElementById('growthChart').innerHTML=ch;
+    // Strategies
+    var strategies=[
+      {title:'提升邀请激励',desc:'为邀请者和被邀请者提供双向奖励（如折扣券、积分、赠品），降低邀请门槛',impact:'K提升0.1-0.3'},
+      {title:'优化分享路径',desc:'减少分享步骤，支持一键分享到多平台，预填邀请文案和链接',impact:'转化率提升20-50%'},
+      {title:'制造分享动机',desc:'设计天然可分享的内容（成就解锁、排行榜、UGC展示），让用户主动传播',impact:'自然分享率翻倍'},
+      {title:'A/B测试接受率',desc:'测试不同落地页、注册流程、激励方案，持续优化邀请接受转化率',impact:'接受率提升5-15%'}
+    ];
+    var sh='';
+    strategies.forEach(function(s){
+      sh+='<div class="strategy-card"><div class="sc-title">'+s.title+'</div><div class="sc-desc">'+s.desc+'</div><div class="sc-impact">预估效果：'+s.impact+'</div></div>';
+    });
+    document.getElementById('strategyGrid').innerHTML=sh;
+    save({i:i,c:c,n0:n0,gen:gen});
+  }
+  function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function init(){
+    try{var d=JSON.parse(localStorage.getItem(SK));if(d){
+      if(d.i){document.getElementById('invites').value=d.i;}
+      if(d.c){document.getElementById('acceptRate').value=d.c*100;}
+      if(d.n0){document.getElementById('initialUsers').value=d.n0;}
+      if(d.gen){document.getElementById('generations').value=d.gen;}
+    }}catch(e){}
+    calc();
+  }
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',VCC.init);}else{VCC.init();}
+</script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="现金流量表生成器：经营/投资/筹资三大活动现金流间接法编制，净现金流计算，期初期末现金调节，CSS现金流瀑布图可视化。">
+<title>现金流量表生成器 - 间接法三大活动现金流·CSS瀑布图 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.cf-table{width:100%;border-collapse:collapse;font-size:13px}
+.cf-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.cf-table th.num{text-align:right}
+.cf-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.cf-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.cf-table tr.section td{background:#f0f4ff;font-weight:700;color:#4f46e5;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.cf-table tr.subtotal td{background:#f8fafc;font-weight:700;color:var(--ink)}
+.cf-table tr.total td{background:linear-gradient(90deg,#ecfdf5,#f0fdf4);font-weight:800;color:#059669;font-size:14px}
+.cf-flow{display:flex;align-items:stretch;gap:8px;padding:10px 0;overflow-x:auto;min-height:280px}
+.cf-block{flex:1;min-width:120px;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;border:1px solid var(--rule)}
+.cf-block-head{padding:10px;text-align:center;font-size:12px;font-weight:700;color:#fff}
+.cf-block.operating .cf-block-head{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+.cf-block.investing .cf-block-head{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.cf-block.financing .cf-block-head{background:linear-gradient(135deg,#8b5cf6,#a78bfa)}
+.cf-block-body{flex:1;padding:10px;display:flex;flex-direction:column;justify-content:center;gap:6px;background:#fff}
+.cf-item{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);padding:4px 6px;border-radius:6px;background:var(--bg-soft)}
+.cf-item .ci-val{font-weight:700}
+.cf-block-foot{padding:8px 10px;text-align:center;font-size:13px;font-weight:800;border-top:1px solid var(--rule)}
+.cf-block-foot.pos{background:#ecfdf5;color:#059669}
+.cf-block-foot.neg{background:#fef2f2;color:#dc2626}
+.cf-arrow{display:flex;align-items:center;justify-content:center;font-size:24px;color:#cbd5e1;flex-shrink:0}
+.cf-net{display:flex;align-items:center;justify-content:center;flex-direction:column;min-width:120px;border-radius:12px;padding:16px;background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #a7f3d0}
+.cf-net .cn-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.cf-net .cn-val{font-size:22px;font-weight:800;color:#059669}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.cf-table{font-size:11px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+  <a href="balance-sheet-builder.html" class="workflow-step">资产负债表</a>
+  <a href="cash-flow-statement-builder.html" class="workflow-step active">现金流量表</a>
+  <a href="tax-provision-calculator.html" class="workflow-step">税务计提</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">现金流量表生成器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">💧</span>现金流量表生成器 Cash Flow Statement Builder</h1>
+  <p>经营/投资/筹资三大活动现金流间接法编制，净利润调整非现金项目与营运资本变动，净现金流自动计算，期初现金+净现金流=期末现金勾稽校验，CSS现金流瀑布图直观展示三大活动对现金的影响。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card success"><div class="mc-label">经营活动现金流</div><div class="mc-value" id="mOps">$0</div></div>
+    <div class="metric-card warning"><div class="mc-label">投资活动现金流</div><div class="mc-value" id="mInv">$0</div></div>
+    <div class="metric-card"><div class="mc-label">筹资活动现金流</div><div class="mc-value" id="mFin">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">净现金流 Net Change</div><div class="mc-value" id="mNet">$0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🛒 经营活动现金流（间接法）</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>净利润 Net Income <span class="hint">($)</span></label><input type="number" id="ni" value="38000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>折旧摊销 D&A <span class="hint">($)</span></label><input type="number" id="da" value="12000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>股权激励 SBC <span class="hint">($)</span></label><input type="number" id="sbc" value="5000" step="500" oninput="CFS.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>应收账款变动 ΔAR <span class="hint">($,增加为-)</span></label><input type="number" id="dAR" value="-6000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>存货变动 ΔInv <span class="hint">($,增加为-)</span></label><input type="number" id="dInv" value="-18000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>应付账款变动 ΔAP <span class="hint">($,增加为+)</span></label><input type="number" id="dAP" value="8000" step="500" oninput="CFS.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>预付费用变动 ΔPrepaid <span class="hint">($)</span></label><input type="number" id="dPre" value="-2000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>其他经营活动 <span class="hint">($)</span></label><input type="number" id="opsOther" value="3000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏭 投资活动现金流</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>购置固定资产 CapEx <span class="hint">($,流出为-)</span></label><input type="number" id="capex" value="-25000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>处置资产收入 <span class="hint">($)</span></label><input type="number" id="assetSale" value="3000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>无形资产购置 <span class="hint">($,流出为-)</span></label><input type="number" id="intangBuy" value="-5000" step="500" oninput="CFS.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>投资收回 <span class="hint">($)</span></label><input type="number" id="invRecv" value="0" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>其他投资活动 <span class="hint">($)</span></label><input type="number" id="invOther" value="0" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏦 筹资活动现金流</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>新增借款 Borrowing <span class="hint">($)</span></label><input type="number" id="borrow" value="20000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>偿还借款 Repay <span class="hint">($,流出为-)</span></label><input type="number" id="repay" value="-8000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>股权融资 Equity Raise <span class="hint">($)</span></label><input type="number" id="equityRaise" value="0" step="500" oninput="CFS.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>支付分红 Dividends <span class="hint">($,流出为-)</span></label><input type="number" id="divPay" value="-10000" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>其他筹资活动 <span class="hint">($)</span></label><input type="number" id="finOther" value="0" step="500" oninput="CFS.calc()"></div>
+      <div class="jx-field"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💧 现金流瀑布图</h2>
+    <div class="cf-flow" id="cfFlow"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 现金流量表（间接法）</h2>
+    <div style="overflow-x:auto"><table class="cf-table" id="cfTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 期初期末现金勾稽</h2>
+    <div class="jx-row">
+      <div class="jx-field"><label>期初现金余额 Beg Cash <span class="hint">($)</span></label><input type="number" id="begCash" value="65000" step="1000" oninput="CFS.calc()"></div>
+      <div class="jx-field"><label>期末实际现金 End Cash <span class="hint">($)</span></label><input type="number" id="endCash" value="94000" step="1000" oninput="CFS.calc()"></div>
+    </div>
+    <div id="reconcile" style="margin-top:12px"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 现金流分析</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="balance-sheet-builder.html" class="rt-card"><div class="rt-icon">⚖️</div><div><h5>资产负债表</h5><p>资产负债平衡</p></div></a>
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>损益编制</p></div></a>
+      <a href="cash-flow-forecast.html" class="rt-card"><div class="rt-icon">🔮</div><div><h5>现金流预测</h5><p>未来现金流预测</p></div></a>
+      <a href="financial-health-scorecard.html" class="rt-card"><div class="rt-icon">❤️</div><div><h5>财务健康度</h5><p>健康度评分</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="cash-flow-statement-builder.html">现金流量表</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CFS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  function sign(n){return n>=0?'+':''}
+
+  function calc(){
+    var opsItems=[
+      {name:'净利润',v:num('ni')},{name:'折旧摊销',v:num('da')},{name:'股权激励',v:num('sbc')},
+      {name:'应收变动',v:num('dAR')},{name:'存货变动',v:num('dInv')},{name:'应付变动',v:num('dAP')},
+      {name:'预付变动',v:num('dPre')},{name:'其他',v:num('opsOther')}
+    ];
+    var ops=opsItems.reduce(function(a,b){return a+b.v},0);
+    var invItems=[
+      {name:'CapEx',v:num('capex')},{name:'处置资产',v:num('assetSale')},{name:'无形购置',v:num('intangBuy')},
+      {name:'投资收回',v:num('invRecv')},{name:'其他',v:num('invOther')}
+    ];
+    var inv=invItems.reduce(function(a,b){return a+b.v},0);
+    var finItems=[
+      {name:'新增借款',v:num('borrow')},{name:'偿还借款',v:num('repay')},{name:'股权融资',v:num('equityRaise')},
+      {name:'支付分红',v:num('divPay')},{name:'其他',v:num('finOther')}
+    ];
+    var fin=finItems.reduce(function(a,b){return a+b.v},0);
+    var net=ops+inv+fin;
+    $('mOps').textContent=fmt(ops);$('mOps').style.color=ops>=0?'#059669':'#dc2626';
+    $('mInv').textContent=fmt(inv);$('mInv').style.color=inv>=0?'#059669':'#dc2626';
+    $('mFin').textContent=fmt(fin);$('mFin').style.color=fin>=0?'#059669':'#dc2626';
+    $('mNet').textContent=fmt(net);$('mNet').style.color=net>=0?'#059669':'#dc2626';
+    renderFlow(opsItems,ops,invItems,inv,finItems,fin,net);
+    renderTable(opsItems,ops,invItems,inv,finItems,fin,net);
+    renderReconcile(net);
+    renderTips(ops,inv,fin,net);
+    save();
+  }
+
+  function renderFlow(opsItems,ops,invItems,inv,finItems,fin,net){
+    var block=function(cls,title,items,total){
+      var h='<div class="cf-block '+cls+'"><div class="cf-block-head">'+title+'</div><div class="cf-block-body">';
+      items.forEach(function(it){if(it.v!==0)h+='<div class="cf-item"><span>'+it.name+'</span><span class="ci-val" style="color:'+(it.v>=0?'#059669':'#dc2626')+'">'+sign(it.v)+fmt(it.v)+'</span></div>'});
+      h+='</div><div class="cf-block-foot '+(total>=0?'pos':'neg')+'">'+sign(total)+fmt(total)+'</div></div>';
+      return h;
+    };
+    var h=block('operating','经营活动',opsItems,ops);
+    h+='<div class="cf-arrow">→</div>'+block('investing','投资活动',invItems,inv);
+    h+='<div class="cf-arrow">→</div>'+block('financing','筹资活动',finItems,fin);
+    h+='<div class="cf-arrow">=</div><div class="cf-net"><div class="cn-label">净现金流</div><div class="cn-val">'+sign(net)+fmt(net)+'</div></div>';
+    $('cfFlow').innerHTML=h;
+  }
+
+  function renderTable(opsItems,ops,invItems,inv,finItems,fin,net){
+    var h='<thead><tr><th>项目</th><th class="num">金额</th></tr></thead><tbody>';
+    h+='<tr class="section"><td colspan="2">一、经营活动现金流 Operating</td></tr>';
+    opsItems.forEach(function(it){h+='<tr><td>　'+it.name+'</td><td class="num" style="color:'+(it.v>=0?'#059669':'#dc2626')+'">'+sign(it.v)+fmt(it.v)+'</td></tr>'});
+    h+='<tr class="subtotal"><td>经营活动现金流净额</td><td class="num" style="color:'+(ops>=0?'#059669':'#dc2626')+'">'+sign(ops)+fmt(ops)+'</td></tr>';
+    h+='<tr class="section"><td colspan="2">二、投资活动现金流 Investing</td></tr>';
+    invItems.forEach(function(it){h+='<tr><td>　'+it.name+'</td><td class="num" style="color:'+(it.v>=0?'#059669':'#dc2626')+'">'+sign(it.v)+fmt(it.v)+'</td></tr>'});
+    h+='<tr class="subtotal"><td>投资活动现金流净额</td><td class="num" style="color:'+(inv>=0?'#059669':'#dc2626')+'">'+sign(inv)+fmt(inv)+'</td></tr>';
+    h+='<tr class="section"><td colspan="2">三、筹资活动现金流 Financing</td></tr>';
+    finItems.forEach(function(it){h+='<tr><td>　'+it.name+'</td><td class="num" style="color:'+(it.v>=0?'#059669':'#dc2626')+'">'+sign(it.v)+fmt(it.v)+'</td></tr>'});
+    h+='<tr class="subtotal"><td>筹资活动现金流净额</td><td class="num" style="color:'+(fin>=0?'#059669':'#dc2626')+'">'+sign(fin)+fmt(fin)+'</td></tr>';
+    h+='<tr class="total"><td>四、本期现金净增加额</td><td class="num" style="color:'+(net>=0?'#059669':'#dc2626')+'">'+sign(net)+fmt(net)+'</td></tr>';
+    h+='</tbody>';
+    $('cfTable').innerHTML=h;
+  }
+
+  function renderReconcile(net){
+    var beg=num('begCash'),end=num('endCash');
+    var calc=end-beg;
+    var diff=net-calc;
+    var ok=Math.abs(diff)<1;
+    var h='<div class="balance-bar" style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:14px;'+(ok?'background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #a7f3d0':'background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fecaca')+'">';
+    h+='<div style="font-size:28px">'+(ok?'✅':'⚠️')+'</div><div style="flex:1"><div style="font-size:15px;font-weight:700">'+(ok?'现金勾稽平衡':'现金勾稽存在差额')+'</div>';
+    h+='<div style="font-size:13px;color:var(--muted);margin-top:2px">期初 '+fmt(beg)+' + 净现金流 '+fmt(net)+' = '+fmt(beg+net)+' ｜ 实际期末 '+fmt(end)+'</div></div>';
+    h+='<div style="font-size:20px;font-weight:800;color:'+(ok?'#059669':'#dc2626')+'">差额 '+fmt(diff)+'</div></div>';
+    $('reconcile').innerHTML=h;
+  }
+
+  function renderTips(ops,inv,fin,net){
+    var tips=[];
+    tips.push('经营活动现金流 '+fmt(ops)+'，'+(ops>=0?'为正，主营业务造血能力良好。':'为负，需警惕经营性现金流失血。'));
+    if(ops<0)tips.push('经营活动现金流为负，若同时净利润为正，说明营运资本占用过多现金（存货/应收激增），需优化营运资本管理。');
+    tips.push('投资活动现金流 '+fmt(inv)+'，'+(inv<0?'为负属正常（企业在投资扩张），关注CapEx回报率。':'为正，可能在变卖资产收缩投资。'));
+    tips.push('筹资活动现金流 '+fmt(fin)+'，'+(fin>0?'为正，企业在外部融资输血。':'为负，企业在偿还债务或分红回馈股东。'));
+    if(ops>0&&inv<0&&ops+inv>0)tips.push('自由现金流（经营+投资）= '+fmt(ops+inv)+'，为正且健康，企业不依赖外部融资即可维持扩张。');
+    if(ops<0&&fin>0)tips.push('经营失血+筹资补血模式不可持续，需尽快扭转经营现金流为正。');
+    tips.push('本期现金净增加 '+fmt(net)+'，'+(net>=0?'现金储备增长。':'现金储备减少，关注流动性安全。'));
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){var d={};['ni','da','sbc','dAR','dInv','dAP','dPre','opsOther','capex','assetSale','intangBuy','invRecv','invOther','borrow','repay','equityRaise','divPay','finOther','begCash','endCash'].forEach(function(id){d[id]=$(id).value});try{localStorage.setItem('jx_cfs_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_cfs_data'));if(d)Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CFS.init)}else{CFS.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="视频广告分镜器：脚本+分镜+时长+字幕+音乐匹配+场景规划，CSS分镜板可视化，跨境卖家视频广告创意制作工具。">
+<title>视频广告分镜器 - 脚本分镜字幕音乐场景规划 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select,.jx-field textarea{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus,.jx-field textarea:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.storyboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.scene-card{border:1px solid var(--rule);border-radius:14px;overflow:hidden;background:#fff}
+.scene-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff}
+.scene-header .sh-num{font-size:12px;font-weight:700;opacity:.9}
+.scene-header .sh-time{font-size:13px;font-weight:800;background:rgba(255,255,255,.25);padding:2px 10px;border-radius:20px}
+.scene-visual{height:100px;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,#f0f4ff,#e0e7ff);border-bottom:1px solid var(--rule)}
+.scene-body{padding:12px 14px}
+.scene-body .sb-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.scene-body .sb-script{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px;min-height:36px}
+.scene-body .sb-subtitle{font-size:11px;color:#4f46e5;background:#f0f4ff;padding:4px 8px;border-radius:6px;margin-bottom:8px;font-weight:600}
+.scene-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg-soft);border-top:1px solid var(--rule-light);font-size:11px}
+.scene-footer .sf-music{color:#8b5cf6;font-weight:600}
+.scene-footer .sf-shot{color:var(--muted)}
+.timeline-bar{display:flex;height:36px;border-radius:10px;overflow:hidden;margin:16px 0}
+.timeline-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;border-right:2px solid #fff;transition:flex .3s;cursor:pointer}
+.timeline-seg:last-child{border-right:none}
+.timeline-seg:hover{filter:brightness(1.1)}
+.timeline-labels{display:flex;gap:4px;font-size:10px;color:var(--muted);margin-bottom:8px}
+.music-match{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:var(--bg-soft);margin-bottom:8px}
+.music-match .mm-icon{font-size:24px}
+.music-match .mm-info{flex:1}
+.music-match .mm-name{font-size:13px;font-weight:700;color:var(--ink)}
+.music-match .mm-desc{font-size:11px;color:var(--muted)}
+.music-match .mm-score{font-size:16px;font-weight:800;color:#10b981}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W35 广告创意工作流</div><div class="workflow-steps">
+  <a href="ad-creative-scorecard.html" class="workflow-step">创意评分</a>
+  <a href="headline-generator.html" class="workflow-step">标题</a>
+  <a href="product-image-analyzer.html" class="workflow-step">图片分析</a>
+  <a href="ab-test-planner.html" class="workflow-step">A/B测试</a>
+  <a href="ad-copy-variants.html" class="workflow-step">文案变体</a>
+  <a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a>
+  <a href="seasonal-ad-planner.html" class="workflow-step">季节规划</a>
+  <a href="ad-budget-splitter.html" class="workflow-step">预算拆分</a>
+  <a href="creative-brief-builder.html" class="workflow-step">Brief</a>
+  <a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+  <a href="video-ad-storyboard.html" class="workflow-step active">视频分镜</a>
+  <a href="creative-asset-library.html" class="workflow-step">素材库</a>
+  <a href="competitor-creative-spy.html" class="workflow-step">创意侦察</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W35 广告创意</a><span class="sep">›</span><span class="current">视频广告分镜器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🎬</span>视频广告分镜器 Video Ad Storyboard</h1>
+  <p>脚本撰写+分镜规划+时长分配+字幕设计+音乐匹配+场景编排，CSS分镜板逐帧展示每个镜头的画面、台词、字幕与配乐，时间轴可视化整体节奏，帮助跨境卖家制作高转化视频广告。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">总时长</div><div class="mc-value" id="mDuration">0s</div></div>
+    <div class="metric-card"><div class="mc-label">分镜数</div><div class="mc-value" id="mScenes">0</div></div>
+    <div class="metric-card success"><div class="mc-label">音乐匹配度</div><div class="mc-value" id="mMusic">0%</div></div>
+    <div class="metric-card warning"><div class="mc-label">前3秒钩子</div><div class="mc-value" id="mHook" style="font-size:16px">-</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 视频基本信息</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>广告名称</label><input type="text" id="adName" value="蓝牙耳机夏季主推" oninput="VSB.calc()"></div>
+      <div class="jx-field"><label>视频格式</label><select id="format" onchange="VSB.calc()"><option>16:9 横版</option><option>9:16 竖版</option><option>1:1 方形</option></select></div>
+      <div class="jx-field"><label>目标时长 <span class="hint">(秒)</span></label><input type="number" id="targetDur" value="30" step="5" oninput="VSB.calc()"></div>
+    </div>
+    <div class="jx-field"><label>核心卖点 / Hook方向</label><input type="text" id="hook" value="降噪黑科技，戴上即静音" oninput="VSB.calc()"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎬 分镜板</h2>
+    <div class="storyboard" id="storyboard"></div>
+    <button onclick="VSB.addScene()" style="margin-top:16px;padding:8px 16px;border:1px dashed #4f46e5;background:#f5f3ff;color:#4f46e5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">+ 添加分镜</button>
+  </div>
+
+  <div class="jx-card">
+    <h2>⏱️ 时间轴节奏</h2>
+    <div class="timeline-labels" id="tlLabels"></div>
+    <div class="timeline-bar" id="timeline"></div>
+    <div style="font-size:12px;color:var(--muted);margin-top:8px">点击时间轴段落查看对应分镜详情。前3秒为黄金钩子期，建议分配强冲击画面。</div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎵 音乐匹配推荐</h2>
+    <div id="musicList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 分镜优化建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="ad-creative-scorecard.html" class="rt-card"><div class="rt-icon">🎨</div><div><h5>创意评分卡</h5><p>创意质量评分</p></div></a>
+      <a href="creative-asset-library.html" class="rt-card"><div class="rt-icon">🗂️</div><div><h5>创意素材库</h5><p>素材统一管理</p></div></a>
+      <a href="headline-generator.html" class="rt-card"><div class="rt-icon">✍️</div><div><h5>标题生成器</h5><p>广告标题</p></div></a>
+      <a href="ad-copy-variants.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>文案变体</h5><p>多版本文案</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="video-ad-storyboard.html">视频分镜器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var VSB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+  var scenes=[
+    {icon:'🎧',script:'戴上耳机瞬间降噪，嘈杂街道秒变静谧',subtitle:'主动降噪·沉浸静界',duration:3,shot:'特写',music:'upbeat'},
+    {icon:'📦',script:'开箱展示包装与配件全家福',subtitle:'开箱即享',duration:4,shot:'俯拍',music:'upbeat'},
+    {icon:'✨',script:'产品多角度特写，高光金属质感',subtitle:'旗舰质感',duration:5,shot:'环绕',music:'ambient'},
+    {icon:'🏃',script:'运动场景佩戴，稳固不掉',subtitle:'运动无忧',duration:5,shot:'跟随',music:'energetic'},
+    {icon:'📱',script:'APP触控操作演示，功能一目了然',subtitle:'智能触控',duration:5,shot:'屏幕录制',music:'tech'},
+    {icon:'🔋',script:'充电5分钟听歌2小时，续航30小时',subtitle:'超长续航',duration:4,shot:'特写',music:'tech'},
+    {icon:'🛒',script:'限时优惠，点击购买',subtitle:'限时特惠 立即下单',duration:4,shot:'CTA',music:'upbeat'}
+  ];
+  var musicLib=[
+    {name:'Energetic Pop Beat',desc:'快节奏电子·适合开场钩子',score:95,mood:'upbeat'},
+    {name:'Ambient Cinematic',desc:'氛围电影感·适合产品展示',score:88,mood:'ambient'},
+    {name:'Workout Power',desc:'运动燃曲·适合场景演绎',score:92,mood:'energetic'},
+    {name:'Tech Innovation',desc:'科技感电子·适合功能演示',score:90,mood:'tech'}
+  ];
+
+  function calc(){
+    var total=scenes.reduce(function(a,b){return a+b.duration},0);
+    var target=num('targetDur');
+    var hookScene=scenes[0];
+    var hookScore=hookScene&&hookScene.duration>=3?100:hookScene?70:0;
+    var musicMatch=Math.round(scenes.filter(function(s){return musicLib.some(function(m){return m.mood===s.music})}).length/Math.max(scenes.length,1)*100);
+    $('mDuration').textContent=total+'s';
+    $('mScenes').textContent=scenes.length;
+    $('mMusic').textContent=musicMatch+'%';
+    $('mHook').textContent=hookScene?(hookScene.duration>=3?'强（'+hookScene.duration+'s）':'偏弱（'+hookScene.duration+'s）'):'-';
+    renderStoryboard();
+    renderTimeline(total,target);
+    renderMusic();
+    renderTips(total,target,hookScene,musicMatch);
+    save();
+  }
+
+  function renderStoryboard(){
+    var h='';
+    scenes.forEach(function(s,i){
+      h+='<div class="scene-card"><div class="scene-header"><span class="sh-num">镜头 #'+(i+1)+'</span><span class="sh-time">'+s.duration+'s</span></div>';
+      h+='<div class="scene-visual">'+s.icon+'</div>';
+      h+='<div class="scene-body"><div class="sb-label">脚本 Script</div><div class="sb-script">'+s.script+'</div>';
+      h+='<div class="sb-label">字幕 Subtitle</div><div class="sb-subtitle">'+s.subtitle+'</div></div>';
+      h+='<div class="scene-footer"><span class="sf-music">🎵 '+s.music+'</span><span class="sf-shot">🎥 '+s.shot+'</span></div></div>';
+    });
+    $('storyboard').innerHTML=h;
+  }
+
+  function renderTimeline(total,target){
+    var colors=['#4f46e5','#6366f1','#818cf8','#8b5cf6','#a78bfa','#f59e0b','#10b981'];
+    var h='';
+    scenes.forEach(function(s,i){
+      var pct=total>0?s.duration/total*100:0;
+      h+='<div class="timeline-seg" style="flex:'+Math.max(pct,4)+';background:'+colors[i%colors.length]+'" title="#'+(i+1)+' '+s.duration+'s">'+(i+1)+'</div>';
+    });
+    $('timeline').innerHTML=h;
+    var labels='';
+    for(var t=0;t<=Math.max(total,target);t+=5){labels+='<div style="flex:1;text-align:left">'+t+'s</div>'}
+    $('tlLabels').innerHTML=labels;
+  }
+
+  function renderMusic(){
+    var h='';
+    musicLib.forEach(function(m){
+      h+='<div class="music-match"><div class="mm-icon">🎵</div><div class="mm-info"><div class="mm-name">'+m.name+'</div><div class="mm-desc">'+m.desc+'</div></div><div class="mm-score">'+m.score+'%</div></div>';
+    });
+    $('musicList').innerHTML=h;
+  }
+
+  function renderTips(total,target,hookScene,musicMatch){
+    var tips=[];
+    tips.push('视频总时长 '+total+' 秒，目标 '+target+' 秒，'+(total>target?'超出'+(total-target)+'秒，建议精简。':total<target?'剩余'+(target-total)+'秒，可补充内容。':'时长精准匹配。'));
+    if(hookScene){
+      if(hookScene.duration>=3)tips.push('前3秒钩子充足（'+hookScene.duration+'s），开场冲击力强，利于留住观众。');
+      else tips.push('前3秒钩子不足（仅'+hookScene.duration+'s），建议将开场镜头延长至3秒以上，强化第一印象。');
+    }
+    if(musicMatch>=80)tips.push('音乐匹配度 '+musicMatch+'%，分镜情绪与配乐高度契合，节奏统一。');
+    else tips.push('音乐匹配度 '+musicMatch+'%，部分分镜配乐情绪不匹配，建议调整音乐选择。');
+    var ctaScene=scenes.find(function(s){return s.shot==='CTA'});
+    if(ctaScene)tips.push('CTA结尾镜头 '+ctaScene.duration+' 秒，字幕"'+ctaScene.subtitle+'"，转化引导清晰。');
+    else tips.push('缺少明确CTA结尾镜头，建议增加"立即购买"引导镜头。');
+    var longScene=scenes.find(function(s){return s.duration>6});
+    if(longScene)tips.push('镜头#'+(scenes.indexOf(longScene)+1)+'时长'+longScene.duration+'秒偏长，建议拆分为2个镜头保持节奏紧凑。');
+    tips.push('建议竖版(9:16)适配TikTok/Reels，横版(16:9)适配YouTube，方形(1:1)适配Feed流，一稿多投提升素材利用率。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function addScene(){scenes.push({icon:'🎯',script:'新分镜脚本',subtitle:'新字幕',duration:3,shot:'中景',music:'upbeat'});calc()}
+  function save(){try{localStorage.setItem('jx_vsb_data',JSON.stringify({scenes:scenes,adName:$('adName').value,format:$('format').value,targetDur:$('targetDur').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_vsb_data'));if(d){scenes=d.scenes||scenes;if(d.adName)$('adName').value=d.adName;if(d.format)$('format').value=d.format;if(d.targetDur)$('targetDur').value=d.targetDur}}catch(e){}}
+  return {calc:calc,addScene:addScene,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',VSB.init)}else{VSB.init()}
+</script>
+</body>
+</html>

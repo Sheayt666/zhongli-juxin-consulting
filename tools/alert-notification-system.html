@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="预警通知系统：6大指标预警规则配置（GMV/ACoS/转化率/退货率/库存/差评），6种通知渠道，三级升级机制，实时预警信息流。">
+<meta name="keywords" content="预警系统,通知系统,异常预警,多渠道推送,升级机制,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="预警通知系统 - 多指标监控·多渠道推送·升级机制 | 众力聚鑫咨询">
+<meta property="og:description" content="预警通知系统：6大指标预警规则配置（GMV/ACoS/转化率/退货率/库存/差评），6种通知渠道，三级升级机制，实时预警信息流。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/alert-notification-system.html">
+<title>预警通知系统 - 多指标监控·多渠道推送·升级机制 | 众力聚鑫咨询 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"预警通知系统","description":"预警通知系统：6大指标预警规则配置（GMV/ACoS/转化率/退货率/库存/差评），6种通知渠道，三级升级机制，实时预警信息流。","url":"https://juxin-consulting.help/tools/alert-notification-system.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"预警通知系统","item":"https://juxin-consulting.help/tools/alert-notification-system.html"}]}
+</script>
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.wf-steps-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.rpt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.rpt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+
+
+.alert-config{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.alert-metric-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:16px}
+.alert-metric-card h4{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.alert-rule{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.alert-rule select,.alert-rule input{padding:8px;border-radius:6px;border:1px solid var(--rule);font-size:13px;width:100%}
+.channel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.channel-card{padding:16px;border-radius:12px;border:2px solid var(--rule);background:#fff;cursor:pointer;transition:all .2s;text-align:center}
+.channel-card.active{border-color:var(--accent);background:var(--accent-bg)}
+.channel-card .cc-icon{font-size:28px;margin-bottom:8px}
+.channel-card .cc-name{font-size:13px;font-weight:600;color:var(--ink)}
+.channel-card .cc-status{font-size:11px;margin-top:4px;color:var(--muted)}
+.escalation-flow{display:flex;align-items:center;gap:8px;margin:16px 0;flex-wrap:wrap}
+.escalation-step{padding:12px 20px;border-radius:10px;text-align:center;flex:1;min-width:120px}
+.escalation-step.l1{background:var(--green-bg);border:1px solid var(--green)}
+.escalation-step.l2{background:var(--gold-bg);border:1px solid var(--gold)}
+.escalation-step.l3{background:var(--red-bg);border:1px solid var(--red)}
+.escalation-step .es-level{font-size:11px;font-weight:700;margin-bottom:4px}
+.escalation-step .es-action{font-size:12px;color:var(--ink-soft)}
+.escalation-step .es-time{font-size:10px;color:var(--muted);margin-top:4px}
+.escalation-arrow{color:var(--muted);font-size:18px}
+.alert-feed{list-style:none;padding:0;margin:0;max-height:400px;overflow-y:auto}
+.feed-item{display:flex;gap:12px;padding:14px 16px;border-radius:10px;margin-bottom:8px;background:var(--bg-soft);border-left:4px solid var(--accent)}
+.feed-item.critical{border-left-color:var(--red);background:var(--red-bg)}
+.feed-item.warning{border-left-color:var(--gold);background:var(--gold-bg)}
+.feed-item.info{border-left-color:var(--accent);background:var(--accent-bg)}
+.feed-item.resolved{border-left-color:var(--green);background:var(--green-bg)}
+.feed-icon{font-size:20px;flex-shrink:0}
+.feed-body{flex:1}
+.feed-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.feed-desc{font-size:12px;color:var(--ink-soft);line-height:1.5}
+.feed-meta{font-size:11px;color:var(--muted);margin-top:4px}
+@media(max-width:768px){.alert-config{grid-template-columns:1fr}.channel-grid{grid-template-columns:1fr}.escalation-flow{flex-direction:column}}
+
+</style>
+</head>
+<body class="tool-page" data-tool="alert_notification_system">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner"><a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a><ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></ul><a href="../index.html" class="tool-nav-back">← 返回首页</a></div></nav>
+<main id="main-content">
+<div class="workflow-nav"><div class="workflow-nav-header"><span class="workflow-icon">📊</span><span class="workflow-name">数据报表工作流</span><span class="workflow-step">第11步 / 共12步</span></div><div class="wf-steps-scroll"><div class="workflow-nav-steps"><a href="daily-report.html" class="step">日报</a><span class="arrow">→</span><a href="weekly-report.html" class="step">周报</a><span class="arrow">→</span><a href="monthly-report.html" class="step">月报</a><span class="arrow">→</span><a href="custom-dashboard.html" class="step">自定义看板</a><span class="arrow">→</span><a href="kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span><a href="real-time-dashboard.html" class="step">实时看板</a><span class="arrow">→</span><a href="executive-summary-report.html" class="step">管理摘要</a><span class="arrow">→</span><a href="automated-report-scheduler.html" class="step">报表调度</a><span class="arrow">→</span><a href="benchmark-report-generator.html" class="step">基准报告</a><span class="arrow">→</span><a href="data-export-center.html" class="step">数据导出</a><span class="arrow">→</span><span class="step current">预警通知</span><span class="arrow">→</span><a href="report-template-library.html" class="step">模板库</a></div></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📊 数据报表工作流 · 标准版</span><h1>预警通知 <em>系统</em></h1><p class="tool-hero-desc">6大核心指标预警规则配置（GMV/ACoS/转化率/退货率/库存/差评），6种通知渠道（邮件/短信/钉钉/企业微信/电话/Webhook），三级升级机制自动升级未处理预警，实时预警信息流追踪处理状态。</p></div></header>
+<section class="tool-section"><div class="container">
+
+<div class="rpt-section" style="margin-top:0">
+<h3>⚙️ 预警规则配置</h3>
+<p style="font-size:13px;color:var(--muted);margin-bottom:16px">为每个指标设置预警阈值和触发条件，实时监控异常</p>
+<div class="alert-config" id="alertConfig"></div>
+</div>
+<div class="rpt-section">
+<h3>📡 通知渠道配置</h3>
+<div class="channel-grid" id="channelGrid"></div>
+</div>
+<div class="rpt-section">
+<h3>⚡ 升级机制</h3>
+<p style="font-size:13px;color:var(--muted);margin-bottom:8px">预警未处理时自动升级通知级别</p>
+<div class="escalation-flow">
+<div class="escalation-step l1"><div class="es-level" style="color:var(--green)">L1 - 即时</div><div class="es-action">站内通知 + 邮件</div><div class="es-time">0-15分钟</div></div>
+<span class="escalation-arrow">→</span>
+<div class="escalation-step l2"><div class="es-level" style="color:var(--gold)">L2 - 升级</div><div class="es-action">短信 + 钉钉/企业微信</div><div class="es-time">15-60分钟</div></div>
+<span class="escalation-arrow">→</span>
+<div class="escalation-step l3"><div class="es-level" style="color:var(--red)">L3 - 紧急</div><div class="es-action">电话 + 管理层推送</div><div class="es-time">>60分钟</div></div>
+</div>
+</div>
+<div class="rpt-section">
+<h3>🔔 预警信息流</h3>
+<ul class="alert-feed" id="alertFeed"></ul>
+</div>
+
+<div class="wf-foot-nav"><a href="data-export-center.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 数据导出</span></a><a href="report-template-library.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">模板库 →</span></a></div>
+</div></section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="real-time-dashboard.html">实时看板</a></li><li><a href="report-template-library.html">报表模板库</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script src="../assets/js/engagement.js"></script>
+<script>
+
+var ANS=(function(){
+'use strict';
+function $(id){return document.getElementById(id);}
+var metrics=[
+{id:'gmv',icon:'💰',name:'GMV',unit:'$',threshold:10000,condition:'below'},
+{id:'acos',icon:'📢',name:'ACoS',unit:'%',threshold:30,condition:'above'},
+{id:'cvr',icon:'🎯',name:'转化率',unit:'%',threshold:8,condition:'below'},
+{id:'returns',icon:'↩️',name:'退货率',unit:'%',threshold:5,condition:'above'},
+{id:'stock',icon:'📦',name:'库存量',unit:'件',threshold:100,condition:'below'},
+{id:'negative',icon:'💔',name:'差评数',unit:'条',threshold:3,condition:'above'}
+];
+var channels=[
+{id:'email',icon:'📧',name:'邮件通知',active:true},
+{id:'sms',icon:'📱',name:'短信通知',active:true},
+{id:'dingtalk',icon:'💬',name:'钉钉推送',active:false},
+{id:'wechat',icon:'💚',name:'企业微信',active:true},
+{id:'phone',icon:'📞',name:'电话通知',active:false},
+{id:'webhook',icon:'🔗',name:'Webhook',active:false}
+];
+var feeds=[
+{type:'critical',icon:'🚨',title:'GMV异常下跌',desc:'当前GMV $8,500低于阈值 $10,000，跌幅15%',time:'2分钟前',status:'未处理'},
+{type:'warning',icon:'⚠️',title:'ACoS超过警戒线',desc:'当前ACoS 32.5%超过阈值30%，建议优化广告',time:'8分钟前',status:'处理中'},
+{type:'critical',icon:'📦',title:'库存不足预警',desc:'SKU PROD-A1 可售库存仅85件，低于安全库存100件',time:'15分钟前',status:'未处理'},
+{type:'warning',icon:'↩️',title:'退货率偏高',desc:'今日退货率5.2%，超过5%阈值',time:'25分钟前',status:'已处理'},
+{type:'info',icon:'📊',title:'日报已生成',desc:'今日运营日报已自动生成并发送至管理邮箱',time:'1小时前',status:'已完成'},
+{type:'resolved',icon:'✅',title:'转化率恢复',desc:'转化率已恢复至12.3%，预警已解除',time:'2小时前',status:'已解决'}
+];
+function renderConfig(){
+$('alertConfig').innerHTML=metrics.map(function(m){
+return '<div class="alert-metric-card"><h4>'+m.icon+' '+m.name+' 预警</h4>'+
+'<div class="alert-rule">'+
+'<select onchange="ANS.updateMetric(''+m.id+'','condition',this.value)">'+
+'<option value="below"'+(m.condition==='below'?' selected':'')+'>低于</option>'+
+'<option value="above"'+(m.condition==='above'?' selected':'')+'>高于</option>'+
+'</select>'+
+'<input type="number" value="'+m.threshold+'" onchange="ANS.updateMetric(''+m.id+'','threshold',this.value)">'+
+'<span style="font-size:13px;color:var(--muted)">'+m.unit+'</span>'+
+'</div>'+
+'<div style="font-size:11px;color:var(--muted);margin-top:6px">当'+m.name+(m.condition==='below'?'低于':'高于')+m.threshold+m.unit+'时触发预警</div></div>';
+}).join('');
+}
+function renderChannels(){
+$('channelGrid').innerHTML=channels.map(function(c){
+return '<div class="channel-card'+(c.active?' active':'')+'" onclick="ANS.toggleChannel(''+c.id+'')">'+
+'<div class="cc-icon">'+c.icon+'</div><div class="cc-name">'+c.name+'</div>'+
+'<div class="cc-status">'+(c.active?'✓ 已启用':'未启用')+'</div></div>';
+}).join('');
+}
+function renderFeed(){
+$('alertFeed').innerHTML=feeds.map(function(f){
+return '<li class="feed-item '+f.type+'">'+
+'<div class="feed-icon">'+f.icon+'</div>'+
+'<div class="feed-body"><div class="feed-title">'+f.title+'</div>'+
+'<div class="feed-desc">'+f.desc+'</div>'+
+'<div class="feed-meta">'+f.time+' · '+f.status+'</div></div></li>';
+}).join('');
+}
+function updateMetric(id,field,val){
+metrics.forEach(function(m){if(m.id===id)m[field]=field==='threshold'?parseFloat(val):val;});
+renderConfig();
+}
+function toggleChannel(id){
+channels.forEach(function(c){if(c.id===id)c.active=!c.active;});
+renderChannels();
+}
+function init(){renderConfig();renderChannels();renderFeed();}
+return{updateMetric:updateMetric,toggleChannel:toggleChannel,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ANS.init);}else{ANS.init();}
+
+</script>
+</body>
+</html>

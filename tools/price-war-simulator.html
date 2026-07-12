@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="价格战模拟器：降价影响推演、利润变化、市场份额推演、CSS模拟图。免费在线跨境电商价格战模拟工具。">
+<meta name="keywords" content="价格战模拟,降价推演,利润变化,市场份额,价格竞争,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/price-war-simulator.html">
+<title>价格战模拟器 - 降价推演·利润变化·市场份额 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pws-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pws-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.round-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.round-card{padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.round-card .rc-round{font-size:11px;color:var(--muted);font-weight:600}
+.round-card .rc-price{font-size:18px;font-weight:800;margin-top:4px}
+.round-card .rc-profit{font-size:13px;font-weight:700;margin-top:4px}
+.round-card .rc-share{font-size:11px;color:var(--muted);margin-top:2px}
+.compare-bar{display:flex;height:40px;border-radius:8px;overflow:hidden;margin:8px 0}
+.compare-seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transition:flex .4s}
+.sim-chart{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px}
+.sim-chart-col{flex:1;min-width:280px}
+.bar-chart-item{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-chart-item .bci-label{font-size:12px;width:80px;text-align:right;color:var(--ink-soft)}
+.bar-chart-item .bci-bar{flex:1;height:24px;border-radius:6px;background:var(--rule-light);overflow:hidden;position:relative}
+.bar-chart-item .bci-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff}
+.verdict-box{padding:20px;border-radius:12px;margin-bottom:12px}
+.verdict-box.good{background:#ecfdf5;border:1px solid #6ee7b7}
+.verdict-box.warn{background:#fffbeb;border:1px solid #fcd34d}
+.verdict-box.bad{background:#fef2f2;border:1px solid #fca5a5}
+.verdict-box .vb-title{font-size:16px;font-weight:800;margin-bottom:6px}
+.verdict-box .vb-desc{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.round-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"价格战模拟器","description":"降价影响推演、利润变化、市场份额推演、CSS模拟图。","url":"https://juxin-consulting.help/tools/price-war-simulator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"价格战模拟器","item":"https://juxin-consulting.help/tools/price-war-simulator.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="price_war_simulator">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚔️ 定价策略工作流</span>
+      <h1>价格战 <em>模拟器</em></h1>
+      <p class="tool-hero-desc">模拟多轮降价博弈对利润与市场份额的影响，推演自身与竞品互相降价后的利润变化曲线，识别价格战临界点与最优应对策略，避免陷入恶性价格螺旋。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第9步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <a href="price-elasticity-tester.html" class="step">价格弹性</a><span class="arrow">→</span>
+      <a href="repricing-rules-engine.html" class="step">自动调价</a><span class="arrow">→</span>
+      <a href="psychological-pricing-analyzer.html" class="step">心理定价</a><span class="arrow">→</span>
+      <span class="step current">价格战模拟</span><span class="arrow">→</span>
+      <a href="coupon-deal-optimizer.html" class="step">Coupon优化</a><span class="arrow">→</span>
+      <a href="multi-variant-pricing-strategy.html" class="step">多变体定价</a><span class="arrow">→</span>
+      <a href="price-history-analyzer.html" class="step">价格历史</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>⚔️ 价格战参数</h2>
+          <p class="calc-form-subtitle">填写自身与竞品价格成本</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>自身价格 <span class="hint">($)</span></label><input type="number" id="myPrice" value="24.99" step="0.01" oninput="PWS.sim()"></div>
+            <div class="calc-field"><label>竞品价格 <span class="hint">($)</span></label><input type="number" id="compPrice" value="23.99" step="0.01" oninput="PWS.sim()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>自身成本 <span class="hint">($)</span></label><input type="number" id="myCost" value="9.00" step="0.01" oninput="PWS.sim()"></div>
+            <div class="calc-field"><label>竞品成本 <span class="hint">($，估算)</span></label><input type="number" id="compCost" value="10.50" step="0.01" oninput="PWS.sim()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>市场总需求 <span class="hint">(pcs/月)</span></label><input type="number" id="market" value="5000" oninput="PWS.sim()"></div>
+            <div class="calc-field"><label>每轮降价幅度 <span class="hint">($)</span></label><input type="number" id="cutStep" value="1.00" step="0.1" oninput="PWS.sim()"></div>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="pws-section">
+        <h3>🔄 多轮降价推演</h3>
+        <div class="round-grid" id="roundGrid"></div>
+      </div>
+
+      <div class="pws-section">
+        <h3>📊 利润与市场份额对比</h3>
+        <div class="sim-chart" id="simChart"></div>
+      </div>
+
+      <div class="pws-section">
+        <h3>🎯 价格战策略建议</h3>
+        <div id="verdictWrap"></div>
+      </div>
+
+      <div class="pws-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="repricing-rules-engine.html" class="related-card"><span class="related-card-icon">⚙️</span><div class="related-card-content"><h5>自动调价引擎</h5><p>调价规则</p></div></a>
+          <a href="competitor-pricing.html" class="related-card"><span class="related-card-icon">🏁</span><div class="related-card-content"><h5>竞品定价</h5><p>竞品比价</p></div></a>
+          <a href="price-elasticity-tester.html" class="related-card"><span class="related-card-icon">📈</span><div class="related-card-content"><h5>价格弹性测试</h5><p>弹性分析</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="psychological-pricing-analyzer.html" class="wbn-btn prev">← 上一步：心理定价</a>
+        <a href="coupon-deal-optimizer.html" class="wbn-btn next">下一步：Coupon优化 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="price-war-simulator.html">价格战模拟</a></li><li><a href="repricing-rules-engine.html">自动调价</a></li><li><a href="price-history-analyzer.html">价格历史</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PWS=(function(){
+  'use strict';
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function sim(){
+    var myP=v('myPrice'),cp=v('compPrice'),myC=v('myCost'),cc=v('compCost'),mkt=v('market'),step=v('cutStep');
+    var rounds=[];
+    var curMy=myP,curCp=cp;
+    for(var r=0;r<=3;r++){
+      // 市场份额：价格低者份额高
+      var myShare=curMy<=curCp?0.6:0.4;
+      var myVol=mkt*myShare,cpVol=mkt*(1-myShare);
+      var myProfit=(curMy-myC)*myVol;
+      var cpProfit=(curCp-cc)*cpVol;
+      rounds.push({r:r,myPrice:curMy,cpPrice:curCp,myProfit:myProfit,cpProfit:cpProfit,myShare:myShare});
+      // 每轮双方各降价
+      curMy=Math.max(myC+1,curMy-step);
+      curCp=Math.max(cc+1,curCp-step);
+    }
+    // round cards
+    var rh='';
+    rounds.forEach(function(r){
+      var profitColor=r.myProfit>=rounds[0].myProfit?'#10b981':'#ef4444';
+      rh+='<div class="round-card"><div class="rc-round">第'+r.r+'轮</div><div class="rc-price" style="color:#4f46e5">$'+r.myPrice.toFixed(2)+'</div><div class="rc-profit" style="color:'+profitColor+'">$'+r.myProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div><div class="rc-share">份额'+Math.round(r.myShare*100)+'%</div></div>';
+    });
+    document.getElementById('roundGrid').innerHTML=rh;
+    // chart
+    var maxProfit=Math.max.apply(null,rounds.map(function(r){return Math.max(r.myProfit,r.cpProfit);}));
+    var ch='<div class="sim-chart-col"><h4 style="font-size:14px;margin-bottom:12px">自身利润变化</h4>';
+    rounds.forEach(function(r){var pct=r.myProfit/maxProfit*100;ch+='<div class="bar-chart-item"><div class="bci-label">第'+r.r+'轮</div><div class="bci-bar"><div class="bci-fill" style="width:'+pct+'%;background:'+(r.myProfit>=rounds[0].myProfit?'#10b981':'#ef4444')+'">$'+r.myProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div></div>';});
+    ch+='</div><div class="sim-chart-col"><h4 style="font-size:14px;margin-bottom:12px">竞品利润变化</h4>';
+    rounds.forEach(function(r){var pct=r.cpProfit/maxProfit*100;ch+='<div class="bar-chart-item"><div class="bci-label">第'+r.r+'轮</div><div class="bci-bar"><div class="bci-fill" style="width:'+pct+'%;background:#f59e0b">$'+r.cpProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div></div>';});
+    ch+='</div>';
+    document.getElementById('simChart').innerHTML=ch;
+    // verdict
+    var r0=rounds[0],r3=rounds[3];
+    var profitDrop=((r0.myProfit-r3.myProfit)/r0.myProfit*100);
+    var cls=profitDrop<10?'good':(profitDrop<30?'warn':'bad');
+    var title=profitDrop<10?'价格战影响可控':'价格战风险较高，需谨慎应对';
+    var vh='<div class="verdict-box '+cls+'"><div class="vb-title">'+title+'</div><div class="vb-desc">经过'+rounds.length+'轮降价博弈，自身利润从$'+r0.myProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'降至$'+r3.myProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'（降幅'+profitDrop.toFixed(0)+'%）。竞品利润从$'+r0.cpProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'降至$'+r3.cpProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'。</div></div>';
+    vh+='<div class="verdict-box warn"><div class="vb-title">💡 应对策略</div><div class="vb-desc">1. 若成本优势明显（自身成本低于竞品），可短降价逼退竞品后回升<br>2. 避免持续跟降，转向差异化竞争（品质/服务/Bundle）<br>3. 用Coupon替代直接降价，保护List Price与BSR权重<br>4. 强化品牌溢价与评论积累，降低价格敏感度<br>5. 关注竞品成本底线，在其亏损区间施加压力</div></div>';
+    document.getElementById('verdictWrap').innerHTML=vh;
+    document.getElementById('resultCard').innerHTML=
+      '<h3>⚔️ 价格战概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">初始利润</div><div class="ri-value positive">$'+r0.myProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">3轮后利润</div><div class="ri-value '+(profitDrop>30?'negative':'positive')+'">$'+r3.myProfit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">利润降幅</div><div class="ri-value '+(profitDrop>30?'negative':'positive')+'">'+profitDrop.toFixed(0)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">成本优势</div><div class="ri-value '+(myC<cc?'positive':'negative')+'">'+(myC<cc?'有':'无')+'</div></div>'+
+      '</div><div class="result-note">'+(myC<cc?'💡 自身成本低于竞品$'+(cc-myC).toFixed(2)+'，具备价格战承受力':'⚠️ 自身成本高于竞品，价格战中处于劣势，建议差异化竞争')+'</div>';
+  }
+  function init(){sim();}
+  return {sim:sim,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PWS.sim);}else{PWS.sim();}
+</script>
+</body>
+</html>

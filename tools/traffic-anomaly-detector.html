@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="流量异常检测器：3σ规则检测点击激增/骤降，欺诈流量识别（高点击低转化高跳出），自动告警与CSS异常标注图。免费跨境卖家流量全链路工具。">
+<meta name="keywords" content="流量异常检测,3σ规则,欺诈流量,点击激增,点击骤降,异常告警,流量欺诈,跨境电商工具">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/traffic-anomaly-detector.html">
+<title>流量异常检测器 - 3σ规则·欺诈识别·异常告警 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-val.danger{color:#ef4444}
+.rsb-card .rsb-val.warn{color:#f59e0b}
+.rsb-card .rsb-val.ok{color:#10b981}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.anomaly-chart{position:relative;height:320px;margin-top:20px;padding:20px 10px 40px;border:1px solid var(--rule-light);border-radius:12px;background:var(--bg-soft);overflow:hidden}
+.anomaly-chart-grid{position:absolute;top:20px;left:10px;right:10px;bottom:40px;display:flex;align-items:flex-end;gap:2px}
+.anomaly-bar{flex:1;min-width:4px;border-radius:3px 3px 0 0;transition:all .3s;position:relative;cursor:pointer}
+.anomaly-bar.normal{background:linear-gradient(180deg,#818cf8,#6366f1)}
+.anomaly-bar.surge{background:linear-gradient(180deg,#f87171,#ef4444)}
+.anomaly-bar.drop{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.anomaly-bar.fraud{background:linear-gradient(180deg,#a78bfa,#7c3aed)}
+.anomaly-bar:hover{opacity:.85;transform:scaleY(1.02)}
+.anomaly-bar .bar-tip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:6px 10px;border-radius:8px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
+.anomaly-bar:hover .bar-tip{opacity:1}
+.anomaly-baseline{position:absolute;left:10px;right:10px;height:0;border-top:2px dashed #94a3b8}
+.anomaly-baseline .bl-label{position:absolute;right:0;top:-20px;font-size:10px;color:#94a3b8;background:var(--bg-soft);padding:1px 6px;border-radius:4px}
+.anomaly-upper{position:absolute;left:10px;right:10px;height:0;border-top:2px dashed #ef4444}
+.anomaly-upper .ul-label{position:absolute;right:0;top:-20px;font-size:10px;color:#ef4444;background:var(--bg-soft);padding:1px 6px;border-radius:4px}
+.anomaly-lower{position:absolute;left:10px;right:10px;height:0;border-top:2px dashed #f59e0b}
+.anomaly-lower .ll-label{position:absolute;right:0;top:-20px;font-size:10px;color:#f59e0b;background:var(--bg-soft);padding:1px 6px;border-radius:4px}
+.alert-item{padding:14px 16px;border-radius:12px;margin-bottom:10px;border-left:4px solid;transition:all .2s}
+.alert-item:hover{transform:translateX(4px)}
+.alert-item.critical{background:#fef2f2;border-color:#ef4444}
+.alert-item.warning{background:#fffbeb;border-color:#f59e0b}
+.alert-item.info{background:#eff6ff;border-color:#3b82f6}
+.alert-item .ai-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.alert-item .ai-icon{font-size:18px}
+.alert-item .ai-title{font-weight:700;font-size:14px}
+.alert-item .ai-desc{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.alert-item .ai-day{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-left:8px}
+.fraud-card{padding:16px;border-radius:12px;background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #d8b4fe;margin-bottom:12px}
+.fraud-card .fc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700;color:#7c3aed}
+.fraud-card .fc-body{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.sigma-explain{padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);margin-top:16px}
+.sigma-explain .se-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.sigma-explain .se-bar{width:40px;height:6px;border-radius:3px}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.stat-mini{flex:1;min-width:120px;padding:14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.stat-mini .sm-val{font-size:20px;font-weight:800}
+.stat-mini .sm-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px}
+.related-tools a{display:block;padding:14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:600;transition:all .2s}
+.related-tools a:hover{border-color:#4f46e5;color:#4f46e5;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.related-tools a .rt-icon{margin-right:6px}
+.hidden{display:none!important}
+@media(max-width:768px){.anomaly-chart{height:240px}.anomaly-bar{min-width:3px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"流量异常检测器","description":"基于3σ规则的流量异常检测工具，识别点击激增/骤降、欺诈流量，自动告警，CSS异常标注图可视化。","url":"https://juxin-consulting.help/tools/traffic-anomaly-detector.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"流量异常检测器","item":"https://juxin-consulting.help/tools/traffic-anomaly-detector.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="traffic_anomaly_detector">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🌊</span><span class="workflow-name">流量全链路工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="traffic-source-audit.html" class="step">流量审计</a><span class="arrow">→</span>
+      <a href="traffic-quality-scorer.html" class="step">流量质量</a><span class="arrow">→</span>
+      <a href="keyword-traffic-estimator.html" class="step">关键词流量</a><span class="arrow">→</span>
+      <a href="organic-vs-paid.html" class="step">自然vs付费</a><span class="arrow">→</span>
+      <a href="traffic-attack-defense.html" class="step">流量攻防</a><span class="arrow">→</span>
+      <a href="click-through-optimizer.html" class="step">点击优化</a><span class="arrow">→</span>
+      <a href="cross-channel-attribution.html" class="step">跨渠道归因</a><span class="arrow">→</span>
+      <a href="traffic-trend-analyzer.html" class="step">趋势分析</a><span class="arrow">→</span>
+      <a href="brand-search-estimator.html" class="step">品牌搜索</a><span class="arrow">→</span>
+      <a href="traffic-forecast.html" class="step">流量预测</a><span class="arrow">→</span>
+      <a href="traffic-anomaly-detector.html" class="step current">异常检测</a><span class="arrow">→</span>
+      <a href="affiliate-traffic-tracker.html" class="step">联盟追踪</a><span class="arrow">→</span>
+      <a href="search-funnel-analyzer.html" class="step">搜索漏斗</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌊 流量全链路工具 · 深度版</span>
+      <h1>流量异常<em>检测器</em></h1>
+      <p class="tool-hero-desc">基于3σ统计规则，自动检测每日点击量激增/骤降异常，识别高点击低转化的欺诈流量模式，生成异常告警与处理建议，CSS异常标注图直观呈现。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="calculator-form">
+          <h2>📋 输入流量数据</h2>
+          <p class="calc-form-subtitle">输入过去30天每日点击量（逗号或换行分隔），系统将基于3σ规则自动检测异常</p>
+          <div class="calc-field">
+            <label>每日点击量（30天数据）</label>
+            <textarea id="clicksInput" rows="4" style="width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:12px;font-size:14px;font-family:inherit;resize:vertical" placeholder="如 1200,1350,1100,980..." oninput="TAD.calc()">1200,1350,1100,980,1250,1300,1180,1420,1280,1150,1320,1380,1210,1290,1340,1190,5000,1360,1220,1310,1270,1400,1180,1330,1250,1290,1340,1210,300,1280</textarea>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>每日转化率%（可选，用于欺诈检测）</label>
+              <textarea id="convInput" rows="3" style="width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:12px;font-size:14px;font-family:inherit;resize:vertical" placeholder="如 8.5,7.2,9.1..." oninput="TAD.calc()">8.5,7.2,9.1,8.8,8.0,7.5,9.3,7.8,8.2,8.7,7.9,8.4,8.6,7.7,8.3,8.9,0.5,8.1,8.5,7.6,8.2,7.9,9.0,8.3,8.1,7.8,8.4,8.6,0.2,8.2</textarea>
+            </div>
+            <div class="calc-field">
+              <label>每日跳出率%（可选，用于欺诈检测）</label>
+              <textarea id="bounceInput" rows="3" style="width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:12px;font-size:14px;font-family:inherit;resize:vertical" placeholder="如 45,42,48..." oninput="TAD.calc()">45,42,48,44,46,43,47,41,45,44,46,42,45,43,47,44,95,45,46,43,45,42,48,44,46,43,45,47,98,45</textarea>
+            </div>
+          </div>
+          <div class="calc-actions">
+            <button class="btn-share" onclick="TAD.loadSample()" style="background:var(--bg-soft);color:#4f46e5;border:1px solid var(--rule);padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">加载示例</button>
+            <button class="btn-reset" onclick="TAD.clearAll()" style="padding:10px 20px;border-radius:10px;font-size:14px;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft)">清空</button>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px">
+            <h4>📐 3σ规则说明</h4>
+            <ul>
+              <li>3σ规则：在正态分布中，99.7%的数据落在均值±3个标准差范围内</li>
+              <li>超出+3σ的数据点判定为"激增异常"（可能是刷量或病毒传播）</li>
+              <li>低于-3σ的数据点判定为"骤降异常"（可能是被惩罚或技术故障）</li>
+              <li>欺诈流量识别：点击量异常高 + 转化率异常低 + 跳出率异常高 = 疑似欺诈</li>
+              <li>建议使用至少20天以上的数据以提高检测准确性</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block hidden" id="statSection">
+        <h3>📊 统计概览</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <div class="stat-row" id="sigmaRow"></div>
+        <div class="sigma-explain">
+          <div class="se-row"><div class="se-bar" style="background:#10b981"></div><span><strong>正常区间</strong>：均值 ± 3σ = [下限, 上限]，99.7%正常数据落在此范围</span></div>
+          <div class="se-row"><div class="se-bar" style="background:#ef4444"></div><span><strong>激增异常</strong>：超出上限+3σ，点击量异常飙升，疑似刷量/恶意点击/病毒传播</span></div>
+          <div class="se-row"><div class="se-bar" style="background:#f59e0b"></div><span><strong>骤降异常</strong>：低于下限-3σ，点击量异常下跌，疑似被惩罚/Listing下架/技术故障</span></div>
+          <div class="se-row"><div class="se-bar" style="background:#7c3aed"></div><span><strong>欺诈流量</strong>：高点击+低转化（&lt;2%）+高跳出（&gt;90%），疑似机器人/点击农场</span></div>
+        </div>
+      </div>
+
+      <div class="section-block hidden" id="chartSection">
+        <h3>📈 异常标注图</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">柱状图为每日点击量，虚线为3σ上下限和均值基准线，红色=激增，黄色=骤降，紫色=欺诈</p>
+        <div class="anomaly-chart" id="anomalyChart"></div>
+      </div>
+
+      <div class="section-block hidden" id="alertSection">
+        <h3>🚨 异常告警面板</h3>
+        <div id="alertList"></div>
+      </div>
+
+      <div class="section-block hidden" id="fraudSection">
+        <h3>🕵️ 欺诈流量分析</h3>
+        <div id="fraudList"></div>
+      </div>
+
+      <div class="section-block">
+        <h3>🔗 相关工具</h3>
+        <div class="related-tools">
+          <a href="traffic-quality-scorer.html"><span class="rt-icon">⭐</span>流量质量评分器</a>
+          <a href="traffic-attack-defense.html"><span class="rt-icon">🛡️</span>流量攻防策略</a>
+          <a href="click-through-optimizer.html"><span class="rt-icon">👆</span>点击率优化器</a>
+          <a href="affiliate-traffic-tracker.html"><span class="rt-icon">🔗</span>联盟流量追踪器</a>
+          <a href="search-funnel-analyzer.html"><span class="rt-icon">🔍</span>搜索漏斗分析器</a>
+          <a href="traffic-forecast.html"><span class="rt-icon">🔮</span>流量预测器</a>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="traffic-forecast.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 流量预测</span></a>
+        <a href="affiliate-traffic-tracker.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">联盟流量追踪 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="traffic-source-audit.html">流量审计</a></li><li><a href="traffic-anomaly-detector.html">异常检测</a></li><li><a href="search-funnel-analyzer.html">搜索漏斗</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<style>
+.back-to-top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 6px 16px rgba(79,70,229,.3);opacity:0;pointer-events:none;transition:all .3s;z-index:999}
+.back-to-top.visible{opacity:1;pointer-events:auto}
+</style>
+<script>
+var TAD=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function show(id){var e=$(id);if(e)e.classList.remove('hidden');}
+  function hide(id){var e=$(id);if(e)e.classList.add('hidden');}
+
+  function parse(str){
+    if(!str||!str.trim())return [];
+    return str.split(/[,\n\s]+/).map(function(s){return parseFloat(s);}).filter(function(n){return !isNaN(n)&&n>=0;});
+  }
+
+  function mean(arr){if(!arr.length)return 0;return arr.reduce(function(a,b){return a+b;},0)/arr.length;}
+  function std(arr,m){
+    if(arr.length<2)return 0;
+    if(m===undefined)m=mean(arr);
+    var v=arr.reduce(function(a,b){return a+Math.pow(b-m,2);},0)/(arr.length-1);
+    return Math.sqrt(v);
+  }
+
+  function calc(){
+    var clicks=parse($('clicksInput').value);
+    var convs=parse($('convInput').value);
+    var bounces=parse($('bounceInput').value);
+    if(clicks.length<5){hide('statSection');hide('chartSection');hide('alertSection');hide('fraudSection');return;}
+
+    var m=mean(clicks);
+    var s=std(clicks,m);
+    var upper=m+3*s;
+    var lower=m-3*s;
+    if(lower<0)lower=0;
+
+    var anomalies=[];
+    var frauds=[];
+    var surgeCount=0,dropCount=0,fraudCount=0;
+
+    for(var i=0;i<clicks.length;i++){
+      var day=i+1;
+      var val=clicks[i];
+      var isSurge=val>upper;
+      var isDrop=val<lower&&s>0;
+
+      if(isSurge){
+        surgeCount++;
+        var severity=val>upper*1.5?'critical':'warning';
+        var dev=((val-m)/s).toFixed(1);
+        anomalies.push({day:day,val:val,type:'surge',severity:severity,dev:dev,
+          title:'点击量激增异常',
+          desc:'第'+day+'天点击量'+val+'超出上限'+Math.round(upper)+'，偏差+'+dev+'σ，'+(val>upper*1.5?'严重异常，需立即排查':'轻度异常，建议关注'),
+          suggestion:val>upper*1.5?'立即检查：1)是否被恶意点击攻击 2)广告预算是否异常消耗 3)是否有异常引流来源。建议暂停异常广告活动并联系平台申诉。':'关注该日流量来源，排查是否有异常关键词或竞争对手恶意点击。'
+        });
+      }
+      if(isDrop){
+        dropCount++;
+        var devD=((val-m)/s).toFixed(1);
+        anomalies.push({day:day,val:val,type:'drop',severity:'warning',dev:devD,
+          title:'点击量骤降异常',
+          desc:'第'+day+'天点击量'+val+'低于下限'+Math.round(lower)+'，偏差'+devD+'σ，流量异常下跌',
+          suggestion:'排查：1)Listing是否被下架或降权 2)广告活动是否暂停 3)关键词排名是否下降 4)是否有技术故障导致页面无法访问。'
+        });
+      }
+
+      // Fraud detection
+      if(convs[i]!==undefined&&bounces[i]!==undefined){
+        if(val>m*1.5&&convs[i]<2&&bounces[i]>90){
+          fraudCount++;
+          frauds.push({day:day,clicks:val,conv:convs[i],bounce:bounces[i],
+            reason:'高点击('+val+')+ 极低转化('+convs[i]+'%) + 极高跳出('+bounces[i]+'%)'
+          });
+        }
+      }
+    }
+
+    // Summary bar
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val">'+clicks.length+'</div><div class="rsb-lbl">检测天数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+Math.round(m)+'</div><div class="rsb-lbl">日均点击</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+s.toFixed(1)+'</div><div class="rsb-lbl">标准差σ</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val '+(surgeCount+dropCount>0?'danger':'ok')+'">'+(surgeCount+dropCount)+'</div><div class="rsb-lbl">异常天数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val '+(fraudCount>0?'danger':'ok')+'">'+fraudCount+'</div><div class="rsb-lbl">疑似欺诈</div></div>';
+
+    $('sigmaRow').innerHTML=
+      '<div class="stat-mini"><div class="sm-val" style="color:#10b981">'+Math.round(lower)+'</div><div class="sm-lbl">下限 (μ-3σ)</div></div>'+
+      '<div class="stat-mini"><div class="sm-val" style="color:#4f46e5">'+Math.round(m)+'</div><div class="sm-lbl">均值 μ</div></div>'+
+      '<div class="stat-mini"><div class="sm-val" style="color:#ef4444">'+Math.round(upper)+'</div><div class="sm-lbl">上限 (μ+3σ)</div></div>'+
+      '<div class="stat-mini"><div class="sm-val" style="color:#7c3aed">'+((clicks.length-surgeCount-dropCount)/clicks.length*100).toFixed(1)+'%</div><div class="sm-lbl">正常率</div></div>';
+
+    show('statSection');
+
+    // Chart
+    renderChart(clicks,m,s,upper,lower,convs,bounces);
+
+    // Alerts
+    if(anomalies.length){
+      $('alertList').innerHTML=anomalies.map(function(a){
+        var bg=a.severity==='critical'?'critical':'warning';
+        var icon=a.type==='surge'?'📈':'📉';
+        var dayBadge=a.type==='surge'?'<span class="ai-day" style="background:#fee2e2;color:#ef4444">第'+a.day+'天</span>':'<span class="ai-day" style="background:#fef3c7;color:#f59e0b">第'+a.day+'天</span>';
+        return '<div class="alert-item '+bg+'"><div class="ai-head"><span class="ai-icon">'+icon+'</span><span class="ai-title">'+a.title+'</span>'+dayBadge+'</div><div class="ai-desc">'+a.desc+'</div><div class="ai-desc" style="margin-top:6px;padding:8px 12px;background:rgba(255,255,255,.6);border-radius:8px"><strong>建议：</strong>'+a.suggestion+'</div></div>';
+      }).join('');
+      show('alertSection');
+    }else{
+      $('alertList').innerHTML='<div class="alert-item info"><div class="ai-head"><span class="ai-icon">✅</span><span class="ai-title">未检测到异常</span></div><div class="ai-desc">所有数据点均在3σ正常范围内，流量表现稳定。</div></div>';
+      show('alertSection');
+    }
+
+    // Fraud
+    if(frauds.length){
+      $('fraudList').innerHTML=frauds.map(function(f){
+        return '<div class="fraud-card"><div class="fc-head">🕵️ 疑似欺诈流量 - 第'+f.day+'天</div><div class="fc-body"><strong>检测指标：</strong>'+f.reason+'<br><strong>风险等级：</strong>高危<br><strong>处理建议：</strong>1) 立即检查该日流量来源报告 2) 排查是否有异常IP集中点击 3) 如为广告流量，暂停相关关键词 4) 向平台举报可疑点击 5) 申请无效点击退款</div></div>';
+      }).join('');
+      show('fraudSection');
+    }else{
+      hide('fraudSection');
+    }
+  }
+
+  function renderChart(clicks,m,s,upper,lower,convs,bounces){
+    var maxVal=Math.max.apply(null,clicks.concat([upper]));
+    var chartHeight=260;
+    var barCount=clicks.length;
+    var html='<div class="anomaly-chart-grid">';
+
+    for(var i=0;i<clicks.length;i++){
+      var val=clicks[i];
+      var h=(val/maxVal)*chartHeight;
+      var cls='normal';
+      var tip='Day '+(i+1)+': '+val+' clicks';
+      if(val>upper){cls='surge';tip+=' [激增 +'+((val-m)/s).toFixed(1)+'σ]';}
+      else if(val<lower&&s>0){cls='drop';tip+=' [骤降 '+((val-m)/s).toFixed(1)+'σ]';}
+      if(convs[i]!==undefined&&bounces[i]!==undefined&&val>m*1.5&&convs[i]<2&&bounces[i]>90){
+        cls='fraud';tip+=' [疑似欺诈]';
+      }
+      html+='<div class="anomaly-bar '+cls+'" style="height:'+h+'px"><div class="bar-tip">'+tip+'</div></div>';
+    }
+    html+='</div>';
+
+    // Baselines
+    var baseTop=20+chartHeight-(m/maxVal)*chartHeight;
+    var upperTop=20+chartHeight-(upper/maxVal)*chartHeight;
+    var lowerTop=20+chartHeight-(lower/maxVal)*chartHeight;
+    if(lower<=0)lowerTop=20+chartHeight;
+
+    html+='<div class="anomaly-baseline" style="top:'+baseTop+'px"><span class="bl-label">μ='+Math.round(m)+'</span></div>';
+    html+='<div class="anomaly-upper" style="top:'+upperTop+'px"><span class="ul-label">+3σ='+Math.round(upper)+'</span></div>';
+    if(lower>0)html+='<div class="anomaly-lower" style="top:'+lowerTop+'px"><span class="ll-label">-3σ='+Math.round(lower)+'</span></div>';
+
+    $('anomalyChart').innerHTML=html;
+    show('chartSection');
+  }
+
+  function loadSample(){
+    $('clicksInput').value='1200,1350,1100,980,1250,1300,1180,1420,1280,1150,1320,1380,1210,1290,1340,1190,5000,1360,1220,1310,1270,1400,1180,1330,1250,1290,1340,1210,300,1280';
+    $('convInput').value='8.5,7.2,9.1,8.8,8.0,7.5,9.3,7.8,8.2,8.7,7.9,8.4,8.6,7.7,8.3,8.9,0.5,8.1,8.5,7.6,8.2,7.9,9.0,8.3,8.1,7.8,8.4,8.6,0.2,8.2';
+    $('bounceInput').value='45,42,48,44,46,43,47,41,45,44,46,42,45,43,47,44,95,45,46,43,45,42,48,44,46,43,45,47,98,45';
+    calc();
+  }
+
+  function clearAll(){
+    $('clicksInput').value='';
+    $('convInput').value='';
+    $('bounceInput').value='';
+    hide('statSection');hide('chartSection');hide('alertSection');hide('fraudSection');
+  }
+
+  return{calc:calc,loadSample:loadSample,clearAll:clearAll};
+})();
+
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

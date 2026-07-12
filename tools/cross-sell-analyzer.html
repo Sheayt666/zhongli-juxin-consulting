@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="交叉销售分析器：关联购买数据，购物篮分析，连带率，Top关联品，CSS关联矩阵。">
+<title>交叉销售分析器 - 购物篮分析·连带率·关联矩阵 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--primary)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.assoc-table{width:100%;border-collapse:collapse;font-size:13px}.assoc-table th{text-align:center;padding:10px 8px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:11px}.assoc-table td{text-align:center;padding:8px;border-bottom:1px solid var(--rule-light);font-size:12px}.assoc-cell{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;font-size:11px;font-weight:700;color:#fff}.assoc-th{font-size:11px;font-weight:700;color:var(--ink-soft);text-align:left;padding-left:8px}
+.top-pair{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);border-radius:var(--radius);margin-bottom:10px;border-left:4px solid}.top-pair.tp1{border-left-color:#ef4444}.top-pair.tp2{border-left-color:#f59e0b}.top-pair.tp3{border-left-color:#4f46e5}.tp-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;color:#fff}.tp-info{flex:1}.tp-info h4{font-size:14px;font-weight:700}.tp-info p{font-size:12px;color:var(--muted)}.tp-val{text-align:right;flex-shrink:0}.tp-val .tv-count{font-size:18px;font-weight:800;color:var(--ink)}.tp-val .tv-conf{font-size:11px;color:var(--muted)}
+.bar-chart{display:flex;flex-direction:column;gap:10px}.bar-row{display:flex;align-items:center;gap:12px}.bar-label{width:120px;font-size:13px;font-weight:600;flex-shrink:0}.bar-track{flex:1;height:28px;background:var(--rule-light);border-radius:6px;overflow:hidden}.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff}.bar-val{width:60px;font-size:13px;font-weight:700;text-align:right}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W7 品牌增长工作流</div><div class="workflow-steps">
+<a href="brand-registry-check.html" class="workflow-step">品牌注册</a><a href="brand-health-score.html" class="workflow-step">品牌健康</a><a href="external-traffic-calculator.html" class="workflow-step">外部流量</a><a href="product-matrix.html" class="workflow-step">产品矩阵</a><a href="social-content.html" class="workflow-step">社交内容</a><a href="brand-store-builder.html" class="workflow-step">旗舰店建设</a><a href="brand-analytics-reporter.html" class="workflow-step">品牌分析</a><a href="customer-segmentation-engine.html" class="workflow-step">客户分群</a><a href="brand-search-volume-tracker.html" class="workflow-step">搜索量追踪</a><a href="storefront-traffic-analyzer.html" class="workflow-step">旗舰店流量</a><a href="brand-loyalty-scorer.html" class="workflow-step">忠诚度评分</a><a href="cross-sell-analyzer.html" class="workflow-step active">交叉销售</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W7 品牌增长</a><span>/</span>交叉销售分析器</div>
+<div class="tool-header"><span class="tool-badge">W7 品牌增长工作流</span><h1>交叉<em>销售分析器</em></h1><p>关联购买数据分析，购物篮连带率计算，Top关联商品排名，CSS关联矩阵热力图，发现交叉销售机会。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val" id="sTotalOrders">0</div><div class="stat-lbl">总订单数</div></div>
+<div class="stat-card"><div class="stat-val" id="sAttachRate">0%</div><div class="stat-lbl">连带率</div></div>
+<div class="stat-card"><div class="stat-val" id="sAvgItems">0.0</div><div class="stat-lbl">平均件数/单</div></div>
+<div class="stat-card"><div class="stat-val" id="sCrossRev">$0</div><div class="stat-lbl">交叉销售金额</div></div>
+</div>
+
+<div class="card"><h2>购物篮数据输入</h2><div class="form-grid">
+<div class="form-field"><label>总订单数</label><input type="number" id="totalOrders" value="3200" oninput="Cross.calc()"></div>
+<div class="form-field"><label>多件订单数 (2件+)</label><input type="number" id="multiOrders" value="1120" oninput="Cross.calc()"></div>
+<div class="form-field"><label>总销售件数</label><input type="number" id="totalItems" value="5800" oninput="Cross.calc()"></div>
+<div class="form-field"><label>交叉销售金额 ($)</label><input type="number" id="crossRev" value="18500" step="100" oninput="Cross.calc()"></div>
+<div class="form-field"><label>产品A销量</label><input type="number" id="prodA" value="1500" oninput="Cross.calc()"></div>
+<div class="form-field"><label>产品B销量</label><input type="number" id="prodB" value="1200" oninput="Cross.calc()"></div>
+</div></div>
+
+<div class="card"><h2>Top关联商品对</h2><div id="topPairs"></div></div>
+<div class="card"><h2>产品关联矩阵</h2>
+<div style="overflow-x:auto"><table class="assoc-table" id="assocMatrix"></table></div>
+<div style="margin-top:8px;font-size:12px;color:var(--muted);text-align:center">数字=共同购买次数 | 颜色深浅=关联强度</div>
+</div>
+<div class="card"><h2>各产品连带率</h2><div class="bar-chart" id="attachChart"></div></div>
+
+<div class="related-grid">
+<a href="product-matrix.html" class="related-card"><span class="rc-icon">📦</span><div><h4>产品矩阵</h4><p>产品组合规划</p></div></a>
+<a href="customer-segmentation-engine.html" class="related-card"><span class="rc-icon">👥</span><div><h4>客户分群</h4><p>客户精准分群</p></div></a>
+<a href="brand-store-builder.html" class="related-card"><span class="rc-icon">🏪</span><div><h4>旗舰店建设</h4><p>店铺模块规划</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Cross={
+  pairs:[
+    {a:'无线耳机',b:'保护套',count:320,conf:21.3},
+    {a:'无线耳机',b:'充电线',count:280,conf:18.7},
+    {a:'智能手表',b:'表带',count:250,conf:20.8},
+    {a:'智能手表',b:'保护膜',count:190,conf:15.8},
+    {a:'充电宝',b:'充电线',count:170,conf:14.2},
+    {a:'无线耳机',b:'充电宝',count:140,conf:9.3},
+  ],
+  products:['无线耳机','智能手表','充电宝','保护套','表带','充电线','保护膜'],
+  matrix:[
+    [0,80,140,320,30,280,60],
+    [80,0,90,70,250,120,190],
+    [140,90,0,50,40,170,30],
+    [320,70,50,0,20,60,40],
+    [30,250,40,20,0,35,80],
+    [280,120,170,60,35,0,50],
+    [60,190,30,40,80,50,0],
+  ],
+  calc(){
+    const totalOrders=parseFloat(document.getElementById('totalOrders').value)||0;
+    const multiOrders=parseFloat(document.getElementById('multiOrders').value)||0;
+    const totalItems=parseFloat(document.getElementById('totalItems').value)||0;
+    const crossRev=parseFloat(document.getElementById('crossRev').value)||0;
+    const attachRate=totalOrders>0?multiOrders/totalOrders*100:0;
+    const avgItems=totalOrders>0?totalItems/totalOrders:0;
+    document.getElementById('sTotalOrders').textContent=totalOrders.toLocaleString();
+    document.getElementById('sAttachRate').textContent=attachRate.toFixed(1)+'%';
+    document.getElementById('sAvgItems').textContent=avgItems.toFixed(2);
+    document.getElementById('sCrossRev').textContent='$'+crossRev.toLocaleString();
+    this.renderTopPairs();
+    this.renderMatrix();
+    this.renderAttachChart();
+  },
+  renderTopPairs(){
+    const maxCount=Math.max(...this.pairs.map(p=>p.count),1);
+    document.getElementById('topPairs').innerHTML=this.pairs.map((p,i)=>{
+      const cls=i<3?'tp'+(i+1):'';
+      const rankColor=i===0?'#ef4444':i===1?'#f59e0b':i===2?'#4f46e5':'#94a3b8';
+      return `<div class="top-pair ${cls}"><div class="tp-rank" style="background:${rankColor}">${i+1}</div><div class="tp-info"><h4>${p.a} + ${p.b}</h4><p>置信度: ${p.conf}% | 提升度: ${(p.count/(1500*1200/3200)).toFixed(2)}x</p></div><div class="tp-val"><div class="tv-count">${p.count}次</div><div class="tv-conf">共同购买</div></div></div>`;
+    }).join('');
+  },
+  renderMatrix(){
+    const maxVal=Math.max(...this.matrix.flat(),1);
+    let html='<thead><tr><th class="assoc-th"></th>'+this.products.map(p=>`<th>${p.slice(0,3)}</th>`).join('')+'</tr></thead><tbody>';
+    this.products.forEach((p,i)=>{
+      html+=`<tr><td class="assoc-th">${p}</td>`;
+      this.matrix[i].forEach((v,j)=>{
+        if(i===j){html+='<td style="background:var(--rule-light)"><span style="color:var(--muted);font-size:11px">—</span></td>';}
+        else{
+          const intensity=v/maxVal;
+          const r=Math.round(79+(239-79)*(1-intensity));
+          const g=Math.round(70+(68-70)*intensity);
+          const b=Math.round(229+(68-229)*intensity);
+          html+=`<td><span class="assoc-cell" style="background:rgb(${r},${g},${b})" title="${this.products[i]} + ${this.products[j]}: ${v}次">${v}</span></td>`;
+        }
+      });
+      html+='</tr>';
+    });
+    html+='</tbody>';
+    document.getElementById('assocMatrix').innerHTML=html;
+  },
+  renderAttachChart(){
+    const attachRates=this.products.map((p,i)=>{
+      const rowSum=this.matrix[i].reduce((s,v)=>s+v,0);
+      const total=this.matrix[i][i]===0?rowSum:rowSum;
+      return {name:p,rate:total>0?rowSum/total*100:0};
+    });
+    const maxRate=Math.max(...attachRates.map(r=>r.rate),1);
+    document.getElementById('attachChart').innerHTML=attachRates.map(r=>`<div class="bar-row"><span class="bar-label">${r.name}</span><div class="bar-track"><div class="bar-fill" style="width:${r.rate/maxRate*100}%;background:var(--primary)">${r.rate.toFixed(0)}%</div></div><span class="bar-val">${r.rate.toFixed(1)}%</span></div>`).join('');
+  }
+};
+Cross.calc();
+</script>
+</body>
+</html>

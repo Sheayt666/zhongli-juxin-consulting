@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="全球开店规划器：新站点选择+Listing同步+翻译+本地化策略+进入时序，CSS路线图可视化，跨境卖家全球化扩张工具。">
+<title>全球开店规划器 - 新站选择本地化策略进入时序 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.market-table{width:100%;border-collapse:collapse;font-size:13px}
+.market-table th{padding:10px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.market-table th.num{text-align:right}
+.market-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.market-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.market-table tr.recommended td{background:#ecfdf5}
+.market-table tr.later td{background:#fffbeb}
+.score-badge{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700}
+.score-high{background:#ecfdf5;color:#059669}
+.score-mid{background:#fffbeb;color:#d97706}
+.score-low{background:#fef2f2;color:#dc2626}
+/* 路线图 */
+.roadmap{position:relative;padding:20px 0}
+.roadmap-track{position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#4f46e5,#6366f1,#818cf8);transform:translateX(-50%);border-radius:2px}
+.roadmap-phase{display:flex;align-items:flex-start;margin-bottom:28px;position:relative}
+.roadmap-phase:nth-child(odd){flex-direction:row-reverse}
+.roadmap-phase:nth-child(odd) .rp-content{text-align:right;margin-right:40px}
+.roadmap-phase:nth-child(even) .rp-content{margin-left:40px}
+.rp-dot{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid #4f46e5;z-index:2;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.rp-content{width:calc(50% - 40px)}
+.rp-card{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.rp-card h4{font-size:15px;font-weight:700;margin:0 0 6px;color:#4f46e5}
+.rp-card .rp-time{font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600}
+.rp-card p{font-size:13px;color:var(--ink-soft);margin:0 0 8px;line-height:1.6}
+.rp-card .rp-tasks{font-size:12px;color:var(--muted);padding-left:16px;margin:0}
+.rp-card .rp-tasks li{margin-bottom:3px}
+.loc-item{display:flex;gap:14px;padding:14px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px;background:#fff}
+.loc-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.loc-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.loc-body h4{font-size:14px;font-weight:700;margin:0 0 4px}.loc-body p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.roadmap-track{left:20px}.roadmap-phase,.roadmap-phase:nth-child(odd){flex-direction:row}.rp-content,.roadmap-phase:nth-child(odd) .rp-content{width:calc(100% - 50px);margin-left:50px;margin-right:0;text-align:left}.rp-dot{left:20px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W38 多店铺管理工作流</div><div class="workflow-steps">
+  <a href="multi-store-dashboard.html" class="workflow-step">综合看板</a>
+  <a href="store-performance-comparison.html" class="workflow-step">绩效对比</a>
+  <a href="cross-store-inventory.html" class="workflow-step">跨店库存</a>
+  <a href="unified-profit-report.html" class="workflow-step">统一利润</a>
+  <a href="store-segmentation-matrix.html" class="workflow-step">店铺分层</a>
+  <a href="multi-store-sku-mapper.html" class="workflow-step">SKU映射</a>
+  <a href="region-performance-analyzer.html" class="workflow-step">区域绩效</a>
+  <a href="store-launch-checklist.html" class="workflow-step">上线清单</a>
+  <a href="multi-store-risk-monitor.html" class="workflow-step">风险监控</a>
+  <a href="centralized-listing-manager.html" class="workflow-step">Listing管理</a>
+  <a href="cross-store-ad-allocator.html" class="workflow-step">广告分配</a>
+  <a href="multi-store-role-permission.html" class="workflow-step">角色权限</a>
+  <a href="global-expansion-planner.html" class="workflow-step active">全球开店</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W38 多店铺管理</a><span class="sep">›</span><span class="current">全球开店规划器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🌍</span>全球开店规划器 Global Expansion Planner</h1>
+  <p>全球市场进入策略规划，新站点选择评分，Listing同步翻译方案，本地化策略建议，分阶段进入时序路线图，CSS可视化全球扩张路径。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">当前站点</div><div class="mc-value" id="mCurrent">-</div></div>
+    <div class="metric-card success"><div class="mc-label">推荐首站</div><div class="mc-value" id="mFirst">-</div></div>
+    <div class="metric-card warning"><div class="mc-label">预计投入</div><div class="mc-value" id="mCost">$0</div></div>
+    <div class="metric-card danger"><div class="mc-label">扩张周期</div><div class="mc-value" id="mTimeline">0月</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🌏 当前业务概况</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>当前主站点</label><select id="currentSite" onchange="GEP.calc()"><option value="us">美国站 US</option><option value="uk">英国站 UK</option><option value="de">德国站 DE</option><option value="jp">日本站 JP</option></select></div>
+      <div class="jx-field"><label>年销售额 ($)</label><input type="number" id="annualSales" value="500000" step="10000" oninput="GEP.calc()"></div>
+      <div class="jx-field"><label>产品SKU数</label><input type="number" id="skuCount" value="15" min="1" oninput="GEP.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>产品类别</label><select id="category" onchange="GEP.calc()"><option value="electronics">3C电子</option><option value="home">家居用品</option><option value="beauty">美妆个护</option><option value="apparel">服装鞋帽</option><option value="toys">玩具母婴</option><option value="sports">运动户外</option></select></div>
+      <div class="jx-field"><label>品牌备案</label><select id="brandReg" onchange="GEP.calc()"><option value="yes">已备案</option><option value="no">未备案</option></select></div>
+      <div class="jx-field"><label>扩张预算 ($)</label><input type="number" id="budget" value="30000" step="1000" oninput="GEP.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 目标市场评分</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">基于市场规模、竞争强度、进入难度、ROI预期、本地化要求5维度评分</p>
+    <div style="overflow-x:auto"><table class="market-table" id="marketTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🗺️ 全球扩张路线图</h2>
+    <div class="roadmap" id="roadmap"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📝 本地化策略清单</h2>
+    <div id="locList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 扩张建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="store-launch-checklist.html" class="rt-card"><div class="rt-icon">🚀</div><div><h5>上线清单</h5><p>开店检查</p></div></a>
+      <a href="centralized-listing-manager.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>Listing管理</h5><p>集中管理</p></div></a>
+      <a href="multi-store-dashboard.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>多店看板</h5><p>综合看板</p></div></a>
+      <a href="region-performance-analyzer.html" class="rt-card"><div class="rt-icon">🌍</div><div><h5>区域绩效</h5><p>区域分析</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="global-expansion-planner.html">全球开店</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var GEP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+  function fmt(n){return '$'+(isFinite(n)?Math.round(n).toLocaleString('en-US'):'0')}
+
+  var MARKETS=[
+    {id:'us',name:'美国 US',flag:'🇺🇸',size:95,comp:70,diff:30,roi:85,loc:40},
+    {id:'uk',name:'英国 UK',flag:'🇬🇧',size:60,comp:55,diff:35,roi:72,loc:50},
+    {id:'de',name:'德国 DE',flag:'🇩🇪',size:65,comp:50,diff:45,roi:78,loc:65},
+    {id:'jp',name:'日本 JP',flag:'🇯🇵',size:70,comp:60,diff:50,roi:75,loc:70},
+    {id:'fr',name:'法国 FR',flag:'🇫🇷',size:45,comp:45,diff:50,roi:65,loc:65},
+    {id:'ca',name:'加拿大 CA',flag:'🇨🇦',size:40,comp:40,diff:25,roi:68,loc:30},
+    {id:'it',name:'意大利 IT',flag:'🇮🇹',size:38,comp:35,diff:50,roi:60,loc:65},
+    {id:'es',name:'西班牙 ES',flag:'🇪🇸',size:35,comp:35,diff:50,roi:58,loc:65},
+    {id:'au',name:'澳大利亚 AU',flag:'🇦🇺',size:30,comp:35,diff:30,roi:55,loc:35},
+    {id:'mx',name:'墨西哥 MX',flag:'🇲🇽',size:25,comp:30,diff:55,roi:50,loc:70}
+  ];
+
+  var PHASES=[
+    {time:'第1-2月',title:'准备阶段',desc:'市场调研 + 资质准备',tasks:['目标市场竞品分析','VAT/EORI税号注册','品牌备案国际扩展','FBA头程物流询价']},
+    {time:'第3-4月',title:'Listing建设',desc:'翻译 + 本地化 + 上架',tasks:['Listing多语言翻译','关键词本地化研究','产品图片本地化','合规标签审核']},
+    {time:'第5-6月',title:'首批发货',desc:'库存备货 + FBA入库',tasks:['首批库存发运（2个月量）','FBA入库质检','初始评论获取计划','Vine计划报名']},
+    {time:'第7-9月',title:'推广启动',desc:'广告 + 促销 + 流量',tasks:['PPC广告启动','Coupon/Prime专享折扣','社交媒体引流','站外Deal站点合作']},
+    {time:'第10-12月',title:'优化稳定',desc:'数据复盘 + 持续优化',tasks:['销售数据复盘','ACoS优化调整','库存补货规划','第二站点准备']}
+  ];
+
+  var LOC_ITEMS=[
+    {icon:'🌐',color:'#4f46e5',title:'Listing翻译本地化',desc:'母语翻译+本地化表达，避免机翻生硬，关键词嵌入自然，符合当地搜索习惯'},
+    {icon:'💰',color:'#10b981',title:'定价策略调整',desc:'考虑关税/VAT/运费/FBA费用差异，当地竞品定价参考，汇率波动预留利润空间'},
+    {icon:'📦',color:'#f59e0b',title:'包装标签合规',desc:'目标市场语言标签，CE/UKCA/FCC等认证标志，EPR包装回收标识，成分/警告语'},
+    {icon:'⚖️',color:'#ef4444',title:'税务合规注册',desc:'欧盟OSS/IOSS注册，英国VAT注册，加拿大GST/HST注册，关税编码确认'},
+    {icon:'🚚',color:'#8b5cf6',title:'物流方案选择',desc:'FBA vs FBM对比，头程海运/空运/铁路方案，海外仓备选，退货处理方案'},
+    {icon:'📣',color:'#06b6d4',title:'营销渠道适配',desc:'当地主流营销渠道（Deal站/社媒/KOL），节假日促销日历，本地化广告素材'}
+  ];
+
+  function calc(){
+    var cur=$('currentSite').value;
+    var sales=num('annualSales'),skus=num('skuCount'),budget=num('budget');
+    var cat=$('category').value,brand=$('brandReg').value;
+    var curMarket=MARKETS.find(function(m){return m.id===cur});
+
+    //计算各市场综合得分
+    var scored=MARKETS.filter(function(m){return m.id!==cur}).map(function(m){
+      var score=m.size*0.3+(100-m.comp)*0.25+(100-m.diff)*0.15+m.roi*0.2+(100-m.loc)*0.1;
+      var estCost=skus*500+m.loc*200+5000;
+      var estTime=Math.ceil((m.diff+m.loc)/25);
+      return Object.assign(m,{score:Math.round(score),estCost:estCost,estTime:estTime});
+    });
+    scored.sort(function(a,b){return b.score-a.score});
+
+    $('mCurrent').textContent=curMarket.flag+' '+curMarket.name;
+    $('mFirst').textContent=scored[0].flag+' '+scored[0].name;
+    $('mCost').textContent=fmt(scored[0].estCost);
+    $('mTimeline').textContent=scored[0].estTime+'月';
+
+    renderTable(scored);
+    renderRoadmap(scored[0]);
+    renderLoc();
+    renderTips(curMarket,scored,sales,skus,budget,brand);
+    save();
+  }
+
+  function renderTable(scored){
+    var h='<thead><tr><th>市场</th><th>市场规模</th><th>竞争强度</th><th>进入难度</th><th>ROI预期</th><th>本地化要求</th><th class="num">综合分</th><th class="num">预估投入</th><th class="num">时间</th><th>建议</th></tr></thead><tbody>';
+    scored.forEach(function(m,i){
+      var rec=i===0?'recommended':i===1?'recommended':i>=6?'later':'';
+      var scoreCls=m.score>=70?'score-high':m.score>=55?'score-mid':'score-low';
+      var recTxt=i<2?'优先进入':i<4?'备选市场':i<6?'观察市场':'暂缓进入';
+      h+='<tr class="'+rec+'"><td><strong>'+m.flag+' '+m.name+'</strong></td><td>'+bar(m.size)+'</td><td>'+bar(100-m.comp)+'</td><td>'+bar(100-m.diff)+'</td><td>'+bar(m.roi)+'</td><td>'+bar(100-m.loc)+'</td><td class="num"><span class="score-badge '+scoreCls+'">'+m.score+'</span></td><td class="num">'+fmt(m.estCost)+'</td><td class="num">'+m.estTime+'月</td><td><span style="font-size:12px;font-weight:700;color:'+(i<2?'#059669':i<4?'#d97706':'#64748b')+'">'+recTxt+'</span></td></tr>';
+    });
+    h+='</tbody>';
+    $('marketTable').innerHTML=h;
+  }
+
+  function bar(v){
+    var color=v>=70?'#10b981':v>=50?'#f59e0b':'#ef4444';
+    return '<div style="display:flex;align-items:center;gap:6px"><div style="width:50px;height:6px;border-radius:3px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:'+v+'%;background:'+color+';border-radius:3px"></div></div><span style="font-size:11px;font-weight:600;color:'+color+'">'+v+'</span></div>';
+  }
+
+  function renderRoadmap(first){
+    var h='<div class="roadmap-track"></div>';
+    PHASES.forEach(function(p,i){
+      h+='<div class="roadmap-phase"><div class="rp-dot"></div><div class="rp-content"><div class="rp-card"><div class="rp-time">'+p.time+'</div><h4>'+p.title+'</h4><p>'+p.desc+'</p><ul class="rp-tasks">';
+      p.tasks.forEach(function(t){h+='<li>'+t+'</li>'});
+      h+='</ul></div></div></div>';
+    });
+    $('roadmap').innerHTML=h;
+  }
+
+  function renderLoc(){
+    var h='';
+    LOC_ITEMS.forEach(function(it){
+      h+='<div class="loc-item"><div class="loc-icon" style="background:'+it.color+'15">'+it.icon+'</div><div class="loc-body"><h4>'+it.title+'</h4><p>'+it.desc+'</p></div></div>';
+    });
+    $('locList').innerHTML=h;
+  }
+
+  function renderTips(cur,scored,sales,skus,budget,brand){
+    var tips=[];
+    var f=scored[0];
+    tips.push('当前主站 '+cur.flag+' '+cur.name+'，年销售额 '+fmt(sales)+'，'+skus+' 个SKU，推荐首站扩张至 '+f.flag+' '+f.name+'（综合分'+f.score+'）。');
+    tips.push(f.name+'预估投入 '+fmt(f.estCost)+'（含翻译/认证/物流/首批库存），扩张周期约 '+f.estTime+' 个月，预期ROI '+f.roi+'分。');
+    if(brand==='no')tips.push('建议先完成品牌备案再扩张，品牌备案是开启品牌保护、A+页面、 Vine评论等功能的 prerequisite。');
+    tips.push('扩张预算 '+fmt(budget)+'，'+(budget>=f.estCost?'预算充足，可覆盖首站扩张全部成本。':'预算缺口 '+fmt(f.estCost-budget)+'，建议分阶段投入或增加预算。'));
+    var second=scored[1];
+    tips.push('第二推荐市场 '+second.flag+' '+second.name+'（综合分'+second.score+'），建议首站稳定后再进入，避免资源分散。');
+    tips.push('Listing同步策略：使用Build International Listings工具，从源站点同步到目标站点，减少重复劳动，翻译需母语校对。');
+    tips.push('税务合规优先：德国/法国需注册VAT，英国需VAT+EORI，欧盟需OSS注册，建议提前2个月启动税务注册流程。');
+    tips.push('库存策略：首批发货建议2个月销售量，避免断货影响排名；同时建立FBA+海外仓双渠道，降低断货风险。');
+    tips.push('本地化关键：不仅是翻译，还包括定价策略（含税/含运费展示）、支付方式适配、客服时区/语言、售后政策调整。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_gep_data',JSON.stringify({currentSite:$('currentSite').value,annualSales:num('annualSales'),skuCount:num('skuCount'),category:$('category').value,brandReg:$('brandReg').value,budget:num('budget')}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_gep_data'));if(d){['currentSite','category','brandReg'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});['annualSales','skuCount','budget'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',GEP.init)}else{GEP.init()}
+</script>
+</body>
+</html>

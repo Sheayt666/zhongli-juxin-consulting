@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="儿童产品认证指南：CPC/CPSC检测要求+实验室查询+证书管理+测试报告，CSS认证清单可视化，跨境卖家合规工具。">
+<title>儿童产品认证指南 - CPC/CPSC检测证书管理 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.cert-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px}
+.cert-item:hover{background:var(--bg-soft)}
+.cert-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cert-body{flex:1}.cert-body h4{font-size:14px;font-weight:700;margin:0 0 4px}.cert-body p{font-size:12px;color:var(--muted);margin:0 0 6px;line-height:1.5}
+.cert-status{font-size:12px;font-weight:700;padding:4px 12px;border-radius:8px}
+.status-required{background:#fef2f2;color:#dc2626}
+.status-recommended{background:#fffbeb;color:#d97706}
+.status-optional{background:#ecfdf5;color:#059669}
+.lab-table{width:100%;border-collapse:collapse;font-size:13px}
+.lab-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.lab-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.test-table{width:100%;border-collapse:collapse;font-size:13px}
+.test-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.test-table th.num{text-align:right}
+.test-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.test-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.timeline-step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule-light)}
+.timeline-step:last-child{border-bottom:none}
+.ts-num{width:32px;height:32px;border-radius:50%;background:#4f46e5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.ts-body h4{font-size:14px;font-weight:700;margin:0 0 4px}.ts-body p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+  <a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a><a href="restricted-keyword-scanner.html" class="workflow-step">违禁词扫描</a><a href="children-product-certification.html" class="workflow-step active">儿童认证</a><a href="environmental-compliance-checker.html" class="workflow-step">环保合规</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W41 合规深度</a><span class="sep">›</span><span class="current">儿童产品认证指南</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🧸</span>儿童产品认证指南 Children Product Certification</h1>
+  <p>儿童产品CPC认证全流程指南，CPSC检测要求，CPSC认可实验室查询，证书管理与测试报告归档，认证时间线规划，确保12岁以下儿童产品合规上架。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">所需检测项</div><div class="mc-value" id="mTests">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">必须项</div><div class="mc-value" id="mRequired">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">建议项</div><div class="mc-value" id="mRecommended">0</div></div>
+    <div class="metric-card success"><div class="mc-label">预估费用</div><div class="mc-value" id="mCost">$0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧸 产品信息输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>产品类型</label><select id="productType" onchange="CPC.calc()"><option value="toy">玩具</option><option value="clothing">儿童服装</option><option value="furniture">儿童家具</option><option value="jewelry">儿童珠宝</option><option value="art">美术用品</option><option value="care">护理用品</option></select></div>
+      <div class="jx-field"><label>目标年龄</label><select id="ageGroup" onchange="CPC.calc()"><option value="under3">3岁以下</option><option value="3to6">3-6岁</option><option value="6to12">6-12岁</option><option value="12plus">12岁以上</option></select></div>
+      <div class="jx-field"><label>目标市场</label><select id="market" onchange="CPC.calc()"><option value="us">美国</option><option value="eu">欧盟</option><option value="both">美国+欧盟</option></select></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>含电池</label><select id="battery" onchange="CPC.calc()"><option value="no">不含</option><option value="yes">含电池</option></select></div>
+      <div class="jx-field"><label>含小零件</label><select id="smallParts" onchange="CPC.calc()"><option value="no">不含</option><option value="yes">含小零件</option></select></div>
+      <div class="jx-field"><label>材料类型</label><select id="material" onchange="CPC.calc()"><option value="plastic">塑料</option><option value="wood">木质</option><option value="fabric">织物</option><option value="metal">金属</option><option value="mixed">混合材料</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 认证要求清单</h2>
+    <div id="certList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧪 检测项目与费用</h2>
+    <div style="overflow-x:auto"><table class="test-table" id="testTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔬 CPSC认可实验室</h2>
+    <div style="overflow-x:auto"><table class="lab-table" id="labTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📅 认证时间线</h2>
+    <div id="timeline"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 认证建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="product-safety-assessment.html" class="rt-card"><div class="rt-icon">🛡️</div><div><h5>安全评估</h5><p>产品安全</p></div></a>
+      <a href="restricted-substance-checker.html" class="rt-card"><div class="rt-icon">⚗️</div><div><h5>限制物质</h5><p>化学物质</p></div></a>
+      <a href="compliance-audit-scorecard.html" class="rt-card"><div class="rt-icon">📋</div><div><h5>审计评分</h5><p>合规审计</p></div></a>
+      <a href="product-compliance-matrix.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>合规矩阵</h5><p>多市场合规</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="children-product-certification.html">儿童认证</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CPC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var LABS=[
+    {name:'SGS',location:'全球',cpsc:'是',time:'5-7工作日',price:'$$$',rating:5},
+    {name:'Bureau Veritas (BV)',location:'全球',cpsc:'是',time:'5-7工作日',price:'$$$',rating:5},
+    {name:'Intertek',location:'全球',cpsc:'是',time:'5-7工作日',price:'$$$',rating:4},
+    {name:'TÜV Rheinland',location:'全球',cpsc:'是',time:'7-10工作日',price:'$$$',rating:5},
+    {name:'Eurofins',location:'全球',cpsc:'是',time:'7-10工作日',price:'$$',rating:4},
+    {name:'QIMA',location:'亚洲/全球',cpsc:'是',time:'3-5工作日',price:'$$',rating:4},
+    {name:'CTI (华测检测)',location:'中国',cpsc:'是',time:'5-7工作日',price:'$',rating:4},
+    {name:'STC',location:'中国香港',cpsc:'是',time:'5-7工作日',price:'$$',rating:4}
+  ];
+
+  var TIMELINE=[
+    {title:'产品开发阶段',desc:'在设计阶段考虑安全标准，选择合规材料，避免小零件（3岁以下产品）',time:'产品开发期'},
+    {title:'选择CPSC实验室',desc:'从CPSC认可实验室名单中选择，获取报价，确认检测项目',time:'第1周'},
+    {title:'寄送样品',desc:'准备最终量产样品（非原型），寄送至实验室，附产品规格说明',time:'第2周'},
+    {title:'实验室检测',desc:'进行铅/邻苯二甲酸盐/小零件/物理机械等检测，等待检测报告',time:'第3-4周'},
+    {title:'获取测试报告',desc:'收到CPSC认可实验室的测试报告，核对所有检测项通过',time:'第5周'},
+    {title:'编制CPC证书',desc:'基于测试报告编制Children Product Certificate，列出适用标准',time:'第5周'},
+    {title:'Listing上架',desc:'在Amazon上传CPC证书和测试报告，提交合规审核',time:'第6周'},
+    {title:'定期复检',desc:'每年至少复检一次，材料/供应商变更时需重新检测',time:'每年'}
+  ];
+
+  function calc(){
+    var pt=$('productType').value,age=$('ageGroup').value,mkt=$('market').value;
+    var bat=$('battery').value,sp=$('smallParts').value,mat=$('material').value;
+
+    var certs=[];
+    //CPC (Children's Product Certificate) - 必须项
+    certs.push({icon:'📜',color:'#4f46e5',title:'CPC儿童产品证书',status:'required',desc:'所有12岁以下儿童产品必须提供，基于CPSC认可实验室测试报告编制'});
+    //铅含量测试
+    certs.push({icon:'⚗️',color:'#ef4444',title:'铅含量测试 (CPSIA Section 101)',status:'required',desc:'涂层铅含量≤90ppm，基材铅含量≤100ppm，所有儿童产品必须'});
+    //邻苯二甲酸盐
+    certs.push({icon:'🧪',color:'#f59e0b',title:'邻苯二甲酸盐测试',status:'required',desc:'8种邻苯二甲酸盐≤0.1%，塑料/软质材料儿童产品必须'});
+    //ASTM F963
+    if(pt==='toy'){
+      certs.push({icon:'🎯',color:'#4f46e5',title:'ASTM F963玩具安全标准',status:'required',desc:'物理/机械/燃烧/化学测试，所有玩具必须通过'});
+    }
+    //小零件
+    if(age==='under3'){
+      certs.push({icon:'⚠️',color:'#ef4444',title:'小零件测试 (16 CFR 1501)',status:'required',desc:'3岁以下产品不得含有小零件，防止窒息危险'});
+    }
+    //16 CFR 1303
+    certs.push({icon:'🎨',color:'#8b5cf6',title:'含铅涂料标准 (16 CFR 1303)',status:'required',desc:'涂层含铅量≤90ppm，有涂层的儿童产品必须'});
+    //床垫阻燃
+    if(pt==='furniture'){
+      certs.push({icon:'🔥',color:'#ef4444',title:'阻燃标准 (16 CFR 1632/1633)',status:'required',desc:'儿童床垫/软体家具需通过阻燃测试'});
+    }
+    //电池
+    if(bat==='yes'){
+      certs.push({icon:'🔋',color:'#f59e0b',title:'电池安全 (UN38.3/IEC 62133)',status:'recommended',desc:'含锂电池产品建议通过电池安全测试'});
+    }
+    //CE标记
+    if(mkt==='eu'||mkt==='both'){
+      certs.push({icon:'🇪🇺',color:'#4f46e5',title:'CE标记 (EN 71)',status:'required',desc:'欧盟市场玩具必须通过EN 71安全标准并获得CE标记'});
+    }
+    //CPSIA追踪标签
+    certs.push({icon:'🏷️',color:'#10b981',title:'CPSIA追踪标签',status:'required',desc:'产品及包装上需永久性追踪标签（制造商/日期/批次）'});
+
+    var requiredCount=certs.filter(function(c){return c.status==='required'}).length;
+    var recommendedCount=certs.filter(function(c){return c.status==='recommended'}).length;
+    var estCost=requiredCount*350+recommendedCount*200;
+
+    $('mTests').textContent=certs.length;
+    $('mRequired').textContent=requiredCount;
+    $('mRecommended').textContent=recommendedCount;
+    $('mCost').textContent='$'+estCost.toLocaleString();
+
+    renderCerts(certs);
+    renderTests(pt,age,mat,sp);
+    renderLabs();
+    renderTimeline();
+    renderTips(pt,age,mkt,certs,estCost);
+    save();
+  }
+
+  function renderCerts(certs){
+    var h='';
+    certs.forEach(function(c){
+      var statusTxt=c.status==='required'?'必须':'推荐';
+      h+='<div class="cert-item"><div class="cert-icon" style="background:'+c.color+'15">'+c.icon+'</div><div class="cert-body"><h4>'+c.title+'</h4><p>'+c.desc+'</p><span class="cert-status status-'+c.status+'">'+statusTxt+'</span></div></div>';
+    });
+    $('certList').innerHTML=h;
+  }
+
+  function renderTests(pt,age,mat,sp){
+    var tests=[
+      {name:'铅含量测试',standard:'CPSIA Sec.101',fee:150,time:'3天'},
+      {name:'邻苯二甲酸盐',standard:'CPSIA Sec.108',fee:200,time:'5天'},
+      {name:'小零件测试',standard:'16 CFR 1501',fee:80,time:'1天'},
+      {name:'物理机械测试',standard:'ASTM F963',fee:350,time:'5天'},
+      {name:'燃烧性能测试',standard:'ASTM F963',fee:120,time:'2天'},
+      {name:'化学迁移测试',standard:'EN 71-3',fee:280,time:'5天'},
+      {name:'涂层铅含量',standard:'16 CFR 1303',fee:100,time:'2天'},
+      {name:'噪音测试',standard:'ASTM F963',fee:80,time:'1天'}
+    ];
+    var total=0;
+    var h='<thead><tr><th>检测项目</th><th>标准</th><th class="num">费用</th><th class="num">周期</th></tr></thead><tbody>';
+    tests.forEach(function(t){
+      total+=t.fee;
+      h+='<tr><td><strong>'+t.name+'</strong></td><td style="font-size:12px;color:var(--muted)">'+t.standard+'</td><td class="num">$'+t.fee+'</td><td class="num">'+t.time+'</td></tr>';
+    });
+    h+='<tr style="background:#eef2ff;font-weight:800"><td colspan="2">总计</td><td class="num" style="color:#4f46e5">$'+total+'</td><td class="num">5-7天</td></tr>';
+    h+='</tbody>';
+    $('testTable').innerHTML=h;
+  }
+
+  function renderLabs(){
+    var h='<thead><tr><th>实验室</th><th>地区</th><th>CPSC认可</th><th>周期</th><th>费用级别</th><th>评分</th></tr></thead><tbody>';
+    LABS.forEach(function(l){
+      var stars='★'.repeat(l.rating)+'☆'.repeat(5-l.rating);
+      h+='<tr><td><strong>'+l.name+'</strong></td><td>'+l.location+'</td><td><span style="color:#059669;font-weight:700">'+l.cpsc+'</span></td><td>'+l.time+'</td><td>'+l.price+'</td><td style="color:#f59e0b">'+stars+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('labTable').innerHTML=h;
+  }
+
+  function renderTimeline(){
+    var h='';
+    TIMELINE.forEach(function(t,i){
+      h+='<div class="timeline-step"><div class="ts-num">'+(i+1)+'</div><div class="ts-body"><h4>'+t.title+' <span style="font-size:11px;color:var(--muted);font-weight:400">('+t.time+')</span></h4><p>'+t.desc+'</p></div></div>';
+    });
+    $('timeline').innerHTML=h;
+  }
+
+  function renderTips(pt,age,mkt,certs,cost){
+    var ptLabel={toy:'玩具',clothing:'儿童服装',furniture:'儿童家具',jewelry:'儿童珠宝',art:'美术用品',care:'护理用品'}[pt];
+    var ageLabel={under3:'3岁以下',three6:'3-6岁','6to12':'6-12岁','12plus':'12岁以上'}[age];
+    var tips=[];
+    tips.push('产品类型「'+ptLabel+'」，目标年龄「'+ageLabel+'」，目标市场「'+(mkt==='both'?'美国+欧盟':mkt==='us'?'美国':'欧盟')+'」，共需 '+certs.length+' 项认证/检测，预估费用 $'+cost.toLocaleString()+'。');
+    tips.push('CPC证书是儿童产品上架Amazon的必要文件，必须基于CPSC认可实验室的测试报告编制，自行编制无效。');
+    tips.push('CPSC认可实验室查询：https://www.cpsc.gov/cgi-bin/labsearch/ ，务必确认实验室在CPSC认可名单内。');
+    if(age==='under3')tips.push('3岁以下产品严格禁止含有小零件，防止窒息风险。建议使用小零件测试筒（16 CFR 1501）预检。');
+    tips.push('铅含量和邻苯二甲酸盐是儿童产品最常见的违规项，建议在选材阶段就选择合规材料，避免量产后检测不通过。');
+    if(pt==='toy')tips.push('玩具必须通过ASTM F963全套安全测试（物理/机械/燃烧/化学），检测周期5-7天，费用约$350。');
+    if(mkt==='eu'||mkt==='both')tips.push('欧盟市场需额外通过EN 71标准并获得CE标记，与美国标准部分重叠但检测要求不同。');
+    tips.push('CPSIA追踪标签：产品和包装上必须有永久性标记，包含制造商名称/地址/生产日期/批次号，便于召回追溯。');
+    tips.push('认证有效期：测试报告通常有效1年，材料/工艺/供应商变更需重新检测。建议每年至少复检一次。');
+    tips.push('Amazon审核：上传CPC证书和测试报告到后台合规中心，审核需3-5个工作日，被拒后需修改重新提交。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_cpc_data',JSON.stringify({productType:$('productType').value,ageGroup:$('ageGroup').value,market:$('market').value,battery:$('battery').value,smallParts:$('smallParts').value,material:$('material').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_cpc_data'));if(d){['productType','ageGroup','market','battery','smallParts','material'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CPC.init)}else{CPC.init()}
+</script>
+</body>
+</html>

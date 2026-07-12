@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="知识产权侵权扫描器：商标/专利/版权全网扫描结果（模拟），侵权预警，证据保全清单。免费在线跨境电商IP侵权自查工具。">
+<meta name="keywords" content="知识产权侵权扫描,商标侵权,专利侵权,版权侵权,侵权预警,证据保全,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/ip-infringement-scanner.html">
+<title>知识产权侵权扫描器 - 商标专利版权扫描·侵权预警·证据保全 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.iis-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.iis-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.scan-result{padding:18px;border-radius:12px;margin-bottom:14px;border:1px solid var(--rule-light)}
+.scan-result.high{background:#fef2f2;border-left:4px solid #ef4444}
+.scan-result.mid{background:#fffbeb;border-left:4px solid #f59e0b}
+.scan-result.low{background:#ecfdf5;border-left:4px solid #10b981}
+.sr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sr-type{font-size:15px;font-weight:700}
+.sr-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700}
+.sr-badge.high{background:#fee2e2;color:#dc2626}.sr-badge.mid{background:#fef3c7;color:#d97706}.sr-badge.low{background:#d1fae5;color:#059669}
+.sr-list{list-style:none;padding:0;margin:0}
+.sr-list li{padding:8px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px solid var(--rule-light);display:flex;justify-content:space-between;align-items:center}
+.sr-list li:last-child{border-bottom:none}
+.evidence-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.ev-item{padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);font-size:13px}
+.ev-item .ei-title{font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.ev-item .ei-desc{color:var(--muted);font-size:12px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.evidence-grid{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"知识产权侵权扫描器","description":"商标/专利/版权全网扫描结果（模拟），侵权预警，证据保全清单。","url":"https://juxin-consulting.help/tools/ip-infringement-scanner.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"知识产权侵权扫描器","item":"https://juxin-consulting.help/tools/ip-infringement-scanner.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="ip_infringement_scanner">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔍 风险管理工作流</span>
+      <h1>知识产权侵权 <em>扫描器</em></h1>
+      <p class="tool-hero-desc">输入产品信息与商标/专利关键词，模拟扫描商标、专利、版权三类侵权风险，输出侵权预警等级与匹配项，生成证据保全清单指导取证，降低IP侵权下架与诉讼风险。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a><span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a><span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a><span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a><span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a><span class="arrow">→</span>
+      <a href="appeal-letter-generator.html" class="step">申诉信生成</a><span class="arrow">→</span>
+      <a href="policy-update-tracker.html" class="step">政策追踪</a><span class="arrow">→</span>
+      <a href="listing-suppression-checker.html" class="step">Listing下架</a><span class="arrow">→</span>
+      <a href="account-suspension-recovery.html" class="step">封号恢复</a><span class="arrow">→</span>
+      <a href="performance-metric-monitor.html" class="step">绩效监控</a><span class="arrow">→</span>
+      <span class="step current">侵权扫描</span><span class="arrow">→</span>
+      <a href="risk-heatmap-generator.html" class="step">风险热力图</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入产品信息</h2>
+          <p class="calc-form-subtitle">填写产品名称、品牌词与待查关键词</p>
+          <div class="calc-field"><label>产品名称</label><input type="text" id="pname" value="Wireless Bluetooth Earbuds Pro" oninput="IIS.scan()"></div>
+          <div class="calc-field"><label>品牌词 / 商标词</label><input type="text" id="brand" value="AirPods" oninput="IIS.scan()"></div>
+          <div class="calc-field"><label>待查关键词 <span class="hint">（逗号分隔）</span></label><input type="text" id="keywords" value="AirPods,iPhone,Beats,noise cancelling" oninput="IIS.scan()"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品类目</label><select id="cat" onchange="IIS.scan()"><option value="电子">3C电子</option><option value="服装">服装鞋帽</option><option value="家居">家居日用</option><option value="美妆">美妆个护</option></select></div>
+            <div class="calc-field"><label>是否自有品牌</label><select id="ownbrand" onchange="IIS.scan()"><option value="no">否 / 通用款</option><option value="yes">是 / 已注册</option></select></div>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="iis-section">
+        <h3>🔎 侵权扫描结果</h3>
+        <div id="scanWrap"></div>
+      </div>
+
+      <div class="iis-section">
+        <h3>📦 证据保全清单</h3>
+        <div class="evidence-grid" id="evGrid"></div>
+      </div>
+
+      <div class="iis-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="ip-protector.html" class="related-card"><span class="related-card-icon">🛡️</span><div class="related-card-content"><h5>知识产权保护</h5><p>品牌备案</p></div></a>
+          <a href="listing-suppression-checker.html" class="related-card"><span class="related-card-icon">📉</span><div class="related-card-content"><h5>Listing下架检查</h5><p>违规词扫描</p></div></a>
+          <a href="appeal-letter-generator.html" class="related-card"><span class="related-card-icon">✉️</span><div class="related-card-content"><h5>申诉信生成</h5><p>侵权申诉</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="performance-metric-monitor.html" class="wbn-btn prev">← 上一步：绩效监控</a>
+        <a href="risk-heatmap-generator.html" class="wbn-btn next">下一步：风险热力图 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="ip-infringement-scanner.html">侵权扫描器</a></li><li><a href="ip-protector.html">知识产权保护</a></li><li><a href="risk-heatmap-generator.html">风险热力图</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var IIS=(function(){
+  'use strict';
+  var TMDB=['AirPods','iPhone','Beats','Apple','Samsung','Nike','Adidas','Sony','Bose','Dyson','Gucci','LV','Disney','Marvel','Nintendo'];
+  var PTDB=[{kw:'noise cancelling',type:'发明专利',owner:'某音频公司',num:'US10,xxx,xxx'},{kw:'wireless charging',type:'发明专利',owner:'某科技公司',num:'US11,xxx,xxx'},{kw:'earbuds',type:'外观专利',owner:'某配件商',num:'USDxxx,xxx'}];
+  var CRDB=['Disney','Marvel','Pokemon','Sanrio','Hello Kitty','Minions','Peppa Pig'];
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function scan(){
+    var pname=v('pname'),brand=v('brand'),kwStr=v('keywords'),cat=v('cat'),own=v('ownbrand');
+    var kws=kwStr.split(',').map(function(k){return k.trim();}).filter(function(k){return k;});
+    // 商标扫描
+    var tmHits=[];
+    kws.forEach(function(k){
+      TMDB.forEach(function(t){if(k.toLowerCase()===t.toLowerCase()||k.toLowerCase().indexOf(t.toLowerCase())!==-1)tmHits.push({kw:k,match:t,reg:'USPTO/EUIPO已注册',cls:cat+'类'});});
+    });
+    // 专利扫描
+    var ptHits=[];
+    kws.forEach(function(k){PTDB.forEach(function(p){if(k.toLowerCase().indexOf(p.kw.toLowerCase())!==-1)ptHits.push({kw:k,type:p.type,owner:p.owner,num:p.num});});});
+    // 版权扫描
+    var crHits=[];
+    kws.forEach(function(k){CRDB.forEach(function(c){if(k.toLowerCase().indexOf(c.toLowerCase())!==-1)crHits.push({kw:k,match:c});});});
+    var tmLevel=tmHits.length?'high':(own==='no'?'mid':'low');
+    var ptLevel=ptHits.length?'high':'low';
+    var crLevel=crHits.length?'high':'low';
+    var overallRisk=tmHits.length+ptHits.length+crHits.length;
+    var orLevel=overallRisk>=3?'高风险':(overallRisk>=1?'中风险':'低风险');
+    var orColor=overallRisk>=3?'#ef4444':(overallRisk>=1?'#f59e0b':'#10b981');
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🔍 扫描概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">侵权风险</div><div class="ri-value" style="color:'+orColor+'">'+orLevel+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">商标命中</div><div class="ri-value '+(tmHits.length?'negative':'positive')+'">'+tmHits.length+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">专利命中</div><div class="ri-value '+(ptHits.length?'negative':'positive')+'">'+ptHits.length+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">版权命中</div><div class="ri-value '+(crHits.length?'negative':'positive')+'">'+crHits.length+'</div></div>'+
+      '</div><div class="result-note">⚠️ '+(overallRisk>=3?'发现多处侵权风险，立即下架相关产品并咨询IP律师':(overallRisk>=1?'发现'+overallRisk+'处潜在侵权，建议修改关键词或获取授权':'未发现明显侵权风险，建议定期复查'))+'<br>📌 本工具为模拟扫描，正式排查请查询USPTO/EUIPO/CPCC官方数据库</div>';
+    var levelMap={high:'高风险',mid:'中风险',low:'低风险'};
+    function renderResult(title,icon,level,hits,fields){
+      var h='<div class="scan-result '+level+'"><div class="sr-head"><div class="sr-type">'+icon+' '+title+'</div><span class="sr-badge '+level+'">'+levelMap[level]+'</span></div>';
+      if(!hits.length){h+='<div style="font-size:13px;color:var(--muted)">未发现命中项</div>';}
+      else{h+='<ul class="sr-list">';hits.forEach(function(it){h+='<li><span>';fields.forEach(function(f,i){h+=(i>0?' · ':'')+(f.label+': '+(it[f.key]||'-'));});h+='</span></li>';});h+='</ul>';}
+      h+='</div>';return h;
+    }
+    var sh=renderResult('商标扫描','™️',tmLevel,tmHits,[{key:'kw',label:'关键词'},{key:'match',label:'匹配商标'},{key:'reg',label:'状态'},{key:'cls',label:'类别'}]);
+    sh+=renderResult('专利扫描','📋',ptLevel,ptHits,[{key:'kw',label:'关键词'},{key:'type',label:'专利类型'},{key:'num',label:'专利号'},{key:'owner',label:'权利人'}]);
+    sh+=renderResult('版权扫描','©️',crLevel,crHits,[{key:'kw',label:'关键词'},{key:'match',label:'匹配版权'}]);
+    document.getElementById('scanWrap').innerHTML=sh;
+    var ev=[
+      {icon:'📸',title:'产品实物证据',desc:'拍摄产品全景/细节/包装/Logo特写，含时间戳'},
+      {icon:'📄',title:'采购合同与发票',desc:'保存与供应商的采购合同、增值税发票'},
+      {icon:'🔐',title:'授权书公证',desc:'若已获授权，保留经公证的品牌授权书'},
+      {icon:'🧪',title:'质检报告',desc:'第三方检测报告证明产品合规'},
+      {icon:'💬',title:'沟通记录',desc:'与投诉方/供应商的所有沟通邮件截图'},
+      {icon:'🌐',title:'Listing快照',desc:'使用Wayback Machine保存Listing历史快照'},
+      {icon:'📋',title:'商标/专利查询记录',desc:'保存USPTO/EUIPO/CPCC查询结果截图'},
+      {icon:'💾',title:'电子证据存证',desc:'使用区块链存证平台固化电子证据'}
+    ];
+    var eh='';ev.forEach(function(e){eh+='<div class="ev-item"><div class="ei-title">'+e.icon+' '+e.title+'</div><div class="ei-desc">'+e.desc+'</div></div>';});
+    document.getElementById('evGrid').innerHTML=eh;
+  }
+  function init(){scan();}
+  return {scan:scan,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',IIS.init);}else{IIS.init();}
+</script>
+</body>
+</html>

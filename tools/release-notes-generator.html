@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="发版说明生成器：版本变更+新功能+修复项+用户通知，格式化发版说明生成，版本历史管理。免费产品开发管理工具。">
+<meta name="keywords" content="发版说明,版本变更,changelog,release notes,版本管理,产品开发">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/release-notes-generator.html">
+<title>发版说明生成器 - 版本变更·新功能·修复项 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.change-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-bottom:1px solid var(--rule-light)}
+.change-item:last-child{border-bottom:none}
+.change-type{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;font-size:11px;font-weight:700;flex-shrink:0}
+.ct-feature{background:#d1fae5;color:#059669}
+.ct-improvement{background:#dbeafe;color:#2563eb}
+.ct-bugfix{background:#fee2e2;color:#dc2626}
+.ct-breaking{background:#fef3c7;color:#d97706}
+.change-content{flex:1}
+.change-title{font-size:14px;font-weight:600;color:var(--ink)}
+.change-desc{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.btn-add{padding:8px 16px;border-radius:8px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+.btn-del{padding:2px 8px;border-radius:4px;border:1px solid #ef4444;background:#fff;font-size:11px;cursor:pointer;color:#ef4444}
+.change-input-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.change-input-row select{padding:8px;border-radius:8px;border:1px solid var(--rule);font-size:13px}
+.change-input-row input{flex:1;min-width:200px;padding:8px;border-radius:8px;border:1px solid var(--rule);font-size:13px}
+.release-note-preview{background:var(--bg-soft);border:1px solid var(--rule-light);border-radius:12px;padding:24px;margin-top:16px;font-family:monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.version-timeline{position:relative;padding-left:24px}
+.version-timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#4f46e5,#c7d2fe)}
+.version-entry{position:relative;margin-bottom:20px}
+.version-entry::before{content:'';position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:#4f46e5;border:2px solid #fff;box-shadow:0 0 0 2px #e0e7ff}
+.version-entry .ve-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.version-entry .ve-version{font-size:15px;font-weight:700;color:#4f46e5}
+.version-entry .ve-date{font-size:12px;color:var(--muted)}
+.version-entry .ve-summary{font-size:13px;color:var(--ink-soft)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"发版说明生成器","description":"版本变更+新功能+修复项+用户通知，格式化发版说明生成。","url":"https://juxin-consulting.help/tools/release-notes-generator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="release_notes_generator">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🔧</span><span class="workflow-name">产品开发管理工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="prd-template.html" class="step">PRD模板</a><span class="arrow">→</span>
+      <a href="mvp-definer.html" class="step">MVP定义</a><span class="arrow">→</span>
+      <a href="feature-priority-matrix.html" class="step">功能优先级</a><span class="arrow">→</span>
+      <a href="user-story-generator.html" class="step">用户故事</a><span class="arrow">→</span>
+      <a href="product-roadmap.html" class="step">产品路线图</a><span class="arrow">→</span>
+      <a href="acceptance-criteria.html" class="step">验收标准</a><span class="arrow">→</span>
+      <a href="competitive-feature-matrix.html" class="step">竞品功能矩阵</a><span class="arrow">→</span>
+      <a href="wbs-generator.html" class="step">WBS分解</a><span class="arrow">→</span>
+      <a href="lifecycle-cost.html" class="step">生命周期成本</a><span class="arrow">→</span>
+      <a href="product-launch-checklist.html" class="step">发布清单</a><span class="arrow">→</span>
+      <a href="sprint-planner.html" class="step">迭代规划</a><span class="arrow">→</span>
+      <a href="beta-test-manager.html" class="step">Beta测试</a><span class="arrow">→</span>
+      <span class="step current">发版说明</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔧 产品开发管理工具 · 标准版</span>
+      <h1>发版说明<em>生成器</em></h1>
+      <p class="tool-hero-desc">管理版本变更记录，自动生成格式化发版说明（Markdown/HTML），新功能/改进/修复/破坏性变更分类展示，版本历史时间线。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="calc-row-2">
+          <div class="calc-field"><label>版本号</label><input type="text" id="version" value="v2.1.0" oninput="RNG.calc()"></div>
+          <div class="calc-field"><label>发布日期</label><input type="date" id="releaseDate" oninput="RNG.calc()"></div>
+        </div>
+        <div class="calc-field"><label>版本摘要</label><input type="text" id="summary" value="本次更新新增支付系统重构、优化搜索性能，修复3个关键Bug" oninput="RNG.calc()"></div>
+
+        <div class="fee-rule-box" style="margin-top:20px"><h4>📝 变更记录</h4></div>
+        <div class="change-input-row">
+          <select id="newChangeType">
+            <option value="feature">✨ 新功能</option>
+            <option value="improvement">⚡ 改进</option>
+            <option value="bugfix">🐛 修复</option>
+            <option value="breaking">⚠️ 破坏性变更</option>
+          </select>
+          <input type="text" id="newChangeTitle" placeholder="变更标题，如 新增微信支付">
+          <input type="text" id="newChangeDesc" placeholder="描述（可选）">
+          <button class="btn-add" onclick="RNG.addChange()">+ 添加</button>
+        </div>
+        <div id="changeList"></div>
+      </div>
+
+      <div class="section-block" id="previewSection">
+        <h3>📄 发版说明预览</h3>
+        <div class="release-note-preview" id="notePreview"></div>
+      </div>
+
+      <div class="section-block" id="historySection">
+        <h3>📋 版本历史</h3>
+        <div class="version-timeline" id="versionTimeline"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="beta-test-manager.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← Beta测试</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="release-notes-generator.html">发版说明</a></li><li><a href="sprint-planner.html">迭代规划</a></li><li><a href="beta-test-manager.html">Beta测试</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var RNG=(function(){
+  'use strict';
+  var KEY='jx_release_changes';
+  var changes=[];
+  var history=[
+    {version:'v2.0.0',date:'2026-05-15',summary:'大版本更新：全新UI改版，重构核心架构，新增10+功能',features:8,fixes:5,breaking:2},
+    {version:'v1.9.2',date:'2026-04-20',summary:'热修复版本：修复支付回调问题和搜索崩溃Bug',features:0,fixes:3,breaking:0},
+    {version:'v1.9.0',date:'2026-03-30',summary:'新增数据分析模块，优化商品导入流程',features:5,fixes:2,breaking:0},
+    {version:'v1.8.0',date:'2026-02-15',summary:'新增多语言支持，优化移动端体验',features:6,fixes:4,breaking:1}
+  ];
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+  function load(){
+    try{var s=localStorage.getItem(KEY);if(s)changes=JSON.parse(s)||[];}catch(e){changes=[];}
+    if(!changes.length){
+      changes=[
+        {type:'feature',title:'新增微信支付集成',desc:'支持微信扫码支付和JSAPI支付'},
+        {type:'feature',title:'新增批量订单导出',desc:'支持Excel/CSV格式导出'},
+        {type:'improvement',title:'搜索性能优化',desc:'搜索响应时间从500ms降至100ms'},
+        {type:'improvement',title:'UI界面改版',desc:'全新设计风格，提升用户体验'},
+        {type:'bugfix',title:'修复支付回调超时',desc:'解决高并发下支付回调丢失问题'},
+        {type:'bugfix',title:'修复商品图片加载失败',desc:'CDN缓存策略优化'},
+        {type:'bugfix',title:'修复优惠券叠加错误',desc:'多券叠加计算逻辑修正'},
+        {type:'breaking',title:'API v1接口废弃',desc:'请迁移至v2接口，v1将于下版本移除'}
+      ];
+      save();
+    }
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(changes));}catch(e){}}
+  function typeLabel(t){return{feature:'✨ 新功能',improvement:'⚡ 改进',bugfix:'🐛 修复',breaking:'⚠️ 破坏性变更'}[t]||t;}
+  function typeClass(t){return'ct-'+t;}
+  function calc(){
+    var ver=v('version'),date=v('releaseDate'),summary=v('summary');
+    var grouped={feature:[],improvement:[],bugfix:[],breaking:[]};
+    changes.forEach(function(c){grouped[c.type].push(c);});
+    $('changeList').innerHTML=changes.map(function(c,i){
+      return '<div class="change-item"><div class="change-type '+typeClass(c.type)+'">'+typeLabel(c.type).charAt(2)+'</div><div class="change-content"><div class="change-title">'+c.title+'</div>'+(c.desc?'<div class="change-desc">'+c.desc+'</div>':'')+'</div><button class="btn-del" onclick="RNG.delChange('+i+')">删除</button></div>';
+    }).join('');
+    var md='# 发版说明\n\n## '+ver+' ('+date+')\n\n'+summary+'\n';
+    if(grouped.feature.length){md+='\n### ✨ 新功能\n';grouped.feature.forEach(function(c){md+='- '+c.title+(c.desc?' - '+c.desc:'')+'\n';});}
+    if(grouped.improvement.length){md+='\n### ⚡ 改进\n';grouped.improvement.forEach(function(c){md+='- '+c.title+(c.desc?' - '+c.desc:'')+'\n';});}
+    if(grouped.bugfix.length){md+='\n### 🐛 修复\n';grouped.bugfix.forEach(function(c){md+='- '+c.title+(c.desc?' - '+c.desc:'')+'\n';});}
+    if(grouped.breaking.length){md+='\n### ⚠️ 破坏性变更\n';grouped.breaking.forEach(function(c){md+='- '+c.title+(c.desc?' - '+c.desc:'')+'\n';});}
+    md+='\n---\n共 '+changes.length+' 项变更 | '+grouped.feature.length+' 新功能 | '+grouped.improvement.length+' 改进 | '+grouped.bugfix.length+' 修复 | '+grouped.breaking.length+' 破坏性变更';
+    $('notePreview').textContent=md;
+    $('versionTimeline').innerHTML=history.map(function(h){
+      return '<div class="version-entry"><div class="ve-header"><span class="ve-version">'+h.version+'</span><span class="ve-date">'+h.date+'</span></div><div class="ve-summary">'+h.summary+'</div><div style="font-size:12px;margin-top:4px">'+(h.features?'<span style="color:#10b981">'+h.features+' 新功能</span> ':'')+(h.fixes?'<span style="color:#dc2626">'+h.fixes+' 修复</span> ':'')+(h.breaking?'<span style="color:#f59e0b">'+h.breaking+' 破坏性</span>':'')+'</div></div>';
+    }).join('');
+  }
+  function addChange(){
+    var type=$('newChangeType').value;
+    var title=$('newChangeTitle').value;
+    if(!title){alert('请输入变更标题');return;}
+    var desc=$('newChangeDesc').value;
+    changes.push({type:type,title:title,desc:desc});
+    save();calc();
+    $('newChangeTitle').value='';$('newChangeDesc').value='';
+  }
+  function delChange(i){changes.splice(i,1);save();calc();}
+  load();
+  return{calc:calc,addChange:addChange,delChange:delChange};
+})();
+RNG.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

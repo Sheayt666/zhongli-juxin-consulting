@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="报表模板库：5大应用场景（运营/财务/广告/库存/客服），15个预制模板，字段预览，格式选择，一键使用，CSS模板卡片展示。">
+<meta name="keywords" content="报表模板,模板库,运营报表,财务报表,广告报表,库存报表,客服报表,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="报表模板库 - 5场景15模板·预览·自定义 | 众力聚鑫咨询">
+<meta property="og:description" content="报表模板库：5大应用场景（运营/财务/广告/库存/客服），15个预制模板，字段预览，格式选择，一键使用，CSS模板卡片展示。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/report-template-library.html">
+<title>报表模板库 - 5场景15模板·预览·自定义 | 众力聚鑫咨询 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"报表模板库","description":"报表模板库：5大应用场景（运营/财务/广告/库存/客服），15个预制模板，字段预览，格式选择，一键使用，CSS模板卡片展示。","url":"https://juxin-consulting.help/tools/report-template-library.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"报表模板库","item":"https://juxin-consulting.help/tools/report-template-library.html"}]}
+</script>
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.wf-steps-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.rpt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.rpt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+
+
+.scene-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.scene-tab{padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid var(--rule);background:#fff;cursor:pointer;transition:all .2s}
+.scene-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.scene-tab:hover{border-color:var(--accent)}
+.template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.template-card{background:#fff;border:1px solid var(--rule);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(15,23,42,.04);transition:all .3s;cursor:pointer}
+.template-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(79,70,229,.12)}
+.template-card .tc-header{padding:16px 20px;background:linear-gradient(135deg,var(--accent-bg),#e0e7ff);border-bottom:1px solid var(--rule)}
+.template-card .tc-icon{font-size:28px;margin-bottom:8px}
+.template-card .tc-name{font-size:15px;font-weight:700;color:var(--ink)}
+.template-card .tc-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;margin-top:6px;background:var(--accent);color:#fff}
+.template-card .tc-body{padding:16px 20px}
+.template-card .tc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.template-card .tc-fields{font-size:11px;color:var(--ink-soft);line-height:1.8}
+.template-card .tc-fields span{display:inline-block;padding:2px 6px;background:var(--bg-soft);border-radius:4px;margin:2px}
+.template-card .tc-footer{padding:12px 20px;border-top:1px solid var(--rule-light);display:flex;justify-content:space-between;align-items:center}
+.template-card .tc-use{font-size:12px;font-weight:600;color:var(--accent)}
+.template-card .tc-format{font-size:11px;color:var(--muted)}
+.template-preview{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:24px;margin-top:16px}
+.template-preview h4{font-size:14px;font-weight:700;margin-bottom:12px}
+.preview-table{width:100%;border-collapse:collapse;font-size:12px}
+.preview-table th{padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);background:#fff;border-bottom:2px solid var(--rule)}
+.preview-table td{padding:8px 10px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.preview-table tr:hover td{background:var(--accent-bg)}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{padding:16px;border-radius:10px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-val{font-size:24px;font-weight:800}
+.stat-card .sc-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+@media(max-width:768px){.template-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+</style>
+</head>
+<body class="tool-page" data-tool="report_template_library">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner"><a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a><ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></ul><a href="../index.html" class="tool-nav-back">← 返回首页</a></div></nav>
+<main id="main-content">
+<div class="workflow-nav"><div class="workflow-nav-header"><span class="workflow-icon">📊</span><span class="workflow-name">数据报表工作流</span><span class="workflow-step">第12步 / 共12步</span></div><div class="wf-steps-scroll"><div class="workflow-nav-steps"><a href="daily-report.html" class="step">日报</a><span class="arrow">→</span><a href="weekly-report.html" class="step">周报</a><span class="arrow">→</span><a href="monthly-report.html" class="step">月报</a><span class="arrow">→</span><a href="custom-dashboard.html" class="step">自定义看板</a><span class="arrow">→</span><a href="kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span><a href="real-time-dashboard.html" class="step">实时看板</a><span class="arrow">→</span><a href="executive-summary-report.html" class="step">管理摘要</a><span class="arrow">→</span><a href="automated-report-scheduler.html" class="step">报表调度</a><span class="arrow">→</span><a href="benchmark-report-generator.html" class="step">基准报告</a><span class="arrow">→</span><a href="data-export-center.html" class="step">数据导出</a><span class="arrow">→</span><a href="alert-notification-system.html" class="step">预警通知</a><span class="arrow">→</span><span class="step current">模板库</span></div></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📊 数据报表工作流 · 标准版</span><h1>报表模板 <em>库</em></h1><p class="tool-hero-desc">5大应用场景（运营/财务/广告/库存/客服），15个预制报表模板，每个模板含字段定义与数据预览，支持CSV/Excel/PDF多种格式，点击即可预览模板详情，一键使用快速生成报表。</p></div></header>
+<section class="tool-section"><div class="container">
+
+<div class="rpt-section" style="margin-top:0">
+<h3>📊 模板库概览</h3>
+<div class="stat-row">
+<div class="stat-card"><div class="sc-val" style="color:var(--accent)">5</div><div class="sc-lbl">应用场景</div></div>
+<div class="stat-card"><div class="sc-val" style="color:var(--green)">15</div><div class="sc-lbl">报表模板</div></div>
+<div class="stat-card"><div class="sc-val" style="color:var(--gold)">3</div><div class="sc-lbl">导出格式</div></div>
+<div class="stat-card"><div class="sc-val" style="color:#8b5cf6">100%</div><div class="sc-lbl">免费使用</div></div>
+</div>
+</div>
+<div class="rpt-section">
+<h3>📁 选择应用场景</h3>
+<div class="scene-tabs" id="sceneTabs"></div>
+<div class="template-grid" id="templateGrid"></div>
+</div>
+<div class="rpt-section">
+<h3>👁️ 模板预览</h3>
+<div class="template-preview" id="templatePreview"></div>
+</div>
+
+<div class="wf-foot-nav"><a href="alert-notification-system.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 预警通知</span></a><a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工具中心 →</span></a></div>
+</div></section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="real-time-dashboard.html">实时看板</a></li><li><a href="report-template-library.html">报表模板库</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script src="../assets/js/engagement.js"></script>
+<script>
+
+var RTL=(function(){
+'use strict';
+function $(id){return document.getElementById(id);}
+var scenes=[
+{id:'operations',icon:'📊',name:'运营报表'},
+{id:'finance',icon:'💰',name:'财务报表'},
+{id:'ads',icon:'📢',name:'广告报表'},
+{id:'inventory',icon:'📦',name:'库存报表'},
+{id:'cs',icon:'🎧',name:'客服报表'}
+];
+var templates={
+operations:[
+{icon:'📈',name:'每日运营日报',tag:'高频',desc:'每日核心运营数据汇总，含GMV/订单/转化/退货等',fields:['日期','GMV','订单数','客单价','转化率','退货率','广告费','ACoS','排名变化'],format:'CSV/Excel',preview:[['日期','GMV','订单数','转化率','ACoS'],['2026-07-12','$8,500','285','12.5%','24.3%'],['2026-07-11','$7,800','268','11.8%','25.1%'],['2026-07-10','$8,200','278','12.1%','23.8%']]},
+{icon:'📊',name:'周度运营周报',tag:'周报',desc:'每周运营数据汇总与环比分析，趋势可视化',fields:['周次','周GMV','周订单','均客单价','周转化','周退货','周广告','周ACoS','环比变化'],format:'Excel/PDF',preview:[['周次','周GMV','周订单','环比'],['W28','$58,500','1,985','+12.3%'],['W27','$52,100','1,780','+5.6%'],['W26','$49,300','1,690','-2.1%']]},
+{icon:'📋',name:'月度运营月报',tag:'月报',desc:'月度全维度运营分析，含目标达成率与趋势',fields:['月份','月GMV','月利润','利润率','月订单','月退货','月广告','达成率','YoY增长'],format:'Excel/PDF',preview:[['月份','月GMV','月利润','达成率'],['2026-06','$245,000','$52,800','102%'],['2026-05','$220,000','$45,600','98%'],['2026-04','$198,000','$40,200','95%']]}
+],
+finance:[
+{icon:'💰',name:'月度财务报表',tag:'核心',desc:'完整财务月报，含收入/成本/费用/利润全链路',fields:['月份','总收入','产品成本','物流费','平台费','广告费','退货损失','其他费用','净利润','利润率'],format:'Excel/PDF',preview:[['月份','总收入','总成本','净利润'],['2026-06','$245,000','$192,200','$52,800'],['2026-05','$220,000','$174,400','$45,600'],['2026-04','$198,000','$157,800','$40,200']]},
+{icon:'💵',name:'现金流报表',tag:'重要',desc:'现金流出入明细，应收应付与净现金流',fields:['日期','收入项','收入金额','支出项','支出金额','现金流方向','期末余额','备注'],format:'CSV/Excel',preview:[['日期','收入','支出','净流'],['07-12','$8,500','$3,200','+$5,300'],['07-11','$7,800','$2,800','+$5,000'],['07-10','$8,200','$4,100','+$4,100']]},
+{icon:'📈',name:'利润分析报表',tag:'分析',desc:'多维度利润分析，按SKU/品类/渠道拆解',fields:['SKU','品类','渠道','售价','成本','费用','毛利','毛利率','净利','净利率'],format:'Excel',preview:[['SKU','售价','成本','净利','净利率'],['PROD-A1','$29.99','$15.50','$8.20','27.3%'],['PROD-B2','$12.99','$5.20','$5.60','43.1%'],['PROD-C3','$39.99','$22.00','$10.50','26.3%']]}
+],
+ads:[
+{icon:'📢',name:'广告投放日报',tag:'高频',desc:'每日广告数据汇总，含各广告活动表现',fields:['日期','广告活动','展示量','点击量','CTR','CPC','花费','销售额','ACoS','ROAS'],format:'CSV/Excel',preview:[['活动','花费','销售额','ACoS'],['Brand Ads','$120','520','23.1%'],['Auto Ads','$85','280','30.4%'],['Exact Match','$180','750','24.0%']]},
+{icon:'🎯',name:'关键词表现报表',tag:'分析',desc:'关键词维度广告表现，含搜索词报告',fields:['关键词','匹配类型','展示量','点击量','CTR','CPC','花费','转化数','转化率','ACoS'],format:'Excel',preview:[['关键词','花费','转化','ACoS'],['bluetooth earbuds','$45','18','22.5%'],['wireless headphones','$38','15','24.1%'],['earbuds case','$22','8','27.5%']]},
+{icon:'📊',name:'广告ROI分析',tag:'决策',desc:'广告投入产出比分析，按产品/活动拆解',fields:['产品','广告投入','直接销售','间接销售','总销售','ROAS','ACoS','TACoS','利润贡献'],format:'Excel/PDF',preview:[['产品','广告费','总销售','ROAS'],['PROD-A1','$320','$1,500','4.7x'],['PROD-B2','$180','$680','3.8x'],['PROD-C3','$250','$950','3.8x']]}
+],
+inventory:[
+{icon:'📦',name:'库存盘点报表',tag:'核心',desc:'多仓库库存盘点，含在途/可用/滞销分析',fields:['SKU','产品名','仓库','总库存','在途库存','可售库存','库存天数','库存价值','滞销标记'],format:'Excel',preview:[['SKU','仓库','可售','天数','价值'],['PROD-A1','FBA-US','350','45','$5,425'],['PROD-B2','FBA-US','800','62','$4,160'],['PROD-C3','FBA-UK','120','28','$2,400']]},
+{icon:'🔄',name:'补货建议报表',tag:'预警',desc:'智能补货建议，含预计断货时间与建议量',fields:['SKU','当前库存','日均销量','可售天数','预计断货','建议补货量','紧急程度','预计到货'],format:'CSV/Excel',preview:[['SKU','可售天数','建议量','紧急'],['PROD-A1','45天','500','正常'],['PROD-C3','28天','300','紧急'],['PROD-D4','15天','800','加急']]},
+{icon:'⏰',name:'滞销库存报表',tag:'清理',desc:'滞销库存识别与清理建议，含库龄分析',fields:['SKU','产品名','入库日期','库龄天数','库存量','库存价值','周转率','建议方案','预计损失'],format:'Excel',preview:[['SKU','库龄','库存量','建议'],['PROD-X1','180天','200','$1,200','降价清仓'],['PROD-X2','150天','150','$900','Outlet'],['PROD-X3','120天','100','$500','批量处理']]}
+],
+cs:[
+{icon:'🎧',name:'客服绩效日报',tag:'高频',desc:'客服团队每日绩效，含响应时间与满意度',fields:['客服','接待量','首次响应','平均响应','解决率','满意度','退换货处理','差评挽回','在线时长'],format:'CSV/Excel',preview:[['客服','接待','响应','满意'],['张三','45','2.5min','96%'],['李四','38','3.1min','94%'],['王五','52','2.0min','98%']]},
+{icon:'💬',name:'客户反馈分析',tag:'分析',desc:'Review与Feedback分析，含情感与主题',fields:['日期','产品','评分','反馈类型','情感倾向','主题标签','处理状态','回复模板'],format:'Excel',preview:[['评分','数量','占比','趋势'],['5星','156','62%','↑'],['4星','45','18%','→'],['1星','18','7%','↓']]},
+{icon:'📋',name:'退换货统计报表',tag:'运营',desc:'退换货原因统计与趋势分析',fields:['月份','退货数','退货率','退货金额','主要原因','Top退货SKU','处理时效','挽回率','净损失'],format:'Excel/PDF',preview:[['月份','退货数','退货率','主要原因'],['2026-06','95','3.8%','尺寸不符'],['2026-05','88','3.5%','质量预期'],['2026-04','72','3.2%','物流损坏']]}
+]
+};
+var currentScene='operations';
+function renderTabs(){
+$('sceneTabs').innerHTML=scenes.map(function(s){
+return '<button class="scene-tab'+(s.id===currentScene?' active':'')+'" onclick="RTL.setScene(''+s.id+'')">'+s.icon+' '+s.name+'</button>';
+}).join('');
+}
+function renderGrid(){
+var tplList=templates[currentScene]||[];
+$('templateGrid').innerHTML=tplList.map(function(t,i){
+return '<div class="template-card" onclick="RTL.preview(''+currentScene+'','+i+')">'+
+'<div class="tc-header"><div class="tc-icon">'+t.icon+'</div><div class="tc-name">'+t.name+'</div><span class="tc-tag">'+t.tag+'</span></div>'+
+'<div class="tc-body"><div class="tc-desc">'+t.desc+'</div><div class="tc-fields">'+t.fields.map(function(f){return '<span>'+f+'</span>';}).join('')+'</div></div>'+
+'<div class="tc-footer"><span class="tc-use">点击预览 →</span><span class="tc-format">'+t.format+'</span></div></div>';
+}).join('');
+}
+function preview(scene,idx){
+var t=templates[scene][idx];
+var html='<h4>'+t.icon+' '+t.name+' - 预览</h4>';
+html+='<p style="font-size:12px;color:var(--muted);margin-bottom:12px">'+t.desc+'</p>';
+html+='<table class="preview-table">';
+t.preview.forEach(function(row,i){
+html+='<tr>';
+row.forEach(function(cell){html+=(i===0?'<th>':'<td>')+cell+'</th>';});
+html+='</tr>';
+});
+html+='</table>';
+html+='<div style="margin-top:12px;font-size:12px;color:var(--muted)">导出格式：'+t.format+' · 字段数：'+t.fields.length+'</div>';
+$('templatePreview').innerHTML=html;
+}
+function setScene(s){
+currentScene=s;
+renderTabs();
+renderGrid();
+}
+function init(){
+renderTabs();
+renderGrid();
+preview('operations',0);
+}
+return{setScene:setScene,preview:preview,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RTL.init);}else{RTL.init();}
+
+</script>
+</body>
+</html>

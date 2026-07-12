@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="直播复盘报告器：全维度数据汇总+改进建议+Action Item追踪，CSS复盘报告卡，改进清单，追踪看板。免费直播运营工具。">
+<meta name="keywords" content="直播复盘,复盘报告,Action Item,改进建议,追踪看板,直播运营,复盘清单">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-post-stream-debrief.html">
+<title>直播复盘报告器 - 全维度汇总·改进清单·Action追踪看板 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.report-card{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border-radius:16px;padding:28px;margin:20px 0;box-shadow:var(--shadow-lg)}
+.report-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.report-score{font-size:48px;font-weight:800;line-height:1}
+.report-grade{font-size:18px;font-weight:700;padding:6px 18px;border-radius:30px;background:rgba(255,255,255,.2)}
+.report-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px}
+.report-metric{background:rgba(255,255,255,.12);border-radius:10px;padding:14px;text-align:center}
+.report-metric .rm-val{font-size:22px;font-weight:800}
+.report-metric .rm-lbl{font-size:11px;opacity:.85;margin-top:2px}
+.dim-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.dim-name{width:100px;font-size:13px;font-weight:600;color:var(--ink-soft)}
+.dim-bar{flex:1;height:24px;background:var(--rule-light);border-radius:8px;overflow:hidden;position:relative}
+.dim-fill{height:100%;border-radius:8px;transition:width .5s}
+.dim-val{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:#fff;font-size:12px;font-weight:700}
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px}
+.kanban-col{background:var(--bg-soft);border-radius:12px;padding:16px;min-height:160px}
+.kanban-col h4{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.col-todo h4{color:#f59e0b}.col-doing h4{color:#3b82f6}.col-done h4{color:#10b981}
+.kanban-count{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:3px 10px;font-size:12px}
+.action-card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:12px;margin-bottom:10px;position:relative}
+.action-card:hover{box-shadow:var(--shadow-md)}
+.action-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;padding-right:50px}
+.action-meta{font-size:11px;color:var(--muted)}
+.action-priority{position:absolute;top:10px;right:10px;font-size:10px;padding:2px 8px;border-radius:6px;font-weight:600}
+.p-high{background:#fef2f2;color:#ef4444}.p-mid{background:#fffbeb;color:#f59e0b}.p-low{background:#ecfdf5;color:#10b981}
+.action-del{position:absolute;bottom:8px;right:8px;font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none}
+.improve-list{list-style:none;padding:0;margin:0}
+.improve-list li{padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.6}
+.improve-list li:last-child{border-bottom:none}
+.improve-list li::before{content:'⚡';position:absolute;left:0;top:10px}
+.btn-move{font-size:10px;padding:2px 6px;border-radius:5px;border:1px solid var(--rule);background:#fff;cursor:pointer;margin-right:4px;color:var(--ink-soft)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播复盘报告器","description":"全维度数据汇总+改进建议+Action Item追踪看板。","url":"https://juxin-consulting.help/tools/live-post-stream-debrief.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_post_stream_debrief">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📺</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="live-product-selection.html" class="step">直播选品</a><span class="arrow">›</span>
+      <a href="live-product-lineup.html" class="step">排品</a><span class="arrow">›</span>
+      <a href="live-script-generator.html" class="step">话术</a><span class="arrow">›</span>
+      <a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">›</span>
+      <a href="live-interaction-calc.html" class="step">互动计算</a><span class="arrow">›</span>
+      <a href="live-replay-analyzer.html" class="step">复盘分析</a><span class="arrow">›</span>
+      <a href="live-promo-text.html" class="step">促销文案</a><span class="arrow">›</span>
+      <a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">›</span>
+      <a href="live-competitor-analysis.html" class="step">竞品分析</a><span class="arrow">›</span>
+      <a href="live-checklist.html" class="step">直播清单</a><span class="arrow">›</span>
+      <a href="live-traffic-source-analyzer.html" class="step">流量来源</a><span class="arrow">›</span>
+      <a href="live-talent-manager.html" class="step">主播管理</a><span class="arrow">›</span>
+      <span class="step current">直播复盘</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📺 直播运营工具</span>
+      <h1>直播复盘<em>报告器</em></h1>
+      <p class="tool-hero-desc">全维度汇总直播数据生成复盘报告卡，自动诊断短板并输出改进清单，Action Item看板(待办/进行中/已完成)追踪改进落地，数据保存至本地。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 直播数据录入</h2>
+          <p class="calc-form-subtitle">填写本场直播核心数据，与目标对比生成复盘报告</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>直播场次名称</label><input type="text" id="sessionName" value="2026-07-10 美妆专场" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>直播时长 <span class="hint">(小时)</span></label><input type="number" id="duration" value="3.5" min="0" step="0.5" oninput="DEB.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>📊 核心指标(实际/目标)</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>GMV实际 <span class="hint">($)</span></label><input type="number" id="gmv" value="18000" min="0" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>GMV目标 <span class="hint">($)</span></label><input type="number" id="gmvTarget" value="20000" min="0" oninput="DEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>观看人数</label><input type="number" id="viewers" value="12000" min="0" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>观看目标</label><input type="number" id="viewersTarget" value="15000" min="0" oninput="DEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>最高在线</label><input type="number" id="peakOnline" value="850" min="0" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>平均在线</label><input type="number" id="avgOnline" value="420" min="0" oninput="DEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>订单数</label><input type="number" id="orders" value="520" min="0" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>客单价 <span class="hint">($)</span></label><input type="number" id="aov" value="34.6" min="0" step="0.1" oninput="DEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>新增粉丝</label><input type="number" id="newFans" value="320" min="0" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>互动数 <span class="hint">(赞+评+转)</span></label><input type="number" id="interactions" value="45000" min="0" oninput="DEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>退货率 <span class="hint">(%)</span></label><input type="number" id="returnRate" value="8" min="0" max="100" step="0.5" oninput="DEB.calc()"></div>
+            <div class="calc-field"><label>投放成本 <span class="hint">($)</span></label><input type="number" id="adCost" value="1200" min="0" oninput="DEB.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="reportSection">
+        <h3>📑 复盘报告卡</h3>
+        <div id="reportCard"></div>
+      </div>
+      <div class="section-block" id="dimSection">
+        <h3>📈 多维度达成率</h3>
+        <div id="dimChart"></div>
+      </div>
+      <div class="section-block" id="improveSection">
+        <h3>⚡ 改进清单</h3>
+        <ul class="improve-list" id="improveList"></ul>
+      </div>
+      <div class="section-block" id="actionSection">
+        <h3>🗂️ Action Item 追踪看板</h3>
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <input type="text" id="newAction" placeholder="新建Action Item..." style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px">
+          <select id="newPriority" style="padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px"><option value="high">高优先级</option><option value="mid">中优先级</option><option value="low">低优先级</option></select>
+          <button class="btn-calc" style="padding:10px 20px" onclick="DEB.addAction()">+ 添加</button>
+        </div>
+        <div class="kanban" id="kanban"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="live-talent-manager.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 主播管理</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-post-stream-debrief.html">直播复盘报告器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var DEB=(function(){
+  'use strict';
+  var KEY='jx_live_actions';
+  var actions=[];
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function v(id){return $(id).value;}
+  function calc(){
+    var gmv=num('gmv'),gmvT=num('gmvTarget'),viewers=num('viewers'),viewersT=num('viewersTarget');
+    var orders=num('orders'),aov=num('aov'),interactions=num('interactions'),newFans=num('newFans');
+    var peak=num('peakOnline'),avg=num('avgOnline'),dur=num('duration'),returnR=num('returnRate')/100,adCost=num('adCost');
+    var cvr=viewers>0?orders/viewers:0;
+    var interactRate=viewers>0?interactions/viewers:0;
+    var netGmv=gmv*(1-returnR);
+    var roi=adCost>0?(gmv-adCost)/adCost:0;
+    var stickiness=viewers>0?avg/viewers:0;
+    var dims=[
+      {name:'GMV达成',rate:gmvT>0?gmv/gmvT:1},
+      {name:'流量达成',rate:viewersT>0?viewers/viewersT:1},
+      {name:'转化率',rate:cvr/0.05},
+      {name:'互动率',rate:interactRate/3},
+      {name:'粉丝沉淀',rate:newFans/300},
+      {name:'用户粘性',rate:stickiness/0.05},
+      {name:'退货控制',rate:(1-returnR)/(1-0.05)},
+      {name:'投放ROI',rate:roi/3}
+    ];
+    var score=dims.reduce(function(s,d){return s+Math.min(1,d.rate);},0)/dims.length*100;
+    renderResult(gmv,netGmv,cvRToP(cvr),roi,score);
+    renderReport(score,gmv,viewers,orders,aov,cvr,roi,newFans,returnR);
+    renderDims(dims);
+    renderImprove(dims,gmv,viewers,cvr,returnR,roi);
+  }
+  function cvRToP(r){return r;}
+  function renderResult(gmv,net,cvR,roi,score){
+    var grade=score>=85?'S':score>=70?'A':score>=55?'B':score>=40?'C':'D';
+    var col=score>=70?'#10b981':score>=55?'#f59e0b':'#ef4444';
+    $('resultCard').innerHTML='<h3>📊 复盘总览</h3>'+
+      '<div style="text-align:center;margin:16px 0"><div style="font-size:14px;color:var(--muted)">综合评分</div><div style="font-size:48px;font-weight:800;color:'+col+'">'+score.toFixed(0)+'</div><span style="display:inline-block;padding:6px 20px;border-radius:30px;background:'+col+';color:#fff;font-weight:700">'+grade+' 级</span></div>'+
+      '<div class="result-note">💡 综合评分由8个维度达成率加权计算。≥85为S级优秀，70-84为A级良好，55-69为B级待提升，<55需重点改进。</div>';
+  }
+  function renderReport(score,gmv,viewers,orders,aov,cvr,roi,newFans,returnR){
+    var grade=score>=85?'S':score>=70?'A':score>=55?'B':score>=40?'C':'D';
+    $('reportCard').innerHTML='<div class="report-card"><div class="report-head"><div><div style="font-size:13px;opacity:.85">复盘报告</div><div style="font-size:20px;font-weight:700">'+v('sessionName')+'</div></div><div style="text-align:right"><div class="report-score">'+score.toFixed(0)+'</div><span class="report-grade">'+grade+' 级复盘</span></div></div>'+
+      '<div class="report-metrics">'+
+      '<div class="report-metric"><div class="rm-val">$'+gmv.toLocaleString()+'</div><div class="rm-lbl">GMV</div></div>'+
+      '<div class="report-metric"><div class="rm-val">'+viewers.toLocaleString()+'</div><div class="rm-lbl">观看人数</div></div>'+
+      '<div class="report-metric"><div class="rm-val">'+orders+'</div><div class="rm-lbl">订单数</div></div>'+
+      '<div class="report-metric"><div class="rm-val">$'+aov.toFixed(1)+'</div><div class="rm-lbl">客单价</div></div>'+
+      '<div class="report-metric"><div class="rm-val">'+(cvr*100).toFixed(1)+'%</div><div class="rm-lbl">转化率</div></div>'+
+      '<div class="report-metric"><div class="rm-val">'+roi.toFixed(1)+'x</div><div class="rm-lbl">投放ROI</div></div>'+
+      '<div class="report-metric"><div class="rm-val">'+newFans+'</div><div class="rm-lbl">新增粉丝</div></div>'+
+      '<div class="report-metric"><div class="rm-val">'+(returnR*100).toFixed(0)+'%</div><div class="rm-lbl">退货率</div></div>'+
+      '</div></div>';
+  }
+  function renderDims(dims){
+    $('dimChart').innerHTML=dims.map(function(d){
+      var pct=Math.min(100,d.rate*100);
+      var col=d.rate>=1?'#10b981':d.rate>=0.7?'#f59e0b':'#ef4444';
+      return '<div class="dim-row"><div class="dim-name">'+d.name+'</div><div class="dim-bar"><div class="dim-fill" style="width:'+pct+'%;background:'+col+'"></div><div class="dim-val" style="color:'+(pct>30?'#fff':col)+'">'+pct.toFixed(0)+'%</div></div></div>';
+    }).join('');
+  }
+  function renderImprove(dims,gmv,viewers,cvr,returnR,roi){
+    var tips=[];
+    if(dims[0].rate<1)tips.push('GMV未达标('+(dims[0].rate*100).toFixed(0)+'%)，需提升客单价或订单量，建议增加高毛利爆品排品。');
+    if(dims[1].rate<1)tips.push('流量未达标，优化直播间封面/标题与开播时段，加大预热引流。');
+    if(dims[2].rate<1)tips.push('转化率偏低('+(cvr*100).toFixed(1)+'%)，加强话术促单与限时福利，优化商品讲解节奏。');
+    if(dims[3].rate<1)tips.push('互动率不足，增加抽奖/福袋/提问互动环节提升观众参与。');
+    if(dims[4].rate<1)tips.push('粉丝沉淀偏少，设置关注领券/粉丝专属价引导关注。');
+    if(dims[6].rate<1)tips.push('退货率'+(returnR*100).toFixed(0)+'%偏高，核查产品与描述一致性，加强预期管理。');
+    if(dims[7].rate<1)tips.push('投放ROI仅'+roi.toFixed(1)+'x，优化人群定向与素材，暂停低效计划。');
+    if(!tips.length)tips.push('各维度均达标，本场表现优秀！可总结成功要素形成SOP复用。');
+    tips.push('建议将关键改进项加入下方Action Item看板追踪落实。');
+    $('improveList').innerHTML=tips.map(function(t){return '<li>'+t+'</li>';}).join('');
+  }
+  function loadActions(){try{var s=localStorage.getItem(KEY);if(s)actions=JSON.parse(s)||[];}catch(e){actions=[];}if(!actions.length){actions=[{t:'优化高毛利爆品排品',p:'high',s:'todo'},{t:'增加福袋抽奖互动环节',p:'mid',s:'todo'},{t:'设置关注领券引导',p:'mid',s:'doing'},{t:'核查产品描述一致性',p:'high',s:'todo'}];saveActions();}}
+  function saveActions(){try{localStorage.setItem(KEY,JSON.stringify(actions));}catch(e){}}
+  function addAction(){var t=v('newAction');if(!t)return;actions.push({t:t,p:v('newPriority'),s:'todo'});$('newAction').value='';saveActions();renderKanban();}
+  function moveAction(i,s){actions[i].s=s;saveActions();renderKanban();}
+  function delAction(i){actions.splice(i,1);saveActions();renderKanban();}
+  function renderKanban(){
+    var cols=[{k:'todo',n:'待办',cls:'col-todo'},{k:'doing',n:'进行中',cls:'col-doing'},{k:'done',n:'已完成',cls:'col-done'}];
+    $('kanban').innerHTML=cols.map(function(c){
+      var items=actions.filter(function(a,i){return a.s===c.k;});
+      return '<div class="kanban-col '+c.cls+'"><h4>'+c.n+' <span class="kanban-count">'+items.length+'</span></h4>'+
+        items.map(function(a){var idx=actions.indexOf(a);var pLabel={high:'高',mid:'中',low:'低'}[a.p];var moves=a.s==='todo'?'<button class="btn-move" onclick="DEB.moveAction('+idx+',\'doing\')">▶开始</button>':a.s==='doing'?'<button class="btn-move" onclick="DEB.moveAction('+idx+',\'done\')">✓完成</button><button class="btn-move" onclick="DEB.moveAction('+idx+',\'todo\')">◀退回</button>':'<button class="btn-move" onclick="DEB.moveAction('+idx+',\'doing\')">↺重开</button>';return '<div class="action-card"><div class="action-title">'+a.t+'</div><div class="action-meta">'+moves+'</div><span class="action-priority p-'+a.p+'">'+pLabel+'</span><button class="action-del" onclick="DEB.delAction('+idx+')">删除</button></div>';}).join('')||'<p style="font-size:12px;color:var(--muted-light);text-align:center;padding:20px 0">暂无</p>'+
+      '</div>';
+    }).join('');
+  }
+  function init(){loadActions();calc();renderKanban();}
+  return{calc:calc,addAction:addAction,moveAction:moveAction,delAction:delAction,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',DEB.init);}else{DEB.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

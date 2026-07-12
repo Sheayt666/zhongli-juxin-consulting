@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="多店角色权限管理器：跨店铺功能授权+数据隔离+操作审计+权限矩阵，CSS权限表可视化，跨境卖家多店铺团队管理工具。">
+<title>多店角色权限管理器 - 跨店授权数据隔离操作审计 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.perm-table{width:100%;border-collapse:collapse;font-size:12px}
+.perm-table th{padding:8px 6px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:11px;position:sticky;top:0}
+.perm-table th:first-child{text-align:left;padding-left:12px;min-width:120px}
+.perm-table td{padding:8px 6px;border-bottom:1px solid var(--rule-light);text-align:center}
+.perm-table td:first-child{text-align:left;padding-left:12px;font-weight:600;color:var(--ink-soft);font-size:12px}
+.perm-yes{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:#ecfdf5;color:#059669;font-size:14px;font-weight:700}
+.perm-no{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:14px;font-weight:700}
+.perm-readonly{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:#fffbeb;color:#d97706;font-size:11px;font-weight:700}
+.perm-toggle{cursor:pointer;transition:all .15s}.perm-toggle:hover{transform:scale(1.15)}
+.role-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.role-tab{padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+.role-tab.active{border-color:#4f46e5;background:#4f46e5;color:#fff;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.audit-log{max-height:360px;overflow-y:auto;border:1px solid var(--rule);border-radius:12px}
+.audit-row{display:grid;grid-template-columns:120px 80px 1fr 100px;gap:12px;padding:10px 16px;border-bottom:1px solid var(--rule-light);font-size:13px;align-items:center}
+.audit-row:last-child{border-bottom:none}
+.audit-row:hover{background:var(--bg-soft)}
+.audit-time{color:var(--muted);font-size:12px}
+.audit-user{font-weight:600;color:#4f46e5}
+.audit-action{color:var(--ink-soft)}
+.audit-level{font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px;text-align:center}
+.audit-high{background:#fef2f2;color:#dc2626}
+.audit-mid{background:#fffbeb;color:#d97706}
+.audit-low{background:#ecfdf5;color:#059669}
+.iso-card{padding:16px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px}
+.iso-card.warn{border-color:#fde68a;background:#fffbeb}
+.iso-card.ok{border-color:#a7f3d0;background:#ecfdf5}
+.iso-card h4{font-size:14px;font-weight:700;margin:0 0 4px}
+.iso-card p{font-size:12px;color:var(--muted);margin:0}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.audit-row{grid-template-columns:1fr;gap:4px}.perm-table{font-size:10px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W38 多店铺管理工作流</div><div class="workflow-steps">
+  <a href="multi-store-dashboard.html" class="workflow-step">综合看板</a>
+  <a href="store-performance-comparison.html" class="workflow-step">绩效对比</a>
+  <a href="cross-store-inventory.html" class="workflow-step">跨店库存</a>
+  <a href="unified-profit-report.html" class="workflow-step">统一利润</a>
+  <a href="store-segmentation-matrix.html" class="workflow-step">店铺分层</a>
+  <a href="multi-store-sku-mapper.html" class="workflow-step">SKU映射</a>
+  <a href="region-performance-analyzer.html" class="workflow-step">区域绩效</a>
+  <a href="store-launch-checklist.html" class="workflow-step">上线清单</a>
+  <a href="multi-store-risk-monitor.html" class="workflow-step">风险监控</a>
+  <a href="centralized-listing-manager.html" class="workflow-step">Listing管理</a>
+  <a href="cross-store-ad-allocator.html" class="workflow-step">广告分配</a>
+  <a href="multi-store-role-permission.html" class="workflow-step active">角色权限</a>
+  <a href="global-expansion-planner.html" class="workflow-step">全球开店</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W38 多店铺管理</a><span class="sep">›</span><span class="current">多店角色权限管理器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔐</span>多店角色权限管理器 Multi-Store Role Permission</h1>
+  <p>跨店铺功能授权管理，RBAC角色权限矩阵，数据隔离策略配置，操作审计日志追踪，CSS权限表可视化各角色在各店铺的操作权限。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">已配置角色</div><div class="mc-value" id="mRoles">0</div></div>
+    <div class="metric-card success"><div class="mc-label">已授权用户</div><div class="mc-value" id="mUsers">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">跨店操作</div><div class="mc-value" id="mCross">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">高危操作</div><div class="mc-value" id="mHigh">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>👥 团队配置</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>团队总人数</label><input type="number" id="teamSize" value="12" min="1" oninput="MRP.calc()"></div>
+      <div class="jx-field"><label>管理店铺数</label><input type="number" id="storeCount" value="4" min="1" oninput="MRP.calc()"></div>
+      <div class="jx-field"><label>数据隔离级别</label><select id="isoLevel" onchange="MRP.calc()"><option value="strict">严格隔离</option><option value="standard">标准隔离</option><option value="relaxed">宽松共享</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 权限矩阵 — 角色功能授权</h2>
+    <div class="role-tabs" id="roleTabs"></div>
+    <div style="overflow-x:auto"><table class="perm-table" id="permTable"></table></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px">点击单元格切换权限：拥有 → 只读 → 无权限。绿色=拥有，黄色=只读，红色=无权限。</p>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏪 数据隔离策略</h2>
+    <div id="isoList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📜 操作审计日志</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">最近24小时跨店操作记录，按风险等级标记</p>
+    <div class="audit-log" id="auditLog"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 权限管理建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="multi-store-dashboard.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>多店看板</h5><p>综合看板</p></div></a>
+      <a href="multi-store-risk-monitor.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>风险监控</h5><p>多店风险</p></div></a>
+      <a href="store-launch-checklist.html" class="rt-card"><div class="rt-icon">🚀</div><div><h5>上线清单</h5><p>开店检查</p></div></a>
+      <a href="centralized-listing-manager.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>Listing管理</h5><p>集中管理</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="multi-store-role-permission.html">角色权限</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var MRP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseInt($(id).value)||0}
+
+  var ROLES=[
+    {id:'admin',name:'超级管理员',color:'#4f46e5',count:1},
+    {id:'ops',name:'运营经理',color:'#10b981',count:3},
+    {id:'ad',name:'广告专员',color:'#f59e0b',count:4},
+    {id:'cs',name:'客服代表',color:'#06b6d4',count:4}
+  ];
+  var MODULES=['Listing编辑','价格调整','广告管理','库存调拨','订单处理','退款审批','报表查看','导出数据','账号设置','权限管理'];
+  var STORES=['美国站','英国站','德国站','日本站'];
+
+  //权限矩阵 [角色][模块] 0=无 1=只读 2=拥有
+  var perms={
+    admin:[2,2,2,2,2,2,2,2,2,2],
+    ops:[2,2,2,2,2,1,2,2,1,0],
+    ad:[0,1,2,0,1,0,2,1,0,0],
+    cs:[1,0,0,0,2,2,1,0,0,0]
+  };
+  var currentRole='admin';
+
+  //审计日志
+  var AUDIT=[
+    {time:'2026-07-12 14:32',user:'admin@jx',action:'修改美国站广告预算 $20,000 → $25,000',level:'high'},
+    {time:'2026-07-12 13:15',user:'ops_zhang@jx',action:'批量调整英国站3个SKU价格',level:'mid'},
+    {time:'2026-07-12 12:08',user:'ad_li@jx',action:'创建德国站新广告活动 "Q3-Promotion"',level:'low'},
+    {time:'2026-07-12 11:45',user:'cs_wang@jx',action:'处理日本站退款订单 #AMZ-88291',level:'low'},
+    {time:'2026-07-12 10:30',user:'admin@jx',action:'授权新用户 ad_chen@jx 广告专员角色',level:'high'},
+    {time:'2026-07-12 09:20',user:'ops_liu@jx',action:'跨店调拨库存 US→UK 200件',level:'mid'},
+    {time:'2026-07-12 08:55',user:'ad_li@jx',action:'查看美国站广告报表（只读）',level:'low'},
+    {time:'2026-07-11 18:40',user:'admin@jx',action:'修改客服代表角色权限：增加退款审批',level:'high'},
+    {time:'2026-07-11 16:22',user:'ops_zhang@jx',action:'编辑德国站Listing文案（3个ASIN）',level:'mid'},
+    {time:'2026-07-11 15:10',user:'cs_wang@jx',action:'回复日本站客户消息15条',level:'low'}
+  ];
+
+  function calc(){
+    var team=num('teamSize'),stores=num('storeCount');
+    var totalUsers=ROLES.reduce(function(a,r){return a+r.count},0);
+    var crossOps=AUDIT.filter(function(a){return a.level==='mid'||a.level==='high'}).length;
+    var highOps=AUDIT.filter(function(a){return a.level==='high'}).length;
+    $('mRoles').textContent=ROLES.length;
+    $('mUsers').textContent=totalUsers;
+    $('mCross').textContent=crossOps;
+    $('mHigh').textContent=highOps;
+    renderRoleTabs();
+    renderPermTable();
+    renderIso(stores);
+    renderAudit();
+    renderTips(team,stores,totalUsers,highOps);
+    save();
+  }
+
+  function renderRoleTabs(){
+    var h='';
+    ROLES.forEach(function(r){
+      h+='<div class="role-tab'+(r.id===currentRole?' active':'')+'" style="'+(r.id===currentRole?'background:'+r.color+';border-color:'+r.color:'')+'" onclick="MRP.switchRole(\''+r.id+'\')">'+r.name+' ('+r.count+')</div>';
+    });
+    $('roleTabs').innerHTML=h;
+  }
+
+  function renderPermTable(){
+    var stores=STORES.slice(0,num('storeCount'));
+    var h='<thead><tr><th>功能模块</th>';
+    stores.forEach(function(s){h+='<th>'+s+'</th>'});
+    h+='</tr></thead><tbody>';
+    MODULES.forEach(function(m,mi){
+      h+='<tr><td>'+m+'</td>';
+      stores.forEach(function(s,si){
+        var v=perms[currentRole][mi];
+        var icon,cls;
+        if(v===2){icon='✓';cls='perm-yes'}
+        else if(v===1){icon='R';cls='perm-readonly'}
+        else{icon='✕';cls='perm-no'}
+        h+='<td><span class="'+cls+' perm-toggle" onclick="MRP.togglePerm('+mi+')">'+icon+'</span></td>';
+      });
+      h+='</tr>';
+    });
+    h+='</tbody>';
+    $('permTable').innerHTML=h;
+  }
+
+  function renderIso(stores){
+    var isoLevel=$('isoLevel').value;
+    var items=[];
+    if(isoLevel==='strict'){
+      items.push({type:'ok',title:'严格数据隔离模式',desc:'各店铺数据完全隔离，用户仅能访问被授权店铺的数据，跨店操作需二次审批'});
+      items.push({type:'ok',title:'财务数据隔离',desc:'各店铺利润/成本数据独立存储，仅超级管理员可查看统一报表'});
+      items.push({type:'warn',title:'库存调拨需审批',desc:'跨店库存调拨需运营经理以上审批，自动记录调拨日志'});
+    }else if(isoLevel==='standard'){
+      items.push({type:'ok',title:'标准数据隔离模式',desc:'运营数据按店铺隔离，报表数据可跨店查看，敏感操作需审批'});
+      items.push({type:'warn',title:'部分数据共享',desc:'Listing模板和广告素材可跨店共享，但价格和库存数据隔离'});
+      items.push({type:'warn',title:'客服统一处理',desc:'客服代表可处理所有店铺订单，但退款审批按店铺隔离'});
+    }else{
+      items.push({type:'warn',title:'宽松共享模式',desc:'大部分数据跨店共享，仅账号设置和权限管理隔离'});
+      items.push({type:'warn',title:'注意数据安全',desc:'建议至少对财务和权限数据进行隔离，避免数据泄露风险'});
+    }
+    items.push({type:'ok',title:'操作审计已启用',desc:'所有跨店操作自动记录日志，高危操作实时告警，日志保留90天'});
+    var h='';
+    items.forEach(function(it){
+      h+='<div class="iso-card '+it.type+'"><h4>'+it.title+'</h4><p>'+it.desc+'</p></div>';
+    });
+    $('isoList').innerHTML=h;
+  }
+
+  function renderAudit(){
+    var h='';
+    AUDIT.forEach(function(a){
+      h+='<div class="audit-row"><div class="audit-time">'+a.time+'</div><div class="audit-user">'+a.user+'</div><div class="audit-action">'+a.action+'</div><div class="audit-level audit-'+a.level+'">'+(a.level==='high'?'高危':a.level==='mid'?'中等':'常规')+'</div></div>';
+    });
+    $('auditLog').innerHTML=h;
+  }
+
+  function renderTips(team,stores,users,high){
+    var tips=[];
+    tips.push('当前团队 '+team+' 人，管理 '+stores+' 个店铺，配置 '+ROLES.length+' 个角色，共授权 '+users+' 个用户账号。');
+    tips.push('采用RBAC（基于角色的访问控制）模型，角色权限按模块×店铺授权，最小权限原则：每个角色仅授予完成工作所需的最低权限。');
+    if(high>0)tips.push('过去24小时有 '+high+' 次高危操作（预算修改/权限变更），建议复核操作记录确认合规。');
+    tips.push('超级管理员仅保留1人，运营经理可管理日常运营但不可修改权限，广告专员仅可操作广告模块，客服代表仅可处理订单和退款。');
+    tips.push('数据隔离建议：财务数据严格隔离（仅管理员可见），运营数据标准隔离（按店铺授权），公共素材（Listing模板/广告素材）可共享。');
+    tips.push('操作审计日志保留90天，高危操作（预算变更/权限修改/库存调拨）实时告警，定期审计确保权限分配合理。');
+    tips.push('建议每季度进行一次权限复核，清理离职用户账号，调整角色权限变化，确保权限矩阵与实际业务需求一致。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function switchRole(id){currentRole=id;renderRoleTabs();renderPermTable()}
+  function togglePerm(mi){
+    var v=perms[currentRole][mi];
+    perms[currentRole][mi]=(v+1)%3;
+    renderPermTable();
+    save();
+  }
+
+  function save(){try{localStorage.setItem('jx_mrp_data',JSON.stringify({teamSize:num('teamSize'),storeCount:num('storeCount'),isoLevel:$('isoLevel').value,perms:perms,currentRole:currentRole}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_mrp_data'));if(d){['teamSize','storeCount'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]});if(d.isoLevel)$('isoLevel').value=d.isoLevel;if(d.perms)perms=d.perms;if(d.currentRole)currentRole=d.currentRole}}catch(e){}}
+  return {calc:calc,switchRole:switchRole,togglePerm:togglePerm,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MRP.init)}else{MRP.init()}
+</script>
+</body>
+</html>

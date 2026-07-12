@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="买家站内信管理器：统一收件箱，模板库，SLA响应时效追踪，CSS消息看板，localStorage保存消息数据。">
+<title>买家站内信管理器 - 消息收发与SLA追踪工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.msg-board{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-top:16px}
+.msg-list-panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);overflow:hidden}
+.msg-list-header{padding:14px 16px;background:var(--accent-bg);border-bottom:1px solid var(--rule);font-size:14px;font-weight:700;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
+.msg-item{padding:12px 16px;border-bottom:1px solid var(--rule-light);cursor:pointer;transition:background .15s;position:relative}
+.msg-item:hover{background:var(--bg-soft)}
+.msg-item.active{background:var(--accent-bg);border-left:3px solid var(--accent)}
+.msg-item.unread::after{content:'';position:absolute;top:14px;right:14px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.msg-item .mi-subject{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:16px}
+.msg-item .mi-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-item .mi-meta{font-size:11px;color:var(--muted-light);margin-top:4px;display:flex;justify-content:space-between}
+.msg-item .mi-sla{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
+.msg-item .mi-sla.urgent{background:var(--red-bg);color:var(--red)}
+.msg-item .mi-sla.warning{background:var(--gold-bg);color:var(--gold)}
+.msg-item .mi-sla.ok{background:var(--green-bg);color:var(--green)}
+.msg-detail-panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:24px}
+.msg-detail-header{padding-bottom:14px;border-bottom:1px solid var(--rule-light);margin-bottom:16px}
+.msg-detail-header h4{font-size:16px;font-weight:700;margin-bottom:4px}
+.msg-detail-meta{font-size:12px;color:var(--muted);display:flex;gap:16px}
+.msg-body{font-size:14px;color:var(--ink-soft);line-height:1.8;padding:16px;background:var(--bg-soft);border-radius:var(--radius-sm);margin-bottom:16px}
+.template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:12px}
+.template-chip{padding:10px 12px;background:var(--accent-bg);border:1px solid #c7d2fe;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;transition:all .15s;color:var(--accent)}
+.template-chip:hover{background:var(--accent);color:#fff}
+.sla-tracker{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.sla-card{padding:14px;border-radius:var(--radius-md);text-align:center}
+.sla-card.urgent{background:var(--red-bg);border:1px solid #fecaca}
+.sla-card.warning{background:var(--gold-bg);border:1px solid #fde68a}
+.sla-card.ok{background:var(--green-bg);border:1px solid #d1fae5}
+.sla-card.normal{background:var(--bg-soft);border:1px solid var(--rule-light)}
+.sla-card .sla-num{font-size:22px;font-weight:800}
+.sla-card .sla-label{font-size:11px;color:var(--muted);margin-top:2px}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">买家站内信管理器</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📨 客户运营工具</span><h1>买家站内信<em>管理器</em></h1><p class="tool-hero-desc">统一管理买家消息，快速回复模板库，SLA响应时效追踪，CSS消息看板</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">👥</span><span class="workflow-name">客户运营工作流</span></div><div class="workflow-nav-steps"><a href="variation-strategy.html" class="step">变体策略</a><span class="arrow">→</span><a href="listing-split-test.html" class="step">Listing测试</a><span class="arrow">→</span><a href="refund-rate-calculator.html" class="step">退款率</a><span class="arrow">→</span><a href="customer-ltv.html" class="step">客户LTV</a><span class="arrow">→</span><a href="review-response-generator.html" class="step">评论回复</a><span class="arrow">→</span><a href="review-request-automation.html" class="step">索评自动化</a><span class="arrow">→</span><a href="negative-review-alert-system.html" class="step">差评预警</a><span class="arrow">→</span><a href="buyer-message-manager.html" class="step current">站内信</a><span class="arrow">→</span><a href="feedback-management-system.html" class="step">Feedback管理</a><span class="arrow">→</span><a href="customer-journey-mapper.html" class="step">客户旅程</a><span class="arrow">→</span><a href="review-velocity-tracker.html" class="step">评论增速</a><span class="arrow">→</span><a href="post-purchase-engagement.html" class="step">购后互动</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>📨 买家站内信管理</h2>
+<div class="form-group"><label>消息列表 (每行: 买家ID,主题,内容,日期,状态)</label><textarea id="msgData" rows="8" oninput="renderMessages()">buyer001,物流咨询,请问什么时候发货？,2026-07-11,unread
+buyer002,退货申请,商品有瑕疵想退货,2026-07-10,unread
+buyer003,产品咨询,请问支持快充吗？,2026-07-09,read
+buyer004,物流咨询,已经3天了还没物流信息,2026-07-08,unread
+buyer005,好评感谢,产品质量很好非常满意,2026-07-07,read
+buyer006,退货申请,尺寸不合适,2026-07-06,replied</textarea></div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="negative-review-alert-system.html" class="related-card"><span class="ricon">🚨</span><span class="rtext">差评预警系统</span></a><a href="feedback-management-system.html" class="related-card"><span class="ricon">📊</span><span class="rtext">Feedback管理</span></a><a href="review-request-automation.html" class="related-card"><span class="ricon">⭐</span><span class="rtext">索评自动化</span></a><a href="review-response-generator.html" class="related-card"><span class="ricon">💬</span><span class="rtext">评论回复生成</span></a><a href="post-purchase-engagement.html" class="related-card"><span class="ricon">🎁</span><span class="rtext">购后互动引擎</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+var TEMPLATES={
+'物流咨询-发货中':'感谢您的咨询！您的订单已于今日发出，预计3-5个工作日送达。物流单号将在24小时内更新，您可在订单页面查看实时物流信息。',
+'物流咨询-延迟':'非常抱歉给您带来不便！经查询您的订单因物流高峰略有延迟，我们已加急处理，预计1-2天内更新物流信息。如有疑问随时联系我们。',
+'退货申请-同意':'我们非常抱歉商品未能满足您的期望。已为您发起退货流程，请在订单页面申请退货，退款将在收到退货后1-2个工作日内处理。',
+'退货申请-协商':'很抱歉给您带来不好的体验。能否提供产品问题的照片？我们将为您提供换货或部分退款方案，期待您的回复。',
+'产品咨询':'感谢您的关注！'+ '如有其他问题欢迎随时咨询，我们将竭诚为您服务。',
+'好评感谢':'非常感谢您的支持与认可！您的满意是我们最大的动力。欢迎关注我们的店铺获取更多新品和优惠信息。'
+};
+function renderMessages(){
+var msgText=document.getElementById('msgData').value.trim();
+if(!msgText){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">📨</div><p>输入消息列表<br>管理买家站内信</p></div>';return;}
+var messages=[];
+msgText.split('\n').forEach(function(line){
+line=line.trim();
+if(!line)return;
+var parts=line.split(',');
+if(parts.length>=5){
+messages.push({buyerId:parts[0].trim(),subject:parts[1].trim(),content:parts.slice(2,parts.length-2).join(',').trim(),date:parts[parts.length-2].trim(),status:parts[parts.length-1].trim()});
+}
+});
+if(messages.length===0){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">📨</div><p>输入消息列表<br>管理买家站内信</p></div>';return;}
+var today=new Date('2026-07-12');
+var unreadCount=messages.filter(function(m){return m.status==='unread';}).length;
+var repliedCount=messages.filter(function(m){return m.status==='replied';}).length;
+var urgentCount=0,warningCount=0,okCount=0;
+messages.forEach(function(m){
+var hours=Math.floor((today-new Date(m.date))/(1000*60*60));
+if(m.status==='unread'){
+if(hours>=48)urgentCount++;
+else if(hours>=24)warningCount++;
+else okCount++;
+}
+});
+var avgResponse='4h';
+var html='<div class="result-card"><h3 style="font-size:18px;font-weight:700;margin-bottom:16px">📨 消息看板概览</h3>';
+html+='<div class="sla-tracker">';
+html+='<div class="sla-card urgent"><div class="sla-num" style="color:var(--red)">'+urgentCount+'</div><div class="sla-label">超时(>48h)</div></div>';
+html+='<div class="sla-card warning"><div class="sla-num" style="color:var(--gold)">'+warningCount+'</div><div class="sla-label">预警(24-48h)</div></div>';
+html+='<div class="sla-card ok"><div class="sla-num" style="color:var(--green)">'+okCount+'</div><div class="sla-label">正常(<24h)</div></div>';
+html+='<div class="sla-card normal"><div class="sla-num" style="color:var(--accent)">'+repliedCount+'</div><div class="sla-label">已回复</div></div>';
+html+='</div>';
+html+='<div class="msg-board">';
+html+='<div class="msg-list-panel"><div class="msg-list-header">收件箱 ('+messages.length+') <span style="font-size:12px">未读 '+unreadCount+'</span></div>';
+messages.forEach(function(m,i){
+var hours=Math.floor((today-new Date(m.date))/(1000*60*60));
+var slaClass=m.status==='unread'?(hours>=48?'urgent':hours>=24?'warning':'ok'):'ok';
+var slaText=m.status==='unread'?(hours>=48?'超时':hours>=24?'预警':hours+'h'):'已回复';
+html+='<div class="msg-item '+(m.status==='unread'?'unread':'')+(i===0?' active':'')+'" onclick="selectMsg('+i+')">';
+html+='<div class="mi-subject">'+m.subject+'</div>';
+html+='<div class="mi-preview">'+m.content.substring(0,40)+'</div>';
+html+='<div class="mi-meta"><span>'+m.buyerId+' · '+m.date+'</span><span class="mi-sla '+slaClass+'">'+slaText+'</span></div>';
+html+='</div>';
+});
+html+='</div>';
+html+='<div class="msg-detail-panel" id="msgDetail">';
+html+='<div class="msg-detail-header"><h4>'+messages[0].subject+'</h4>';
+html+='<div class="msg-detail-meta"><span>买家: '+messages[0].buyerId+'</span><span>日期: '+messages[0].date+'</span><span>状态: '+(messages[0].status==='unread'?'未读':messages[0].status==='read'?'已读':'已回复')+'</span></div></div>';
+html+='<div class="msg-body">'+messages[0].content+'</div>';
+html+='<h4 style="font-size:14px;font-weight:600;margin-bottom:8px">📋 快速回复模板</h4>';
+html+='<div class="template-grid">';
+var matchedTemplates=Object.keys(TEMPLATES).filter(function(t){return t.indexOf(messages[0].subject)>-1;});
+if(matchedTemplates.length===0)matchedTemplates=Object.keys(TEMPLATES);
+matchedTemplates.forEach(function(t){
+html+='<div class="template-chip" onclick="useTemplate(\''+t.replace(/'/g,"\\'")+'\')">'+t+'</div>';
+});
+html+='</div>';
+html+='<div style="margin-top:16px"><textarea placeholder="选择模板或输入回复内容..." style="width:100%;padding:12px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;min-height:80px" id="replyBox"></textarea>';
+html+='<button onclick="sendReply()" style="margin-top:8px;padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer">发送回复</button></div>';
+html+='</div>';
+html+='</div>';
+html+='<div style="margin-top:16px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);font-size:13px;color:var(--muted)">💡 SLA建议：24小时内回复所有消息，48小时为最大时限。超时消息将影响账户健康度。使用模板可提升回复效率，但建议根据具体情况个性化修改。</div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var saved=JSON.parse(localStorage.getItem('jx_msg_manager')||'{}');
+saved.lastView=Date.now();
+saved.total=messages.length;
+saved.unread=unreadCount;
+localStorage.setItem('jx_msg_manager',JSON.stringify(saved));
+}
+function selectMsg(idx){
+var items=document.querySelectorAll('.msg-item');
+items.forEach(function(el,i){el.classList.toggle('active',i===idx);el.classList.remove('unread');});
+}
+function useTemplate(name){
+var box=document.getElementById('replyBox');
+if(box)box.value=TEMPLATES[name]||'';
+}
+function sendReply(){
+var box=document.getElementById('replyBox');
+if(box&&box.value.trim()){
+alert('回复已发送！(演示)');
+box.value='';
+}else{
+alert('请输入回复内容');
+}
+}
+renderMessages();
+
+</script>
+</body>
+</html>

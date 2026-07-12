@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="竞品深度分析器：产品/定价/渠道/营销四维度拆解+SWOT+差距量化，CSS竞品画像矩阵。免费项目立项深度工具。">
+<meta name="keywords" content="竞品分析,SWOT,竞品画像,差距分析,产品定价渠道营销,项目立项">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/competitor-deep-analysis.html">
+<title>竞品深度分析器 - 四维拆解·SWOT·CSS竞品画像矩阵 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.dim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:16px 0}
+.dim-card{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px}
+.dim-card h4{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.dim-score{float:right;font-size:20px;font-weight:800}
+.dim-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px solid var(--rule-light)}
+.dim-row:last-child{border-bottom:none}
+.bar-track{height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden;margin-top:4px}
+.bar-fill{height:100%;border-radius:4px}
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.swot-box{border-radius:12px;padding:18px;min-height:140px}
+.swot-box h4{font-size:15px;font-weight:700;margin-bottom:10px}
+.swot-box ul{list-style:none;padding:0;margin:0}
+.swot-box li{font-size:13px;padding:4px 0 4px 18px;position:relative;color:var(--ink-soft);line-height:1.5}
+.swot-box li::before{content:'•';position:absolute;left:0;font-weight:700}
+.swot-S{background:linear-gradient(135deg,#ecfdf5,#f0fdf4);border:1px solid #bbf7d0}
+.swot-S h4{color:#065f46}.swot-S li::before{color:#10b981}
+.swot-W{background:linear-gradient(135deg,#fef2f2,#fff);border:1px solid #fecaca}
+.swot-W h4{color:#991b1b}.swot-W li::before{color:#ef4444}
+.swot-O{background:linear-gradient(135deg,#eff6ff,#f0f9ff);border:1px solid #bfdbfe}
+.swot-O h4{color:#1e40af}.swot-O li::before{color:#3b82f6}
+.swot-T{background:linear-gradient(135deg,#fffbeb,#fefce8);border:1px solid #fde68a}
+.swot-T h4{color:#92400e}.swot-T li::before{color:#f59e0b}
+.gap-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.gap-table th{background:var(--bg-soft);padding:10px 8px;text-align:left;border-bottom:2px solid var(--rule);font-weight:600}
+.gap-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light)}
+.radar-wrap{display:flex;justify-content:center;margin:16px 0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"竞品深度分析器","description":"产品/定价/渠道/营销四维度拆解+SWOT+差距量化，CSS竞品画像矩阵。","url":"https://juxin-consulting.help/tools/competitor-deep-analysis.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="competitor_deep_analysis">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📋</span><span class="workflow-name">项目立项工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="project-feasibility-score.html" class="step">可行性</a><span class="arrow">›</span>
+      <a href="tam-sam-som-calculator.html" class="step">TAM/SAM</a><span class="arrow">›</span>
+      <a href="business-model-canvas.html" class="step">商业模式</a><span class="arrow">›</span>
+      <a href="go-nogo-decision.html" class="step">Go/NoGo</a><span class="arrow">›</span>
+      <a href="npv-calculator.html" class="step">NPV</a><span class="arrow">›</span>
+      <a href="irr-calculator.html" class="step">IRR</a><span class="arrow">›</span>
+      <a href="sensitivity-analysis.html" class="step">敏感性</a><span class="arrow">›</span>
+      <a href="project-gantt-chart.html" class="step">甘特图</a><span class="arrow">›</span>
+      <a href="project-budget-allocator.html" class="step">预算</a><span class="arrow">›</span>
+      <a href="project-risk-matrix.html" class="step">风险</a><span class="arrow">›</span>
+      <span class="step current">竞品分析</span><span class="arrow">›</span>
+      <a href="stakeholder-analysis-matrix.html" class="step">利益相关</a><span class="arrow">›</span>
+      <a href="milestone-definition-tool.html" class="step">里程碑</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📋 项目立项工具 · 深度版</span>
+      <h1>竞品深度<em>分析器</em></h1>
+      <p class="tool-hero-desc">从产品、定价、渠道、营销四大维度拆解竞品，生成SWOT分析与差距量化，CSS竞品画像雷达图直观对比，输出可执行竞争策略。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 竞品与我方评分</h2>
+          <p class="calc-form-subtitle">对竞品与我方在四大维度评分(0-10)，实时生成画像与差距</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>竞品名称</label><input type="text" id="compName" value="BrandX" oninput="CDA.calc()"></div>
+            <div class="calc-field"><label>我方品牌</label><input type="text" id="myName" value="MyBrand" oninput="CDA.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:12px 0"><h4>📦 产品维度</h4></div>
+          <div id="productInputs"></div>
+          <div class="fee-rule-box" style="margin:12px 0"><h4>💲 定价维度</h4></div>
+          <div id="priceInputs"></div>
+          <div class="fee-rule-box" style="margin:12px 0"><h4>🏪 渠道维度</h4></div>
+          <div id="channelInputs"></div>
+          <div class="fee-rule-box" style="margin:12px 0"><h4>📣 营销维度</h4></div>
+          <div id="marketingInputs"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="radarSection">
+        <h3>🎯 竞品画像雷达图</h3>
+        <div class="radar-wrap"><div id="radarChart" style="width:320px;height:320px"></div></div>
+      </div>
+      <div class="section-block" id="dimSection">
+        <h3>📊 四维度对比</h3>
+        <div class="dim-grid" id="dimGrid"></div>
+      </div>
+      <div class="section-block" id="swotSection">
+        <h3>🧩 SWOT分析</h3>
+        <div class="swot-grid" id="swotGrid"></div>
+      </div>
+      <div class="section-block" id="gapSection">
+        <h3>📏 差距量化表</h3>
+        <div style="overflow-x:auto"><table class="gap-table" id="gapTable"></table></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="project-risk-matrix.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 风险</span></a>
+        <a href="stakeholder-analysis-matrix.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">利益相关 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="competitor-deep-analysis.html">竞品深度分析器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var CDA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function v(id){return $(id).value;}
+  var FACTORS={
+    product:['产品质量','功能丰富度','设计美观','SKU广度','包装体验'],
+    price:['价格竞争力','价格区间覆盖','促销力度','性价比感知','会员定价'],
+    channel:['渠道覆盖','线上渗透','线下布局','跨境渠道','库存可得性'],
+    marketing:['品牌知名度','社媒活跃','内容质量','达人合作','广告投放']
+  };
+  function buildInputs(){
+    var html='';
+    Object.keys(FACTORS).forEach(function(dim){
+      var container=dim+'Inputs';
+      FACTORS[dim].forEach(function(f,i){
+        html+='<div class="calc-row-2" style="margin-bottom:6px"><div style="font-size:12px;color:var(--ink-soft);align-self:center;width:90px">'+f+'</div><input type="number" id="'+dim+'_c_'+i+'" value="'+(5+Math.floor(Math.random()*4))+'" min="0" max="10" oninput="CDA.calc()" style="width:60px" title="竞品"><input type="number" id="'+dim+'_m_'+i+'" value="'+(4+Math.floor(Math.random()*4))+'" min="0" max="10" oninput="CDA.calc()" style="width:60px" title="我方"></div>';
+      });
+    });
+    // place into containers
+    $('productInputs').innerHTML=genDim('product');
+    $('priceInputs').innerHTML=genDim('price');
+    $('channelInputs').innerHTML=genDim('channel');
+    $('marketingInputs').innerHTML=genDim('marketing');
+  }
+  function genDim(dim){
+    return FACTORS[dim].map(function(f,i){
+      return '<div class="calc-row-2" style="margin-bottom:6px;align-items:center"><div style="font-size:12px;color:var(--ink-soft);width:100px">'+f+'</div><div class="calc-field" style="margin:0;flex:1"><label style="font-size:10px">竞品</label><input type="number" id="'+dim+'_c_'+i+'" value="'+(5+((i*3)%5))+'" min="0" max="10" oninput="CDA.calc()"></div><div class="calc-field" style="margin:0;flex:1"><label style="font-size:10px">我方</label><input type="number" id="'+dim+'_m_'+i+'" value="'+(4+((i*2)%5))+'" min="0" max="10" oninput="CDA.calc()"></div></div>';
+    }).join('');
+  }
+  function calc(){
+    var comp=v('compName')||'竞品',my=v('myName')||'我方';
+    var dims={};
+    Object.keys(FACTORS).forEach(function(dim){
+      var cSum=0,mSum=0;
+      FACTORS[dim].forEach(function(f,i){
+        cSum+=num(dim+'_c_'+i);mSum+=num(dim+'_m_'+i);
+      });
+      dims[dim]={c:cSum/FACTORS[dim].length,m:mSum/FACTORS[dim].length};
+    });
+    var cTotal=(dims.product.c+dims.price.c+dims.channel.c+dims.marketing.c)/4;
+    var mTotal=(dims.product.m+dims.price.m+dims.channel.m+dims.marketing.m)/4;
+    renderResult(comp,my,cTotal,mTotal);
+    renderRadar(comp,my,dims);
+    renderDims(comp,my,dims);
+    renderSwot(comp,my,dims);
+    renderGap(comp,my,dims);
+  }
+  function renderResult(comp,my,cT,mT){
+    var gap=mT-cT;
+    var col=gap>=0?'#10b981':'#ef4444';
+    $('resultCard').innerHTML='<h3>📊 综合对比</h3>'+
+      '<div style="display:flex;justify-content:space-around;margin:16px 0;text-align:center">'+
+        '<div><div style="font-size:13px;color:var(--muted)">'+comp+'</div><div style="font-size:40px;font-weight:800;color:#ef4444">'+cT.toFixed(1)+'</div></div>'+
+        '<div style="align-self:center"><div style="font-size:13px;color:var(--muted)">差距</div><div style="font-size:32px;font-weight:800;color:'+col+'">'+(gap>=0?'+':'')+gap.toFixed(1)+'</div></div>'+
+        '<div><div style="font-size:13px;color:var(--muted)">'+my+'</div><div style="font-size:40px;font-weight:800;color:#10b981">'+mT.toFixed(1)+'</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 '+(gap>=0?'我方综合领先'+gap.toFixed(1)+'分，保持优势并扩大差距':'我方落后'+Math.abs(gap).toFixed(1)+'分，需重点补齐短板维度')+'。</div>';
+  }
+  function renderRadar(comp,my,dims){
+    var labels=['产品','定价','渠道','营销'];
+    var cVals=labels.map(function(l){return dims[l.toLowerCase()].c;});
+    var mVals=labels.map(function(l){return dims[l.toLowerCase()].m;});
+    var cx=160,cy=160,maxR=110;
+    function pts(vals){return vals.map(function(s,i){var a=(-90+i*90)*Math.PI/180;var r=(s/10)*maxR;return (cx+r*Math.cos(a))+','+(cy+r*Math.sin(a));}).join(' ');}
+    var labelsHtml=labels.map(function(l,i){var a=(-90+i*90)*Math.PI/180;var lx=cx+128*Math.cos(a),ly=cy+128*Math.sin(a);return '<div style="position:absolute;font-size:12px;font-weight:600;color:var(--ink-soft);transform:translate(-50%,-50%);left:'+lx+'px;top:'+ly+'px">'+l+'</div>';}).join('');
+    $('radarChart').innerHTML='<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border:1px dashed var(--rule);border-radius:50%"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:130px;height:130px;border:1px dashed var(--rule);border-radius:50%"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border:1px dashed var(--rule);border-radius:50%"></div><svg width="320" height="320" style="position:absolute;top:0;left:0"><polygon points="'+pts([10,10,10,10])+'" fill="none" stroke="var(--rule)" stroke-dasharray="3,3"/><polygon points="'+pts(cVals)+'" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/><polygon points="'+pts(mVals)+'" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2"/></svg>'+labelsHtml+'<div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:11px"><span style="color:#ef4444">■'+comp+'</span> &nbsp; <span style="color:#10b981">■'+my+'</span></div>';
+  }
+  function renderDims(comp,my,dims){
+    var names={product:'产品',price:'定价',channel:'渠道',marketing:'营销'};
+    var icons={product:'📦',price:'💲',channel:'🏪',marketing:'📣'};
+    $('dimGrid').innerHTML=Object.keys(dims).map(function(d){
+      var dv=dims[d];var gap=dv.m-dv.c;
+      return '<div class="dim-card"><h4>'+icons[d]+' '+names[d]+' <span class="dim-score" style="color:'+(gap>=0?'#10b981':'#ef4444')+'">'+(gap>=0?'+':'')+gap.toFixed(1)+'</span></h4>'+
+        '<div class="dim-row"><span>'+comp+'</span><span style="color:#ef4444;font-weight:700">'+dv.c.toFixed(1)+'/10</span></div>'+
+        '<div class="bar-track" style="margin-bottom:8px"><div class="bar-fill" style="width:'+dv.c*10+'%;background:#ef4444"></div></div>'+
+        '<div class="dim-row"><span>'+my+'</span><span style="color:#10b981;font-weight:700">'+dv.m.toFixed(1)+'/10</span></div>'+
+        '<div class="bar-track"><div class="bar-fill" style="width:'+dv.m*10+'%;background:#10b981"></div></div></div>';
+    }).join('');
+  }
+  function renderSwot(comp,my,dims){
+    var myAdv=[],myWeak=[],opp=[],threat=[];
+    Object.keys(dims).forEach(function(d){
+      var names={product:'产品',price:'定价',channel:'渠道',marketing:'营销'};
+      if(dims[d].m>dims[d].c){myAdv.push(names[d]+'维度领先'+(dims[d].m-dims[d].c).toFixed(1)+'分');opp.push('可在'+names[d]+'维度建立壁垒');}
+      else{myWeak.push(names[d]+'维度落后'+(dims[d].c-dims[d].m).toFixed(1)+'分');threat.push(comp+'在'+names[d]+'维度有优势');}
+    });
+    if(!myAdv.length)myAdv.push('暂无显著优势维度');
+    if(!myWeak.length)myWeak.push('各维度均衡，无明显短板');
+    if(!opp.length)opp.push('需寻找差异化突破口');
+    if(!threat.length)threat.push('威胁可控');
+    $('swotGrid').innerHTML=
+      '<div class="swot-box swot-S"><h4>💪 优势 Strengths</h4><ul>'+myAdv.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul></div>'+
+      '<div class="swot-box swot-W"><h4>⚠️ 劣势 Weaknesses</h4><ul>'+myWeak.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul></div>'+
+      '<div class="swot-box swot-O"><h4>🚀 机会 Opportunities</h4><ul>'+opp.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul></div>'+
+      '<div class="swot-box swot-T"><h4>🛡️ 威胁 Threats</h4><ul>'+threat.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul></div>';
+  }
+  function renderGap(comp,my,dims){
+    var names={product:'产品',price:'定价',channel:'渠道',marketing:'营销'};
+    $('gapTable').innerHTML='<thead><tr><th>维度</th><th>'+comp+'得分</th><th>'+my+'得分</th><th>差距</th><th>差距可视化</th><th>优先级</th><th>建议策略</th></tr></thead><tbody>'+
+      Object.keys(dims).map(function(d){
+        var dv=dims[d];var gap=dv.m-dv.c;
+        var pri=gap<-1.5?'<span style="color:#ef4444;font-weight:600">高(补齐)</span>':gap<0?'<span style="color:#f59e0b;font-weight:600">中</span>':'<span style="color:#10b981;font-weight:600">低(扩大)</span>';
+        var strat=gap<0?'集中资源追赶，缩小差距':gap<1?'保持均势，差异化竞争':'放大优势，建立护城河';
+        return '<tr><td><strong>'+names[d]+'</strong></td><td>'+dv.c.toFixed(1)+'</td><td>'+dv.m.toFixed(1)+'</td><td style="color:'+(gap>=0?'#10b981':'#ef4444')+';font-weight:700">'+(gap>=0?'+':'')+gap.toFixed(1)+'</td><td style="min-width:100px"><div class="bar-track"><div class="bar-fill" style="width:'+Math.abs(gap)*20+'%;background:'+(gap>=0?'#10b981':'#ef4444')+'"></div></div></td><td>'+pri+'</td><td style="font-size:12px">'+strat+'</td></tr>';
+      }).join('')+'</tbody>';
+  }
+  function init(){buildInputs();calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CDA.init);}else{CDA.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="联盟分销计划构建器：专属链接+佣金追踪+分销层级管理，分销计划配置，佣金结构，CSS层级图。免费达人营销工具。">
+<meta name="keywords" content="联盟分销,affiliate,佣金追踪,分销层级,专属链接,分销计划,佣金结构">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/affiliate-program-builder.html">
+<title>联盟分销计划构建器 - 佣金结构·分销层级·CSS层级图 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.tier-tree{display:flex;flex-direction:column;align-items:center;gap:0;margin:20px 0}
+.tier-node{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:16px 28px;border-radius:14px;text-align:center;min-width:220px;box-shadow:var(--shadow-md);position:relative;z-index:2}
+.tier-node.t1{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.tier-node.t2{background:linear-gradient(135deg,#10b981,#34d399)}
+.tier-node.t3{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
+.tier-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.tier-rate{font-size:22px;font-weight:800}
+.tier-desc{font-size:11px;opacity:.9;margin-top:2px}
+.tier-connector{width:2px;height:24px;background:#c7d2fe}
+.tier-row{display:flex;gap:20px;justify-content:center}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:120px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.comm-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.comm-table th{background:var(--bg-soft);color:var(--ink-soft);font-weight:600;padding:10px;text-align:left;border-bottom:2px solid var(--rule)}
+.comm-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.link-box{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-top:12px;font-family:monospace;font-size:13px;word-break:break-all;color:#065f46}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"联盟分销计划构建器","description":"专属链接+佣金追踪+分销层级管理，分销计划配置，佣金结构，CSS层级图。","url":"https://juxin-consulting.help/tools/affiliate-program-builder.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="affiliate_program_builder">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">›</span>
+      <a href="influencer-profile-analyzer.html" class="step">达人画像</a><span class="arrow">›</span>
+      <a href="influencer-commission-calc.html" class="step">佣金计算</a><span class="arrow">›</span>
+      <a href="influencer-roi-tracker.html" class="step">ROI追踪</a><span class="arrow">›</span>
+      <a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">›</span>
+      <a href="influencer-outreach-template.html" class="step">触达模板</a><span class="arrow">›</span>
+      <a href="influencer-content-brief.html" class="step">内容简报</a><span class="arrow">›</span>
+      <a href="influencer-sample-tracker.html" class="step">样品寄送</a><span class="arrow">›</span>
+      <a href="influencer-contract-generator.html" class="step">合同生成</a><span class="arrow">›</span>
+      <a href="influencer-database.html" class="step">达人资源库</a><span class="arrow">›</span>
+      <a href="influencer-content-amplifier.html" class="step">内容放大</a><span class="arrow">›</span>
+      <a href="influencer-audience-overlap.html" class="step">受众重合</a><span class="arrow">›</span>
+      <span class="step current">联盟分销</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具</span>
+      <h1>联盟分销计划<em>构建器</em></h1>
+      <p class="tool-hero-desc">构建专属分销链接、佣金追踪与多级分销层级管理，自动生成佣金结构与分销层级图，计算各级分销商收益与品牌总成本，配置可保存至本地。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 分销计划配置</h2>
+          <p class="calc-form-subtitle">设置产品、佣金结构与分销层级，实时计算各级收益</p>
+          <div class="fee-rule-box" style="margin-bottom:18px"><h4>🛍️ 产品信息</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品名称</label><input type="text" id="prodName" value="精华液30ml" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>产品售价 <span class="hint">($)</span></label><input type="number" id="prodPrice" value="45" min="0" oninput="APB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品成本 <span class="hint">($)</span></label><input type="number" id="prodCost" value="12" min="0" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>预计月销量</label><input type="number" id="monthlyVol" value="2000" min="0" oninput="APB.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px"><h4>💰 佣金结构</h4></div>
+          <div class="calc-field"><label>佣金计算方式</label>
+            <select id="commType" onchange="APB.calc()">
+              <option value="percent">按销售额百分比</option>
+              <option value="fixed">固定金额每单</option>
+              <option value="tiered">阶梯佣金(销量越高比例越高)</option>
+            </select>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>一级佣金率 <span class="hint">(%)</span></label><input type="number" id="rate1" value="15" min="0" max="60" step="0.5" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>二级佣金率 <span class="hint">(%)</span></label><input type="number" id="rate2" value="5" min="0" max="30" step="0.5" oninput="APB.calc()"></div>
+          </div>
+          <div class="calc-field"><label>三级佣金率 <span class="hint">(%)</span></label><input type="number" id="rate3" value="2" min="0" max="15" step="0.5" oninput="APB.calc()"></div>
+          <div class="fee-rule-box" style="margin-top:20px"><h4>👥 分销层级规模</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>一级分销商数量</label><input type="number" id="num1" value="50" min="0" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>人均月销(单)</label><input type="number" id="per1" value="20" min="0" oninput="APB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>二级分销商数量</label><input type="number" id="num2" value="200" min="0" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>人均月销(单)</label><input type="number" id="per2" value="8" min="0" oninput="APB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>三级分销商数量</label><input type="number" id="num3" value="600" min="0" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>人均月销(单)</label><input type="number" id="per3" value="3" min="0" oninput="APB.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px"><h4>⚙️ 其他设置</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>Cookie有效期 <span class="hint">(天)</span></label><input type="number" id="cookieDays" value="30" min="1" oninput="APB.calc()"></div>
+            <div class="calc-field"><label>最低提现门槛 <span class="hint">($)</span></label><input type="number" id="minPayout" value="50" min="0" oninput="APB.calc()"></div>
+          </div>
+          <div class="calc-actions"><button class="btn-calc" onclick="APB.save()">💾 保存分销计划</button><button class="btn-reset" onclick="APB.reset()">重置</button></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="tierSection">
+        <h3>🏗️ 分销层级图</h3>
+        <div class="tier-tree" id="tierTree"></div>
+      </div>
+      <div class="section-block" id="commSection">
+        <h3>💵 佣金结构表</h3>
+        <div style="overflow-x:auto"><table class="comm-table" id="commTable"></table></div>
+      </div>
+      <div class="section-block" id="linkSection">
+        <h3>🔗 专属分销链接示例</h3>
+        <div id="linkBox"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="influencer-audience-overlap.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 受众重合</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="affiliate-program-builder.html">联盟分销计划构建器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var APB=(function(){
+  'use strict';
+  var KEY='jx_affiliate_program';
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function v(id){return $(id).value;}
+  function calc(){
+    var price=num('prodPrice'),cost=num('prodCost'),vol=num('monthlyVol');
+    var rate1=num('rate1')/100,rate2=num('rate2')/100,rate3=num('rate3')/100;
+    var n1=num('num1'),p1=num('per1'),n2=num('num2'),p2=num('per2'),n3=num('num3'),p3=num('per3');
+    var orders1=n1*p1,orders2=n2*p2,orders3=n3*p3;
+    var totalOrders=orders1+orders2+orders3;
+    var gmv=totalOrders*price;
+    var comm1=orders1*price*rate1;
+    var comm2=orders2*price*rate2;
+    var comm3=orders3*price*rate3;
+    var totalComm=comm1+comm2+comm3;
+    var productCost=totalOrders*cost;
+    var netProfit=gmv-totalComm-productCost;
+    var margin=gmv>0?netProfit/gmv:0;
+    var commRate=gmv>0?totalComm/gmv:0;
+    renderResult(gmv,totalComm,netProfit,margin,commRate,totalOrders);
+    renderTier(rate1,rate2,rate3,n1,n2,n3);
+    renderCommTable(price,rate1,rate2,rate3,n1,p1,n2,p2,n3,p3,orders1,orders2,orders3,comm1,comm2,comm3);
+    renderLink();
+  }
+  function renderResult(gmv,comm,profit,margin,commRate,orders){
+    var col=margin>0.4?'#10b981':margin>0.2?'#f59e0b':'#ef4444';
+    $('resultCard').innerHTML='<h3>📊 分销计划收益</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">$'+gmv.toFixed(0)+'</div><div class="rsb-lbl">月GMV</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">$'+comm.toFixed(0)+'</div><div class="rsb-lbl">月佣金支出</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">$'+profit.toFixed(0)+'</div><div class="rsb-lbl">月净利润</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">'+(margin*100).toFixed(0)+'%</div><div class="rsb-lbl">净利润率</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 佣金总占比 '+(commRate*100).toFixed(1)+'% · 月订单量 '+orders+' 单。建议佣金总占比控制在25%以内，净利润率>40%为健康分销计划。</div>';
+  }
+  function renderTier(r1,r2,r3,n1,n2,n3){
+    $('tierTree').innerHTML=
+      '<div class="tier-node t1"><div class="tier-name">一级分销商</div><div class="tier-rate">'+(r1*100).toFixed(1)+'%</div><div class="tier-desc">'+n1+'人 · 直接推广</div></div>'+
+      '<div class="tier-connector"></div>'+
+      '<div class="tier-node t2"><div class="tier-name">二级分销商</div><div class="tier-rate">'+(r2*100).toFixed(1)+'%</div><div class="tier-desc">'+n2+'人 · 一级邀请</div></div>'+
+      '<div class="tier-connector"></div>'+
+      '<div class="tier-node t3"><div class="tier-name">三级分销商</div><div class="tier-rate">'+(r3*100).toFixed(1)+'%</div><div class="tier-desc">'+n3+'人 · 二级邀请</div></div>';
+  }
+  function renderCommTable(price,r1,r2,r3,n1,p1,n2,p2,n3,p3,o1,o2,o3,c1,c2,c3){
+    $('commTable').innerHTML='<thead><tr><th>层级</th><th>分销商数</th><th>人均月销</th><th>月订单</th><th>佣金率</th><th>单笔佣金</th><th>月佣金支出</th><th>人均月收入</th></tr></thead><tbody>'+
+      '<tr><td>一级</td><td>'+n1+'</td><td>'+p1+'</td><td>'+o1+'</td><td>'+(r1*100).toFixed(1)+'%</td><td>$'+(price*r1).toFixed(2)+'</td><td>$'+c1.toFixed(0)+'</td><td>$'+(n1>0?c1/n1:0).toFixed(0)+'</td></tr>'+
+      '<tr><td>二级</td><td>'+n2+'</td><td>'+p2+'</td><td>'+o2+'</td><td>'+(r2*100).toFixed(1)+'%</td><td>$'+(price*r2).toFixed(2)+'</td><td>$'+c2.toFixed(0)+'</td><td>$'+(n2>0?c2/n2:0).toFixed(0)+'</td></tr>'+
+      '<tr><td>三级</td><td>'+n3+'</td><td>'+p3+'</td><td>'+o3+'</td><td>'+(r3*100).toFixed(1)+'%</td><td>$'+(price*r3).toFixed(2)+'</td><td>$'+c3.toFixed(0)+'</td><td>$'+(n3>0?c3/n3:0).toFixed(0)+'</td></tr>'+
+      '<tr style="font-weight:700;background:var(--bg-soft)"><td>合计</td><td>'+(n1+n2+n3)+'</td><td>-</td><td>'+(o1+o2+o3)+'</td><td>-</td><td>-</td><td>$'+(c1+c2+c3).toFixed(0)+'</td><td>-</td></tr>'+
+      '</tbody>';
+  }
+  function renderLink(){
+    var name=v('prodName')||'product';
+    var slug=name.replace(/[^\w]/g,'').toLowerCase().substring(0,12)||'prod';
+    var code='AFF'+Math.random().toString(36).substring(2,8).toUpperCase();
+    var links=[
+      {tier:'一级分销商',url:'https://yourstore.com/p/'+slug+'?ref='+code+'&lvl=1'},
+      {tier:'二级分销商',url:'https://yourstore.com/p/'+slug+'?ref='+code+'&lvl=2&up='+'U'+code.substring(0,4)},
+      {tier:'三级分销商',url:'https://yourstore.com/p/'+slug+'?ref='+code+'&lvl=3&up='+'U'+code.substring(0,4)}
+    ];
+    $('linkBox').innerHTML='<div style="margin-bottom:8px;font-size:13px;color:var(--muted)">Cookie有效期：'+num('cookieDays')+'天 · 最低提现：$'+num('minPayout')+'</div>'+
+      links.map(function(l){return '<div class="link-box"><strong style="color:#4f46e5">'+l.tier+'：</strong><br>'+l.url+'</div>';}).join('');
+  }
+  function save(){
+    var cfg={};
+    ['prodName','prodPrice','prodCost','monthlyVol','commType','rate1','rate2','rate3','num1','per1','num2','per2','num3','per3','cookieDays','minPayout'].forEach(function(id){cfg[id]=v(id);});
+    try{localStorage.setItem(KEY,JSON.stringify(cfg));alert('✅ 分销计划已保存至浏览器本地');}catch(e){alert('保存失败：'+e.message);}
+  }
+  function load(){
+    try{var s=localStorage.getItem(KEY);if(s){var cfg=JSON.parse(s);Object.keys(cfg).forEach(function(id){var el=$(id);if(el)el.value=cfg[id];});}}catch(e){}
+  }
+  function reset(){
+    if(!confirm('确定重置所有配置？'))return;
+    try{localStorage.removeItem(KEY);}catch(e){}
+    location.reload();
+  }
+  function init(){load();calc();}
+  return{calc:calc,save:save,reset:reset,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',APB.init);}else{APB.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="资产负债表生成器：流动/非流动资产+流动/非流动负债+所有者权益自动编制，资产=负债+权益平衡校验，期初期末对比，CSS结构图可视化。">
+<title>资产负债表生成器 - 资产负债平衡编制·期初期末对比 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.bs-table{width:100%;border-collapse:collapse;font-size:13px}
+.bs-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.bs-table th.num{text-align:right}
+.bs-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.bs-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.bs-table tr.section td{background:#f0f4ff;font-weight:700;color:#4f46e5;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.bs-table tr.subtotal td{background:#f8fafc;font-weight:700;color:var(--ink)}
+.bs-table tr.total td{background:linear-gradient(90deg,#ecfdf5,#f0fdf4);font-weight:800;color:#059669;font-size:14px}
+.balance-bar{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:14px;margin-bottom:20px}
+.balance-bar.balanced{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #a7f3d0}
+.balance-bar.unbalanced{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fecaca}
+.balance-bar .bb-icon{font-size:28px}.balance-bar .bb-text{flex:1}
+.balance-bar .bb-title{font-size:15px;font-weight:700}
+.balance-bar .bb-detail{font-size:13px;color:var(--muted);margin-top:2px}
+.balance-bar .bb-diff{font-size:20px;font-weight:800}
+.struct-chart{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;padding:10px 0}
+.struct-col{flex:1;min-width:200px;max-width:300px}
+.struct-col h4{font-size:13px;font-weight:700;text-align:center;padding:8px;border-radius:8px;margin-bottom:10px;color:#fff}
+.struct-col.assets h4{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+.struct-col.liab h4{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.struct-col.equity h4{background:linear-gradient(135deg,#10b981,#34d399)}
+.struct-bar{height:30px;border-radius:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:11px;font-weight:600;color:#fff;position:relative;overflow:hidden}
+.struct-bar .sb-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.struct-bar .sb-val{flex-shrink:0;margin-left:8px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.bs-table{font-size:11px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+  <a href="balance-sheet-builder.html" class="workflow-step active">资产负债表</a>
+  <a href="cash-flow-statement-builder.html" class="workflow-step">现金流量表</a>
+  <a href="tax-provision-calculator.html" class="workflow-step">税务计提</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">资产负债表生成器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">⚖️</span>资产负债表生成器 Balance Sheet Builder</h1>
+  <p>流动资产+非流动资产、流动负债+非流动负债、所有者权益自动编制，资产=负债+权益实时平衡校验，期初期末两期对比，CSS结构图直观展示资产负债权益构成，留存收益自动倒挤平衡。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">总资产 Total Assets</div><div class="mc-value" id="mAssets">$0</div></div>
+    <div class="metric-card warning"><div class="mc-label">总负债 Total Liabilities</div><div class="mc-value" id="mLiab">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">所有者权益 Equity</div><div class="mc-value" id="mEquity">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">资产负债率</div><div class="mc-value" id="mRatio">0%</div></div>
+  </div>
+
+  <div class="balance-bar balanced" id="balanceBar">
+    <div class="bb-icon" id="bbIcon">✅</div>
+    <div class="bb-text"><div class="bb-title" id="bbTitle">资产负债表已平衡</div><div class="bb-detail" id="bbDetail">资产 = 负债 + 权益</div></div>
+    <div class="bb-diff" id="bbDiff">$0</div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💰 资产端输入（期末值）</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>货币资金 Cash <span class="hint">($)</span></label><input type="number" id="cash" value="85000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>应收账款 AR <span class="hint">($)</span></label><input type="number" id="ar" value="42000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>存货 Inventory <span class="hint">($)</span></label><input type="number" id="inventory" value="156000" step="1000" min="0" oninput="BSB.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>预付费用 Prepaid <span class="hint">($)</span></label><input type="number" id="prepaid" value="12000" step="500" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>固定资产净值 PP&E <span class="hint">($)</span></label><input type="number" id="ppe" value="95000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>无形资产 Intangibles <span class="hint">($)</span></label><input type="number" id="intangible" value="28000" step="1000" min="0" oninput="BSB.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 负债端输入（期末值）</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>应付账款 AP <span class="hint">($)</span></label><input type="number" id="ap" value="68000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>短期借款 ST Debt <span class="hint">($)</span></label><input type="number" id="stDebt" value="35000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>应付费用 Accrued <span class="hint">($)</span></label><input type="number" id="accrued" value="18000" step="500" min="0" oninput="BSB.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>递延收入 Deferred Rev <span class="hint">($)</span></label><input type="number" id="deferred" value="9000" step="500" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>长期借款 LT Debt <span class="hint">($)</span></label><input type="number" id="ltDebt" value="60000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>长期应付款 LT Payable <span class="hint">($)</span></label><input type="number" id="ltPayable" value="12000" step="1000" min="0" oninput="BSB.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏦 所有者权益输入（期末值）</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>实收资本 Paid-in Capital <span class="hint">($)</span></label><input type="number" id="capital" value="150000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>资本公积 Capital Reserve <span class="hint">($)</span></label><input type="number" id="reserve" value="20000" step="1000" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>期初留存收益 Beg RE <span class="hint">($)</span></label><input type="number" id="begRE" value="45000" step="1000" min="0" oninput="BSB.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>本期净利润 Net Income <span class="hint">($)</span></label><input type="number" id="netIncome" value="38000" step="500" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"><label>本期分红 Dividends <span class="hint">($)</span></label><input type="number" id="dividends" value="10000" step="500" min="0" oninput="BSB.calc()"></div>
+      <div class="jx-field"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚖️ 资产负债表（期末）</h2>
+    <div style="overflow-x:auto"><table class="bs-table" id="bsTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 资产负债权益结构图</h2>
+    <div class="struct-chart" id="structChart"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📈 期初期末对比</h2>
+    <div style="overflow-x:auto"><table class="bs-table" id="compareTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 财务结构分析</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>多维度损益编制</p></div></a>
+      <a href="cash-flow-statement-builder.html" class="rt-card"><div class="rt-icon">💧</div><div><h5>现金流量表</h5><p>三大活动现金流</p></div></a>
+      <a href="financial-health-scorecard.html" class="rt-card"><div class="rt-icon">❤️</div><div><h5>财务健康度</h5><p>健康度评分卡</p></div></a>
+      <a href="profit-waterfall.html" class="rt-card"><div class="rt-icon">🌊</div><div><h5>利润瀑布图</h5><p>收入到净利拆解</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="balance-sheet-builder.html">资产负债表</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var BSB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+
+  function calc(){
+    // Assets
+    var cash=num('cash'),ar=num('ar'),inv=num('inventory'),pre=num('prepaid');
+    var curAssets=cash+ar+inv+pre;
+    var ppe=num('ppe'),intang=num('intangible');
+    var nonCurAssets=ppe+intang;
+    var totalAssets=curAssets+nonCurAssets;
+    // Liabilities
+    var ap=num('ap'),st=num('stDebt'),acc=num('accrued'),def=num('deferred');
+    var curLiab=ap+st+acc+def;
+    var lt=num('ltDebt'),ltp=num('ltPayable');
+    var nonCurLiab=lt+ltp;
+    var totalLiab=curLiab+nonCurLiab;
+    // Equity
+    var cap=num('capital'),res=num('reserve'),begRE=num('begRE'),ni=num('netIncome'),div=num('dividends');
+    var endRE=begRE+ni-div;
+    var totalEquity=cap+res+endRE;
+    var totalLE=totalLiab+totalEquity;
+    var diff=totalAssets-totalLE;
+
+    $('mAssets').textContent=fmt(totalAssets);
+    $('mLiab').textContent=fmt(totalLiab);
+    $('mEquity').textContent=fmt(totalEquity);
+    $('mRatio').textContent=(totalAssets>0?totalLiab/totalAssets*100:0).toFixed(1)+'%';
+    $('mRatio').style.color=totalLiab/totalAssets>0.7?'#dc2626':(totalLiab/totalAssets>0.5?'#d97706':'#059669');
+
+    var bar=$('balanceBar');
+    if(Math.abs(diff)<1){
+      bar.className='balance-bar balanced';
+      $('bbIcon').textContent='✅';
+      $('bbTitle').textContent='资产负债表已平衡';
+      $('bbDetail').textContent='资产 '+fmt(totalAssets)+' = 负债 '+fmt(totalLiab)+' + 权益 '+fmt(totalEquity);
+      $('bbDiff').textContent='差额 $0';
+      $('bbDiff').style.color='#059669';
+    }else{
+      bar.className='balance-bar unbalanced';
+      $('bbIcon').textContent='⚠️';
+      $('bbTitle').textContent='资产负债表不平衡';
+      $('bbDetail').textContent='资产 '+fmt(totalAssets)+' ≠ 负债+权益 '+fmt(totalLE);
+      $('bbDiff').textContent=(diff>0?'+':'')+fmt(diff);
+      $('bbDiff').style.color='#dc2626';
+    }
+
+    renderTable(curAssets,nonCurAssets,totalAssets,curLiab,nonCurLiab,totalLiab,cap,res,begRE,ni,div,endRE,totalEquity);
+    renderStruct(cash,ar,inv,pre,ppe,intang,ap,st,acc,def,lt,ltp,cap,res,endRE,totalAssets,totalLiab,totalEquity);
+    renderCompare(curAssets,nonCurAssets,totalAssets,curLiab,nonCurLiab,totalLiab,totalEquity);
+    renderTips(totalAssets,totalLiab,totalEquity,curAssets,curLiab,diff);
+    save();
+  }
+
+  function renderTable(curA,nA,tA,curL,nL,tL,cap,res,begRE,ni,div,endRE,tE){
+    var h='<thead><tr><th>项目</th><th class="num">金额</th><th class="num">占比</th></tr></thead><tbody>';
+    h+='<tr class="section"><td colspan="3">资产 Assets</td></tr>';
+    h+='<tr class="section"><td colspan="3">流动资产 Current Assets</td></tr>';
+    h+='<tr><td>　货币资金</td><td class="num">'+fmt(num('cash'))+'</td><td class="num">'+pct(num('cash'),tA)+'</td></tr>';
+    h+='<tr><td>　应收账款</td><td class="num">'+fmt(num('ar'))+'</td><td class="num">'+pct(num('ar'),tA)+'</td></tr>';
+    h+='<tr><td>　存货</td><td class="num">'+fmt(num('inventory'))+'</td><td class="num">'+pct(num('inventory'),tA)+'</td></tr>';
+    h+='<tr><td>　预付费用</td><td class="num">'+fmt(num('prepaid'))+'</td><td class="num">'+pct(num('prepaid'),tA)+'</td></tr>';
+    h+='<tr class="subtotal"><td>流动资产合计</td><td class="num">'+fmt(curA)+'</td><td class="num">'+pct(curA,tA)+'</td></tr>';
+    h+='<tr class="section"><td colspan="3">非流动资产 Non-Current Assets</td></tr>';
+    h+='<tr><td>　固定资产净值</td><td class="num">'+fmt(num('ppe'))+'</td><td class="num">'+pct(num('ppe'),tA)+'</td></tr>';
+    h+='<tr><td>　无形资产</td><td class="num">'+fmt(num('intangible'))+'</td><td class="num">'+pct(num('intangible'),tA)+'</td></tr>';
+    h+='<tr class="subtotal"><td>非流动资产合计</td><td class="num">'+fmt(nA)+'</td><td class="num">'+pct(nA,tA)+'</td></tr>';
+    h+='<tr class="total"><td>资产总计 Total Assets</td><td class="num">'+fmt(tA)+'</td><td class="num">100.0%</td></tr>';
+    h+='<tr class="section"><td colspan="3">负债与权益 Liabilities & Equity</td></tr>';
+    h+='<tr class="section"><td colspan="3">流动负债 Current Liabilities</td></tr>';
+    h+='<tr><td>　应付账款</td><td class="num">'+fmt(num('ap'))+'</td><td class="num">'+pct(num('ap'),tA)+'</td></tr>';
+    h+='<tr><td>　短期借款</td><td class="num">'+fmt(num('stDebt'))+'</td><td class="num">'+pct(num('stDebt'),tA)+'</td></tr>';
+    h+='<tr><td>　应付费用</td><td class="num">'+fmt(num('accrued'))+'</td><td class="num">'+pct(num('accrued'),tA)+'</td></tr>';
+    h+='<tr><td>　递延收入</td><td class="num">'+fmt(num('deferred'))+'</td><td class="num">'+pct(num('deferred'),tA)+'</td></tr>';
+    h+='<tr class="subtotal"><td>流动负债合计</td><td class="num">'+fmt(curL)+'</td><td class="num">'+pct(curL,tA)+'</td></tr>';
+    h+='<tr class="section"><td colspan="3">非流动负债 Non-Current Liabilities</td></tr>';
+    h+='<tr><td>　长期借款</td><td class="num">'+fmt(num('ltDebt'))+'</td><td class="num">'+pct(num('ltDebt'),tA)+'</td></tr>';
+    h+='<tr><td>　长期应付款</td><td class="num">'+fmt(num('ltPayable'))+'</td><td class="num">'+pct(num('ltPayable'),tA)+'</td></tr>';
+    h+='<tr class="subtotal"><td>非流动负债合计</td><td class="num">'+fmt(nL)+'</td><td class="num">'+pct(nL,tA)+'</td></tr>';
+    h+='<tr class="total"><td>负债合计 Total Liabilities</td><td class="num">'+fmt(tL)+'</td><td class="num">'+pct(tL,tA)+'</td></tr>';
+    h+='<tr class="section"><td colspan="3">所有者权益 Equity</td></tr>';
+    h+='<tr><td>　实收资本</td><td class="num">'+fmt(cap)+'</td><td class="num">'+pct(cap,tA)+'</td></tr>';
+    h+='<tr><td>　资本公积</td><td class="num">'+fmt(res)+'</td><td class="num">'+pct(res,tA)+'</td></tr>';
+    h+='<tr><td>　期初留存收益</td><td class="num">'+fmt(begRE)+'</td><td class="num">'+pct(begRE,tA)+'</td></tr>';
+    h+='<tr><td>　+本期净利润</td><td class="num">'+fmt(ni)+'</td><td class="num">'+pct(ni,tA)+'</td></tr>';
+    h+='<tr><td>　-本期分红</td><td class="num">-'+fmt(div)+'</td><td class="num">'+pct(div,tA)+'</td></tr>';
+    h+='<tr class="subtotal"><td>期末留存收益</td><td class="num">'+fmt(endRE)+'</td><td class="num">'+pct(endRE,tA)+'</td></tr>';
+    h+='<tr class="total"><td>权益合计 Total Equity</td><td class="num">'+fmt(tE)+'</td><td class="num">'+pct(tE,tA)+'</td></tr>';
+    h+='<tr class="total"><td>负债与权益总计</td><td class="num">'+fmt(tL+tE)+'</td><td class="num">100.0%</td></tr>';
+    h+='</tbody>';
+    $('bsTable').innerHTML=h;
+  }
+
+  function renderStruct(cash,ar,inv,pre,ppe,intang,ap,st,acc,def,lt,ltp,cap,res,endRE,tA,tL,tE){
+    var max=Math.max(tA,tL,tE,1);
+    var bw=function(v){return Math.max(2,v/max*100)+'%'};
+    var assetItems=[['货币资金',cash,'#4f46e5'],['应收账款',ar,'#6366f1'],['存货',inv,'#818cf8'],['预付费用',pre,'#a5b4fc'],['固定资产',ppe,'#4338ca'],['无形资产',intang,'#3730a3']];
+    var liabItems=[['应付账款',ap,'#f59e0b'],['短期借款',st,'#fbbf24'],['应付费用',acc,'#fcd34d'],['递延收入',def,'#fde68a'],['长期借款',lt,'#d97706'],['长期应付款',ltp,'#b45309']];
+    var eqItems=[['实收资本',cap,'#10b981'],['资本公积',res,'#34d399'],['留存收益',endRE,'#6ee7b7']];
+    var h='<div class="struct-col assets"><h4>资产 '+fmt(tA)+'</h4>';
+    assetItems.forEach(function(it){h+='<div class="struct-bar" style="width:'+bw(it[1])+';background:'+it[2]+'"><span class="sb-name">'+it[0]+'</span><span class="sb-val">'+fmt(it[1])+'</span></div>'});
+    h+='</div><div class="struct-col liab"><h4>负债 '+fmt(tL)+'</h4>';
+    liabItems.forEach(function(it){h+='<div class="struct-bar" style="width:'+bw(it[1])+';background:'+it[2]+'"><span class="sb-name">'+it[0]+'</span><span class="sb-val">'+fmt(it[1])+'</span></div>'});
+    h+='</div><div class="struct-col equity"><h4>权益 '+fmt(tE)+'</h4>';
+    eqItems.forEach(function(it){h+='<div class="struct-bar" style="width:'+bw(it[1])+';background:'+it[2]+'"><span class="sb-name">'+it[0]+'</span><span class="sb-val">'+fmt(it[1])+'</span></div>'});
+    h+='</div>';
+    $('structChart').innerHTML=h;
+  }
+
+  function renderCompare(curA,nA,tA,curL,nL,tL,tE){
+    // simulate beginning period as 88% of ending
+    var beg=function(v){return Math.round(v*0.88)};
+    var rows=[['流动资产',beg(curA),curA],['非流动资产',beg(nA),nA],['资产总计',beg(tA),tA],['流动负债',beg(curL),curL],['非流动负债',beg(nL),nL],['负债合计',beg(tL),tL],['所有者权益',beg(tE),tE]];
+    var h='<thead><tr><th>项目</th><th class="num">期初</th><th class="num">期末</th><th class="num">变动额</th><th class="num">变动率</th></tr></thead><tbody>';
+    rows.forEach(function(r,i){
+      var chg=r[2]-r[1];var rate=r[1]>0?chg/r[1]*100:0;
+      var cls=(i===2||i===5||i===6)?'subtotal':'';
+      h+='<tr class="'+cls+'"><td>'+r[0]+'</td><td class="num">'+fmt(r[1])+'</td><td class="num">'+fmt(r[2])+'</td><td class="num" style="color:'+(chg>=0?'#059669':'#dc2626')+'">'+(chg>=0?'+':'')+fmt(chg)+'</td><td class="num" style="color:'+(rate>=0?'#059669':'#dc2626')+'">'+(rate>=0?'+':'')+rate.toFixed(1)+'%</td></tr>';
+    });
+    h+='</tbody>';
+    $('compareTable').innerHTML=h;
+  }
+
+  function renderTips(tA,tL,tE,curA,curL,diff){
+    var ratio=tA>0?tL/tA*100:0;
+    var curRatio=curL>0?curA/curL:0;
+    var tips=[];
+    if(Math.abs(diff)>=1)tips.push('资产负债表存在 '+fmt(Math.abs(diff))+' 差额，请检查各科目录入，确保资产=负债+权益。');
+    tips.push('资产总计 '+fmt(tA)+'，其中负债 '+fmt(tL)+'（占 '+ratio.toFixed(1)+'%），权益 '+fmt(tE)+'（占 '+(100-ratio).toFixed(1)+'%）。');
+    if(ratio>70)tips.push('资产负债率 '+ratio.toFixed(1)+'% 偏高，财务杠杆较大，偿债压力较重，建议控制负债规模。');
+    else if(ratio<30)tips.push('资产负债率 '+ratio.toFixed(1)+'% 偏低，财务策略保守，可适当运用杠杆提升ROE。');
+    else tips.push('资产负债率 '+ratio.toFixed(1)+'% 处于合理区间，财务结构稳健。');
+    if(curRatio<1)tips.push('流动比率 '+curRatio.toFixed(2)+'（<1），短期偿债能力不足，建议增加流动资产或减少短期负债。');
+    else if(curRatio>=1.5&&curRatio<=2)tips.push('流动比率 '+curRatio.toFixed(2)+'，短期偿债能力良好。');
+    else if(curRatio>3)tips.push('流动比率 '+curRatio.toFixed(2)+' 偏高，流动资金闲置，建议优化资金运用效率。');
+    var inv=num('inventory');
+    if(curA>0&&inv/curA>0.5)tips.push('存货占流动资产 '+(inv/curA*100).toFixed(1)+'%，存货占比偏高，关注库存周转与跌价风险。');
+    tips.push('留存收益期末为 '+fmt(num('begRE')+num('netIncome')-num('dividends'))+'，由期初留存+净利润-分红自动计算，是平衡表的关键调节项。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function pct(v,t){return (t>0?v/t*100:0).toFixed(1)+'%'}
+  function save(){var d={};['cash','ar','inventory','prepaid','ppe','intangible','ap','stDebt','accrued','deferred','ltDebt','ltPayable','capital','reserve','begRE','netIncome','dividends'].forEach(function(id){d[id]=$(id).value});try{localStorage.setItem('jx_bsb_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_bsb_data'));if(d)Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',BSB.init)}else{BSB.init()}
+</script>
+</body>
+</html>

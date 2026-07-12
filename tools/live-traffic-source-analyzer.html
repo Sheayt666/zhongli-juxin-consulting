@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="直播流量来源分析器：自然/付费/私域流量占比，引流效率，转化归因，CSS流量来源矩阵。免费直播运营深度工具。">
+<meta name="keywords" content="直播流量,流量来源,自然流量,付费流量,私域流量,转化归因,引流效率,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-traffic-source-analyzer.html">
+<title>直播流量来源分析器 - 自然/付费/私域占比·转化归因·CSS流量矩阵 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:120px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;margin:20px 0}
+.donut{width:220px;height:220px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:all .5s}
+.donut-inner{width:140px;height:140px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-num{font-size:28px;font-weight:800;color:#4f46e5}
+.donut-lbl{font-size:12px;color:var(--muted)}
+.src-legend{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+.src-leg-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft)}
+.src-leg-dot{width:12px;height:12px;border-radius:3px}
+.matrix-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.matrix-table th{background:var(--bg-soft);color:var(--ink-soft);font-weight:600;padding:10px 8px;text-align:left;border-bottom:2px solid var(--rule)}
+.matrix-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light)}
+.bar-track{height:10px;background:var(--rule-light);border-radius:5px;overflow:hidden;min-width:80px}
+.bar-fill{height:100%;border-radius:5px;transition:width .5s}
+.funnel-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.funnel-label{width:110px;font-size:13px;font-weight:600;color:var(--ink-soft);text-align:right}
+.funnel-bar{flex:1;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;color:#fff;font-weight:600;font-size:13px;transition:width .5s}
+.funnel-rate{width:60px;font-size:12px;color:var(--muted)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播流量来源分析器","description":"自然/付费/私域流量占比，引流效率，转化归因，CSS流量来源矩阵。","url":"https://juxin-consulting.help/tools/live-traffic-source-analyzer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_traffic_source_analyzer">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📺</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="live-product-selection.html" class="step">直播选品</a><span class="arrow">›</span>
+      <a href="live-product-lineup.html" class="step">排品</a><span class="arrow">›</span>
+      <a href="live-script-generator.html" class="step">话术</a><span class="arrow">›</span>
+      <a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">›</span>
+      <a href="live-interaction-calc.html" class="step">互动计算</a><span class="arrow">›</span>
+      <a href="live-replay-analyzer.html" class="step">复盘分析</a><span class="arrow">›</span>
+      <a href="live-promo-text.html" class="step">促销文案</a><span class="arrow">›</span>
+      <a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">›</span>
+      <a href="live-competitor-analysis.html" class="step">竞品分析</a><span class="arrow">›</span>
+      <a href="live-checklist.html" class="step">直播清单</a><span class="arrow">›</span>
+      <span class="step current">流量来源</span><span class="arrow">›</span>
+      <a href="live-talent-manager.html" class="step">主播管理</a><span class="arrow">›</span>
+      <a href="live-post-stream-debrief.html" class="step">直播复盘</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📺 直播运营工具 · 深度版</span>
+      <h1>直播流量来源<em>分析器</em></h1>
+      <p class="tool-hero-desc">拆解直播间自然/付费/私域流量占比，分析引流效率与转化归因，CSS流量来源矩阵与漏斗图直观呈现各来源贡献，定位最优引流组合。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 流量来源数据</h2>
+          <p class="calc-form-subtitle">填写各流量来源的观看人数、转化与成本，实时分析引流效率</p>
+          <div class="fee-rule-box" style="margin-bottom:18px"><h4>🌊 三大流量来源</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>自然流量观看人数</label><input type="number" id="organicView" value="8000" min="0" oninput="TSA.calc()"></div>
+            <div class="calc-field"><label>自然流量转化率 <span class="hint">(%)</span></label><input type="number" id="organicCvr" value="3.5" min="0" step="0.1" oninput="TSA.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>付费流量观看人数</label><input type="number" id="paidView" value="5000" min="0" oninput="TSA.calc()"></div>
+            <div class="calc-field"><label>付费流量成本 <span class="hint">($)</span></label><input type="number" id="paidCost" value="800" min="0" oninput="TSA.calc()"></div>
+          </div>
+          <div class="calc-field"><label>付费流量转化率 <span class="hint">(%)</span></label><input type="number" id="paidCvr" value="2.2" min="0" step="0.1" oninput="TSA.calc()"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>私域流量观看人数</label><input type="number" id="privateView" value="3000" min="0" oninput="TSA.calc()"></div>
+            <div class="calc-field"><label>私域流量转化率 <span class="hint">(%)</span></label><input type="number" id="privateCvr" value="6.8" min="0" step="0.1" oninput="TSA.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px"><h4>💵 转化与客单</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>平均客单价 <span class="hint">($)</span></label><input type="number" id="aov" value="35" min="0" oninput="TSA.calc()"></div>
+            <div class="calc-field"><label>直播时长 <span class="hint">(分钟)</span></label><input type="number" id="duration" value="180" min="1" oninput="TSA.calc()"></div>
+          </div>
+          <div class="calc-field"><label>私域引流成本 <span class="hint">($/人，粉丝群/社群维护分摊)</span></label><input type="number" id="privateCost" value="120" min="0" oninput="TSA.calc()"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="donutSection">
+        <h3>🥧 流量来源占比</h3>
+        <div class="donut-wrap">
+          <div class="donut" id="donut"><div class="donut-inner"><div class="donut-num" id="donutNum">0</div><div class="donut-lbl">总观看人数</div></div></div>
+          <div class="src-legend" id="srcLegend"></div>
+        </div>
+      </div>
+      <div class="section-block" id="matrixSection">
+        <h3>📊 流量来源矩阵</h3>
+        <div style="overflow-x:auto"><table class="matrix-table" id="matrixTable"></table></div>
+      </div>
+      <div class="section-block" id="funnelSection">
+        <h3>🔻 转化漏斗与归因</h3>
+        <div id="funnelChart"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="live-checklist.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 直播清单</span></a>
+        <a href="live-talent-manager.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">主播管理 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-traffic-source-analyzer.html">直播流量来源分析器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var TSA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var ov=num('organicView'),oc=num('organicCvr')/100;
+    var pv=num('paidView'),pc=num('paidCost'),pcvr=num('paidCvr')/100;
+    var prv=num('privateView'),prcvr=num('privateCvr')/100,prcost=num('privateCost');
+    var aov=num('aov'),dur=num('duration');
+    var total=ov+pv+prv;
+    var oOrders=ov*oc,pOrders=pv*pcvr,prOrders=prv*prcvr;
+    var totalOrders=oOrders+pOrders+prOrders;
+    var gmv=totalOrders*aov;
+    var totalCost=pc+prcost;
+    var netGmv=gmv-totalCost;
+    var oGmv=oOrders*aov,pGmv=pOrders*aov,prGmv=prOrders*aov;
+    var oCpa=0,pCpa=pOrders>0?pc/pOrders:0,prCpa=prOrders>0?prcost/prOrders:0;
+    var oRoi=Infinity,pRoi=pCpa>0?aov/pCpa:0,prRoi=prCpa>0?aov/prCpa:0;
+    var efficiency=total>0?totalOrders/total:0;
+    renderResult(total,gmv,netGmv,efficiency,totalOrders);
+    renderDonut(ov,pv,prv,total);
+    renderMatrix(ov,pv,prv,oc,pcvr,prcvr,oOrders,pOrders,prOrders,oGmv,pGmv,prGmv,pc,prcost,pCpa,prCpa,dur);
+    renderFunnel(ov,pv,prv,total,oOrders,pOrders,prOrders,totalOrders,aov,gmv);
+  }
+  function renderResult(total,gmv,net,eff,orders){
+    var col=net>0?'#10b981':'#ef4444';
+    $('resultCard').innerHTML='<h3>📊 流量分析总览</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+total.toLocaleString()+'</div><div class="rsb-lbl">总观看人数</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">$'+gmv.toFixed(0)+'</div><div class="rsb-lbl">总GMV</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">$'+net.toFixed(0)+'</div><div class="rsb-lbl">净GMV</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+(eff*100).toFixed(1)+'%</div><div class="rsb-lbl">综合转化率</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 综合转化率='+orders+'/'+total+'='+(eff*100).toFixed(1)+'%。私域流量转化率通常最高，应持续沉淀；自然流量免费但受算法影响；付费流量需控成本。</div>';
+  }
+  function renderDonut(o,p,pr,total){
+    var op=total>0?o/total:0,pp=total>0?p/total:0,prp=total>0?pr/total:0;
+    var oDeg=op*360,pDeg=pp*360,prDeg=prp*360;
+    $('donut').style.background='conic-gradient(#10b981 0deg '+oDeg+'deg,#f59e0b '+oDeg+'deg '+(oDeg+pDeg)+'deg,#4f46e5 '+(oDeg+pDeg)+'deg 360deg)';
+    $('donutNum').textContent=total.toLocaleString();
+    $('srcLegend').innerHTML='<div class="src-leg-item"><span class="src-leg-dot" style="background:#10b981"></span>自然 '+(op*100).toFixed(0)+'% ('+o.toLocaleString()+')</div>'+
+      '<div class="src-leg-item"><span class="src-leg-dot" style="background:#f59e0b"></span>付费 '+(pp*100).toFixed(0)+'% ('+p.toLocaleString()+')</div>'+
+      '<div class="src-leg-item"><span class="src-leg-dot" style="background:#4f46e5"></span>私域 '+(prp*100).toFixed(0)+'% ('+pr.toLocaleString()+')</div>';
+  }
+  function renderMatrix(ov,pv,prv,oc,pcvr,prcvr,oO,pO,prO,oG,pG,prG,pc,prcost,pCpa,prCpa,dur){
+    var rows=[
+      {name:'自然流量',color:'#10b981',view:ov,cvr:oc,orders:oO,gmv:oG,cost:0,cpa:0,roi:'∞'},
+      {name:'付费流量',color:'#f59e0b',view:pv,cvr:pcvr,orders:pO,gmv:pG,cost:pc,cpa:pCpa,roi:pCpa>0?(pG/(pc+0.01)).toFixed(1)+'x':'-'},
+      {name:'私域流量',color:'#4f46e5',view:prv,cvr:prcvr,orders:prO,gmv:prG,cost:prcost,cpa:prCpa,roi:prCpa>0?(prG/(prcost+0.01)).toFixed(1)+'x':'-'}
+    ];
+    $('matrixTable').innerHTML='<thead><tr><th>来源</th><th>观看</th><th>占比</th><th>转化率</th><th>订单</th><th>GMV</th><th>成本</th><th>CPA</th><th>ROI</th><th>人均观看时长</th></tr></thead><tbody>'+
+      rows.map(function(r){
+        var total=ov+pv+prv;
+        var share=total>0?(r.view/total*100).toFixed(0):0;
+        var avgWatch=dur>0?(r.view>0?Math.min(dur,dur*(0.6+r.cvr)):0):0;
+        return '<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:'+r.color+';margin-right:6px"></span><strong>'+r.name+'</strong></td>'+
+          '<td>'+r.view.toLocaleString()+'</td><td>'+share+'%</td><td>'+(r.cvr*100).toFixed(1)+'%</td>'+
+          '<td>'+Math.round(r.orders)+'</td><td>$'+r.gmv.toFixed(0)+'</td><td>$'+r.cost.toFixed(0)+'</td>'+
+          '<td>'+(r.cpa>0?'$'+r.cpa.toFixed(2):'-')+'</td><td>'+r.roi+'</td><td>'+avgWatch.toFixed(0)+'min</td></tr>';
+      }).join('')+'</tbody>';
+  }
+  function renderFunnel(ov,pv,prv,total,oO,pO,prO,totalOrders,aov,gmv){
+    var stages=[
+      {label:'总曝光观看',val:total,color:'#4f46e5'},
+      {label:'有效互动',val:total*0.35,color:'#6366f1'},
+      {label:'商品点击',val:total*0.15,color:'#8b5cf6'},
+      {label:'加购',val:total*0.06,color:'#f59e0b'},
+      {label:'下单成交',val:totalOrders,color:'#10b981'}
+    ];
+    var max=stages[0].val;
+    var prev=max;
+    var html=stages.map(function(s,i){
+      var w=max>0?(s.val/max*100):0;
+      var rate=i>0&&prev>0?(s.val/prev*100).toFixed(0):100;
+      prev=s.val;
+      return '<div class="funnel-row"><div class="funnel-label">'+s.label+'</div>'+
+        '<div class="funnel-bar" style="width:'+w+'%;background:linear-gradient(90deg,'+s.color+','+s.color+'cc)">'+Math.round(s.val).toLocaleString()+'</div>'+
+        '<div class="funnel-rate">'+(i>0?rate+'%':'100%')+'</div></div>';
+    }).join('');
+    html+='<div style="margin-top:16px;padding:14px;background:var(--bg-soft);border-radius:10px;font-size:13px;color:var(--ink-soft)">📌 转化归因：自然流量贡献 <strong style="color:#10b981">'+Math.round(oO)+'</strong> 单，付费 <strong style="color:#f59e0b">'+Math.round(pO)+'</strong> 单，私域 <strong style="color:#4f46e5">'+Math.round(prO)+'</strong> 单。总GMV $'+gmv.toFixed(0)+'，客单价 $'+aov+'。</div>';
+    $('funnelChart').innerHTML=html;
+  }
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TSA.init);}else{TSA.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

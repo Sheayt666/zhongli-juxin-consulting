@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FBA标签批量生成器：输入ASIN、FNSKU、数量、外箱数，生成FNSKU标/外箱标/国标/重量标信息表，CSS标签预览，打印清单。">
+<title>FBA标签批量生成器 - FNSKU/外箱/国标标签工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.label-table{width:100%;border-collapse:collapse;margin-top:16px}
+.label-table th{background:var(--accent-bg);color:var(--accent);padding:12px;text-align:left;font-size:12px;font-weight:700;border-bottom:2px solid var(--accent)}
+.label-table td{padding:12px;border-bottom:1px solid var(--rule-light);font-size:13px}
+.label-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:20px}
+.label-preview{border:2px dashed var(--rule);border-radius:var(--radius-md);padding:16px;text-align:center;background:#fff;position:relative}
+.label-preview.fnsku{border-color:var(--accent)}
+.label-preview.carton{border-color:var(--gold)}
+.label-preview.country{border-color:var(--green)}
+.label-preview.weight{border-color:var(--red)}
+.label-preview .lp-type{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.label-preview .lp-barcode{font-family:'SF Mono',Monaco,monospace;font-size:20px;font-weight:800;margin:8px 0;letter-spacing:2px}
+.label-preview .lp-info{font-size:12px;color:var(--muted);margin-top:4px}
+.label-preview .lp-box{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-top:4px}
+.label-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.label-summary-item{padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.label-summary-item .lsi-num{font-size:24px;font-weight:800;color:var(--accent)}
+.label-summary-item .lsi-label{font-size:11px;color:var(--muted);margin-top:4px}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">FBA标签批量生成器</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">🏷️ 物流合规工具</span><h1>FBA标签<em>批量生成器</em></h1><p class="tool-hero-desc">输入ASIN和FNSKU，一键生成FNSKU标、外箱标、国标、重量标全套标签信息表与预览</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">🚚</span><span class="workflow-name">物流合规工作流</span></div><div class="workflow-nav-steps"><a href="first-mile-shipping.html" class="step">头程运费</a><span class="arrow">→</span><a href="supplier-comparison.html" class="step">供应商比价</a><span class="arrow">→</span><a href="vat-calculator.html" class="step">VAT关税</a><span class="arrow">→</span><a href="tax-profit-calculator.html" class="step">税务利润</a><span class="arrow">→</span><a href="payment-fee.html" class="step">收款费率</a><span class="arrow">→</span><a href="currency-converter.html" class="step">汇率转换</a><span class="arrow">→</span><a href="hs-code-lookup.html" class="step">HS编码</a><span class="arrow">→</span><a href="customs-duty-calculator.html" class="step">关税计算</a><span class="arrow">→</span><a href="shipping-route-optimizer.html" class="step">路线优化</a><span class="arrow">→</span><a href="fba-label-batch-generator.html" class="step current">FBA标签</a><span class="arrow">→</span><a href="dangerous-goods-checker.html" class="step">危险品检查</a><span class="arrow">→</span><a href="import-export-compliance-guide.html" class="step">进出口合规</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>🏷️ 输入FBA标签信息</h2>
+<div class="form-row">
+<div class="form-group"><label>ASIN</label><input type="text" id="asin" placeholder="如 B08XYZ1234" value="B08XYZ1234" oninput="genLabels()"></div>
+<div class="form-group"><label>FNSKU</label><input type="text" id="fnsku" placeholder="如 X001ABCXYZ" value="X001ABCXYZ" oninput="genLabels()"></div>
+</div>
+<div class="form-row-3">
+<div class="form-group"><label>单品数量</label><input type="number" id="qty" placeholder="如 100" min="0" value="100" oninput="genLabels()"></div>
+<div class="form-group"><label>外箱数</label><input type="number" id="cartons" placeholder="如 5" min="0" value="5" oninput="genLabels()"></div>
+<div class="form-group"><label>每箱数量</label><input type="number" id="perCarton" placeholder="如 20" min="0" value="20" oninput="genLabels()"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>产品名称</label><input type="text" id="prodName" placeholder="如 无线蓝牙耳机" value="无线蓝牙耳机" oninput="genLabels()"></div>
+<div class="form-group"><label>原产国</label><select id="country" onchange="genLabels()"><option value="CN">China (中国)</option><option value="VN">Vietnam (越南)</option><option value="IN">India (印度)</option><option value="TH">Thailand (泰国)</option></select></div>
+</div>
+<div class="form-row-3">
+<div class="form-group"><label>单品重量 (kg)</label><input type="number" id="unitWeight" placeholder="如 0.15" step="0.01" min="0" value="0.15" oninput="genLabels()"></div>
+<div class="form-group"><label>外箱毛重 (kg)</label><input type="number" id="cartonWeight" placeholder="如 3.2" step="0.01" min="0" value="3.2" oninput="genLabels()"></div>
+<div class="form-group"><label>外箱尺寸 (cm)</label><input type="text" id="cartonSize" placeholder="如 40x30x30" value="40x30x30" oninput="genLabels()"></div>
+</div>
+</div>
+<div class="result-area" id="resultArea">
+<div class="empty-state"><div class="icon">🏷️</div><p>输入ASIN、FNSKU和数量<br>生成FBA标签信息表与预览</p></div>
+</div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="shipping-route-optimizer.html" class="related-card"><span class="ricon">🚢</span><span class="rtext">物流路线优化器</span></a><a href="import-export-compliance-guide.html" class="related-card"><span class="ricon">📋</span><span class="rtext">进出口合规指南</span></a><a href="dangerous-goods-checker.html" class="related-card"><span class="ricon">⚠️</span><span class="rtext">危险品检查器</span></a><a href="hs-code-lookup.html" class="related-card"><span class="ricon">🔍</span><span class="rtext">HS编码查询器</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+function genLabels(){
+var asin=document.getElementById('asin').value.trim();
+var fnsku=document.getElementById('fnsku').value.trim();
+var qty=parseInt(document.getElementById('qty').value)||0;
+var cartons=parseInt(document.getElementById('cartons').value)||0;
+var perCarton=parseInt(document.getElementById('perCarton').value)||0;
+var prodName=document.getElementById('prodName').value.trim();
+var country=document.getElementById('country').value;
+var unitWeight=parseFloat(document.getElementById('unitWeight').value)||0;
+var cartonWeight=parseFloat(document.getElementById('cartonWeight').value)||0;
+var cartonSize=document.getElementById('cartonSize').value.trim();
+if(!asin||!fnsku||qty<=0){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">🏷️</div><p>输入ASIN、FNSKU和数量<br>生成FBA标签信息表与预览</p></div>';return;}
+var countryMap={CN:'China',VN:'Vietnam',IN:'India',TH:'Thailand'};
+var countryFull=countryMap[country]||country;
+var totalLabels=qty+cartons*2+cartons;
+var html='<div class="result-card"><h3 style="font-size:18px;font-weight:700;margin-bottom:16px">🏷️ FBA标签生成结果</h3>';
+html+='<div class="label-summary">';
+html+='<div class="label-summary-item"><div class="lsi-num">'+qty+'</div><div class="lsi-label">FNSKU单品标</div></div>';
+html+='<div class="label-summary-item"><div class="lsi-num">'+cartons+'</div><div class="lsi-label">外箱标</div></div>';
+html+='<div class="label-summary-item"><div class="lsi-num">'+cartons+'</div><div class="lsi-label">国标(原产地)</div></div>';
+html+='<div class="label-summary-item"><div class="lsi-num" style="color:var(--gold)">'+cartons+'</div><div class="lsi-label">重量标</div></div>';
+html+='</div>';
+html+='<table class="label-table"><thead><tr><th>标签类型</th><th>编码</th><th>数量</th><th>尺寸</th><th>粘贴位置</th><th>说明</th></tr></thead><tbody>';
+html+='<tr><td><strong style="color:var(--accent)">FNSKU标</strong></td><td style="font-family:monospace;font-weight:700">'+fnsku+'</td><td>'+qty+' 张</td><td>50×30mm</td><td>每个单品外包装</td><td>覆盖原条码，确保可扫描</td></tr>';
+html+='<tr><td><strong style="color:var(--gold)">外箱标</strong></td><td style="font-family:monospace;font-weight:700">'+fnsku+'-C'+(cartons>1?'1~'+cartons:'1')+'</td><td>'+cartons+' 张</td><td>100×100mm</td><td>外箱顶部居中</td><td>每箱1张，编号唯一</td></tr>';
+html+='<tr><td><strong style="color:var(--green)">国标</strong></td><td>Made in '+countryFull+'</td><td>'+cartons+' 张</td><td>50×30mm</td><td>外箱侧面</td><td>原产地标识，合规必须</td></tr>';
+html+='<tr><td><strong style="color:var(--red)">重量标</strong></td><td>'+cartonWeight+' kg</td><td>'+cartons+' 张</td><td>50×30mm</td><td>外箱侧面</td><td>毛重标识，每箱1张</td></tr>';
+html+='</tbody></table>';
+html+='<h4 style="font-size:16px;font-weight:700;margin:24px 0 12px">📋 标签预览</h4>';
+html+='<div class="label-preview-grid">';
+html+='<div class="label-preview fnsku"><div class="lp-type" style="color:var(--accent)">FNSKU 标签</div><div style="font-size:11px;color:var(--muted)">'+asin+'</div><div class="lp-barcode" style="color:var(--accent)">||| | || ||| |</div><div class="lp-info">'+fnsku+'</div><div class="lp-box" style="background:var(--accent-bg);color:var(--accent)">'+prodName+'</div></div>';
+html+='<div class="label-preview carton"><div class="lp-type" style="color:var(--gold)">外箱标签</div><div style="font-size:11px;color:var(--muted)">Carton 1/'+cartons+'</div><div class="lp-barcode" style="color:var(--gold)">|| ||| | || |</div><div class="lp-info">'+fnsku+'-C1</div><div class="lp-box" style="background:var(--gold-bg);color:var(--gold)">'+perCarton+' units/box</div></div>';
+html+='<div class="label-preview country"><div class="lp-type" style="color:var(--green)">原产地标</div><div class="lp-barcode" style="color:var(--green);font-size:16px">Made in</div><div class="lp-info" style="font-size:18px;font-weight:700;color:var(--green)">'+countryFull+'</div><div class="lp-box" style="background:var(--green-bg);color:var(--green)">'+country+'</div></div>';
+html+='<div class="label-preview weight"><div class="lp-type" style="color:var(--red)">重量标签</div><div class="lp-barcode" style="color:var(--red);font-size:16px">'+cartonWeight+'</div><div class="lp-info">kg (Gross Weight)</div><div class="lp-box" style="background:var(--red-bg);color:var(--red)">'+cartonSize+' cm</div></div>';
+html+='</div>';
+html+='<h4 style="font-size:16px;font-weight:700;margin:24px 0 12px">🖨️ 打印清单</h4>';
+html+='<div style="padding:16px;background:var(--bg-soft);border-radius:var(--radius-md);font-size:14px;line-height:2">';
+html+='<div>✓ FNSKU单品标签: <strong>'+qty+'张</strong> (50×30mm 热敏纸)</div>';
+html+='<div>✓ 外箱标签: <strong>'+cartons+'张</strong> (100×100mm A4打印)</div>';
+html+='<div>✓ 原产地标签: <strong>'+cartons+'张</strong> (50×30mm 热敏纸)</div>';
+html+='<div>✓ 重量标签: <strong>'+cartons+'张</strong> (50×30mm 热敏纸)</div>';
+html+='<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--rule)">总计: <strong style="color:var(--accent)">'+totalLabels+'张标签</strong></div>';
+html+='</div>';
+html+='<div style="margin-top:16px;padding:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius-sm);font-size:13px;color:#92400e">⚠️ 注意：FNSKU标签必须完全覆盖产品原条码。外箱标必须贴在箱顶居中位置，不可折叠或遮挡。建议多打印10%备用。</div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var h=JSON.parse(localStorage.getItem('jx_fba_labels')||'[]');
+h.unshift({asin:asin,fnsku:fnsku,qty:qty,cartons:cartons,time:Date.now()});
+if(h.length>10)h=h.slice(0,10);
+localStorage.setItem('jx_fba_labels',JSON.stringify(h));
+}
+genLabels();
+
+</script>
+</body>
+</html>

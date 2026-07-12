@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="供应商数据库搜索器（W18版）：按产品关键词与筛选条件搜索供应商，产能/认证/评分对比，CSS对比卡片。免费在线跨境电商供应商搜索工具。">
+<meta name="keywords" content="供应商搜索,供应商数据库,供应商对比,产能认证,采购管理,跨境卖家">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/supplier-database-search-w18.html">
+<title>供应商数据库搜索器 - 产能认证对比·CSS对比卡 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.sds-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.sds-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.sup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.sup-card{padding:22px;border-radius:14px;border:1px solid var(--rule);background:var(--surface);transition:all .2s;position:relative}
+.sup-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:#4f46e5}
+.sup-card .sc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.sup-card .sc-name{font-size:15px;font-weight:700;color:var(--ink)}
+.sup-card .sc-loc{font-size:11px;color:var(--muted);margin-top:2px}
+.sup-score{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0}
+.sup-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sup-meta-item{font-size:12px}
+.sup-meta-item .smi-label{color:var(--muted)}
+.sup-meta-item .smi-val{font-weight:600;color:var(--ink)}
+.cert-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.cert-tag{font-size:10px;padding:2px 8px;border-radius:10px;background:#eef2ff;color:#4f46e5;font-weight:600}
+.cap-bar{height:6px;border-radius:3px;background:var(--rule-light);overflow:hidden;margin-top:4px}
+.cap-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#4f46e5,#6366f1)}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.stat-card{flex:1;min-width:100px;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.stat-card .sv{font-size:20px;font-weight:800;color:var(--ink)}
+.stat-card .sl{font-size:11px;color:var(--muted);margin-top:2px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"供应商数据库搜索器","description":"按产品关键词与筛选条件搜索供应商，产能/认证/评分对比，CSS对比卡片。","url":"https://juxin-consulting.help/tools/supplier-database-search-w18.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"供应商数据库搜索器","item":"https://juxin-consulting.help/tools/supplier-database-search-w18.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="supplier_database_search_w18">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🏭 采购管理工作流</span>
+      <h1>供应商数据库 <em>搜索器</em></h1>
+      <p class="tool-hero-desc">按产品关键词与多条件筛选供应商，对比产能、认证资质、综合评分与MOQ，CSS对比卡片直观呈现，快速锁定优质供应商资源。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第6步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a><span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a><span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a><span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本</a><span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a><span class="arrow">→</span>
+      <span class="step current">供应商搜索</span><span class="arrow">→</span>
+      <a href="purchase-order-manager.html" class="step">采购订单</a><span class="arrow">→</span>
+      <a href="supplier-performance-scorecard-w18.html" class="step">供应商记分卡</a><span class="arrow">→</span>
+      <a href="price-negotiation-strategist.html" class="step">价格谈判</a><span class="arrow">→</span>
+      <a href="incoming-qc-manager.html" class="step">来料质检</a><span class="arrow">→</span>
+      <a href="supplier-risk-monitor.html" class="step">供应商风险</a><span class="arrow">→</span>
+      <a href="purchase-cost-tracker.html" class="step">采购成本</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="sds-section">
+        <h3>🔍 搜索筛选条件</h3>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>产品关键词</label><input type="text" id="kw" value="蓝牙耳机" oninput="SDS.search()"></div>
+          <div class="calc-field"><label>所在地</label><select id="loc" onchange="SDS.search()"><option value="">全部</option><option value="深圳">深圳</option><option value="东莞">东莞</option><option value="广州">广州</option><option value="义乌">义乌</option></select></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>最低评分</label><select id="minScore" onchange="SDS.search()"><option value="0">不限</option><option value="3.5">3.5+</option><option value="4" selected>4.0+</option><option value="4.5">4.5+</option></select></div>
+          <div class="calc-field"><label>认证要求</label><select id="cert" onchange="SDS.search()"><option value="">不限</option><option value="ISO9001">ISO9001</option><option value="BSCI">BSCI</option><option value="CE">CE</option><option value="FCC">FCC</option></select></div>
+        </div>
+      </div>
+
+      <div class="sds-section">
+        <h3>📊 搜索结果概览</h3>
+        <div class="stat-row" id="statRow"></div>
+      </div>
+
+      <div class="sds-section">
+        <h3>📋 供应商对比卡片</h3>
+        <div class="sup-grid" id="supGrid"></div>
+      </div>
+
+      <div class="sds-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="supplier-audit.html" class="related-card"><span class="related-card-icon">🔍</span><div class="related-card-content"><h5>供应商评估</h5><p>资质审核</p></div></a>
+          <a href="supplier-performance-scorecard-w18.html" class="related-card"><span class="related-card-icon">📊</span><div class="related-card-content"><h5>供应商记分卡</h5><p>绩效评分</p></div></a>
+          <a href="purchase-order-manager.html" class="related-card"><span class="related-card-icon">📝</span><div class="related-card-content"><h5>采购订单管理</h5><p>PO生成</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="lead-time-calc.html" class="wbn-btn prev">← 上一步：交期计算</a>
+        <a href="purchase-order-manager.html" class="wbn-btn next">下一步：采购订单 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-database-search-w18.html">供应商搜索</a></li><li><a href="supplier-audit.html">供应商评估</a></li><li><a href="purchase-cost-tracker.html">采购成本</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var SDS=(function(){
+  'use strict';
+  var DB=[
+    {name:'深圳蓝声科技有限公司',loc:'深圳',cat:'蓝牙耳机',score:4.7,cap:85,moq:500,lead:15,price:8.5,certs:['ISO9001','BSCI','CE','FCC'],year:8},
+    {name:'东莞智联电子厂',loc:'东莞',cat:'蓝牙耳机',score:4.3,cap:70,moq:1000,lead:20,price:7.2,certs:['ISO9001','CE'],year:6},
+    {name:'深圳声科数码科技',loc:'深圳',cat:'蓝牙耳机',score:4.6,cap:90,moq:300,lead:12,price:9.8,certs:['ISO9001','BSCI','CE','FCC','RoHS'],year:10},
+    {name:'广州沃声电子',loc:'广州',cat:'蓝牙耳机',score:4.1,cap:60,moq:800,lead:25,price:6.8,certs:['CE'],year:4},
+    {name:'义乌市声动商贸',loc:'义乌',cat:'蓝牙耳机',score:3.8,cap:45,moq:200,lead:18,price:5.5,certs:[],year:3},
+    {name:'深圳市锐音科技',loc:'深圳',cat:'蓝牙耳机',score:4.5,cap:78,moq:500,lead:14,price:8.9,certs:['ISO9001','BSCI','FCC'],year:7}
+  ];
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function search(){
+    var kw=v('kw').toLowerCase(),loc=v('loc'),minScore=parseFloat(v('minScore'))||0,cert=v('cert');
+    var list=DB.filter(function(s){
+      var kwOk=!kw||s.name.toLowerCase().indexOf(kw)!==-1||s.cat.toLowerCase().indexOf(kw)!==-1;
+      var locOk=!loc||s.loc===loc;
+      var scoreOk=s.score>=minScore;
+      var certOk=!cert||s.certs.indexOf(cert)!==-1;
+      return kwOk&&locOk&&scoreOk&&certOk;
+    });
+    list.sort(function(a,b){return b.score-a.score;});
+    var avgScore=list.length?(list.reduce(function(s,x){return s+x.score;},0)/list.length).toFixed(1):'-';
+    var avgPrice=list.length?(list.reduce(function(s,x){return s+x.price;},0)/list.length).toFixed(2):'-';
+    document.getElementById('statRow').innerHTML=
+      '<div class="stat-card"><div class="sv">'+list.length+'</div><div class="sl">匹配供应商</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#4f46e5">'+avgScore+'</div><div class="sl">平均评分</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#10b981">$'+avgPrice+'</div><div class="sl">平均单价</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#f59e0b">'+(list.length?Math.min.apply(null,list.map(function(x){return x.moq;})):'-')+'</div><div class="sl">最低MOQ</div></div>';
+    if(!list.length){document.getElementById('supGrid').innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);grid-column:1/-1">未找到匹配的供应商，请调整筛选条件</div>';return;}
+    var h='';
+    list.forEach(function(s){
+      var sc=s.score>=4.5?'#10b981':(s.score>=4?'#f59e0b':'#ef4444');
+      h+='<div class="sup-card"><div class="sc-head"><div><div class="sc-name">'+s.name+'</div><div class="sc-loc">📍 '+s.loc+' · 成立'+s.year+'年</div></div><div class="sup-score" style="background:'+sc+'">'+s.score+'</div></div>';
+      h+='<div class="sup-meta"><div class="sup-meta-item"><div class="smi-label">起订量 MOQ</div><div class="smi-val">'+s.moq+' pcs</div></div>';
+      h+='<div class="sup-meta-item"><div class="smi-label">参考单价</div><div class="smi-val">$'+s.price+'</div></div>';
+      h+='<div class="sup-meta-item"><div class="smi-label">交货周期</div><div class="smi-val">'+s.lead+' 天</div></div>';
+      h+='<div class="sup-meta-item"><div class="smi-label">产能利用率</div><div class="smi-val">'+s.cap+'%</div></div></div>';
+      h+='<div class="cap-bar"><div class="cap-bar-fill" style="width:'+s.cap+'%;background:'+(s.cap>=85?'#ef4444':s.cap>=70?'#f59e0b':'#10b981')+'"></div></div>';
+      h+='<div style="font-size:11px;color:var(--muted);margin-top:4px">产能'+(s.cap>=85?'紧张':'充裕')+'</div>';
+      if(s.certs.length){h+='<div class="cert-tags">';s.certs.forEach(function(c){h+='<span class="cert-tag">'+c+'</span>';});h+='</div>';}else{h+='<div style="font-size:11px;color:var(--muted)">暂无认证</div>';}
+      h+='</div>';
+    });
+    document.getElementById('supGrid').innerHTML=h;
+  }
+  function init(){search();}
+  return {search:search,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SDS.init);}else{SDS.init();}
+</script>
+</body>
+</html>

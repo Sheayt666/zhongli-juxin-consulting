@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="评论痛点挖掘器：竞品差评内容分析，功能缺口+改进机会+痛点优先级量化，CSS痛点矩阵可视化，跨境卖家VOC用户声音分析工具。">
+<title>评论痛点挖掘器 - 差评分析功能缺口痛点优先级 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field textarea{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field textarea:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.pain-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.pain-card{border:1px solid var(--rule);border-radius:14px;padding:16px;background:#fff;position:relative;overflow:hidden}
+.pain-card .pc-priority{position:absolute;top:0;right:0;padding:4px 12px;font-size:11px;font-weight:800;color:#fff;border-radius:0 14px 0 8px}
+.pain-card.p1 .pc-priority{background:#dc2626}.pain-card.p2 .pc-priority{background:#f59e0b}.pain-card.p3 .pc-priority{background:#4f46e5}
+.pain-card .pc-icon{font-size:28px;margin-bottom:8px}
+.pain-card .pc-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.pain-card .pc-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.pain-card .pc-stats{display:flex;gap:12px;font-size:11px}
+.pain-card .pc-stat{flex:1}
+.pain-card .pc-stat .ps-val{font-size:16px;font-weight:800;color:#dc2626}
+.pain-card .pc-stat .ps-lab{color:var(--muted)}
+.pain-bar{height:6px;border-radius:3px;background:var(--rule-light);overflow:hidden;margin-top:6px}
+.pain-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#dc2626,#f59e0b)}
+.review-feed{max-height:320px;overflow-y:auto;border:1px solid var(--rule);border-radius:12px}
+.review-item{padding:12px 14px;border-bottom:1px solid var(--rule-light);font-size:12px}
+.review-item:last-child{border-bottom:none}
+.review-item .ri-head{display:flex;justify-content:space-between;margin-bottom:4px}
+.review-item .ri-stars{color:#f59e0b}
+.review-item .ri-tag{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700}
+.ri-tag.pain{background:#fef2f2;color:#dc2626}.ri-tag.gap{background:#fffbeb;color:#d97706}
+.review-item .ri-text{color:var(--ink-soft);line-height:1.5}
+.gap-table{width:100%;border-collapse:collapse;font-size:13px}
+.gap-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.gap-table th.num{text-align:right}
+.gap-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.gap-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+  <a href="product-research-scorecard.html" class="workflow-step">选品评分</a>
+  <a href="market-gap-finder.html" class="workflow-step">市场空白</a>
+  <a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a>
+  <a href="competition-density-mapper.html" class="workflow-step">竞争密度</a>
+  <a href="product-differentiation-planner.html" class="workflow-step">差异化</a>
+  <a href="seasonality-checker.html" class="workflow-step">季节性</a>
+  <a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a>
+  <a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a>
+  <a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a>
+  <a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+  <a href="blue-ocean-scanner.html" class="workflow-step">蓝海扫描</a>
+  <a href="review-pain-point-miner.html" class="workflow-step active">痛点挖掘</a>
+  <a href="product-improvement-ideator.html" class="workflow-step">改进创意</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W36 选品深度</a><span class="sep">›</span><span class="current">评论痛点挖掘器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">⛏️</span>评论痛点挖掘器 Review Pain Point Miner</h1>
+  <p>输入竞品差评内容，自动提取功能缺口与改进机会，痛点按提及频率×严重度量化优先级，CSS痛点矩阵可视化展示，帮助跨境卖家从用户声音(VOC)中发现产品改进方向。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card danger"><div class="mc-label">差评总数</div><div class="mc-value" id="mReviews">0</div></div>
+    <div class="metric-card"><div class="mc-label">痛点类型</div><div class="mc-value" id="mPains">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">功能缺口</div><div class="mc-value" id="mGaps">0</div></div>
+    <div class="metric-card success"><div class="mc-label">最高优先级</div><div class="mc-value" id="mTop" style="font-size:14px">-</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📝 竞品差评输入</h2>
+    <div class="jx-field"><label>差评内容（每行一条）<span class="hint">粘贴竞品1-3星评论</span></label><textarea id="reviews" rows="8" style="font-size:12px;line-height:1.6" oninput="RPM.calc()">续航太短了，用半天就没电，根本不能用一整天
+降噪效果一般，戴上还能听到外面声音，不如宣传的那么好
+耳塞太小，戴久了耳朵疼，舒适度很差
+连接不稳定，隔几分钟断一次，看视频很烦
+充电口松了，用了两周就接触不良
+按键太硬，每次按都很费力
+通话质量差，对方说听不清楚
+包装简陋，送人拿不出手
+左右耳音量不一样，有质量问题
+说明书全英文，看不懂怎么配对</textarea></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 痛点优先级矩阵</h2>
+    <div class="pain-matrix" id="painMatrix"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 功能缺口与改进机会</h2>
+    <div style="overflow-x:auto"><table class="gap-table" id="gapTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💬 差评原文与标签</h2>
+    <div class="review-feed" id="reviewFeed"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 痛点转化建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="product-improvement-ideator.html" class="rt-card"><div class="rt-icon">💡</div><div><h5>产品改进创意器</h5><p>改进方向生成</p></div></a>
+      <a href="review-velocity-analyzer.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>评论速度分析</h5><p>评论增长分析</p></div></a>
+      <a href="product-differentiation-planner.html" class="rt-card"><div class="rt-icon">🎨</div><div><h5>差异化规划</h5><p>差异化定位</p></div></a>
+      <a href="market-gap-finder.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>市场空白发现</h5><p>空白机会</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="review-pain-point-miner.html">痛点挖掘</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var RPM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  //痛点关键词库
+  var painLib=[
+    {key:'续航',icon:'🔋',keywords:['续航','没电','电量','半天','用不久'],severity:9,improvement:'升级大容量电池，续航提升至30小时+，配套快充'},
+    {key:'降噪',icon:'🔇',keywords:['降噪','隔音','听到外面','噪音'],severity:8,improvement:'升级主动降噪芯片，降噪深度达35dB+，强化宣传真实性'},
+    {key:'舒适度',icon:'👂',keywords:['耳朵疼','不舒服','戴久','太小','磨'],severity:7,improvement:'配备多尺寸硅胶耳塞，人体工学设计，轻量化至4g'},
+    {key:'连接稳定性',icon:'📶',keywords:['断','连接不稳','断连','卡顿'],severity:9,improvement:'升级蓝牙5.3芯片，双路传输，抗干扰强化'},
+    {key:'耐用性',icon:'🛡️',keywords:['松了','接触不良','坏了','质量','两周'],severity:8,improvement:'加强接口工艺，Type-C镀金触点，通过5000次插拔测试'},
+    {key:'按键体验',icon:'🔘',keywords:['按键','硬','费力','难按'],severity:5,improvement:'优化按键力度反馈，触控+实体键双模式'},
+    {key:'通话质量',icon:'📞',keywords:['通话','听不清','麦克风','对方'],severity:7,improvement:'增加双麦克风降噪阵列，ENC通话降噪'},
+    {key:'包装',icon:'📦',keywords:['包装','简陋','送人','拿不出手'],severity:4,improvement:'升级礼盒包装，含收纳盒，提升开箱体验'},
+    {key:'品控',icon:'⚠️',keywords:['左右','不一样','质量问题','坏'],severity:9,improvement:'加强出厂配对检测，左右声道一致性校准'},
+    {key:'本地化',icon:'🌍',keywords:['说明书','英文','看不懂','配对'],severity:4,improvement:'多语言说明书，一键配对引导动画'}
+  ];
+
+  function calc(){
+    var text=$('reviews').value;
+    var lines=text.split('\n').filter(function(l){return l.trim()});
+    var reviewData=lines.map(function(l){
+      var tags=[];
+      painLib.forEach(function(p){if(p.keywords.some(function(k){return l.indexOf(k)>=0}))tags.push(p.key)});
+      return{text:l,tags:tags,stars:Math.floor(Math.random()*2)+1};
+    });
+    var painCount={};
+    reviewData.forEach(function(r){r.tags.forEach(function(t){painCount[t]=(painCount[t]||0)+1})});
+    var pains=Object.keys(painCount).map(function(k){
+      var p=painLib.find(function(x){return x.key===k});
+      var count=painCount[k];
+      var freq=count/lines.length*100;
+      var score=Math.round(freq*p.severity/10);
+      return{key:k,icon:p.icon,count:count,freq:freq,severity:p.severity,improvement:p.improvement,score:score,priority:score>=70?'P1':score>=40?'P2':'P3'};
+    }).sort(function(a,b){return b.score-a.score});
+    $('mReviews').textContent=lines.length;
+    $('mPains').textContent=pains.length;
+    $('mGaps').textContent=pains.filter(function(p){return p.severity>=7}).length;
+    $('mTop').textContent=pains[0]?pains[0].key:'-';
+    renderMatrix(pains);
+    renderGapTable(pains);
+    renderFeed(reviewData);
+    renderTips(pains,lines.length);
+    save();
+  }
+
+  function renderMatrix(pains){
+    var h='';
+    pains.forEach(function(p){
+      h+='<div class="pain-card '+(p.priority==='P1'?'p1':p.priority==='P2'?'p2':'p3')+'">';
+      h+='<div class="pc-priority">'+p.priority+'</div>';
+      h+='<div class="pc-icon">'+p.icon+'</div>';
+      h+='<div class="pc-title">'+p.key+'</div>';
+      h+='<div class="pc-desc">'+p.improvement+'</div>';
+      h+='<div class="pc-stats"><div class="pc-stat"><div class="ps-val">'+p.count+'</div><div class="ps-lab">提及次数</div></div>';
+      h+='<div class="pc-stat"><div class="ps-val">'+p.freq.toFixed(0)+'%</div><div class="ps-lab">频率</div></div>';
+      h+='<div class="pc-stat"><div class="ps-val">'+p.severity+'</div><div class="ps-lab">严重度</div></div></div>';
+      h+='<div class="pain-bar"><div class="pain-bar-fill" style="width:'+p.score+'%"></div></div>';
+      h+='<div style="font-size:11px;color:var(--muted);margin-top:4px">痛点分：'+p.score+'</div></div>';
+    });
+    $('painMatrix').innerHTML=h||'<p style="color:var(--muted);text-align:center;padding:20px">未识别到痛点，请输入更多差评内容</p>';
+  }
+
+  function renderGapTable(pains){
+    var h='<thead><tr><th>痛点</th><th>类型</th><th class="num">提及次数</th><th class="num">频率</th><th class="num">严重度</th><th class="num">痛点分</th><th>优先级</th><th>改进机会</th></tr></thead><tbody>';
+    pains.forEach(function(p){
+      var isGap=p.severity>=7;
+      h+='<tr><td><strong>'+p.icon+' '+p.key+'</strong></td><td>'+(isGap?'<span class="ri-tag gap">功能缺口</span>':'<span class="ri-tag pain">体验痛点</span>')+'</td><td class="num">'+p.count+'</td><td class="num">'+p.freq.toFixed(0)+'%</td><td class="num">'+p.severity+'</td><td class="num" style="font-size:15px;font-weight:800;color:'+(p.score>=70?'#dc2626':p.score>=40?'#d97706':'#4f46e5')+'">'+p.score+'</td><td><span class="score-badge '+(p.priority==='P1'?'score-red':p.priority==='P2'?'score-niche':'score-gap')+'">'+p.priority+'</span></td><td style="font-size:12px;max-width:200px">'+p.improvement+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('gapTable').innerHTML=h;
+  }
+
+  function renderFeed(reviewData){
+    var stars=function(n){return '★'.repeat(n)+'☆'.repeat(5-n)};
+    var h='';
+    reviewData.forEach(function(r){
+      h+='<div class="review-item"><div class="ri-head"><span class="ri-stars">'+stars(r.stars)+'</span>';
+      h+='<span>'+(r.tags.map(function(t){return '<span class="ri-tag pain" style="margin-left:4px">'+t+'</span>'}).join('')||'<span class="ri-tag gap">未分类</span>')+'</span></div>';
+      h+='<div class="ri-text">"'+r.text+'"</div></div>';
+    });
+    $('reviewFeed').innerHTML=h;
+  }
+
+  function renderTips(pains,total){
+    var tips=[];
+    tips.push('共分析 '+total+' 条差评，识别出 '+pains.length+' 个痛点类型，其中 '+pains.filter(function(p){return p.severity>=7}).length+' 个为高严重度功能缺口。');
+    var p1=pains.filter(function(p){return p.priority==='P1'});
+    if(p1.length)tips.push('P1优先痛点：'+p1.map(function(p){return p.key+'(分'+p.score+')'}).join('、')+'，需在下一代产品中优先解决，直接影响差评率与退货率。');
+    var top=pains[0];
+    if(top)tips.push('最突出痛点「'+top.key+'」被提及 '+top.count+' 次（'+top.freq.toFixed(0)+'%），改进建议：'+top.improvement+'。');
+    tips.push('痛点分=频率×严重度/10，建议痛点分≥40的痛点纳入产品迭代需求清单。');
+    var easy=pains.filter(function(p){return p.severity<=5});
+    if(easy.length)tips.push('低成本速赢改进：'+easy.map(function(p){return p.key}).join('、')+'，严重度低但能快速提升好评率，建议优先实施。');
+    tips.push('建议将痛点改进点转化为Listing卖点文案，如"续航30h解决电量焦虑"，直击竞品痛点实现差异化。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_rpm_data',$('reviews').value)}catch(e){}}
+  function load(){try{var d=localStorage.getItem('jx_rpm_data');if(d)$('reviews').value=d}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RPM.init)}else{RPM.init()}
+</script>
+</body>
+</html>

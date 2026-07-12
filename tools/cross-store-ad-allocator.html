@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="跨店广告预算分配器：多店铺广告预算统筹+ROI对比+智能再分配+竞争避让，CSS分配矩阵可视化，跨境卖家多店铺广告预算管理工具。">
+<title>跨店广告预算分配器 - 多店预算统筹ROI对比智能再分配 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.alloc-table{width:100%;border-collapse:collapse;font-size:13px}
+.alloc-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.alloc-table th.num{text-align:right}
+.alloc-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.alloc-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.alloc-table tr.best td{background:#ecfdf5}
+.alloc-table tr.warn td{background:#fffbeb}
+.alloc-bar-cell{display:flex;align-items:center;gap:8px}
+.alloc-bar{height:10px;border-radius:5px;background:var(--rule-light);overflow:hidden;flex:1;min-width:60px}
+.alloc-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#4f46e5,#6366f1)}
+.alloc-change{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px}
+.alloc-up{background:#ecfdf5;color:#059669}
+.alloc-down{background:#fef2f2;color:#dc2626}
+.alloc-equal{background:var(--bg-soft);color:var(--muted)}
+.store-card{border:1px solid var(--rule);border-radius:14px;padding:16px;background:#fff;margin-bottom:12px}
+.store-card .sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.store-card .sc-name{font-size:14px;font-weight:700;color:var(--ink)}
+.store-card .sc-roi{font-size:13px;font-weight:800;padding:3px 10px;border-radius:20px}
+.sc-bar-row{display:grid;grid-template-columns:100px 1fr 80px 80px;gap:10px;align-items:center;font-size:12px;padding:4px 0}
+.sc-bar-label{color:var(--ink-soft);font-weight:600}
+.sc-bar-track{height:18px;border-radius:9px;background:var(--rule-light);overflow:hidden;position:relative}
+.sc-bar-fill{height:100%;border-radius:9px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;color:#fff;font-weight:700;transition:width .4s}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.sc-bar-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W38 多店铺管理工作流</div><div class="workflow-steps">
+  <a href="multi-store-dashboard.html" class="workflow-step">综合看板</a>
+  <a href="store-performance-comparison.html" class="workflow-step">绩效对比</a>
+  <a href="cross-store-inventory.html" class="workflow-step">跨店库存</a>
+  <a href="unified-profit-report.html" class="workflow-step">统一利润</a>
+  <a href="store-segmentation-matrix.html" class="workflow-step">店铺分层</a>
+  <a href="multi-store-sku-mapper.html" class="workflow-step">SKU映射</a>
+  <a href="region-performance-analyzer.html" class="workflow-step">区域绩效</a>
+  <a href="store-launch-checklist.html" class="workflow-step">上线清单</a>
+  <a href="multi-store-risk-monitor.html" class="workflow-step">风险监控</a>
+  <a href="centralized-listing-manager.html" class="workflow-step">Listing管理</a>
+  <a href="cross-store-ad-allocator.html" class="workflow-step active">广告分配</a>
+  <a href="multi-store-role-permission.html" class="workflow-step">角色权限</a>
+  <a href="global-expansion-planner.html" class="workflow-step">全球开店</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W38 多店铺管理</a><span class="sep">›</span><span class="current">跨店广告预算分配器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔀</span>跨店广告预算分配器 Cross-Store Ad Allocator</h1>
+  <p>多店铺广告预算统筹管理，ROI对比分析，基于广告效率智能再分配预算，避免同品牌店铺间关键词竞争冲突，CSS分配矩阵可视化各店铺预算占比与调整方向。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">总广告预算</div><div class="mc-value" id="mBudget">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">整体ROAS</div><div class="mc-value" id="mROAS">0x</div></div>
+    <div class="metric-card warning"><div class="mc-label">需加码店铺</div><div class="mc-value" id="mUp">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">需减投店铺</div><div class="mc-value" id="mDown">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💰 总预算与策略</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>总广告预算 <span class="hint">($/月)</span></label><input type="number" id="totalBudget" value="50000" step="1000" oninput="CSA.calc()"></div>
+      <div class="jx-field"><label>目标ROAS</label><input type="number" id="targetROAS" value="4.0" step="0.1" oninput="CSA.calc()"></div>
+      <div class="jx-field"><label>再分配比例 <span class="hint">(%)</span></label><input type="number" id="reallocPct" value="20" min="0" max="50" oninput="CSA.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 各店铺广告表现</h2>
+    <div id="storeCards"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 智能预算分配矩阵</h2>
+    <div style="overflow-x:auto"><table class="alloc-table" id="allocTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🛡️ 竞争避让分析</h2>
+    <ul class="tips-list" id="avoidList"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 预算分配建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="store-performance-comparison.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>店铺绩效对比</h5><p>多店绩效</p></div></a>
+      <a href="ad-budget-splitter.html" class="rt-card"><div class="rt-icon">✂️</div><div><h5>广告预算拆分</h5><p>预算拆分</p></div></a>
+      <a href="multi-store-dashboard.html" class="rt-card"><div class="rt-icon">📈</div><div><h5>多店看板</h5><p>综合看板</p></div></a>
+      <a href="unified-profit-report.html" class="rt-card"><div class="rt-icon">💰</div><div><h5>统一利润</h5><p>统一利润报告</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="cross-store-ad-allocator.html">广告分配器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CSA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var stores=[
+    {name:'美国站 US',budget:20000,spend:18500,sales:92000,roas:4.97,conflict:['蓝牙耳机']},
+    {name:'英国站 UK',budget:10000,spend:9200,sales:28000,roas:3.04,conflict:['蓝牙耳机']},
+    {name:'德国站 DE',budget:12000,spend:11500,sales:62000,roas:5.39,conflict:['降噪耳机']},
+    {name:'日本站 JP',budget:8000,spend:7800,sales:31000,roas:3.97,conflict:['蓝牙耳机']}
+  ];
+
+  function calc(){
+    var total=num('totalBudget'),target=num('targetROAS'),reallocPct=num('reallocPct')/100;
+    var data=stores.map(function(s){
+      s._roas=s.sales/s.spend;
+      s._efficiency=s._roas/target; //>1表示高效
+      //智能再分配：高效店铺加预算，低效减预算
+      var shift=s.budget*reallocPct*(s._efficiency-1);
+      s._newBudget=Math.max(1000,Math.round(s.budget+shift));
+      s._change=s._newBudget-s.budget;
+      s._newSpend=Math.round(s._newBudget*0.95);
+      s._newSales=Math.round(s._newSpend*s._roas*0.95);
+      s._action=s._change>500?'加码':s._change<-500?'减投':'维持';
+      return s;
+    });
+    //归一化到总预算
+    var sumNew=data.reduce(function(a,s){return a+s._newBudget},0);
+    data.forEach(function(s){s._newBudget=Math.round(s._newBudget/sumNew*total);s._change=s._newBudget-s.budget});
+    var totalSpend=data.reduce(function(a,s){return a+s._newSpend},0);
+    var totalSales=data.reduce(function(a,s){return a+s._newSales},0);
+    var overallROAS=totalSales/totalSpend;
+    var up=data.filter(function(s){return s._action==='加码'}).length;
+    var down=data.filter(function(s){return s._action==='减投'}).length;
+    $('mBudget').textContent=fmt(total);
+    $('mROAS').textContent=overallROAS.toFixed(2)+'x';
+    $('mUp').textContent=up;
+    $('mDown').textContent=down;
+    renderCards(data,target);
+    renderTable(data,target);
+    renderAvoid(data);
+    renderTips(data,total,overallROAS,target,up,down);
+    save();
+  }
+
+  function renderCards(data,target){
+    var colors=['#4f46e5','#10b981','#f59e0b','#8b5cf6'];
+    var h='';
+    data.forEach(function(s,i){
+      var roiColor=s._roas>=target?'#10b981':'#dc2626';
+      h+='<div class="store-card"><div class="sc-head"><span class="sc-name">🏪 '+s.name+'</span><span class="sc-roi" style="background:'+(s._roas>=target?'#ecfdf5':'#fef2f2')+';color:'+roiColor+'">ROAS '+s._roas.toFixed(2)+'x</span></div>';
+      h+='<div class="sc-bar-row"><span class="sc-bar-label">原预算</span><div class="sc-bar-track"><div class="sc-bar-fill" style="width:'+Math.min(100,s.budget/20000*100)+'%;background:'+colors[i]+'">'+fmt(s.budget)+'</div></div><span></span><span></span></div>';
+      h+='<div class="sc-bar-row"><span class="sc-bar-label">新预算</span><div class="sc-bar-track"><div class="sc-bar-fill" style="width:'+Math.min(100,s._newBudget/20000*100)+'%;background:linear-gradient(90deg,'+colors[i]+','+colors[i]+'cc)">'+fmt(s._newBudget)+'</div></div><span></span><span class="alloc-change '+(s._change>0?'alloc-up':s._change<0?'alloc-down':'alloc-equal')+'">'+(s._change>0?'+':'')+fmt(s._change)+'</span></div>';
+      h+='</div>';
+    });
+    $('storeCards').innerHTML=h;
+  }
+
+  function renderTable(data,target){
+    var h='<thead><tr><th>店铺</th><th class="num">原预算</th><th class="num">花费</th><th class="num">销售额</th><th class="num">ROAS</th><th class="num">效率比</th><th>新预算</th><th class="num">变动</th><th>建议</th></tr></thead><tbody>';
+    var sorted=data.slice().sort(function(a,b){return b._efficiency-a._efficiency});
+    sorted.forEach(function(s){
+      var cls=s._action==='加码'?'best':s._action==='减投'?'warn':'';
+      h+='<tr class="'+cls+'"><td><strong>🏪 '+s.name+'</strong></td><td class="num">'+fmt(s.budget)+'</td><td class="num">'+fmt(s.spend)+'</td><td class="num">'+fmt(s.sales)+'</td><td class="num" style="color:'+(s._roas>=target?'#10b981':'#dc2626')+';font-weight:800">'+s._roas.toFixed(2)+'x</td><td class="num">'+(s._efficiency*100).toFixed(0)+'%</td><td><div class="alloc-bar-cell"><div class="alloc-bar"><div class="alloc-bar-fill" style="width:'+Math.min(100,s._newBudget/25000*100)+'%"></div></div>'+fmt(s._newBudget)+'</div></td><td class="num"><span class="alloc-change '+(s._change>0?'alloc-up':s._change<0?'alloc-down':'alloc-equal')+'">'+(s._change>0?'+':'')+fmt(s._change)+'</span></td><td><span style="font-size:12px;font-weight:700;color:'+(s._action==='加码'?'#10b981':s._action==='减投'?'#dc2626':'#64748b')+'">'+s._action+'</span></td></tr>';
+    });
+    h+='</tbody>';
+    $('allocTable').innerHTML=h;
+  }
+
+  function renderAvoid(data){
+    //识别同品牌多店铺投放相同关键词的冲突
+    var conflictKWs={};
+    data.forEach(function(s){s.conflict.forEach(function(kw){if(!conflictKWs[kw])conflictKWs[kw]=[];conflictKWs[kw].push(s.name)})});
+    var h='';
+    Object.keys(conflictKWs).forEach(function(kw){
+      var stores_=conflictKWs[kw];
+      if(stores_.length>1){
+        h+='<li>关键词「'+kw+'」被 '+stores_.length+' 个店铺同时竞价（'+stores_.join('、')+'），存在内部竞价抬价风险。建议主投店铺保留精准匹配，其他店铺改用长尾变体或降低竞价避让。</li>';
+      }
+    });
+    if(!h)h='<li>未检测到跨店关键词冲突，各店铺广告投放词无重叠。</li>';
+    $('avoidList').innerHTML=h;
+  }
+
+  function renderTips(data,total,roas,target,up,down){
+    var tips=[];
+    tips.push('总预算 '+fmt(total)+'，智能再分配后整体ROAS '+roas.toFixed(2)+'x（目标'+target+'x），'+(roas>=target?'达成目标。':'未达目标，需优化。'));
+    tips.push('建议加码店铺 '+up+' 个（ROAS高于目标），减投店铺 '+down+' 个（ROAS低于目标），维持店铺 '+(data.length-up-down)+' 个。');
+    var best=data.slice().sort(function(a,b){return b._roas-a._roas})[0];
+    if(best)tips.push('最高效店铺「'+best.name+'」ROAS '+best._roas.toFixed(2)+'x，建议加码'+fmt(Math.abs(best._change))+'，扩大优势。');
+    var worst=data.slice().sort(function(a,b){return a._roas-b._roas})[0];
+    if(worst)tips.push('最低效店铺「'+worst.name+'」ROAS '+worst._roas.toFixed(2)+'x，建议减投'+fmt(Math.abs(worst._change))+'，优化ACoS后再加码。');
+    tips.push('竞争避让：同品牌多店避免对同一关键词竞价，防止内部抬价，建议按店铺分配差异化关键词组合。');
+    tips.push('建议每周复盘各店铺ROAS，动态调整预算分配，将预算向高效率店铺倾斜，最大化整体广告产出。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_csa_data',JSON.stringify({totalBudget:num('totalBudget'),targetROAS:num('targetROAS'),reallocPct:num('reallocPct')}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_csa_data'));if(d){['totalBudget','targetROAS','reallocPct'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CSA.init)}else{CSA.init()}
+</script>
+</body>
+</html>

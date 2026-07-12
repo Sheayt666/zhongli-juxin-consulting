@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="创意素材库：图片/视频/文案统一管理+标签分类+版本控制+权限管理，CSS素材网格可视化，跨境卖家广告素材资产管理工具。">
+<title>创意素材库 - 标签分类版本控制权限管理 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-bar .fb-label{font-size:12px;font-weight:700;color:var(--muted);margin-right:4px}
+.filter-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);transition:all .2s}
+.filter-chip.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.filter-chip:hover:not(.active){border-color:#c7d2fe;color:#4f46e5}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.asset-card{border:1px solid var(--rule);border-radius:14px;overflow:hidden;background:#fff;transition:all .2s;cursor:pointer}
+.asset-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(79,70,229,.12);border-color:#c7d2fe}
+.asset-thumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
+.asset-thumb.image{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.asset-thumb.video{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+.asset-thumb.copy{background:linear-gradient(135deg,#d1fae5,#a7f3d0)}
+.asset-type-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;color:#fff}
+.asset-type-image{background:#4f46e5}.asset-type-video{background:#ec4899}.asset-type-copy{background:#10b981}
+.asset-version{position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;background:rgba(0,0,0,.5);color:#fff}
+.asset-body{padding:12px}
+.asset-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.asset-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.asset-tag{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--bg-soft);color:var(--muted)}
+.asset-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.perm-bar{display:flex;gap:4px;margin-top:6px}
+.perm-dot{width:8px;height:8px;border-radius:50%}
+.perm-view{background:#10b981}.perm-edit{background:#f59e0b}.perm-admin{background:#dc2644}
+.perm-dot.off{background:var(--rule-light)}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W35 广告创意工作流</div><div class="workflow-steps">
+  <a href="ad-creative-scorecard.html" class="workflow-step">创意评分</a>
+  <a href="headline-generator.html" class="workflow-step">标题</a>
+  <a href="product-image-analyzer.html" class="workflow-step">图片分析</a>
+  <a href="ab-test-planner.html" class="workflow-step">A/B测试</a>
+  <a href="ad-copy-variants.html" class="workflow-step">文案变体</a>
+  <a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a>
+  <a href="seasonal-ad-planner.html" class="workflow-step">季节规划</a>
+  <a href="ad-budget-splitter.html" class="workflow-step">预算拆分</a>
+  <a href="creative-brief-builder.html" class="workflow-step">Brief</a>
+  <a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+  <a href="video-ad-storyboard.html" class="workflow-step">视频分镜</a>
+  <a href="creative-asset-library.html" class="workflow-step active">素材库</a>
+  <a href="competitor-creative-spy.html" class="workflow-step">创意侦察</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W35 广告创意</a><span class="sep">›</span><span class="current">创意素材库</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🗂️</span>创意素材库 Creative Asset Library</h1>
+  <p>图片/视频/文案统一管理，标签分类检索，版本控制追踪迭代，权限分级管理，CSS素材网格可视化展示，帮助跨境卖家建立结构化创意资产库，提升素材复用与协同效率。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">素材总数</div><div class="mc-value" id="mTotal">0</div></div>
+    <div class="metric-card"><div class="mc-label">图片</div><div class="mc-value" id="mImage">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">视频</div><div class="mc-value" id="mVideo">0</div></div>
+    <div class="metric-card success"><div class="mc-label">文案</div><div class="mc-value" id="mCopy">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">待审核</div><div class="mc-value" id="mReview">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 素材筛选</h2>
+    <div class="filter-bar">
+      <span class="fb-label">类型：</span>
+      <div class="filter-chip active" onclick="CAL.filter('all',this)">全部</div>
+      <div class="filter-chip" onclick="CAL.filter('image',this)">🖼️ 图片</div>
+      <div class="filter-chip" onclick="CAL.filter('video',this)">🎬 视频</div>
+      <div class="filter-chip" onclick="CAL.filter('copy',this)">✍️ 文案</div>
+    </div>
+    <div class="filter-bar">
+      <span class="fb-label">标签：</span>
+      <div class="filter-chip active" onclick="CAL.filterTag('all',this)">全部</div>
+      <div class="filter-chip" onclick="CAL.filterTag('夏季',this)">夏季</div>
+      <div class="filter-chip" onclick="CAL.filterTag('降噪',this)">降噪</div>
+      <div class="filter-chip" onclick="CAL.filterTag('开箱',this)">开箱</div>
+      <div class="filter-chip" onclick="CAL.filterTag('运动',this)">运动</div>
+      <div class="filter-chip" onclick="CAL.filterTag('促销',this)">促销</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📦 素材网格</h2>
+    <div class="asset-grid" id="assetGrid"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔐 权限管理矩阵</h2>
+    <div style="overflow-x:auto"><table class="jx-table" style="width:100%;border-collapse:collapse;font-size:13px" id="permTable"></table></div>
+    <div style="display:flex;gap:16px;margin-top:12px;font-size:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px"><div class="perm-dot perm-view"></div>查看</div>
+      <div style="display:flex;align-items:center;gap:6px"><div class="perm-dot perm-edit"></div>编辑</div>
+      <div style="display:flex;align-items:center;gap:6px"><div class="perm-dot perm-admin"></div>管理</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 素材管理建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="video-ad-storyboard.html" class="rt-card"><div class="rt-icon">🎬</div><div><h5>视频分镜器</h5><p>视频广告分镜</p></div></a>
+      <a href="ad-creative-scorecard.html" class="rt-card"><div class="rt-icon">🎨</div><div><h5>创意评分卡</h5><p>创意评分</p></div></a>
+      <a href="competitor-creative-spy.html" class="rt-card"><div class="rt-icon">🕵️</div><div><h5>竞品创意侦察</h5><p>竞品素材分析</p></div></a>
+      <a href="creative-fatigue-detector.html" class="rt-card"><div class="rt-icon">😴</div><div><h5>疲劳检测</h5><p>素材疲劳度</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="creative-asset-library.html">创意素材库</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CAL=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var currentType='all',currentTag='all';
+  var assets=[
+    {name:'产品主图-白底',type:'image',icon:'🖼️',tags:['降噪'],version:'v2.3',status:'已审核',author:'设计师A',date:'07-10',perms:[1,1,0]},
+    {name:'夏季场景图-海滩',type:'image',icon:'🏖️',tags:['夏季','运动'],version:'v1.5',status:'已审核',author:'设计师B',date:'07-08',perms:[1,0,0]},
+    {name:'开箱视频-30s',type:'video',icon:'📦',tags:['开箱'],version:'v3.1',status:'已审核',author:'视频组',date:'07-09',perms:[1,1,1]},
+    {name:'降噪演示视频',type:'video',icon:'🎧',tags:['降噪'],version:'v2.0',status:'待审核',author:'视频组',date:'07-11',perms:[1,1,0]},
+    {name:'主标题文案A',type:'copy',icon:'✍️',tags:['降噪','促销'],version:'v4.2',status:'已审核',author:'文案C',date:'07-07',perms:[1,1,0]},
+    {name:'促销Banner文案',type:'copy',icon:'🏷️',tags:['促销','夏季'],version:'v1.8',status:'已审核',author:'文案C',date:'07-06',perms:[1,1,1]},
+    {name:'运动场景视频',type:'video',icon:'🏃',tags:['运动'],version:'v1.2',status:'待审核',author:'视频组',date:'07-12',perms:[1,0,0]},
+    {name:'产品细节图-金属',type:'image',icon:'✨',tags:['降噪'],version:'v2.1',status:'已审核',author:'设计师A',date:'07-05',perms:[1,1,0]},
+    {name:'夏季促销主图',type:'image',icon:'☀️',tags:['夏季','促销'],version:'v3.0',status:'已审核',author:'设计师B',date:'07-04',perms:[1,1,1]},
+    {name:'卖点文案合集',type:'copy',icon:'📝',tags:['降噪','开箱'],version:'v5.0',status:'已审核',author:'文案C',date:'07-03',perms:[1,1,0]}
+  ];
+
+  function filter(type,el){currentType=type;document.querySelectorAll('.filter-bar')[0].querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});el.classList.add('active');render()}
+  function filterTag(tag,el){currentTag=tag;document.querySelectorAll('.filter-bar')[1].querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});el.classList.add('active');render()}
+
+  function calc(){
+    $('mTotal').textContent=assets.length;
+    $('mImage').textContent=assets.filter(function(a){return a.type==='image'}).length;
+    $('mVideo').textContent=assets.filter(function(a){return a.type==='video'}).length;
+    $('mCopy').textContent=assets.filter(function(a){return a.type==='copy'}).length;
+    $('mReview').textContent=assets.filter(function(a){return a.status==='待审核'}).length;
+    render();renderPerm();renderTips();
+  }
+
+  function render(){
+    var filtered=assets.filter(function(a){
+      var typeOk=currentType==='all'||a.type===currentType;
+      var tagOk=currentTag==='all'||a.tags.indexOf(currentTag)>=0;
+      return typeOk&&tagOk;
+    });
+    var h='';
+    filtered.forEach(function(a){
+      h+='<div class="asset-card"><div class="asset-thumb '+a.type+'">'+a.icon;
+      h+='<span class="asset-type-badge asset-type-'+a.type+'">'+({image:'图片',video:'视频',copy:'文案'}[a.type])+'</span>';
+      h+='<span class="asset-version">'+a.version+'</span></div>';
+      h+='<div class="asset-body"><div class="asset-name">'+a.name+'</div>';
+      h+='<div class="asset-tags">';
+      a.tags.forEach(function(t){h+='<span class="asset-tag">#'+t+'</span>'});
+      h+='</div><div class="asset-meta"><span>'+a.author+'</span><span style="color:'+(a.status==='待审核'?'#d97706':'#059669')+'">'+a.status+'</span></div>';
+      h+='<div class="perm-bar">';
+      var permNames=['perm-view','perm-edit','perm-admin'];
+      a.perms.forEach(function(p,i){h+='<div class="perm-dot '+(p?permNames[i]:'off')+'"></div>'});
+      h+='</div></div></div>';
+    });
+    $('assetGrid').innerHTML=h||'<p style="color:var(--muted);text-align:center;padding:40px">无匹配素材</p>';
+  }
+
+  function renderPerm(){
+    var roles=[{role:'管理员',perms:[1,1,1]},{role:'创意总监',perms:[1,1,1]},{role:'设计师',perms:[1,1,0]},{role:'文案',perms:[1,1,0]},{role:'投放优化师',perms:[1,0,0]},{role:'外部协作者',perms:[1,0,0]}];
+    var h='<thead><tr><th style="text-align:left;padding:10px 14px;background:var(--bg-soft);font-size:12px">角色</th><th style="padding:10px;text-align:center;font-size:12px">查看</th><th style="padding:10px;text-align:center;font-size:12px">编辑</th><th style="padding:10px;text-align:center;font-size:12px">管理</th><th style="padding:10px;text-align:center;font-size:12px">下载</th></tr></thead><tbody>';
+    roles.forEach(function(r){
+      h+='<tr><td style="padding:10px 14px;font-weight:600;border-bottom:1px solid var(--rule-light)">'+r.role+'</td>';
+      [r.perms[0],r.perms[1],r.perms[2],r.perms[0]].forEach(function(p){
+        h+='<td style="padding:10px;text-align:center;border-bottom:1px solid var(--rule-light)">'+(p?'<span style="color:#10b981;font-size:16px">✓</span>':'<span style="color:#cbd5e1">—</span>')+'</td>';
+      });
+      h+='</tr>';
+    });
+    h+='</tbody>';
+    $('permTable').innerHTML=h;
+  }
+
+  function renderTips(){
+    var review=assets.filter(function(a){return a.status==='待审核'});
+    var tips=[];
+    tips.push('素材库共 '+assets.length+' 个素材，其中图片 '+assets.filter(function(a){return a.type==='image'}).length+'、视频 '+assets.filter(function(a){return a.type==='video'}).length+'、文案 '+assets.filter(function(a){return a.type==='copy'}).length+'。');
+    if(review.length)tips.push('有 '+review.length+' 个素材待审核（'+review.map(function(a){return a.name}).join('、')+'），建议及时审核上架。');
+    var versions=assets.map(function(a){return parseInt(a.version.replace('v','').split('.')[0])});
+    var avgVer=versions.reduce(function(a,b){return a+b},0)/versions.length;
+    tips.push('素材平均迭代 '+avgVer.toFixed(1)+' 个大版本，版本控制体系运转正常。');
+    var tagCount={};
+    assets.forEach(function(a){a.tags.forEach(function(t){tagCount[t]=(tagCount[t]||0)+1})});
+    var topTag=Object.keys(tagCount).sort(function(a,b){return tagCount[b]-tagCount[a]})[0];
+    tips.push('最高频标签「#'+topTag+'」（'+tagCount[topTag]+'个素材），是该品类核心素材方向。');
+    tips.push('建议建立素材命名规范（品类_场景_版本_日期），配合标签体系实现秒级检索，素材复用率可提升50%+。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  return {filter:filter,filterTag:filterTag,calc:calc,init:function(){calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CAL.init)}else{CAL.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="封号恢复SOP：72小时恢复清单、材料准备、申诉策略、进度追踪，CSS恢复时间线可视化。免费在线跨境电商账号封禁恢复工具。">
+<meta name="keywords" content="封号恢复,账号申诉,72小时恢复,POA,申诉策略,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/account-suspension-recovery.html">
+<title>封号恢复SOP - 72小时清单·材料准备·进度追踪 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.asr-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.asr-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.countdown-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.cd-card{flex:1;min-width:120px;padding:18px;border-radius:12px;text-align:center;color:#fff}
+.cd-card.t1{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.cd-card.t2{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.cd-card.t3{background:linear-gradient(135deg,#10b981,#059669)}
+.cd-card .cd-time{font-size:13px;opacity:.9}
+.cd-card .cd-label{font-size:20px;font-weight:800;margin-top:4px}
+.cd-card .cd-tasks{font-size:11px;opacity:.85;margin-top:4px}
+.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.phase-card{padding:20px;border-radius:12px;border-top:4px solid #ef4444;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.phase-card.p2{border-top-color:#f59e0b}.phase-card.p3{border-top-color:#10b981}
+.phase-card .pc-head{font-size:15px;font-weight:800;margin-bottom:12px;color:var(--ink)}
+.task-list{list-style:none;padding:0;margin:0}
+.task-list li{padding:8px 0 8px 26px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);cursor:pointer;line-height:1.5}
+.task-list li:last-child{border-bottom:none}
+.task-list li::before{content:'☐';position:absolute;left:0;top:7px;color:var(--muted)}
+.task-list li.done{color:var(--muted);text-decoration:line-through}
+.task-list li.done::before{content:'☑';color:#10b981}
+.mat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.mat-item{padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);font-size:13px}
+.mat-item .mi-title{font-weight:700;color:var(--ink);margin-bottom:4px}
+.mat-item .mi-desc{color:var(--muted);font-size:12px}
+.strat-box{padding:18px;border-radius:12px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;margin-bottom:12px}
+.strat-box h4{font-size:14px;font-weight:700;margin-bottom:8px;color:#4f46e5}
+.strat-box p{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.progress-wrap{margin-top:8px}
+.progress-track{height:10px;border-radius:5px;background:var(--rule-light);overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#4f46e5,#10b981);border-radius:5px;transition:width .4s}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.phase-grid{grid-template-columns:1fr}.mat-grid{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"封号恢复SOP","description":"72小时恢复清单、材料准备、申诉策略、进度追踪，CSS恢复时间线可视化。","url":"https://juxin-consulting.help/tools/account-suspension-recovery.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"封号恢复SOP","item":"https://juxin-consulting.help/tools/account-suspension-recovery.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="account_suspension_recovery">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚑 风险管理工作流</span>
+      <h1>封号恢复 <em>SOP</em></h1>
+      <p class="tool-hero-desc">账号被封后的标准恢复流程，72小时分阶段行动清单（紧急止血→深度应对→恢复运营），申诉材料清单与策略建议，进度追踪可视化，勾选完成项自动持久化。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第9步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a><span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a><span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a><span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a><span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a><span class="arrow">→</span>
+      <a href="appeal-letter-generator.html" class="step">申诉信生成</a><span class="arrow">→</span>
+      <a href="policy-update-tracker.html" class="step">政策追踪</a><span class="arrow">→</span>
+      <a href="listing-suppression-checker.html" class="step">Listing下架</a><span class="arrow">→</span>
+      <span class="step current">封号恢复</span><span class="arrow">→</span>
+      <a href="performance-metric-monitor.html" class="step">绩效监控</a><span class="arrow">→</span>
+      <a href="ip-infringement-scanner.html" class="step">侵权扫描</a><span class="arrow">→</span>
+      <a href="risk-heatmap-generator.html" class="step">风险热力图</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="asr-section">
+        <h3>🚨 封号信息登记</h3>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>封号原因</label><select id="reason" onchange="ASR.render()">
+            <option value="odr">ODR订单缺陷率超标</option>
+            <option value="policy">政策违规</option>
+            <option value="ip">知识产权侵权</option>
+            <option value="counterfeit">假冒商品投诉</option>
+            <option value="related">关联账号封禁</option>
+            <option value="review">评价操纵</option>
+          </select></div>
+          <div class="calc-field"><label>封号时间</label><input type="datetime-local" id="banTime" onchange="ASR.render()"></div>
+        </div>
+      </div>
+
+      <div class="asr-section">
+        <h3>⏰ 72小时恢复时间线</h3>
+        <div class="countdown-bar" id="countdownBar"></div>
+        <div class="phase-grid" id="phaseGrid"></div>
+      </div>
+
+      <div class="asr-section">
+        <h3>📦 申诉材料准备清单</h3>
+        <div class="mat-grid" id="matGrid"></div>
+      </div>
+
+      <div class="asr-section">
+        <h3>🎯 申诉策略建议</h3>
+        <div id="stratWrap"></div>
+      </div>
+
+      <div class="asr-section">
+        <h3>📈 恢复进度追踪</h3>
+        <div class="progress-wrap">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:var(--muted)">总体进度</span><span style="font-size:13px;font-weight:700;color:#4f46e5" id="progText">0%</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px">💡 点击上方任务项勾选完成状态，进度自动保存</p>
+        </div>
+      </div>
+
+      <div class="asr-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="appeal-letter-generator.html" class="related-card"><span class="related-card-icon">✉️</span><div class="related-card-content"><h5>申诉信生成器</h5><p>POA结构</p></div></a>
+          <a href="ban-prevention.html" class="related-card"><span class="related-card-icon">🛡️</span><div class="related-card-content"><h5>封号预防</h5><p>风险预警</p></div></a>
+          <a href="account-health.html" class="related-card"><span class="related-card-icon">🏥</span><div class="related-card-content"><h5>账号健康监控</h5><p>8维度检查</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="listing-suppression-checker.html" class="wbn-btn prev">← 上一步：Listing下架</a>
+        <a href="performance-metric-monitor.html" class="wbn-btn next">下一步：绩效监控 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-suspension-recovery.html">封号恢复SOP</a></li><li><a href="appeal-letter-generator.html">申诉信生成</a></li><li><a href="risk-heatmap-generator.html">风险热力图</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var ASR=(function(){
+  'use strict';
+  var SK='jx_suspension_recovery';
+  var done={};
+  var PHASES={
+    odr:{p1:['查看账号健康仪表盘确认ODR数值','逐条核查A-to-Z索赔订单','联系差评客户尝试解决','暂停所有广告活动止血','截图保存账号健康数据','检查FBA发货时效'],p2:['撰写POA申诉信(根本原因/措施/预防)','准备发货时效改善证据','提交申诉并记录Case ID','检查其他绩效指标是否连带异常','备份订单与客户数据'],p3:['跟进申诉进度(每日)','准备补充材料应对驳回','制定ODR长期监控机制','恢复广告投放(分阶段)','团队复盘并制定SOP']},
+    policy:{p1:['查看亚马逊通知邮件明确违规条款','定位违规Listing/产品','立即下架或修改违规内容','暂停相关产品广告','截图保存违规证据','排查其他Listing同类问题'],p2:['逐条对照政策条款撰写POA','准备整改前后对比证据','提交申诉','对全员进行政策培训','建立政策变更追踪机制'],p3:['跟进申诉恢复Listing','完善上架前合规审核流程','建立政策更新订阅','定期自查合规性','复盘并输出合规手册']},
+    ip:{p1:['查看投诉方与投诉类型(商标/专利/版权)','立即下架被投诉Listing','收集自有知识产权证据','暂停相关广告','检查其他Listing是否涉侵权'],p2:['撰写Counter-Notice或POA申诉','准备商标注册证/授权书','提交品牌备案维权','咨询知识产权律师','准备DMCA反通知(版权类)'],p3:['跟进投诉处理进度','恢复被下架Listing','完善知识产权布局','建立侵权自查机制','加强供应商合规要求']},
+    counterfeit:{p1:['查看假冒投诉详情','立即下架被投诉产品','收集正品采购凭证与发票','暂停相关广告','检查供应链资质'],p2:['撰写POA提供正品证明','准备品牌授权书与采购发票','提交Transparency/品牌备案投诉','联系投诉方沟通','准备产品质检报告'],p3:['跟进申诉进度','加入Transparency防伪计划','完善供应链溯源','建立防伪包装','复盘供应链合规']},
+    related:{p1:['排查关联账号(同IP/设备/收款/地址)','确认关联账号封禁原因','隔离未封账号(更换IP/设备)','备份所有账号数据','暂停关联账号操作'],p2:['撰写POA说明账号独立性','准备各账号独立运营证据(办公/人员/收款)','提交申诉','关闭或申诉关联封号','强化账号隔离方案'],p3:['跟进申诉进度','建立账号隔离SOP','使用防关联浏览器/独立VPS','独立收款与法人主体','复盘账号矩阵安全']},
+    review:{p1:['立即停止所有刷评/索评行为','排查可疑评价并记录','查看亚马逊警告邮件','暂停客服索评模板','整理评价获取渠道'],p2:['撰写POA承认问题并整改','提供合规获评流程说明(TSP/Vine)','提交申诉','清理违规评价','对团队进行评价政策培训'],p3:['跟进申诉进度','仅使用Amazon Vine/TSP合规获评','建立评价监控机制','优化产品自然获评能力','复盘评价合规体系']}
+  };
+  var MATERIALS=[
+    {title:'公司营业执照',desc:'清晰的彩色扫描件，信息与卖家后台一致'},
+    {title:'品牌注册证/授权书',desc:'商标注册证书或品牌方授权书'},
+    {title:'采购发票/进货凭证',desc:'过去365天内正规增值税发票，含供应商信息'},
+    {title:'产品质检报告',desc:'第三方检测机构出具的合规检测报告'},
+    {title:'POA申诉信',desc:'根本原因分析+已采取措施+预防措施三段式'},
+    {title:'整改前后对比',desc:'违规内容修改前后的截图证据'},
+    {title:'客户沟通记录',desc:'与投诉客户的沟通邮件/消息记录'},
+    {title:'运营流程文档',desc:'标准作业流程SOP证明合规运营体系'}
+  ];
+  var STRATEGY={
+    odr:{h:'ODR超标申诉策略',p:'ODR由A-to-Z索赔率、差评率、信用卡拒付率构成。重点展示已联系客户解决问题的证据，提供发货时效改善数据，强调已切换FBA或升级物流，承诺持续监控ODR<1%。'},
+    policy:{h:'政策违规申诉策略',p:'逐条引用违规政策条款并说明已整改，提供违规内容删除/修改前后截图，承诺建立上架前合规审核流程，附全员政策培训记录。'},
+    ip:{h:'知识产权侵权申诉策略',p:'明确侵权类型对症下药：商标类提供不侵权抗辩或授权书；版权类提交DMCA反通知；专利类咨询律师评估专利无效或不侵权意见。务必引用Amazon IP Policy。'},
+    counterfeit:{h:'假冒商品申诉策略',p:'假冒投诉需提供强有力的正品证明：品牌授权书+正规采购发票+Transparency计划参与。若投诉方为恶意竞争，收集对比证据反诉。'},
+    related:{h:'关联封号申诉策略',p:'关联封号恢复难度大，需证明各账号独立运营：独立法人/办公地址/收款账户/人员/设备。建议同时申诉被封关联账号，强化账号隔离方案。'},
+    review:{h:'评价操纵申诉策略',p:'承认问题态度诚恳，详述违规评价获取渠道并已停止，承诺仅使用Vine/TSP等合规渠道，提供合规获评流程文档，附团队评价政策培训记录。'}
+  };
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function load(){try{done=JSON.parse(localStorage.getItem(SK)||'{}');}catch(e){done={};}}
+  function save(){try{localStorage.setItem(SK,JSON.stringify(done));}catch(e){}}
+  function toggle(key){done[key]=!done[key];save();render();}
+  function render(){
+    var reason=v('reason')||'odr';
+    var p=PHASES[reason];
+    var banTime=v('banTime')?new Date(v('banTime')):new Date();
+    var now=new Date();
+    var elapsedH=Math.floor((now-banTime)/3600000);
+    if(elapsedH<0)elapsedH=0;
+    var t1=Math.max(0,24-elapsedH),t2=Math.max(0,48-elapsedH),t3=Math.max(0,72-elapsedH);
+    document.getElementById('countdownBar').innerHTML=
+      '<div class="cd-card t1"><div class="cd-time">0-24小时</div><div class="cd-label">'+(elapsedH<24?'剩余 '+t1+'h':'已过')+'</div><div class="cd-tasks">紧急止血</div></div>'+
+      '<div class="cd-card t2"><div class="cd-time">24-48小时</div><div class="cd-label">'+(elapsedH<48?'剩余 '+t2+'h':'已过')+'</div><div class="cd-tasks">深度应对</div></div>'+
+      '<div class="cd-card t3"><div class="cd-time">48-72小时</div><div class="cd-label">'+(elapsedH<72?'剩余 '+t3+'h':'已过')+'</div><div class="cd-tasks">恢复运营</div></div>';
+    var phases=[{t:'第一阶段：紧急止血',cls:'p1',items:p.p1},{t:'第二阶段：深度应对',cls:'p2',items:p.p2},{t:'第三阶段：恢复运营',cls:'p3',items:p.p3}];
+    var total=0,doneCnt=0;
+    var ph='';
+    phases.forEach(function(pg){
+      ph+='<div class="phase-card '+pg.cls+'"><div class="pc-head">'+pg.t+'</div><ul class="task-list">';
+      pg.items.forEach(function(it,i){
+        var key=reason+'_'+pg.cls+'_'+i;total++;if(done[key])doneCnt++;
+        ph+='<li class="'+(done[key]?'done':'')+'" onclick="ASR.toggle(\''+key+'\')">'+it+'</li>';
+      });
+      ph+='</ul></div>';
+    });
+    document.getElementById('phaseGrid').innerHTML=ph;
+    var mh='';
+    MATERIALS.forEach(function(m){mh+='<div class="mat-item"><div class="mi-title">'+m.title+'</div><div class="mi-desc">'+m.desc+'</div></div>';});
+    document.getElementById('matGrid').innerHTML=mh;
+    var s=STRATEGY[reason];
+    document.getElementById('stratWrap').innerHTML='<div class="strat-box"><h4>'+s.h+'</h4><p>'+s.p+'</p></div>';
+    var pct=Math.round(doneCnt/total*100);
+    document.getElementById('progFill').style.width=pct+'%';
+    document.getElementById('progText').textContent=pct+'% ('+doneCnt+'/'+total+')';
+  }
+  function init(){
+    var d=new Date();
+    var local=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);
+    document.getElementById('banTime').value=local;
+    load();render();
+  }
+  return {render:render,toggle:toggle,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ASR.init);}else{ASR.init();}
+</script>
+</body>
+</html>

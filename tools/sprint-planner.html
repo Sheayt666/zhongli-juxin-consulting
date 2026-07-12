@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="迭代规划器（深度版）：Sprint backlog管理+故事点估算+燃尽图SVG+团队容量管理，CSS燃尽图可视化。免费产品开发管理工具。">
+<meta name="keywords" content="Sprint规划,迭代管理,燃尽图,故事点,团队容量,敏捷开发,产品开发">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/sprint-planner.html">
+<title>迭代规划器 - Sprint Backlog·燃尽图·团队容量·深度版 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.backlog-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.backlog-table th{background:#4f46e5;color:#fff;padding:10px;text-align:left;font-weight:600;border-radius:6px 6px 0 0}
+.backlog-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.backlog-table tr:hover td{background:var(--bg-soft)}
+.story-status{display:inline-block;padding:2px 10px;border-radius:6px;font-size:11px;font-weight:600}
+.st-todo{background:#e0e7ff;color:#4f46e5}
+.st-doing{background:#fef3c7;color:#d97706}
+.st-done{background:#d1fae5;color:#059669}
+.priority-badge{display:inline-block;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:700;text-align:center;line-height:24px;color:#fff}
+.pr-high{background:#ef4444}
+.pr-medium{background:#f59e0b}
+.pr-low{background:#10b981}
+.sp-add-btn{padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.sp-del-btn{padding:3px 10px;border-radius:6px;border:1px solid #ef4444;background:#fff;font-size:11px;cursor:pointer;color:#ef4444}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
+.burndown-svg{width:100%;height:280px;margin-top:16px}
+.capacity-bar{display:flex;gap:4px;margin-top:8px}
+.capacity-segment{flex:1;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"迭代规划器","description":"Sprint backlog管理+故事点估算+燃尽图SVG+团队容量管理。","url":"https://juxin-consulting.help/tools/sprint-planner.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="sprint_planner">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🔧</span><span class="workflow-name">产品开发管理工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="prd-template.html" class="step">PRD模板</a><span class="arrow">→</span>
+      <a href="mvp-definer.html" class="step">MVP定义</a><span class="arrow">→</span>
+      <a href="feature-priority-matrix.html" class="step">功能优先级</a><span class="arrow">→</span>
+      <a href="user-story-generator.html" class="step">用户故事</a><span class="arrow">→</span>
+      <a href="product-roadmap.html" class="step">产品路线图</a><span class="arrow">→</span>
+      <a href="acceptance-criteria.html" class="step">验收标准</a><span class="arrow">→</span>
+      <a href="competitive-feature-matrix.html" class="step">竞品功能矩阵</a><span class="arrow">→</span>
+      <a href="wbs-generator.html" class="step">WBS分解</a><span class="arrow">→</span>
+      <a href="lifecycle-cost.html" class="step">生命周期成本</a><span class="arrow">→</span>
+      <a href="product-launch-checklist.html" class="step">发布清单</a><span class="arrow">→</span>
+      <span class="step current">迭代规划</span><span class="arrow">→</span>
+      <a href="beta-test-manager.html" class="step">Beta测试</a><span class="arrow">→</span>
+      <a href="release-notes-generator.html" class="step">发版说明</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔧 产品开发管理工具 · 深度版</span>
+      <h1>迭代<em>规划器</em></h1>
+      <p class="tool-hero-desc">Sprint Backlog管理，故事点估算与团队容量匹配，SVG燃尽图实时追踪进度，localStorage持久化(jx_sprint_backlog)。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="calc-row-2">
+          <div class="calc-field"><label>Sprint名称</label><input type="text" id="sprintName" value="Sprint 12" oninput="SP.calc()"></div>
+          <div class="calc-field"><label>Sprint天数</label><input type="number" id="sprintDays" value="10" oninput="SP.calc()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>团队成员数</label><input type="number" id="teamSize" value="4" oninput="SP.calc()"></div>
+          <div class="calc-field"><label>每人日容量（故事点）</label><input type="number" id="dailyCapacity" value="3" step="0.5" oninput="SP.calc()"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0;flex-wrap:wrap;gap:12px">
+          <h2 style="margin:0">📋 Sprint Backlog</h2>
+          <button class="sp-add-btn" onclick="SP.openModal()">+ 添加故事</button>
+        </div>
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <table class="backlog-table" id="backlogTable"></table>
+      </div>
+
+      <div class="section-block" id="burndownSection">
+        <h3>📉 燃尽图</h3>
+        <svg class="burndown-svg" id="burndownSvg" viewBox="0 0 600 280"></svg>
+      </div>
+
+      <div class="section-block" id="capacitySection">
+        <h3>👥 团队容量分析</h3>
+        <div id="capacityWrap"></div>
+      </div>
+
+      <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+          <h3>添加用户故事</h3>
+          <div class="calc-field"><label>故事描述</label><input type="text" id="mStory" placeholder="如 用户可以一键导出订单"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>故事点</label><input type="number" id="mPoints" value="3" step="0.5"></div>
+            <div class="calc-field"><label>优先级</label><select id="mPriority"><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select></div>
+          </div>
+          <div class="calc-field"><label>状态</label><select id="mStatus"><option value="todo">待开始</option><option value="doing">进行中</option><option value="done">已完成</option></select></div>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <button class="sp-add-btn" onclick="SP.saveModal()">保存</button>
+            <button onclick="SP.closeModal()" style="padding:10px 20px;border-radius:10px;border:1px solid var(--rule);background:#fff;font-size:14px;cursor:pointer">取消</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="product-launch-checklist.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 发布清单</span></a>
+        <a href="beta-test-manager.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">Beta测试 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="sprint-planner.html">迭代规划</a></li><li><a href="beta-test-manager.html">Beta测试</a></li><li><a href="release-notes-generator.html">发版说明</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var SP=(function(){
+  'use strict';
+  var KEY='jx_sprint_backlog';
+  var data=[];
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function load(){
+    try{var s=localStorage.getItem(KEY);if(s)data=JSON.parse(s)||[];}catch(e){data=[];}
+    if(!data.length){
+      data=[
+        {story:'用户登录注册',points:5,priority:'high',status:'done'},
+        {story:'商品列表展示',points:8,priority:'high',status:'done'},
+        {story:'购物车功能',points:5,priority:'high',status:'doing'},
+        {story:'支付集成',points:8,priority:'high',status:'doing'},
+        {story:'订单管理后台',points:5,priority:'medium',status:'todo'},
+        {story:'评价系统',points:3,priority:'medium',status:'todo'},
+        {story:'优惠券功能',points:5,priority:'low',status:'todo'},
+        {story:'数据导出',points:2,priority:'low',status:'todo'}
+      ];
+      save();
+    }
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+  function priorityLabel(p){return p==='high'?'高':p==='medium'?'中':'低';}
+  function statusLabel(s){return s==='done'?'已完成':s==='doing'?'进行中':'待开始';}
+  function calc(){
+    var total=0,done=0,doing=0,todo=0;
+    data.forEach(function(d){
+      total+=d.points;
+      if(d.status==='done')done+=d.points;
+      else if(d.status==='doing')doing+=d.points;
+      else todo+=d.points;
+    });
+    var days=v('sprintDays'),team=v('teamSize'),cap=v('dailyCapacity');
+    var capacity=days*team*cap;
+    var remaining=total-done;
+    var util=capacity>0?(total/capacity*100):0;
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+total+'</div><div class="rsb-lbl">总故事点</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+done+'</div><div class="rsb-lbl">已完成</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+(doing+todo)+'</div><div class="rsb-lbl">剩余</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#6366f1">'+capacity+'</div><div class="rsb-lbl">团队容量</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+(util>100?'#ef4444':'#10b981')+'">'+util.toFixed(0)+'%</div><div class="rsb-lbl">容量利用率</div></div>';
+    $('backlogTable').innerHTML=
+      '<tr><th>#</th><th>用户故事</th><th>故事点</th><th>优先级</th><th>状态</th><th>操作</th></tr>'+
+      data.map(function(d,i){
+        return '<tr><td>'+(i+1)+'</td><td>'+d.story+'</td><td><strong>'+d.points+'</strong></td>'+
+          '<td><span class="priority-badge pr-'+d.priority+'">'+priorityLabel(d.priority).charAt(0)+'</span></td>'+
+          '<td><span class="story-status st-'+d.status+'">'+statusLabel(d.status)+'</span></td>'+
+          '<td><button class="sp-del-btn" onclick="SP.del('+i+')">删除</button></td></tr>';
+      }).join('');
+    var w=600,h=280,padL=50,padR=20,padT=20,padB=40;
+    var chartW=w-padL-padR,chartH=h-padT-padB;
+    var maxVal=Math.max(total,1);
+    var idealY=chartH;
+    var html='<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+(padT+chartH)+'" stroke="#94a3b8" stroke-width="1"/>';
+    html+='<line x1="'+padL+'" y1="'+(padT+chartH)+'" x2="'+(padL+chartW)+'" y2="'+(padT+chartH)+'" stroke="#94a3b8" stroke-width="1"/>';
+    html+='<text x="20" y="'+(padT+10)+'" font-size="11" fill="#64748b" text-anchor="end">'+total+'</text>';
+    html+='<text x="20" y="'+(padT+chartH+5)+'" font-size="11" fill="#64748b" text-anchor="end">0</text>';
+    html+='<text x="'+(padL-10)+'" y="'+(padT+chartH/2)+'" font-size="11" fill="#64748b" text-anchor="end" transform="rotate(-90 '+(padL-10)+' '+(padT+chartH/2)+')">故事点</text>';
+    var pts=[];
+    pts.push([padL,padT]);
+    pts.push([padL+chartW,padT+chartH]);
+    var idealPath='M'+pts[0][0]+' '+pts[0][1]+' L'+pts[1][0]+' '+pts[1][1];
+    html+='<path d="'+idealPath+'" stroke="#c7d2fe" stroke-width="2" stroke-dasharray="5,5" fill="none"/>';
+    html+='<text x="'+(padL+chartW-10)+'" y="'+(padT+chartH-10)+'" font-size="10" fill="#94a3b8" text-anchor="end">理想线</text>';
+    var progress=total>0?done/total:0;
+    var actualX=padL+chartW*progress;
+    var actualY=padT+chartH*(remaining/maxVal);
+    html+='<line x1="'+padL+'" y1="'+padT+'" x2="'+actualX+'" y2="'+actualY+'" stroke="#4f46e5" stroke-width="3" fill="none"/>';
+    html+='<circle cx="'+actualX+'" cy="'+actualY+'" r="6" fill="#4f46e5" stroke="#fff" stroke-width="2"/>';
+    html+='<text x="'+actualX+'" y="'+(actualY-12)+'" font-size="11" fill="#4f46e5" text-anchor="middle" font-weight="700">'+remaining+'pt</text>';
+    var labels=['Day 0','Day '+Math.ceil(days/2),'Day '+days];
+    for(var li=0;li<3;li++){
+      var lx=padL+chartW*(li/2);
+      html+='<text x="'+lx+'" y="'+(padT+chartH+18)+'" font-size="10" fill="#64748b" text-anchor="middle">'+labels[li]+'</text>';
+    }
+    var status=remaining===0?'已完成':progress>=0.7?'接近完成':progress>=0.4?'进行中':'刚启动';
+    var statusColor=remaining===0?'#10b981':progress>=0.5?'#f59e0b':'#4f46e5';
+    html+='<rect x="'+(w-110)+'" y="10" width="100" height="24" rx="12" fill="'+statusColor+'22" stroke="'+statusColor+'" stroke-width="1"/>';
+    html+='<text x="'+(w-60)+'" y="26" font-size="12" fill="'+statusColor+'" text-anchor="middle" font-weight="600">'+status+'</text>';
+    $('burndownSvg').innerHTML=html;
+    var capHTML='<div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px">'+
+      '<div style="flex:1;min-width:200px"><div style="font-size:13px;color:var(--muted);margin-bottom:4px">总容量</div><div style="font-size:24px;font-weight:800;color:#4f46e5">'+capacity+' pt</div></div>'+
+      '<div style="flex:1;min-width:200px"><div style="font-size:13px;color:var(--muted);margin-bottom:4px">已分配</div><div style="font-size:24px;font-weight:800;color:'+(total>capacity?'#ef4444':'#10b981')+'">'+total+' pt</div></div>'+
+      '<div style="flex:1;min-width:200px"><div style="font-size:13px;color:var(--muted);margin-bottom:4px">差异</div><div style="font-size:24px;font-weight:800;color:'+(total>capacity?'#ef4444':'#10b981')+'">'+(capacity-total>0?'+':'')+Math.round(capacity-total)+' pt</div></div></div>';
+    var dayCap=team*cap;
+    capHTML+='<div style="font-size:13px;color:var(--muted);margin-bottom:8px">每日容量分布（'+team+'人 × '+cap+'pt/人 = '+dayCap+'pt/天）</div>';
+    capHTML+='<div class="capacity-bar">';
+    for(var di=0;di<days;di++){
+      var pct=dayCap>0?Math.min(100,remaining/dayCap*100):0;
+      var col=pct>90?'#ef4444':pct>50?'#f59e0b':'#10b981';
+      capHTML+='<div class="capacity-segment" style="background:'+col+'33;border:1px solid '+col+';color:'+col+'">D'+(di+1)+'</div>';
+    }
+    capHTML+='</div>';
+    capHTML+='<div style="margin-top:16px;padding:12px;background:'+(total>capacity?'#fef2f2':'#f0fdf4')+';border-radius:10px;border:1px solid '+(total>capacity?'#fca5a5':'#86efac')+';font-size:13px;color:'+(total>capacity?'#dc2626':'#059669')+'">';
+    if(total>capacity)capHTML+='⚠️ 超载：故事点('+total+')超过团队容量('+capacity+')，建议减少'+Math.round(total-capacity)+'pt或增加人手';
+    else if(total<capacity*0.7)capHTML+='💡 容量富余：团队还有'+Math.round(capacity-total)+'pt空闲，可考虑增加故事';
+    else capHTML+='✅ 容量匹配：故事点与团队容量匹配良好';
+    capHTML+='</div>';
+    $('capacityWrap').innerHTML=capHTML;
+  }
+  function openModal(){$('modalOverlay').classList.add('show');}
+  function closeModal(){$('modalOverlay').classList.remove('show');}
+  function saveModal(){
+    var story=$('mStory').value;if(!story){alert('请输入用户故事');return;}
+    data.push({story:story,points:parseFloat($('mPoints').value)||1,priority:$('mPriority').value,status:$('mStatus').value});
+    save();closeModal();calc();
+    $('mStory').value='';
+  }
+  function del(i){if(confirm('确认删除此故事？')){data.splice(i,1);save();calc();}}
+  load();
+  return{calc:calc,openModal:openModal,closeModal:closeModal,saveModal:saveModal,del:del};
+})();
+SP.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

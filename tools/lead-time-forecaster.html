@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="交期预测器（深度版）：生产+质检+头程+入库全链路时间估算，缓冲时间设置，CSS甘特图，延误风险评估。免费补货全链路工具。">
+<meta name="keywords" content="交期预测,补货周期,生产质检,头程物流,甘特图,延误风险,补货全链路">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/lead-time-forecaster.html">
+<title>交期预测器 - 全链路时间·甘特图·延误风险·深度版 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.gantt-chart{overflow-x:auto;margin-top:16px}
+.gantt-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;min-height:36px}
+.gantt-label{width:120px;font-size:13px;font-weight:600;color:var(--ink-soft);flex-shrink:0;text-align:right}
+.gantt-track{flex:1;position:relative;height:28px;background:var(--bg-soft);border-radius:6px;min-width:400px}
+.gantt-bar{position:absolute;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;transition:all .3s;cursor:pointer}
+.gantt-bar.production{background:linear-gradient(90deg,#4f46e5,#6366f1)}
+.gantt-bar.qc{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}
+.gantt-bar.firstmile{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.gantt-bar.customs{background:linear-gradient(90deg,#ef4444,#f87171)}
+.gantt-bar.inbound{background:linear-gradient(90deg,#10b981,#34d399)}
+.gantt-buffer{position:absolute;height:100%;border-radius:6px;border:2px dashed #94a3b8;background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(148,163,184,.1) 4px,rgba(148,163,184,.1) 8px);display:flex;align-items:center;justify-content:center;font-size:10px;color:#64748b}
+.gantt-scale{display:flex;gap:0;margin-bottom:4px;padding-left:128px}
+.gantt-scale-item{flex:1;text-align:center;font-size:10px;color:var(--muted);border-left:1px solid var(--rule-light);min-width:30px}
+.risk-meter{display:flex;align-items:center;gap:12px;margin-top:16px}
+.risk-bar{flex:1;height:12px;border-radius:6px;background:linear-gradient(90deg,#10b981 0%,#10b981 33%,#f59e0b 33%,#f59e0b 66%,#ef4444 66%,#ef4444 100%);position:relative}
+.risk-indicator{position:absolute;top:-4px;width:4px;height:20px;background:var(--ink);border-radius:2px;transition:left .3s}
+.risk-label{font-size:14px;font-weight:700;white-space:nowrap}
+.chain-stage{display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;background:var(--bg-soft);margin-bottom:8px}
+.chain-stage .cs-icon{font-size:20px}
+.chain-stage .cs-info{flex:1}
+.chain-stage .cs-name{font-size:14px;font-weight:600}
+.chain-stage .cs-days{font-size:12px;color:var(--muted)}
+.chain-stage .cs-days strong{font-size:18px;color:#4f46e5;font-weight:800}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"交期预测器","description":"生产+质检+头程+入库全链路时间估算，CSS甘特图，延误风险评估。","url":"https://juxin-consulting.help/tools/lead-time-forecaster.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="lead_time_forecaster">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📦</span><span class="workflow-name">补货全链路工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="restock-simulator.html" class="step">补货模拟</a><span class="arrow">→</span>
+      <a href="multi-channel-restock.html" class="step">多渠道补货</a><span class="arrow">→</span>
+      <a href="overseas-warehouse-compare.html" class="step">海外仓对比</a><span class="arrow">→</span>
+      <a href="fnsku-generator.html" class="step">FNSKU生成</a><span class="arrow">→</span>
+      <a href="sta-packing-calc.html" class="step">STA装箱</a><span class="arrow">→</span>
+      <a href="first-mile-cost-allocator.html" class="step">头程分摊</a><span class="arrow">→</span>
+      <a href="awd-restock-calc.html" class="step">AWD补货</a><span class="arrow">→</span>
+      <a href="inventory-audit.html" class="step">库存盘点</a><span class="arrow">→</span>
+      <a href="stockout-cost-calc.html" class="step">断货成本</a><span class="arrow">→</span>
+      <a href="overstock-alert.html" class="step">滞销预警</a><span class="arrow">→</span>
+      <span class="step current">交期预测</span><span class="arrow">→</span>
+      <a href="seasonal-restock-planner.html" class="step">旺季补货</a><span class="arrow">→</span>
+      <a href="restock-alert-system.html" class="step">补货预警</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📦 补货全链路工具 · 深度版</span>
+      <h1>交期<em>预测器</em></h1>
+      <p class="tool-hero-desc">从生产→质检→头程→清关→入库全链路时间估算，缓冲时间配置，CSS甘特图可视化排期，延误风险评估与预警。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 全链路参数</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品名称</label><input type="text" id="productName" value="蓝牙耳机X1" oninput="LTF.calc()"></div>
+            <div class="calc-field"><label>订单数量</label><input type="number" id="orderQty" value="5000" oninput="LTF.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>🏭 生产阶段</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>生产周期（天）</label><input type="number" id="prodDays" value="15" oninput="LTF.calc()"></div>
+            <div class="calc-field"><label>缓冲天数</label><input type="number" id="prodBuffer" value="3" oninput="LTF.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>🔍 质检阶段</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>质检周期（天）</label><input type="number" id="qcDays" value="3" oninput="LTF.calc()"></div>
+            <div class="calc-field"><label>缓冲天数</label><input type="number" id="qcBuffer" value="1" oninput="LTF.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>🚢 头程物流</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>物流方式</label><select id="shippingMethod" onchange="LTF.calc()"><option value="sea">海运</option><option value="air">空运</option><option value="rail">铁运</option><option value="truck">卡派</option></select></div>
+            <div class="calc-field"><label>运输周期（天）</label><input type="number" id="shipDays" value="25" oninput="LTF.calc()"></div>
+          </div>
+          <div class="calc-field"><label>缓冲天数</label><input type="number" id="shipBuffer" value="5" oninput="LTF.calc()"></div>
+
+          <div class="fee-rule-box"><h4>🛃 清关阶段</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>清关周期（天）</label><input type="number" id="customsDays" value="3" oninput="LTF.calc()"></div>
+            <div class="calc-field"><label>缓冲天数</label><input type="number" id="customsBuffer" value="2" oninput="LTF.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>📦 入库上架</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>入库周期（天）</label><input type="number" id="inboundDays" value="2" oninput="LTF.calc()"></div>
+            <div class="calc-field"><label>缓冲天数</label><input type="number" id="inboundBuffer" value="1" oninput="LTF.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 全链路时间汇总</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <div id="chainStages"></div>
+      </div>
+
+      <div class="section-block" id="ganttSection">
+        <h3>📈 甘特图排期</h3>
+        <div class="gantt-chart" id="ganttChart"></div>
+      </div>
+
+      <div class="section-block" id="riskSection">
+        <h3>⚠️ 延误风险评估</h3>
+        <div class="risk-meter">
+          <span class="risk-label">低风险</span>
+          <div class="risk-bar"><div class="risk-indicator" id="riskIndicator"></div></div>
+          <span class="risk-label">高风险</span>
+        </div>
+        <div id="riskDetails" style="margin-top:16px"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="overstock-alert.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 滞销预警</span></a>
+        <a href="seasonal-restock-planner.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">旺季补货 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="lead-time-forecaster.html">交期预测</a></li><li><a href="seasonal-restock-planner.html">旺季补货</a></li><li><a href="restock-alert-system.html">补货预警</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var LTF=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var stages=[
+      {name:'生产',icon:'🏭',days:v('prodDays'),buffer:v('prodBuffer'),cls:'production',color:'#4f46e5'},
+      {name:'质检',icon:'🔍',days:v('qcDays'),buffer:v('qcBuffer'),cls:'qc',color:'#8b5cf6'},
+      {name:'头程',icon:'🚢',days:v('shipDays'),buffer:v('shipBuffer'),cls:'firstmile',color:'#f59e0b'},
+      {name:'清关',icon:'🛃',days:v('customsDays'),buffer:v('customsBuffer'),cls:'customs',color:'#ef4444'},
+      {name:'入库',icon:'📦',days:v('inboundDays'),buffer:v('inboundBuffer'),cls:'inbound',color:'#10b981'}
+    ];
+    var totalDays=0,totalBuffer=0;
+    stages.forEach(function(s){totalDays+=s.days;totalBuffer+=s.buffer;});
+    var totalWithBuffer=totalDays+totalBuffer;
+    var today=new Date();
+    var deliveryDate=new Date(today.getTime()+totalWithBuffer*86400000);
+    var dateStr=deliveryDate.getFullYear()+'-'+String(deliveryDate.getMonth()+1).padStart(2,'0')+'-'+String(deliveryDate.getDate()).padStart(2,'0');
+    var bufferRatio=totalDays>0?(totalBuffer/totalDays*100):0;
+    var riskScore=Math.min(100,bufferRatio*1.5+(v('shipDays')>30?20:0)+(v('customsBuffer')<1?15:0));
+    var riskLevel=riskScore<30?'低':riskScore<60?'中':'高';
+    var riskColor=riskScore<30?'#10b981':riskScore<60?'#f59e0b':'#ef4444';
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">预计总交期</div><div class="rh-value">'+totalWithBuffer+'天</div></div>'+
+      '<div class="result-detail"><span>预计到货日期</span><strong>'+dateStr+'</strong></div>'+
+      '<div class="result-detail"><span>净周期（不含缓冲）</span><strong>'+totalDays+'天</strong></div>'+
+      '<div class="result-detail"><span>总缓冲天数</span><strong>'+totalBuffer+'天 ('+bufferRatio.toFixed(0)+'%)</strong></div>'+
+      '<div class="result-detail"><span>延误风险</span><strong style="color:'+riskColor+'">'+riskLevel+' ('+Math.round(riskScore)+'/100)</strong></div>';
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+totalWithBuffer+'</div><div class="rsb-lbl">总交期（天）</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+totalDays+'</div><div class="rsb-lbl">净周期（天）</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+totalBuffer+'</div><div class="rsb-lbl">缓冲（天）</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+riskColor+'">'+riskLevel+'</div><div class="rsb-lbl">延误风险</div></div>';
+    $('chainStages').innerHTML=stages.map(function(s){
+      return '<div class="chain-stage"><span class="cs-icon">'+s.icon+'</span><div class="cs-info"><div class="cs-name">'+s.name+'</div><div class="cs-days">周期 <strong>'+s.days+'</strong>天 + 缓冲 '+s.buffer+'天</div></div><div style="font-size:13px;color:'+s.color+';font-weight:600">'+(s.days+s.buffer)+'天</div></div>';
+    }).join('');
+    var maxScale=Math.ceil(totalWithBuffer/5)*5;
+    var scaleHtml='<div class="gantt-scale">';
+    for(var d=0;d<=maxScale;d+=5){scaleHtml+='<div class="gantt-scale-item">D'+d+'</div>';}
+    scaleHtml+='</div>';
+    var ganttHtml=scaleHtml;
+    var offset=0;
+    stages.forEach(function(s){
+      var barStart=offset/maxScale*100;
+      var barWidth=s.days/maxScale*100;
+      var bufStart=(offset+s.days)/maxScale*100;
+      var bufWidth=s.buffer/maxScale*100;
+      ganttHtml+='<div class="gantt-row"><div class="gantt-label">'+s.icon+' '+s.name+'</div><div class="gantt-track">'+
+        '<div class="gantt-bar '+s.cls+'" style="left:'+barStart+'%;width:'+barWidth+'%" title="'+s.name+': '+s.days+'天">'+s.days+'天</div>'+
+        (s.buffer>0?'<div class="gantt-buffer" style="left:'+bufStart+'%;width:'+bufWidth+'%" title="缓冲: '+s.buffer+'天">+'+s.buffer+'</div>':'')+
+      '</div></div>';
+      offset+=s.days+s.buffer;
+    });
+    $('ganttChart').innerHTML=ganttHtml;
+    $('riskIndicator').style.left=riskScore+'%';
+    $('riskDetails').innerHTML=
+      '<div style="padding:14px;background:'+(riskLevel==='低'?'#f0fdf4':riskLevel==='中'?'#fffbeb':'#fef2f2')+';border-radius:10px;border:1px solid '+(riskLevel==='低'?'#86efac':riskLevel==='中'?'#fde68a':'#fca5a5')+'">'+
+      '<div style="font-size:14px;font-weight:700;color:'+riskColor+';margin-bottom:8px">风险等级：'+riskLevel+' ('+Math.round(riskScore)+'/100)</div>'+
+      '<ul style="font-size:13px;color:var(--ink-soft);line-height:1.8;margin:0;padding-left:16px">'+
+        (v('shipDays')>30?'<li>头程运输周期较长（'+v('shipDays')+'天），建议考虑空运或铁运缩短时间</li>':'')+
+        (v('customsBuffer')<1?'<li>清关缓冲不足，旺季可能排队延误</li>':'')+
+        (bufferRatio>30?'<li>缓冲比例过高（'+bufferRatio.toFixed(0)+'%），可优化供应链效率</li>':'')+
+        (bufferRatio<10?'<li>缓冲比例偏低（'+bufferRatio.toFixed(0)+'%），建议增加弹性以应对突发</li>':'')+
+        (v('prodBuffer')<2?'<li>生产缓冲不足，工厂排期变化可能导致延误</li>':'')+
+        '<li>建议下单日期：'+dateStr+' 前 '+totalWithBuffer+' 天</li>'+
+      '</ul></div>';
+  }
+  return{calc:calc};
+})();
+LTF.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

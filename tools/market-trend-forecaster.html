@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="市场趋势预测器：行业增长率+品类趋势+消费者行为变化+未来6-12月预测，SVG多线折线图，场景预测（乐观/基准/保守）。">
+<title>市场趋势预测器 - 多线SVG图·三场景预测·增长预测 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.chart-container{width:100%;overflow-x:auto}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.scenario-card{border-radius:var(--radius);padding:20px;border:2px solid}.scenario-card.optimistic{border-color:var(--success);background:var(--success-bg)}.scenario-card.baseline{border-color:var(--primary);background:var(--primary-bg)}.scenario-card.conservative{border-color:var(--warning);background:var(--warning-bg)}.sc-title{font-size:16px;font-weight:700;margin-bottom:8px}.sc-val{font-size:32px;font-weight:800;margin-bottom:8px}.sc-desc{font-size:13px;color:var(--ink-soft)}
+.factor-list{display:flex;flex-direction:column;gap:10px}.factor-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:var(--radius);border-left:4px solid}.factor-item.pos{border-left-color:var(--success)}.factor-item.neg{border-left-color:var(--danger)}.factor-item.neu{border-left-color:var(--muted)}.factor-icon{font-size:20px;flex-shrink:0}.factor-info{flex:1}.factor-info h4{font-size:13px;font-weight:700}.factor-info p{font-size:12px;color:var(--muted)}.factor-impact{font-size:14px;font-weight:800;flex-shrink:0}
+.recommendation{padding:16px;background:var(--primary-bg);border-radius:var(--radius);border-left:4px solid var(--primary)}.recommendation h4{font-size:14px;font-weight:700;margin-bottom:8px}.recommendation p{font-size:13px;color:var(--ink-soft)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.scenario-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W8 战略决策工作流</div><div class="workflow-steps">
+<a href="market-entry-evaluator.html" class="workflow-step">市场进入</a><a href="competitive-advantage.html" class="workflow-step">竞争优势</a><a href="market-share.html" class="workflow-step">市场份额</a><a href="annual-budget-planner.html" class="workflow-step">年度预算</a><a href="referral-fee.html" class="workflow-step">佣金计算</a><a href="market-trend-forecaster.html" class="workflow-step active">趋势预测</a><a href="competitor-landscape-mapper.html" class="workflow-step">竞争格局</a><a href="category-opportunity-analyzer.html" class="workflow-step">类目机会</a><a href="resource-allocation-optimizer.html" class="workflow-step">资源优化</a><a href="growth-strategy-roadmap.html" class="workflow-step">增长路线图</a><a href="scenario-planner.html" class="workflow-step">场景规划</a><a href="okr-goal-framework.html" class="workflow-step">OKR目标</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W8 战略决策</a><span>/</span>市场趋势预测器</div>
+<div class="tool-header"><span class="tool-badge">W8 战略决策工作流 · 深度版</span><h1>市场趋势<em>预测器</em></h1><p>行业增长率+品类趋势+消费者行为变化综合分析，未来6-12月预测，SVG多线折线图，三场景预测（乐观/基准/保守），战略建议。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sCurrent">$0</div><div class="stat-lbl">当前市场规模</div></div>
+<div class="stat-card"><div class="stat-val success" id="sGrowth">0%</div><div class="stat-lbl">年增长率</div></div>
+<div class="stat-card"><div class="stat-val primary" id="sForecast">$0</div><div class="stat-lbl">12月后预测</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sCagr">0%</div><div class="stat-lbl">CAGR</div></div>
+</div>
+
+<div class="card"><h2>市场数据输入</h2><div class="form-grid">
+<div class="form-field"><label>当前市场规模 <span class="hint">($M)</span></label><input type="number" id="marketSize" value="500" step="10" min="0" oninput="Forecast.calc()"></div>
+<div class="form-field"><label>历史年增长率 <span class="hint">(%)</span></label><input type="number" id="histGrowth" value="12" step="0.5" oninput="Forecast.calc()"></div>
+<div class="form-field"><label>乐观增长率 <span class="hint">(%)</span></label><input type="number" id="optGrowth" value="18" step="0.5" oninput="Forecast.calc()"></div>
+<div class="form-field"><label>基准增长率 <span class="hint">(%)</span></label><input type="number" id="baseGrowth" value="12" step="0.5" oninput="Forecast.calc()"></div>
+<div class="form-field"><label>保守增长率 <span class="hint">(%)</span></label><input type="number" id="consGrowth" value="6" step="0.5" oninput="Forecast.calc()"></div>
+<div class="form-field"><label>预测月数</label><input type="number" id="months" value="12" step="1" min="1" max="24" oninput="Forecast.calc()"></div>
+</div></div>
+
+<div class="card"><h2>多线趋势预测图 (SVG)</h2><div class="chart-container" id="chartContainer"></div></div>
+<div class="card"><h2>三场景预测对比</h2><div class="scenario-grid" id="scenarioGrid"></div></div>
+<div class="card"><h2>影响因素分析</h2><div class="factor-list" id="factorList"></div></div>
+<div class="card"><h2>战略建议</h2><div class="recommendation" id="recommendation"></div></div>
+
+<div class="related-grid">
+<a href="scenario-planner.html" class="related-card"><span class="rc-icon">🎲</span><div><h4>场景规划器</h4><p>三场景财务预测</p></div></a>
+<a href="category-opportunity-analyzer.html" class="related-card"><span class="rc-icon">🎯</span><div><h4>类目机会分析</h4><p>类目进入策略</p></div></a>
+<a href="competitor-landscape-mapper.html" class="related-card"><span class="rc-icon">🗺</span><div><h4>竞争格局图谱</h4><p>竞争格局分析</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Forecast={
+  calc(){
+    const size=parseFloat(document.getElementById('marketSize').value)||0;
+    const hist=parseFloat(document.getElementById('histGrowth').value)||0;
+    const opt=parseFloat(document.getElementById('optGrowth').value)||0;
+    const base=parseFloat(document.getElementById('baseGrowth').value)||0;
+    const cons=parseFloat(document.getElementById('consGrowth').value)||0;
+    const months=parseInt(document.getElementById('months').value)||12;
+    const optSeries=[],baseSeries=[],consSeries=[];
+    for(let i=0;i<=months;i++){
+      optSeries.push(size*Math.pow(1+opt/100/12,i));
+      baseSeries.push(size*Math.pow(1+base/100/12,i));
+      consSeries.push(size*Math.pow(1+cons/100/12,i));
+    }
+    const optFinal=optSeries[optSeries.length-1];
+    const baseFinal=baseSeries[baseSeries.length-1];
+    const consFinal=consSeries[consSeries.length-1];
+    const cagr=(Math.pow(baseFinal/size,12/months)-1)*100;
+    document.getElementById('sCurrent').textContent='$'+size+'M';
+    document.getElementById('sGrowth').textContent=hist+'%';
+    document.getElementById('sForecast').textContent='$'+baseFinal.toFixed(0)+'M';
+    document.getElementById('sCagr').textContent=cagr.toFixed(1)+'%';
+    this.renderChart(optSeries,baseSeries,consSeries,months);
+    this.renderScenarios(optFinal,baseFinal,consFinal,size);
+    this.renderFactors(hist,opt,cons);
+    this.renderRec(opt,base,cons,hist,baseFinal,size);
+  },
+  renderChart(opt,base,cons,months){
+    const w=800,h=360,pad=50;
+    const all=[...opt,...base,...cons];
+    const max=Math.max(...all,1);
+    const min=Math.min(...all,0);
+    const range=max-min||1;
+    const xStep=(w-pad*2)/months;
+    const mkPath=(arr)=>arr.map((v,i)=>(i===0?'M':'L')+(pad+i*xStep)+','+(h-pad-((v-min)/range)*(h-pad*2))).join(' ');
+    const mkArea=(arr)=>mkPath(arr)+` L${pad+months*xStep},${h-pad} L${pad},${h-pad} Z`;
+    let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.15"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>`;
+    for(let i=0;i<=4;i++){const gy=h-pad-i*(h-pad*2)/4;const val=min+range*i/4;svg+=`<line x1="${pad}" y1="${gy}" x2="${w-pad}" y2="${gy}" stroke="#e2e8f0" stroke-dasharray="4,4"/><text x="${pad-8}" y="${gy+4}" text-anchor="end" font-size="10" fill="#94a3b8">$${val.toFixed(0)}M</text>`;}
+    svg+=`<path d="${mkArea(base)}" fill="url(#bg)"/>`;
+    svg+=`<path d="${mkPath(opt)}" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="5,3"/>`;
+    svg+=`<path d="${mkPath(base)}" fill="none" stroke="#4f46e5" stroke-width="2.5"/>`;
+    svg+=`<path d="${mkPath(cons)}" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/>`;
+    for(let i=0;i<=months;i+=2){svg+=`<text x="${pad+i*xStep}" y="${h-pad+18}" text-anchor="middle" font-size="10" fill="#64748b">M${i}</text>`;}
+    svg+=`<g><rect x="${w-180}" y="10" width="170" height="60" fill="#fff" stroke="#e2e8f0" rx="6"/><line x1="${w-170}" y1="25" x2="${w-150}" y2="25" stroke="#10b981" stroke-width="2" stroke-dasharray="5,3"/><text x="${w-145}" y="29" font-size="11" fill="#64748b">乐观</text><line x1="${w-170}" y1="40" x2="${w-150}" y2="40" stroke="#4f46e5" stroke-width="2.5"/><text x="${w-145}" y="44" font-size="11" fill="#64748b">基准</text><line x1="${w-170}" y1="55" x2="${w-150}" y2="55" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/><text x="${w-145}" y="59" font-size="11" fill="#64748b">保守</text></g>`;
+    svg+='</svg>';
+    document.getElementById('chartContainer').innerHTML=svg;
+  },
+  renderScenarios(opt,base,cons,current){
+    const optGrowth=((opt/current-1)*100).toFixed(1);
+    const baseGrowth=((base/current-1)*100).toFixed(1);
+    const consGrowth=((cons/current-1)*100).toFixed(1);
+    document.getElementById('scenarioGrid').innerHTML=`
+      <div class="scenario-card optimistic"><div class="sc-title" style="color:var(--success)">乐观场景</div><div class="sc-val" style="color:var(--success)">$${opt.toFixed(0)}M</div><div class="sc-desc">增长 +${optGrowth}% | 消费回暖+政策利好+品类爆发</div></div>
+      <div class="scenario-card baseline"><div class="sc-title" style="color:var(--primary)">基准场景</div><div class="sc-val" style="color:var(--primary)">$${base.toFixed(0)}M</div><div class="sc-desc">增长 +${baseGrowth}% | 稳定增长+正常竞争环境</div></div>
+      <div class="scenario-card conservative"><div class="sc-title" style="color:var(--warning)">保守场景</div><div class="sc-val" style="color:var(--warning)">$${cons.toFixed(0)}M</div><div class="sc-desc">增长 +${consGrowth}% | 经济放缓+竞争加剧+需求疲软</div></div>`;
+  },
+  renderFactors(hist,opt,cons){
+    const factors=[
+      {type:'pos',icon:'📈',title:'电商渗透率持续提升',desc:'线上购物习惯深化，品类线上占比年增3-5%',impact:'+'+(hist*0.3).toFixed(1)+'%'},
+      {type:'pos',icon:'🌐',title:'新兴市场增长',desc:'东南亚、拉美等新兴市场增速高于成熟市场',impact:'+'+(hist*0.2).toFixed(1)+'%'},
+      {type:'pos',icon:'📱',title:'移动端购物增长',desc:'移动端占比超70%，社交电商驱动增量',impact:'+'+(hist*0.15).toFixed(1)+'%'},
+      {type:'neg',icon:'💰',title:'通胀压力',desc:'消费者购买力下降，价格敏感度提升',impact:'-'+(hist*0.1).toFixed(1)+'%'},
+      {type:'neg',icon:'⚔',title:'竞争加剧',desc:'新进入者增多，价格战风险上升',impact:'-'+(hist*0.15).toFixed(1)+'%'},
+      {type:'neu',icon:'📋',title:'平台政策变化',desc:'FBA费用调整、合规要求变化带来不确定性',impact:'±'+(hist*0.05).toFixed(1)+'%'},
+    ];
+    document.getElementById('factorList').innerHTML=factors.map(f=>`<div class="factor-item ${f.type}"><span class="factor-icon">${f.icon}</span><div class="factor-info"><h4>${f.title}</h4><p>${f.desc}</p></div><span class="factor-impact" style="color:${f.type==='pos'?'var(--success)':f.type==='neg'?'var(--danger)':'var(--muted)'}">${f.impact}</span></div>`).join('');
+  },
+  renderRec(opt,base,cons,hist,forecast,current){
+    const growthPct=((forecast/current-1)*100).toFixed(1);
+    let rec=`<h4>基于基准场景的${growthPct}%增长预测，建议：</h4>`;
+    rec+=`<p>1. <strong>加大库存备货</strong>：按基准增长${growthPct}%规划库存，预留20%弹性应对乐观场景<br>`;
+    rec+=`2. <strong>扩展产品线</strong>：在增长确认的细分类目中增加SKU覆盖<br>`;
+    rec+=`3. <strong>优化广告预算</strong>：按增长趋势调整广告投入，保守场景下预留缩减空间<br>`;
+    rec+=`4. <strong>关注竞争动态</strong>：竞争加剧可能导致份额下降，持续监控竞品策略<br>`;
+    rec+=`5. <strong>多市场布局</strong>：分散单一市场风险，把握新兴市场增长红利<br>`;
+    rec+=`6. <strong>建立预警机制</strong>：当实际增长低于保守场景(${cons>current?'+':' '}${((cons/current-1)*100).toFixed(1)}%)时启动应急方案</p>`;
+    document.getElementById('recommendation').innerHTML=rec;
+  }
+};
+Forecast.calc();
+</script>
+</body>
+</html>

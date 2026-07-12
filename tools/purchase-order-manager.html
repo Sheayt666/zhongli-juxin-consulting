@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="采购订单管理器（深度版）：PO生成+审批流+状态追踪+交付确认+对账管理，CRUD+localStorage，CSS订单看板。免费在线跨境电商采购订单管理工具。">
+<meta name="keywords" content="采购订单管理,PO生成,审批流,状态追踪,对账管理,采购管理,localStorage">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/purchase-order-manager.html">
+<title>采购订单管理器 - PO生成·审批流·状态追踪·对账 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pom-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pom-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kanban-col{background:var(--bg-soft);border-radius:12px;padding:14px;min-height:160px}
+.kanban-col .kc-head{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.kanban-col .kc-count{font-size:11px;background:#fff;padding:2px 8px;border-radius:10px;color:var(--muted)}
+.po-card{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid #4f46e5;cursor:pointer;transition:all .2s}
+.po-card:hover{box-shadow:var(--shadow-md);transform:translateX(2px)}
+.po-card .pc-id{font-size:12px;font-weight:700;color:var(--ink)}
+.po-card .pc-sup{font-size:11px;color:var(--muted);margin:2px 0}
+.po-card .pc-amt{font-size:13px;font-weight:700;color:#4f46e5}
+.status-draft{border-left-color:#94a3b8}.status-pending{border-left-color:#f59e0b}.status-approved{border-left-color:#4f46e5}.status-shipped{border-left-color:#06b6d4}.status-received{border-left-color:#10b981}
+.po-table{width:100%;border-collapse:collapse;font-size:13px}
+.po-table th{background:var(--bg-soft);padding:10px;text-align:left;font-weight:600;color:var(--ink);border-bottom:2px solid var(--rule)}
+.po-table td{padding:10px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.po-table tr:hover{background:var(--bg-soft)}
+.status-badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:700}
+.status-badge.draft{background:#f1f5f9;color:#64748b}
+.status-badge.pending{background:#fef3c7;color:#d97706}
+.status-badge.approved{background:#eef2ff;color:#4f46e5}
+.status-badge.shipped{background:#cffafe;color:#0891b2}
+.status-badge.received{background:#d1fae5;color:#059669}
+.btn-act{font-size:11px;padding:4px 10px;border:1px solid var(--rule);border-radius:6px;background:#fff;cursor:pointer;margin-right:4px;color:var(--ink-soft)}
+.btn-act:hover{border-color:#4f46e5;color:#4f46e5}
+.btn-add{padding:10px 22px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.stat-card{flex:1;min-width:100px;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.stat-card .sv{font-size:20px;font-weight:800;color:var(--ink)}
+.stat-card .sl{font-size:11px;color:var(--muted);margin-top:2px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.kanban{grid-template-columns:1fr 1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"采购订单管理器","description":"PO生成+审批流+状态追踪+交付确认+对账管理，CRUD+localStorage，CSS订单看板。","url":"https://juxin-consulting.help/tools/purchase-order-manager.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"采购订单管理器","item":"https://juxin-consulting.help/tools/purchase-order-manager.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="purchase_order_manager">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📝 采购管理工作流 · 深度版</span>
+      <h1>采购订单 <em>管理器</em></h1>
+      <p class="tool-hero-desc">采购订单全生命周期管理：PO生成、审批流、状态追踪（草稿→待审→已批→已发→已收）、交付确认、对账管理，CSS看板直观呈现，CRUD操作数据本地持久化。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第7步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a><span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a><span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a><span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本</a><span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a><span class="arrow">→</span>
+      <a href="supplier-database-search-w18.html" class="step">供应商搜索</a><span class="arrow">→</span>
+      <span class="step current">采购订单</span><span class="arrow">→</span>
+      <a href="supplier-performance-scorecard-w18.html" class="step">供应商记分卡</a><span class="arrow">→</span>
+      <a href="price-negotiation-strategist.html" class="step">价格谈判</a><span class="arrow">→</span>
+      <a href="incoming-qc-manager.html" class="step">来料质检</a><span class="arrow">→</span>
+      <a href="supplier-risk-monitor.html" class="step">供应商风险</a><span class="arrow">→</span>
+      <a href="purchase-cost-tracker.html" class="step">采购成本</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="pom-section">
+        <h3>➕ 新建采购订单</h3>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>供应商</label><input type="text" id="sup" value="深圳蓝声科技" oninput="POM.calcAmt()"></div>
+          <div class="calc-field"><label>产品名称</label><input type="text" id="prod" value="蓝牙耳机Pro" oninput="POM.calcAmt()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>数量</label><input type="number" id="qty" value="1000" oninput="POM.calcAmt()"></div>
+          <div class="calc-field"><label>单价 <span class="hint">($)</span></label><input type="number" id="price" value="8.5" step="0.01" oninput="POM.calcAmt()"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="font-size:14px">订单金额: <strong style="color:#4f46e5;font-size:18px" id="amt">$8,500.00</strong></div>
+          <button class="btn-add" onclick="POM.add()">＋ 生成采购订单</button>
+        </div>
+      </div>
+
+      <div class="pom-section">
+        <h3>📊 订单概览</h3>
+        <div class="stat-row" id="statRow"></div>
+      </div>
+
+      <div class="pom-section">
+        <h3>📋 订单状态看板</h3>
+        <div class="kanban" id="kanban"></div>
+      </div>
+
+      <div class="pom-section">
+        <h3>📑 订单明细与对账表</h3>
+        <table class="po-table">
+          <thead><tr><th>PO编号</th><th>供应商</th><th>产品</th><th>数量</th><th>单价</th><th>金额</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody id="poTable"></tbody>
+        </table>
+      </div>
+
+      <div class="pom-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="supplier-database-search-w18.html" class="related-card"><span class="related-card-icon">🏭</span><div class="related-card-content"><h5>供应商搜索</h5><p>供应商对比</p></div></a>
+          <a href="incoming-qc-manager.html" class="related-card"><span class="related-card-icon">🔍</span><div class="related-card-content"><h5>来料质检</h5><p>AQL抽样</p></div></a>
+          <a href="purchase-cost-tracker.html" class="related-card"><span class="related-card-icon">💰</span><div class="related-card-content"><h5>采购成本追踪</h5><p>价格趋势</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="supplier-database-search-w18.html" class="wbn-btn prev">← 上一步：供应商搜索</a>
+        <a href="supplier-performance-scorecard-w18.html" class="wbn-btn next">下一步：供应商记分卡 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="purchase-order-manager.html">采购订单管理</a></li><li><a href="supplier-database-search-w18.html">供应商搜索</a></li><li><a href="purchase-cost-tracker.html">采购成本</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var POM=(function(){
+  'use strict';
+  var SK='jx_purchase_orders';
+  var orders=[];
+  var SEQ=1001;
+  var FLOW=['draft','pending','approved','shipped','received'];
+  var FLOW_NAME={draft:'草稿',pending:'待审批',approved:'已审批',shipped:'已发货',received:'已收货'};
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function load(){try{var d=JSON.parse(localStorage.getItem(SK)||'{}');orders=d.orders||[];SEQ=d.seq||1001;if(!orders.length){orders=[{id:'PO-1001',sup:'深圳蓝声科技',prod:'蓝牙耳机Pro',qty:1000,price:8.5,amt:8500,status:'approved',date:'2026-07-01'},{id:'PO-1002',sup:'东莞智联电子',prod:'充电盒',qty:2000,price:2.3,amt:4600,status:'shipped',date:'2026-07-05'},{id:'PO-1003',sup:'深圳声科数码',prod:'硅胶耳塞',qty:5000,price:0.15,amt:750,status:'pending',date:'2026-07-08'}];SEQ=1004;save();}}catch(e){orders=[];}}
+  function save(){try{localStorage.setItem(SK,JSON.stringify({orders:orders,seq:SEQ}));}catch(e){}}
+  function calcAmt(){var q=parseFloat(v('qty'))||0,p=parseFloat(v('price'))||0;document.getElementById('amt').textContent='$'+(q*p).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function add(){
+    var sup=v('sup'),prod=v('prod'),q=parseInt(v('qty'))||0,p=parseFloat(v('price'))||0;
+    if(!sup||!prod||!q){alert('请填写完整信息');return;}
+    var id='PO-'+SEQ;SEQ++;
+    orders.push({id:id,sup:sup,prod:prod,qty:q,price:p,amt:(q*p),status:'draft',date:new Date().toISOString().slice(0,10)});
+    save();render();
+  }
+  function advance(id){
+    orders.forEach(function(o){if(o.id===id){var idx=FLOW.indexOf(o.status);if(idx<FLOW.length-1)o.status=FLOW[idx+1];}});
+    save();render();
+  }
+  function remove(id){orders=orders.filter(function(o){return o.id!==id;});save();render();}
+  function renderStats(){
+    var total=orders.reduce(function(s,o){return s+o.amt;},0);
+    var received=orders.filter(function(o){return o.status==='received';}).reduce(function(s,o){return s+o.amt;},0);
+    var pending=orders.filter(function(o){return o.status==='pending';}).length;
+    document.getElementById('statRow').innerHTML=
+      '<div class="stat-card"><div class="sv">'+orders.length+'</div><div class="sl">订单总数</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#4f46e5">$'+total.toLocaleString('en-US',{maximumFractionDigits:0})+'</div><div class="sl">订单总额</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#10b981">$'+received.toLocaleString('en-US',{maximumFractionDigits:0})+'</div><div class="sl">已对账金额</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#f59e0b">'+pending+'</div><div class="sl">待审批</div></div>';
+  }
+  function renderKanban(){
+    var h='';
+    FLOW.forEach(function(st){
+      var list=orders.filter(function(o){return o.status===st;});
+      h+='<div class="kanban-col"><div class="kc-head">'+FLOW_NAME[st]+'<span class="kc-count">'+list.length+'</span></div>';
+      list.forEach(function(o){h+='<div class="po-card status-'+o.status+'" onclick="POM.advance(\''+o.id+'\')"><div class="pc-id">'+o.id+'</div><div class="pc-sup">'+o.sup+'</div><div class="pc-amt">$'+o.amt.toLocaleString('en-US',{maximumFractionDigits:2})+'</div></div>';});
+      h+='</div>';
+    });
+    document.getElementById('kanban').innerHTML=h;
+  }
+  function renderTable(){
+    var h='';
+    orders.forEach(function(o){
+      h+='<tr><td><strong>'+o.id+'</strong></td><td>'+o.sup+'</td><td>'+o.prod+'</td><td>'+o.qty.toLocaleString()+'</td><td>$'+o.price.toFixed(2)+'</td><td>$'+o.amt.toLocaleString('en-US',{maximumFractionDigits:2})+'</td><td><span class="status-badge '+o.status+'">'+FLOW_NAME[o.status]+'</span></td><td>'+(o.status!=='received'?'<button class="btn-act" onclick="POM.advance(\''+o.id+'\')">推进</button>':'')+'<button class="btn-act" onclick="POM.remove(\''+o.id+'\')" style="color:#ef4444">删除</button></td></tr>';
+    });
+    document.getElementById('poTable').innerHTML=h;
+  }
+  function render(){renderStats();renderKanban();renderTable();}
+  function init(){load();render();}
+  return {calcAmt:calcAmt,add:add,advance:advance,remove:remove,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',POM.init);}else{POM.init();}
+</script>
+</body>
+</html>

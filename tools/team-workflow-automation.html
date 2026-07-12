@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="团队工作流自动化器：输入任务和审批流程，输出任务分配+审批流+进度追踪+自动提醒规则，CSS流程图展示。">
+<meta name="keywords" content="工作流自动化,任务分配,审批流程,进度追踪,自动提醒,团队协作,流程管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/team-workflow-automation.html">
+<title>团队工作流自动化器 - 任务分配·审批流·自动提醒 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.flow-chart{display:flex;align-items:center;gap:0;margin:24px 0;flex-wrap:wrap;justify-content:center}
+.flow-node{padding:16px 24px;border-radius:12px;text-align:center;min-width:140px;transition:all .2s;position:relative}
+.flow-node.task{background:var(--accent-bg);border:2px solid var(--accent);color:var(--accent)}
+.flow-node.approve{background:var(--green-bg);border:2px solid var(--green);color:var(--green)}
+.flow-node.notify{background:var(--gold-bg);border:2px solid var(--gold);color:var(--gold)}
+.flow-node .fn-icon{font-size:24px;margin-bottom:4px}
+.flow-node .fn-title{font-size:14px;font-weight:700}
+.flow-node .fn-desc{font-size:11px;margin-top:4px;opacity:.7}
+.flow-arrow{font-size:24px;color:var(--accent);margin:0 8px}
+.auto-rule{background:var(--bg-soft);border:1px solid var(--rule);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:start;gap:10px}
+.auto-rule .ar-icon{font-size:20px;flex-shrink:0}
+.auto-rule .ar-content{flex:1}
+.auto-rule .ar-title{font-size:14px;font-weight:600}
+.auto-rule .ar-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.auto-rule .ar-trigger{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;background:var(--accent-bg);color:var(--accent);margin-top:4px}
+</style>
+</head>
+<body class="tool-page" data-tool="team_workflow_automation">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第10步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <a href="okr-goal-tracker.html" class="step">OKR追踪</a>
+      <span class="arrow">→</span>
+      <a href="training-onboarding-manager.html" class="step">培训入职</a>
+      <span class="arrow">→</span>
+      <a href="performance-review-system.html" class="step">绩效考核</a>
+      <span class="arrow">→</span>
+      <a href="role-permission-manager.html" class="step">权限管理</a>
+      <span class="arrow">→</span>
+      <span class="step current">工作流自动化</span>
+      <span class="arrow">→</span>
+      <a href="recruitment-pipeline.html" class="step">招聘漏斗</a>
+      <span class="arrow">→</span>
+      <a href="competency-model-builder.html" class="step">胜任力模型</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 标准版</span>
+      <h1>团队工作流 <em>自动化器</em></h1>
+      <p class="tool-hero-desc">输入任务和审批流程，输出任务分配+审批流+进度追踪+自动提醒规则，CSS流程图展示，帮你自动化团队协作流程。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>⚙️ 工作流配置</h2>
+          <p class="calc-form-subtitle">输入任务类型和审批流程，生成自动化工作流</p>
+          <div class="calc-field"><label>工作流类型</label><select id="wfType" onchange="TWA.gen()">
+            <option value="listing" selected>Listing发布流程</option>
+            <option value="purchase">采购审批流程</option>
+            <option value="refund">退款审批流程</option>
+            <option value="content">内容审核流程</option>
+            <option value="custom">自定义流程</option>
+          </select></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>任务发起人</label><input type="text" id="initiator" value="运营专员" oninput="TWA.gen()"></div>
+            <div class="calc-field"><label>审批层级</label><select id="levels" onchange="TWA.gen()">
+              <option value="1">1级 (直接审批)</option>
+              <option value="2" selected>2级 (主管+经理)</option>
+              <option value="3">3级 (主管+经理+总监)</option>
+            </select></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>自动提醒</label><select id="autoRemind" onchange="TWA.gen()"><option value="yes" selected>开启</option><option value="no">关闭</option></select></div>
+            <div class="calc-field"><label>超时自动处理</label><select id="autoTimeout" onchange="TWA.gen()"><option value="no" selected>关闭</option><option value="yes">开启</option></select></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🔄 工作流流程图</h3>
+        <div class="flow-chart" id="flowChart"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>⚙️ 自动化规则</h3>
+        <div id="autoRules"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 任务分配与进度</h3>
+        <table class="data-table" id="taskTable"></table>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="role-permission-manager.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第9步</span>权限管理 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="recruitment-pipeline.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第11步</span>招聘漏斗 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="team-workflow-automation.html">团队工作流</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var TWA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var FLOWS={
+    listing:{name:'Listing发布',steps:[{type:'task',icon:'📝',title:'撰写Listing',desc:'运营专员'},{type:'approve',icon:'✅',title:'主管审批',desc:'运营主管'},{type:'approve',icon:'✅',title:'经理审批',desc:'运营经理'},{type:'task',icon:'🚀',title:'发布上架',desc:'系统自动'},{type:'notify',icon:'🔔',title:'发布通知',desc:'全团队'}]},
+    purchase:{name:'采购审批',steps:[{type:'task',icon:'📝',title:'提交采购单',desc:'采购员'},{type:'approve',icon:'✅',title:'部门审批',desc:'部门主管'},{type:'approve',icon:'✅',title:'财务审批',desc:'财务经理'},{type:'task',icon:'💰',title:'付款执行',desc:'财务部'},{type:'notify',icon:'🔔',title:'到货提醒',desc:'采购员'}]},
+    refund:{name:'退款审批',steps:[{type:'task',icon:'📝',title:'受理退款',desc:'客服专员'},{type:'approve',icon:'✅',title:'客服主管审批',desc:'客服主管'},{type:'approve',icon:'✅',title:'财务审批',desc:'财务经理'},{type:'task',icon:'💰',title:'退款执行',desc:'财务部'},{type:'notify',icon:'🔔',title:'客户通知',desc:'客服'}]},
+    content:{name:'内容审核',steps:[{type:'task',icon:'📝',title:'创建内容',desc:'内容编辑'},{type:'approve',icon:'✅',title:'编辑审核',desc:'内容主管'},{type:'approve',icon:'✅',title:'法务审核',desc:'法务顾问'},{type:'task',icon:'🚀',title:'发布上线',desc:'系统自动'},{type:'notify',icon:'🔔',title:'发布通知',desc:'全团队'}]},
+    custom:{name:'自定义',steps:[{type:'task',icon:'📝',title:'发起任务',desc:'发起人'},{type:'approve',icon:'✅',title:'第一审',desc:'直接主管'},{type:'approve',icon:'✅',title:'终审',desc:'部门经理'},{type:'task',icon:'🚀',title:'执行完成',desc:'执行人'},{type:'notify',icon:'🔔',title:'完成通知',desc:'相关人'}]}
+  };
+  return{
+    gen:function(){
+      var wfKey=$('wfType').value,wf=FLOWS[wfKey];
+      var levels=parseInt($('levels').value);
+      var autoRemind=$('autoRemind').value==='yes';
+      var autoTimeout=$('autoTimeout').value==='yes';
+      var steps=wf.steps.slice(0,2+parseInt(levels));
+      var html='<h3>⚙️ 工作流概览</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">工作流</div><div class="hc-value" style="font-size:20px">'+wf.name+'</div><div class="hc-sub">'+steps.length+'个步骤</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">审批层级</div><div class="hc-value">'+levels+'</div><div class="hc-sub">自动提醒 '+(autoRemind?'开':'关')+'</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">发起人</span><span class="fr-val">'+$('initiator').value+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">流程步骤</span><span class="fr-val">'+steps.length+'步</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">自动提醒</span><span class="fr-val">'+(autoRemind?'已开启':'未开启')+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">超时自动处理</span><span class="fr-val">'+(autoTimeout?'已开启':'未开启')+'</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var fcHtml='';
+      steps.forEach(function(s,i){
+        fcHtml+='<div class="flow-node '+s.type+'"><div class="fn-icon">'+s.icon+'</div><div class="fn-title">'+s.title+'</div><div class="fn-desc">'+s.desc+'</div></div>';
+        if(i<steps.length-1)fcHtml+='<div class="flow-arrow">→</div>';
+      });
+      $('flowChart').innerHTML=fcHtml;
+      var rules=[
+        {icon:'📧',title:'任务分配提醒',desc:'新任务创建时自动通知执行人',trigger:'触发: 任务创建'},
+        {icon:'⏱️',title:'审批超时提醒',desc:'审批超过24小时自动提醒审批人',trigger:'触发: 超时24h'},
+        {icon:'📨',title:'审批结果通知',desc:'审批完成后自动通知发起人',trigger:'触发: 审批完成'},
+        {icon:'🔄',title:'驳回重新分配',desc:'审批不通过时自动退回发起人修改',trigger:'触发: 审批驳回'},
+        {icon:'📊',title:'进度同步更新',desc:'每个步骤完成后自动更新任务进度',trigger:'触发: 步骤完成'}
+      ];
+      if(autoTimeout)rules.push({icon:'⚠️',title:'超时自动升级',desc:'审批超过48小时自动升级到上级',trigger:'触发: 超时48h'});
+      var rHtml='';
+      rules.forEach(function(r){
+        rHtml+='<div class="auto-rule"><div class="ar-icon">'+r.icon+'</div><div class="ar-content"><div class="ar-title">'+r.title+'</div><div class="ar-desc">'+r.desc+'</div><div class="ar-trigger">'+r.trigger+'</div></div></div>';
+      });
+      $('autoRules').innerHTML=rHtml;
+      var tHtml='<thead><tr><th>步骤</th><th>负责人</th><th>状态</th><th>预计耗时</th><th>操作</th></tr></thead><tbody>';
+      steps.forEach(function(s,i){
+        tHtml+='<tr><td style="font-weight:600">'+s.icon+' '+s.title+'</td><td>'+s.desc+'</td>';
+        tHtml+='<td class="'+(i===0?'pass':(i<2?'warn':''))+'">'+(i===0?'已完成':(i<2?'待处理':'未开始'))+'</td>';
+        tHtml+='<td>'+(i===0?'2h':(i<2?'4h':'1h'))+'</td>';
+        tHtml+='<td>'+(i<2?'查看':'-')+'</td></tr>';
+      });
+      tHtml+='</tbody></table>';
+      $('taskTable').innerHTML=tHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TWA.gen);}else{TWA.gen();}
+</script>
+</body>
+</html>

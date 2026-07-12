@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="类目机会分析器：综合机会评分、CSS评分矩阵、进入策略推荐。从增长率、竞争密度、利润空间、准入门槛多维度评估类目进入价值。">
+<title>类目机会分析器 - 评分矩阵·进入策略·多维度评估 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.score-ring-wrap{display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;margin:20px 0}.score-ring{width:160px;height:160px;border-radius:50%;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .4s}.score-ring::before{content:'';position:absolute;inset:12px;border-radius:50%;background:var(--surface)}.score-ring-inner{position:relative;z-index:1;text-align:center}.score-ring-inner .sr-val{font-size:48px;font-weight:900;line-height:1}.score-ring-inner .sr-lbl{font-size:12px;color:var(--muted);margin-top:4px}.score-grade{flex:1;min-width:280px}.score-grade h3{font-size:20px;font-weight:800;margin-bottom:8px}.score-grade .sg-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.matrix-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}.matrix-cell{padding:20px;border-radius:var(--radius);border:2px solid;position:relative;overflow:hidden}.matrix-cell .mc-score{font-size:36px;font-weight:900;margin-bottom:4px}.matrix-cell .mc-label{font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:8px}.matrix-cell .mc-desc{font-size:12px;color:var(--muted);line-height:1.5}.matrix-cell .mc-bar{position:absolute;bottom:0;left:0;height:4px;transition:width .4s}
+.dim-list{display:flex;flex-direction:column;gap:12px}.dim-item{display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg);border-radius:var(--radius);border-left:4px solid}.dim-item.high{border-left-color:var(--success)}.dim-item.med{border-left-color:var(--warning)}.dim-item.low{border-left-color:var(--danger)}.dim-item .dim-info{flex:1}.dim-item .dim-info h4{font-size:14px;font-weight:700;margin-bottom:2px}.dim-item .dim-info p{font-size:12px;color:var(--muted)}.dim-item .dim-score{font-size:24px;font-weight:800;flex-shrink:0;min-width:50px;text-align:right}
+.strategy-card{padding:20px;border-radius:var(--radius);margin-bottom:12px;border-left:4px solid}.strategy-card.recommend{background:var(--success-bg);border-left-color:var(--success)}.strategy-card.caution{background:var(--warning-bg);border-left-color:var(--warning)}.strategy-card.avoid{background:var(--danger-bg);border-left-color:var(--danger)}.strategy-card h4{font-size:15px;font-weight:700;margin-bottom:8px}.strategy-card p{font-size:13px;color:var(--ink-soft);line-height:1.7}.strategy-card ul{margin-top:8px;padding-left:20px}.strategy-card li{font-size:13px;color:var(--ink-soft);margin-bottom:4px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.matrix-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}.score-ring-wrap{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W8 战略决策工作流</div><div class="workflow-steps">
+<a href="market-entry-evaluator.html" class="workflow-step">市场进入</a><a href="competitive-advantage.html" class="workflow-step">竞争优势</a><a href="market-share.html" class="workflow-step">市场份额</a><a href="annual-budget-planner.html" class="workflow-step">年度预算</a><a href="referral-fee.html" class="workflow-step">佣金计算</a><a href="market-trend-forecaster.html" class="workflow-step">趋势预测</a><a href="competitor-landscape-mapper.html" class="workflow-step">竞争格局</a><a href="category-opportunity-analyzer.html" class="workflow-step active">类目机会</a><a href="resource-allocation-optimizer.html" class="workflow-step">资源优化</a><a href="growth-strategy-roadmap.html" class="workflow-step">增长路线图</a><a href="scenario-planner.html" class="workflow-step">场景规划</a><a href="okr-goal-framework.html" class="workflow-step">OKR目标</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W8 战略决策</a><span>/</span>类目机会分析器</div>
+<div class="tool-header"><span class="tool-badge">W8 战略决策工作流</span><h1>类目机会<em>分析器</em></h1><p>多维度评估类目进入价值：增长率、竞争密度、利润空间、准入门槛综合评分，CSS评分矩阵可视化，精准进入策略推荐。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotalScore">0</div><div class="stat-lbl">综合机会评分</div></div>
+<div class="stat-card"><div class="stat-val success" id="sGrowthScore">0</div><div class="stat-lbl">增长潜力分</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sCompScore">0</div><div class="stat-lbl">竞争难度分</div></div>
+<div class="stat-card"><div class="stat-val primary" id="sProfitScore">0</div><div class="stat-lbl">利润空间分</div></div>
+</div>
+
+<div class="card">
+<h2>类目数据输入</h2>
+<div class="form-grid">
+<div class="form-field"><label>类目年增长率 <span class="hint">(%)</span></label><input type="number" id="growthRate" value="15" step="0.5" oninput="Opp.calc()"></div>
+<div class="form-field"><label>类目市场规模 <span class="hint">($M)</span></label><input type="number" id="marketSize" value="200" step="10" oninput="Opp.calc()"></div>
+<div class="form-field"><label>头部品牌集中度 CR4 <span class="hint">(%)</span></label><input type="number" id="cr4" value="45" step="1" min="0" max="100" oninput="Opp.calc()"></div>
+<div class="form-field"><label>竞品平均评论数</label><input type="number" id="avgReviews" value="500" step="10" oninput="Opp.calc()"></div>
+<div class="form-field"><label>平均售价 <span class="hint">($)</span></label><input type="number" id="avgPrice" value="29.99" step="0.5" oninput="Opp.calc()"></div>
+<div class="form-field"><label>平均毛利率 <span class="hint">(%)</span></label><input type="number" id="margin" value="35" step="1" oninput="Opp.calc()"></div>
+<div class="form-field"><label>准入门槛</label><select id="barrier" onchange="Opp.calc()"><option value="1">低（无认证/无专利）</option><option value="2" selected>中（部分认证/品牌）</option><option value="3">高（严格认证/专利壁垒）</option></select></div>
+<div class="form-field"><label>季节性波动</label><select id="seasonality" onchange="Opp.calc()"><option value="1">低（全年稳定）</option><option value="2" selected>中（有季节高峰）</option><option value="3">高（强季节依赖）</option></select></div>
+</div>
+</div>
+
+<div class="card">
+<h2>综合机会评分</h2>
+<div class="score-ring-wrap">
+<div class="score-ring" id="scoreRing"><div class="score-ring-inner"><div class="sr-val" id="srVal">0</div><div class="sr-lbl">机会评分 / 100</div></div></div>
+<div class="score-grade" id="scoreGrade"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>四维度评分矩阵</h2>
+<div class="matrix-grid" id="matrixGrid"></div>
+</div>
+
+<div class="card">
+<h2>维度详细分析</h2>
+<div class="dim-list" id="dimList"></div>
+</div>
+
+<div class="card">
+<h2>进入策略推荐</h2>
+<div id="strategyList"></div>
+</div>
+
+<div class="related-grid">
+<a href="competitor-landscape-mapper.html" class="related-card"><span class="rc-icon">🗺</span><div><h4>竞争格局图谱</h4><p>竞争格局分析</p></div></a>
+<a href="market-entry-evaluator.html" class="related-card"><span class="rc-icon">🚀</span><div><h4>市场进入评估</h4><p>市场进入决策</p></div></a>
+<a href="market-trend-forecaster.html" class="related-card"><span class="rc-icon">📈</span><div><h4>趋势预测器</h4><p>市场趋势预测</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Opp={
+  calc(){
+    const growth=parseFloat(document.getElementById('growthRate').value)||0;
+    const size=parseFloat(document.getElementById('marketSize').value)||0;
+    const cr4=parseFloat(document.getElementById('cr4').value)||0;
+    const reviews=parseFloat(document.getElementById('avgReviews').value)||0;
+    const price=parseFloat(document.getElementById('avgPrice').value)||0;
+    const margin=parseFloat(document.getElementById('margin').value)||0;
+    const barrier=parseInt(document.getElementById('barrier').value);
+    const season=parseInt(document.getElementById('seasonality').value);
+    const growthScore=Math.min(100,growth*4+(size/10));
+    const compScore=Math.max(0,100-(cr4*0.6)-(reviews/20));
+    const profitScore=Math.min(100,margin*1.5+(price/0.8));
+    const entryScore=Math.max(0,100-(barrier*25)-(season*15));
+    const total=Math.round(growthScore*0.3+compScore*0.25+profitScore*0.3+entryScore*0.15);
+    document.getElementById('sTotalScore').textContent=total;
+    document.getElementById('sGrowthScore').textContent=Math.round(growthScore);
+    document.getElementById('sCompScore').textContent=Math.round(compScore);
+    document.getElementById('sProfitScore').textContent=Math.round(profitScore);
+    const ring=document.getElementById('scoreRing');
+    const deg=(total/100)*360;
+    let color;
+    if(total>=75)color='var(--success)';
+    else if(total>=50)color='var(--primary)';
+    else if(total>=35)color='var(--warning)';
+    else color='var(--danger)';
+    ring.style.background=`conic-gradient(${color} ${deg}deg, var(--rule-light) ${deg}deg)`;
+    document.getElementById('srVal').textContent=total;
+    document.getElementById('srVal').style.color=color;
+    const grade=document.getElementById('scoreGrade');
+    if(total>=75){grade.innerHTML='<h3 style="color:var(--success)">A级 - 强烈推荐进入</h3><p class="sg-desc">该类目具有高增长潜力、适中的竞争强度和良好的利润空间。是当前最优的类目进入选择，建议优先投入资源。</p>';}
+    else if(total>=55){grade.innerHTML='<h3 style="color:var(--primary)">B级 - 值得考虑</h3><p class="sg-desc">类目整体表现中等偏上，存在一定机会但需注意竞争和门槛风险。建议小规模测试后再决定是否加大投入。</p>';}
+    else if(total>=35){grade.innerHTML='<h3 style="color:var(--warning)">C级 - 谨慎评估</h3><p class="sg-desc">类目机会一般，竞争激烈或利润空间有限。如无差异化优势，建议暂缓进入或寻找细分利基。</p>';}
+    else{grade.innerHTML='<h3 style="color:var(--danger)">D级 - 不建议进入</h3><p class="sg-desc">类目进入门槛高、竞争极度激烈或利润微薄。除非有独特优势，否则不建议投入资源。</p>';}
+    const dims=[
+      {name:'增长潜力',score:growthScore,weight:'30%',desc:`年增长率${growth}%，市场规模$${size}M`,level:growthScore>=60?'high':growthScore>=35?'med':'low'},
+      {name:'竞争强度',score:compScore,weight:'25%',desc:`CR4=${cr4}%，平均${reviews}评论`,level:compScore>=60?'high':compScore>=35?'med':'low'},
+      {name:'利润空间',score:profitScore,weight:'30%',desc:`毛利率${margin}%，均价$${price}`,level:profitScore>=60?'high':profitScore>=35?'med':'low'},
+      {name:'准入门槛',score:entryScore,weight:'15%',desc:`门槛${['','低','中','高'][barrier]}，季节性${['','低','中','高'][season]}`,level:entryScore>=60?'high':entryScore>=35?'med':'low'}
+    ];
+    document.getElementById('matrixGrid').innerHTML=dims.map(d=>{
+      const c=d.score>=60?'var(--success)':d.score>=35?'var(--warning)':'var(--danger)';
+      const bg=d.score>=60?'var(--success-bg)':d.score>=35?'var(--warning-bg)':'var(--danger-bg)';
+      return `<div class="matrix-cell" style="border-color:${c};background:${bg}">
+      <div class="mc-score" style="color:${c}">${Math.round(d.score)}</div>
+      <div class="mc-label">${d.name} (权重${d.weight})</div>
+      <div class="mc-desc">${d.desc}</div>
+      <div class="mc-bar" style="background:${c};width:${d.score}%"></div>
+      </div>`;
+    }).join('');
+    document.getElementById('dimList').innerHTML=dims.map(d=>{
+      const c=d.score>=60?'var(--success)':d.score>=35?'var(--warning)':'var(--danger)';
+      let advice='';
+      if(d.name==='增长潜力'){
+        if(d.score>=60)advice='市场增长强劲，建议尽早布局抢占增长红利';
+        else if(d.score>=35)advice='市场增长平缓，需通过差异化获取份额';
+        else advice='市场增长停滞，建议寻找新兴细分领域';
+      }else if(d.name==='竞争强度'){
+        if(d.score>=60)advice='竞争相对分散，有切入空间';
+        else if(d.score>=35)advice='竞争中等，需建立差异化优势';
+        else advice='竞争高度集中，正面竞争风险大';
+      }else if(d.name==='利润空间'){
+        if(d.score>=60)advice='利润空间充足，有广告投放余量';
+        else if(d.score>=35)advice='利润一般，需严格控制成本';
+        else advice='利润微薄，不建议进入';
+      }else{
+        if(d.score>=60)advice='进入门槛低，可快速启动';
+        else if(d.score>=35)advice='门槛适中，需准备认证和品牌';
+        else advice='门槛极高，需大量前期投入';
+      }
+      return `<div class="dim-item ${d.level}">
+      <div class="dim-info"><h4>${d.name}</h4><p>${d.desc} · ${advice}</p></div>
+      <div class="dim-score" style="color:${c}">${Math.round(d.score)}</div>
+      </div>`;
+    }).join('');
+    const strat=[];
+    if(total>=75){
+      strat.push({type:'recommend',title:'立即进入策略',body:'该类目评分优秀，建议立即启动进入计划。',items:['首批备货3-6个月销量，确保不断货','广告预算上浮20%抢占关键词','注册品牌备案，完善A+页面和Store','目标3个月内进入类目前20']});
+      strat.push({type:'recommend',title:'加速增长策略',body:'利用类目增长红利快速扩大规模。',items:['同步开发2-3个变体/配色扩展产品线','建立Review积累机制，目标月增50+评论','关注竞品动态，及时调整定价策略']});
+    }else if(total>=55){
+      strat.push({type:'caution',title:'测试验证策略',body:'类目有潜力但存在风险，建议小规模测试。',items:['首批备货1-2个月销量试水','PPC预算控制在日$30-50','重点跟踪转化率和ACOS','3个月后评估是否加大投入']});
+      strat.push({type:'caution',title:'差异化切入策略',body:'避免正面竞争，寻找差异化定位。',items:['分析竞品差评，找到产品改进点','聚焦细分人群或使用场景','定价避开头部品牌价格带','打造独特卖点(USP)']});
+    }else if(total>=35){
+      strat.push({type:'caution',title:'利基市场策略',body:'大类目竞争激烈，建议寻找细分利基。',items:['挖掘长尾关键词对应的需求','聚焦特定人群或使用场景','控制初始投入在$5000以内','准备随时退出的Plan B']});
+      strat.push({type:'caution',title:'观望等待策略',body:'暂不进入，持续监控市场变化。',items:['建立竞品监控清单','跟踪类目增长率和新进入者','等待竞争格局变化或新技术出现','将资源投入更高评分类目']});
+    }else{
+      strat.push({type:'avoid',title:'不建议进入',body:'该类目综合评分过低，进入风险大于收益。',items:['竞争极度激烈且利润微薄','准入门槛高，前期投入大','建议将资源投入其他类目','如已有产品，考虑逐步退出']});
+    }
+    document.getElementById('strategyList').innerHTML=strat.map(s=>`<div class="strategy-card ${s.type}"><h4>${s.title}</h4><p>${s.body}</p><ul>${s.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('');
+  }
+};
+Opp.calc();
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="产品规格书生成器：输入产品信息、技术参数、质量标准，输出结构化规格文档（PRD+技术参数+验收标准+BOM），可一键复制。">
+<meta name="keywords" content="产品规格书,PRD,技术参数,验收标准,BOM清单,产品文档,规格生成器">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/product-specification-builder.html">
+<title>产品规格书生成器 - PRD·技术参数·验收标准·BOM | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.supplier-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:14px;transition:all .2s}
+.supplier-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:var(--accent)}
+.supplier-card .sc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.supplier-card .sc-name{font-size:16px;font-weight:700;color:var(--ink)}
+.supplier-card .sc-score{font-size:24px;font-weight:800}
+.gantt-chart{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
+.gantt-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.gantt-track{position:relative;height:32px;background:var(--bg-soft);border-radius:8px}
+.gantt-bar{position:absolute;height:100%;border-radius:8px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.checklist-item{display:flex;align-items:start;gap:10px;padding:12px;border-radius:8px;margin-bottom:8px;background:var(--bg-soft);transition:all .2s}
+.checklist-item:hover{background:var(--accent-bg)}
+.checklist-item .ci-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.checklist-item.checked .ci-checkbox{background:var(--green);border-color:var(--green);color:#fff}
+.checklist-item .ci-content{flex:1}
+.checklist-item .ci-title{font-size:14px;font-weight:600;color:var(--ink)}
+.checklist-item .ci-desc{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}.gantt-row{grid-template-columns:100px 1fr}}
+
+.spec-output{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:24px;margin-top:12px;font-size:13px;line-height:1.9;color:var(--ink-soft);max-height:600px;overflow-y:auto}
+.spec-output h4{font-size:16px;font-weight:700;color:var(--ink);margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--accent-bg)}
+.spec-output h4:first-child{margin-top:0}
+.spec-output .spec-section{margin-bottom:20px}
+.spec-output .spec-table{width:100%;border-collapse:collapse;margin:8px 0}
+.spec-output .spec-table th{padding:8px;border:1px solid var(--rule);background:#fff;font-size:12px;text-align:left}
+.spec-output .spec-table td{padding:8px;border:1px solid var(--rule);background:#fff;font-size:12px}
+</style>
+</head>
+<body class="tool-page" data-tool="product_specification_builder">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚀</span><span class="workflow-name">产品开发工作流</span><span class="workflow-step">第9步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="demand-validator.html" class="step">需求验证</a>
+      <span class="arrow">→</span>
+      <a href="packaging-designer.html" class="step">包装设计</a>
+      <span class="arrow">→</span>
+      <a href="certification-check.html" class="step">认证检查</a>
+      <span class="arrow">→</span>
+      <a href="patent-check.html" class="step">专利检查</a>
+      <span class="arrow">→</span>
+      <a href="prototype-cost.html" class="step">原型成本</a>
+      <span class="arrow">→</span>
+      <a href="supplier-database-search.html" class="step">供应商搜索</a>
+      <span class="arrow">→</span>
+      <a href="product-sourcing-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="market-gap-analysis.html" class="step">市场空白</a>
+      <span class="arrow">→</span>
+      <span class="step current">规格书</span>
+      <span class="arrow">→</span>
+      <a href="mold-tooling-calculator.html" class="step">开模计算</a>
+      <span class="arrow">→</span>
+      <a href="product-testing-checklist.html" class="step">测试清单</a>
+      <span class="arrow">→</span>
+      <a href="ip-landscape-analysis.html" class="step">IP全景</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚀 产品开发工作流 · 标准版</span>
+      <h1>产品规格书 <em>生成器</em></h1>
+      <p class="tool-hero-desc">输入产品信息、技术参数、质量标准，输出结构化规格文档（PRD+技术参数+验收标准+BOM），可一键复制使用。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📝 产品规格信息</h2>
+          <p class="calc-form-subtitle">输入产品信息，自动生成结构化规格文档</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品名称</label><input type="text" id="pName" value="蓝牙降噪耳机X1" oninput="PSB.gen()"></div>
+            <div class="calc-field"><label>产品型号</label><input type="text" id="pModel" value="BT-NC-X1" oninput="PSB.gen()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>目标售价 ($)</label><input type="number" id="pPrice" value="49.99" step="0.01" oninput="PSB.gen()"></div>
+            <div class="calc-field"><label>目标成本 ($)</label><input type="number" id="pCost" value="15" step="0.01" oninput="PSB.gen()"></div>
+          </div>
+          <div class="calc-field"><label>产品定位</label><select id="pPosition" onchange="PSB.gen()">
+            <option value="budget" selected>性价比入门款</option>
+            <option value="midrange">中端主流款</option>
+            <option value="premium">高端旗舰款</option>
+          </select></div>
+          <div class="calc-field"><label>核心技术参数（每行一项：参数名|值）</label><textarea id="techParams" rows="6" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" oninput="PSB.gen()">蓝牙版本|5.3
+驱动单元|40mm动圈
+频响范围|20Hz-20kHz
+续航时间|50小时
+充电接口|Type-C
+降噪深度|35dB
+防水等级|IPX5
+重量|250g</textarea></div>
+          <div class="calc-row-2" style="margin-top:14px">
+            <div class="calc-field"><label>目标市场</label><select id="pMarket" onchange="PSB.gen()"><option value="us" selected>北美</option><option value="eu">欧洲</option><option value="global">全球</option></select></div>
+            <div class="calc-field"><label>认证要求</label><input type="text" id="pCerts" value="FCC, CE, RoHS" oninput="PSB.gen()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📄 规格文档预览 <button class="btn-copy" onclick="PSB.copy()" style="float:right">📋 复制全文</button></h3>
+        <div class="spec-output" id="specOutput"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="market-gap-analysis.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第8步</span>市场空白 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="mold-tooling-calculator.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第10步</span>开模计算 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="product-specification-builder.html">产品规格书</a></li><li><a href="supplier-database-search.html">供应商搜索</a></li><li><a href="ip-landscape-analysis.html">IP全景</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var PSB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  return{
+    gen:function(){
+      var name=$('pName').value,model=$('pModel').value;
+      var price=v('pPrice'),cost=v('pCost');
+      var pos=$('pPosition').value,posText={budget:'性价比入门款',midrange:'中端主流款',premium:'高端旗舰款'}[pos];
+      var market=$('pMarket').value,marketText={us:'北美',eu:'欧洲',global:'全球'}[market];
+      var certs=$('pCerts').value;
+      var params=$('techParams').value.split('\n').filter(function(l){return l.trim();});
+      var margin=price>0?((price-cost)/price*100):0;
+      var html='<h3>📝 规格文档概览</h3>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">产品名称</span><span class="fr-val">'+name+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">型号</span><span class="fr-val">'+model+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">定位</span><span class="fr-val">'+posText+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">目标利润率</span><span class="fr-val" style="color:'+(margin>=50?'var(--green)':(margin>=30?'var(--gold)':'var(--red)'))+'">'+margin.toFixed(1)+'%</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var spec='<h4>📋 产品需求文档 (PRD)</h4>';
+      spec+='<div class="spec-section"><strong>产品名称：</strong>'+name+'<br><strong>型号：</strong>'+model+'<br><strong>产品定位：</strong>'+posText+'<br><strong>目标市场：</strong>'+marketText+'<br><strong>目标售价：</strong>$'+price.toFixed(2)+'<br><strong>目标成本：</strong>$'+cost.toFixed(2)+'<br><strong>预估利润率：</strong>'+margin.toFixed(1)+'%</div>';
+      spec+='<h4>🔧 技术参数</h4><table class="spec-table"><thead><tr><th>参数名称</th><th>规格值</th></tr></thead><tbody>';
+      params.forEach(function(p){var kv=p.split('|');if(kv.length>=2)spec+='<tr><td>'+kv[0].trim()+'</td><td>'+kv[1].trim()+'</td></tr>';});
+      spec+='</tbody></table>';
+      spec+='<h4>✅ 验收标准</h4><table class="spec-table"><thead><tr><th>检验项目</th><th>标准</th><th>判定方法</th></tr></thead><tbody>';
+      spec+='<tr><td>外观检查</td><td>无划痕/变形/色差</td><td>目检100%</td></tr>';
+      spec+='<tr><td>蓝牙连接</td><td>10m内稳定连接</td><td>距离测试</td></tr>';
+      spec+='<tr><td>续航测试</td><td>≥50小时</td><td>满电播放测试</td></tr>';
+      spec+='<tr><td>降噪效果</td><td>≥35dB</td><td>声学仪器测试</td></tr>';
+      spec+='<tr><td>充电性能</td><td>2小时充电达80%</td><td>充电后测试</td></tr>';
+      spec+='<tr><td>防水等级</td><td>IPX5</td><td>防水测试</td></tr>';
+      spec+='</tbody></table>';
+      spec+='<h4>📲 BOM清单</h4><table class="spec-table"><thead><tr><th>部件</th><th>数量</th><th>单价</th><th>小计</th></tr></thead><tbody>';
+      var bom=[['PCB主板',1,3.50],['蓝牙芯片',1,2.80],['电池组',1,1.50],['喇叭单元',2,1.20],['外壳',1,0.80],['包装',1,0.50]];
+      var bomTotal=0;bom.forEach(function(b){spec+='<tr><td>'+b[0]+'</td><td>'+b[1]+'</td><td>$'+b[2].toFixed(2)+'</td><td>$'+(b[1]*b[2]).toFixed(2)+'</td></tr>';bomTotal+=b[1]*b[2];});
+      spec+='<tr style="font-weight:700"><td colspan="3">合计</td><td>$'+bomTotal.toFixed(2)+'</td></tr>';
+      spec+='</tbody></table>';
+      spec+='<h4>📜 认证要求</h4><div class="spec-section">'+certs.split(',').map(function(c){return '<span class="cert-badge cert-yes" style="display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;margin:2px;background:var(--green-bg);color:var(--green)">'+c.trim()+' ✓</span>';}).join('')+'</div>';
+      $('specOutput').innerHTML=spec;
+    },
+    copy:function(){
+      var text=$('specOutput').innerText;
+      if(navigator.clipboard)navigator.clipboard.writeText(text);
+      alert('已复制到剪贴板！');
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PSB.gen);}else{PSB.gen();}
+</script>
+</body>
+</html>

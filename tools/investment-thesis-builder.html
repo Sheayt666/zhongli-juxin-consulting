@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="投资逻辑构建器：市场机会+竞争优势+财务预期+退出策略四维框架，CSS逻辑框架图，风险评估矩阵。免费投资决策工具。">
+<meta name="keywords" content="投资逻辑,投资框架,市场机会,竞争优势,退出策略,风险评估,投资决策">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/investment-thesis-builder.html">
+<title>投资逻辑构建器 - 市场机会·竞争优势·退出策略 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.thesis-score-ring{width:160px;height:160px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative}
+.thesis-score-inner{width:120px;height:120px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.thesis-score-num{font-size:36px;font-weight:800}
+.thesis-score-lbl{font-size:12px;color:var(--muted)}
+.framework-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+.framework-card{border-radius:14px;padding:20px;border:2px solid var(--rule-light);transition:all .2s}
+.framework-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.framework-card .fc-icon{font-size:28px;margin-bottom:8px}
+.framework-card .fc-title{font-size:15px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.framework-card .fc-score{float:right;font-size:20px;font-weight:800;padding:2px 12px;border-radius:8px}
+.framework-card .fc-item{font-size:13px;color:var(--ink-soft);padding:4px 0;border-bottom:1px solid var(--rule-light)}
+.framework-card .fc-item:last-child{border-bottom:none}
+.framework-card .fc-item strong{color:var(--ink)}
+.risk-matrix{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:4px;margin-top:16px}
+.risk-matrix .rm-header{background:#4f46e5;color:#fff;padding:8px;text-align:center;font-size:12px;font-weight:600;border-radius:6px}
+.risk-matrix .rm-label{background:var(--bg-soft);padding:8px;text-align:center;font-size:12px;font-weight:600;color:var(--ink-soft);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.risk-matrix .rm-cell{padding:12px;border-radius:6px;font-size:12px;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.risk-low{background:#d1fae5;color:#059669}
+.risk-medium{background:#fef3c7;color:#d97706}
+.risk-high{background:#fee2e2;color:#dc2626}
+.risk-critical{background:#fecaca;color:#991b1b;font-weight:700}
+@media(max-width:768px){.framework-grid{grid-template-columns:1fr}.risk-matrix{grid-template-columns:60px 1fr 1fr 1fr;font-size:11px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"投资逻辑构建器","description":"市场机会+竞争优势+财务预期+退出策略四维框架，CSS逻辑框架图，风险评估矩阵。","url":"https://juxin-consulting.help/tools/investment-thesis-builder.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="investment_thesis_builder">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">💰</span><span class="workflow-name">投资决策工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="payback-period-calc.html" class="step">回本周期</a><span class="arrow">→</span>
+      <a href="investment-comparison.html" class="step">投资对比</a><span class="arrow">→</span>
+      <a href="break-even-analysis.html" class="step">盈亏平衡</a><span class="arrow">→</span>
+      <a href="currency-hedging.html" class="step">汇率对冲</a><span class="arrow">→</span>
+      <a href="tax-impact-calc.html" class="step">税务影响</a><span class="arrow">→</span>
+      <a href="depreciation-calc.html" class="step">折旧计算</a><span class="arrow">→</span>
+      <a href="working-capital-calc.html" class="step">营运资金</a><span class="arrow">→</span>
+      <a href="transfer-pricing.html" class="step">转移定价</a><span class="arrow">→</span>
+      <a href="dividend-calc.html" class="step">分红计算</a><span class="arrow">→</span>
+      <a href="benchmark-comparison.html" class="step">基准对比</a><span class="arrow">→</span>
+      <a href="valuation-model-builder.html" class="step">估值模型</a><span class="arrow">→</span>
+      <a href="scenario-analysis-tool.html" class="step">场景分析</a><span class="arrow">→</span>
+      <span class="step current">投资逻辑</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">💰 投资决策工具 · 标准版</span>
+      <h1>投资逻辑<em>构建器</em></h1>
+      <p class="tool-hero-desc">从市场机会、竞争优势、财务预期、退出策略四个维度构建投资逻辑框架，CSS框架图可视化，风险矩阵评估，综合投资评分。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 投资标的参数</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>投资标的</label><input type="text" id="target" value="跨境电商项目" oninput="ITB.calc()"></div>
+            <div class="calc-field"><label>投资金额（万元）</label><input type="number" id="amount" value="300" oninput="ITB.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>🌍 市场机会（权重25%）</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>TAM市场总量（亿元）</label><input type="number" id="tam" value="50" oninput="ITB.calc()"></div>
+            <div class="calc-field"><label>市场增速（% YoY）</label><input type="number" id="marketGrowth" value="25" oninput="ITB.calc()"></div>
+          </div>
+          <div class="calc-field"><label>市场可触达性（1-10分）</label><input type="range" id="marketAccess" min="1" max="10" value="7" oninput="ITB.calc();document.getElementById('marketAccessVal').textContent=this.value" style="width:100%"><span id="marketAccessVal" style="font-weight:700;color:#4f46e5">7</span></div>
+
+          <div class="fee-rule-box"><h4>🏆 竞争优势（权重30%）</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>竞争壁垒（1-10分）</label><input type="range" id="barrier" min="1" max="10" value="6" oninput="ITB.calc();document.getElementById('barrierVal').textContent=this.value" style="width:100%"><span id="barrierVal" style="font-weight:700;color:#4f46e5">6</span></div>
+            <div class="calc-field"><label>差异化程度（1-10分）</label><input type="range" id="differentiation" min="1" max="10" value="7" oninput="ITB.calc();document.getElementById('diffVal').textContent=this.value" style="width:100%"><span id="diffVal" style="font-weight:700;color:#4f46e5">7</span></div>
+          </div>
+          <div class="calc-field"><label>团队执行力（1-10分）</label><input type="range" id="team" min="1" max="10" value="8" oninput="ITB.calc();document.getElementById('teamVal').textContent=this.value" style="width:100%"><span id="teamVal" style="font-weight:700;color:#4f46e5">8</span></div>
+
+          <div class="fee-rule-box"><h4>💰 财务预期（权重25%）</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>预期年回报率（%）</label><input type="number" id="expectedReturn" value="35" oninput="ITB.calc()"></div>
+            <div class="calc-field"><label>回本周期（月）</label><input type="number" id="payback" value="18" oninput="ITB.calc()"></div>
+          </div>
+          <div class="calc-field"><label>财务确定性（1-10分）</label><input type="range" id="certainty" min="1" max="10" value="6" oninput="ITB.calc();document.getElementById('certVal').textContent=this.value" style="width:100%"><span id="certVal" style="font-weight:700;color:#4f46e5">6</span></div>
+
+          <div class="fee-rule-box"><h4>🚪 退出策略（权重20%）</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>退出路径清晰度（1-10分）</label><input type="range" id="exitClarity" min="1" max="10" value="5" oninput="ITB.calc();document.getElementById('exitVal').textContent=this.value" style="width:100%"><span id="exitVal" style="font-weight:700;color:#4f46e5">5</span></div>
+            <div class="calc-field"><label>预期持有年限</label><input type="number" id="holdYears" value="5" oninput="ITB.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="scoreSection">
+        <h3>🎯 投资综合评分</h3>
+        <div class="thesis-score-ring" id="scoreRing">
+          <div class="thesis-score-inner">
+            <div class="thesis-score-num" id="scoreNum">0</div>
+            <div class="thesis-score-lbl">投资评分 / 100</div>
+          </div>
+        </div>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block" id="frameworkSection">
+        <h3>📊 四维框架图</h3>
+        <div class="framework-grid" id="frameworkGrid"></div>
+      </div>
+
+      <div class="section-block" id="riskSection">
+        <h3>⚠️ 风险评估矩阵</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">纵轴：影响程度 | 横轴：发生概率</p>
+        <div class="risk-matrix" id="riskMatrix"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="scenario-analysis-tool.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 场景分析</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="investment-thesis-builder.html">投资逻辑</a></li><li><a href="valuation-model-builder.html">估值模型</a></li><li><a href="scenario-analysis-tool.html">场景分析</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var ITB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function colorForScore(s){return s>=80?'#10b981':s>=60?'#f59e0b':'#ef4444';}
+  function grade(s){return s>=85?'强烈推荐':s>=70?'推荐投资':s>=55?'谨慎考虑':'不建议';}
+  function calc(){
+    var marketScore=Math.min(100,(v('marketGrowth')/40*30+v('marketAccess')/10*40+Math.min(v('tam')/100,1)*30));
+    var compScore=(v('barrier')/10*35+v('differentiation')/10*35+v('team')/10*30);
+    var finScore=Math.min(100,(v('expectedReturn')/50*35+(36/Math.max(v('payback'),1))*35+v('certainty')/10*30));
+    var exitScore=(v('exitClarity')/10*60+(10/Math.max(v('holdYears'),1))*40);
+    var total=Math.round(marketScore*0.25+compScore*0.30+finScore*0.25+exitScore*0.20);
+    var c=colorForScore(total);
+    $('scoreRing').style.background='conic-gradient('+c+' '+total*3.6+'deg,#e0e7ff '+(total*3.6)+'deg)';
+    $('scoreNum').textContent=total;
+    $('scoreNum').style.color=c;
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">投资评分</div><div class="rh-value" style="color:'+c+'">'+total+'/100</div></div>'+
+      '<div class="result-detail"><span>投资建议</span><strong style="color:'+c+'">'+grade(total)+'</strong></div>'+
+      '<div class="result-detail"><span>市场机会</span><strong>'+Math.round(marketScore)+'/100</strong></div>'+
+      '<div class="result-detail"><span>竞争优势</span><strong>'+Math.round(compScore)+'/100</strong></div>'+
+      '<div class="result-detail"><span>财务预期</span><strong>'+Math.round(finScore)+'/100</strong></div>'+
+      '<div class="result-detail"><span>退出策略</span><strong>'+Math.round(exitScore)+'/100</strong></div>';
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+c+'">'+total+'</div><div class="rsb-lbl">综合评分</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+Math.round(marketScore)+'</div><div class="rsb-lbl">市场机会</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+Math.round(compScore)+'</div><div class="rsb-lbl">竞争优势</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+Math.round(finScore)+'</div><div class="rsb-lbl">财务预期</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#8b5cf6">'+Math.round(exitScore)+'</div><div class="rsb-lbl">退出策略</div></div>';
+    var cards=[
+      {icon:'🌍',title:'市场机会',score:Math.round(marketScore),items:[
+        {label:'TAM',value:'¥'+v('tam')+'亿'},
+        {label:'市场增速',value:v('marketGrowth')+'%/年'},
+        {label:'可触达性',value:v('marketAccess')+'/10'}
+      ]},
+      {icon:'🏆',title:'竞争优势',score:Math.round(compScore),items:[
+        {label:'竞争壁垒',value:v('barrier')+'/10'},
+        {label:'差异化',value:v('differentiation')+'/10'},
+        {label:'团队执行',value:v('team')+'/10'}
+      ]},
+      {icon:'💰',title:'财务预期',score:Math.round(finScore),items:[
+        {label:'年回报率',value:v('expectedReturn')+'%'},
+        {label:'回本周期',value:v('payback')+'个月'},
+        {label:'确定性',value:v('certainty')+'/10'}
+      ]},
+      {icon:'🚪',title:'退出策略',score:Math.round(exitScore),items:[
+        {label:'路径清晰度',value:v('exitClarity')+'/10'},
+        {label:'持有年限',value:v('holdYears')+'年'},
+        {label:'退出可行性',value:(v('exitClarity')>5?'可行':'待评估')}
+      ]}
+    ];
+    $('frameworkGrid').innerHTML=cards.map(function(c){
+      var s=c.score;var col=colorForScore(s);
+      return '<div class="framework-card" style="border-color:'+col+'33">'+
+        '<div class="fc-icon">'+c.icon+'</div>'+
+        '<div class="fc-title">'+c.title+'<span class="fc-score" style="background:'+col+'22;color:'+col+'">'+s+'</span></div>'+
+        c.items.map(function(i){return '<div class="fc-item"><span>'+i.label+'</span><strong>'+i.value+'</strong></div>';}).join('')+
+      '</div>';
+    }).join('');
+    var risks=[
+      {name:'市场风险',impact:v('marketGrowth')<15?'high':'medium',prob:v('marketAccess')<5?'high':'medium'},
+      {name:'竞争风险',impact:v('barrier')<5?'high':'low',prob:v('differentiation')<5?'high':'medium'},
+      {name:'团队风险',impact:v('team')<5?'critical':'low',prob:v('team')<6?'medium':'low'},
+      {name:'财务风险',impact:v('payback')>24?'high':'medium',prob:v('certainty')<5?'high':'medium'},
+      {name:'退出风险',impact:v('exitClarity')<4?'high':'low',prob:v('holdYears')>5?'medium':'low'}
+    ];
+    function riskLevel(impact,prob){
+      var i=impact==='critical'?4:impact==='high'?3:impact==='medium'?2:1;
+      var p=prob==='high'?3:prob==='medium'?2:1;
+      var score=i*p;
+      if(score>=9)return'risk-critical';
+      if(score>=6)return'risk-high';
+      if(score>=3)return'risk-medium';
+      return'risk-low';
+    }
+    function riskLabel(l){return l==='risk-critical'?'极高':l==='risk-high'?'高':l==='risk-medium'?'中':'低';}
+    $('riskMatrix').innerHTML=
+      '<div class="rm-header"></div><div class="rm-header">低概率</div><div class="rm-header">中概率</div><div class="rm-header">高概率</div>'+
+      '<div class="rm-label">高影响</div><div class="rm-cell risk-medium">'+riskLabel('risk-medium')+'</div><div class="rm-cell risk-high">'+riskLabel('risk-high')+'</div><div class="rm-cell risk-critical">'+riskLabel('risk-critical')+'</div>'+
+      '<div class="rm-label">中影响</div><div class="rm-cell risk-low">'+riskLabel('risk-low')+'</div><div class="rm-cell risk-medium">'+riskLabel('risk-medium')+'</div><div class="rm-cell risk-high">'+riskLabel('risk-high')+'</div>'+
+      '<div class="rm-label">低影响</div><div class="rm-cell risk-low">'+riskLabel('risk-low')+'</div><div class="rm-cell risk-low">'+riskLabel('risk-low')+'</div><div class="rm-cell risk-medium">'+riskLabel('risk-medium')+'</div>';
+  }
+  return{calc:calc};
+})();
+ITB.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

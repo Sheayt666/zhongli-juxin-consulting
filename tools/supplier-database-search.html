@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="供应商数据库搜索器(深度版)：模拟1688/阿里巴巴工厂搜索，产能评估，交易记录，认证查询，综合评分，CSS搜索结果卡片+对比矩阵，跨境采购利器。">
+<meta name="keywords" content="供应商搜索,工厂搜索,1688,阿里巴巴,产能评估,供应商评分,采购,跨境卖家">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/supplier-database-search.html">
+<title>供应商数据库搜索器 - 工厂搜索·产能评估·综合评分 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.supplier-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:14px;transition:all .2s}
+.supplier-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:var(--accent)}
+.supplier-card .sc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.supplier-card .sc-name{font-size:16px;font-weight:700;color:var(--ink)}
+.supplier-card .sc-score{font-size:24px;font-weight:800}
+.gantt-chart{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
+.gantt-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.gantt-track{position:relative;height:32px;background:var(--bg-soft);border-radius:8px}
+.gantt-bar{position:absolute;height:100%;border-radius:8px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.checklist-item{display:flex;align-items:start;gap:10px;padding:12px;border-radius:8px;margin-bottom:8px;background:var(--bg-soft);transition:all .2s}
+.checklist-item:hover{background:var(--accent-bg)}
+.checklist-item .ci-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.checklist-item.checked .ci-checkbox{background:var(--green);border-color:var(--green);color:#fff}
+.checklist-item .ci-content{flex:1}
+.checklist-item .ci-title{font-size:14px;font-weight:600;color:var(--ink)}
+.checklist-item .ci-desc{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}.gantt-row{grid-template-columns:100px 1fr}}
+
+.supplier-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:14px;transition:all .2s}
+.supplier-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:var(--accent)}
+.supplier-card .sc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.supplier-card .sc-name{font-size:16px;font-weight:700;color:var(--ink)}
+.supplier-card .sc-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-left:8px}
+.supplier-card .sc-score{font-size:28px;font-weight:800}
+.supplier-card .sc-body{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.supplier-card .sc-metric{text-align:center;padding:8px;background:var(--bg-soft);border-radius:8px}
+.supplier-card .sc-metric .sm-val{font-size:16px;font-weight:700}
+.supplier-card .sc-metric .sm-lbl{font-size:11px;color:var(--muted)}
+.cert-badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;margin:2px}
+.cert-yes{background:var(--green-bg);color:var(--green)}
+.cert-no{background:var(--red-bg);color:var(--red)}
+</style>
+</head>
+<body class="tool-page" data-tool="supplier_database_search">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚀</span><span class="workflow-name">产品开发工作流</span><span class="workflow-step">第6步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="demand-validator.html" class="step">需求验证</a>
+      <span class="arrow">→</span>
+      <a href="packaging-designer.html" class="step">包装设计</a>
+      <span class="arrow">→</span>
+      <a href="certification-check.html" class="step">认证检查</a>
+      <span class="arrow">→</span>
+      <a href="patent-check.html" class="step">专利检查</a>
+      <span class="arrow">→</span>
+      <a href="prototype-cost.html" class="step">原型成本</a>
+      <span class="arrow">→</span>
+      <span class="step current">供应商搜索</span>
+      <span class="arrow">→</span>
+      <a href="product-sourcing-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="market-gap-analysis.html" class="step">市场空白</a>
+      <span class="arrow">→</span>
+      <a href="product-specification-builder.html" class="step">规格书</a>
+      <span class="arrow">→</span>
+      <a href="mold-tooling-calculator.html" class="step">开模计算</a>
+      <span class="arrow">→</span>
+      <a href="product-testing-checklist.html" class="step">测试清单</a>
+      <span class="arrow">→</span>
+      <a href="ip-landscape-analysis.html" class="step">IP全景</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚀 产品开发工作流 · 深度版</span>
+      <h1>供应商数据库 <em>搜索器</em></h1>
+      <p class="tool-hero-desc">模拟1688/阿里巴巴工厂搜索，产能评估、交易记录、认证查询、综合评分，CSS搜索结果卡片+对比矩阵，深度版供应商筛选利器。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-form" style="grid-column:1/-1">
+        <h2>🔍 供应商搜索</h2>
+        <p class="calc-form-subtitle">输入产品关键词和筛选条件，搜索匹配供应商（模拟1688/阿里巴巴数据）</p>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>产品关键词</label><input type="text" id="keyword" value="蓝牙耳机" oninput="SDS.search()"></div>
+          <div class="calc-field"><label>地区</label><select id="region" onchange="SDS.search()">
+            <option value="" selected>全部地区</option>
+            <option value="深圳">深圳</option>
+            <option value="东莞">东莞</option>
+            <option value="广州">广州</option>
+            <option value="义乌">义乌</option>
+            <option value="宁波">宁波</option>
+          </select></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>最小产能 (件/月)</label><input type="number" id="minCapacity" value="5000" min="0" step="1000" oninput="SDS.search()"></div>
+          <div class="calc-field"><label>最低评分</label><select id="minScore" onchange="SDS.search()">
+            <option value="0" selected>不限</option>
+            <option value="60">60分以上</option>
+            <option value="70">70分以上</option>
+            <option value="80">80分以上</option>
+          </select></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>认证要求</label><select id="certReq" onchange="SDS.search()">
+            <option value="" selected>不限</option>
+            <option value="ISO9001">ISO9001</option>
+            <option value="CE">CE</option>
+            <option value="FCC">FCC</option>
+            <option value="RoHS">RoHS</option>
+          </select></div>
+          <div class="calc-field"><label>排序方式</label><select id="sortBy" onchange="SDS.search()">
+            <option value="score" selected>综合评分</option>
+            <option value="capacity">产能</option>
+            <option value="transactions">交易量</option>
+            <option value="years">年限</option>
+          </select></div>
+        </div>
+        <button class="btn-action" onclick="SDS.search()" style="margin-top:8px">🔍 搜索供应商</button>
+      </div>
+      <div class="calc-results" style="grid-column:1/-1">
+        <div class="result-card" id="resultCard"></div>
+      </div>
+      <div class="tool-section-box" style="grid-column:1/-1">
+        <h3>🏢 供应商列表</h3>
+        <div id="supplierList"></div>
+      </div>
+      <div class="tool-section-box" style="grid-column:1/-1">
+        <h3>📊 供应商对比矩阵</h3>
+        <div id="compareMatrix"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="prototype-cost.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第5步</span>原型成本 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="product-sourcing-planner.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第7步</span>采购计划 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-database-search.html">供应商数据库</a></li><li><a href="supplier-database-search.html">供应商搜索</a></li><li><a href="ip-landscape-analysis.html">IP全景</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var SDS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var SUPPLIERS=[
+    {name:'深圳科创电子科技',region:'深圳',capacity:50000,transactions:3200,years:12,certs:['ISO9001','CE','FCC','RoHS'],priceLevel:'中',responseTime:'2h',quality:92,service:88,delivery:90},
+    {name:'东莞鑫达精密制造',region:'东莞',capacity:30000,transactions:1800,years:8,certs:['ISO9001','CE'],priceLevel:'低',responseTime:'4h',quality:85,service:82,delivery:86},
+    {name:'深圳优品科技',region:'深圳',capacity:80000,transactions:5500,years:15,certs:['ISO9001','CE','FCC','RoHS','BSCI'],priceLevel:'高',responseTime:'1h',quality:95,service:92,delivery:94},
+    {name:'广州利达电子',region:'广州',capacity:20000,transactions:1200,years:6,certs:['CE','FCC'],priceLevel:'低',responseTime:'6h',quality:78,service:75,delivery:80},
+    {name:'宁波海辰科技',region:'宁波',capacity:15000,transactions:800,years:5,certs:['ISO9001'],priceLevel:'中',responseTime:'8h',quality:80,service:78,delivery:82},
+    {name:'义乌小商品制造',region:'义乌',capacity:100000,transactions:8000,years:10,certs:['CE'],priceLevel:'低',responseTime:'12h',quality:70,service:85,delivery:75},
+    {name:'深圳博远创新科技',region:'深圳',capacity:40000,transactions:2800,years:9,certs:['ISO9001','CE','FCC'],priceLevel:'中',responseTime:'3h',quality:88,service:85,delivery:89},
+    {name:'东莞明辉电子',region:'东莞',capacity:25000,transactions:1500,years:7,certs:['ISO9001','RoHS'],priceLevel:'低',responseTime:'5h',quality:82,service:80,delivery:84}
+  ];
+  function calcScore(s){return Math.round(s.quality*0.4+s.service*0.25+s.delivery*0.2+Math.min(100,s.transactions/100)*0.15);}
+  function sc(s){return s>=85?'score-high':(s>=70?'score-mid':'score-low');}
+  return{
+    search:function(){
+      var kw=$('keyword').value.toLowerCase().trim();
+      var region=$('region').value;
+      var minCap=v('minCapacity');
+      var minScore=parseInt($('minScore').value);
+      var certReq=$('certReq').value;
+      var sortBy=$('sortBy').value;
+      var filtered=SUPPLIERS.filter(function(s){
+        if(region&&s.region!==region)return false;
+        if(s.capacity<minCap)return false;
+        var score=calcScore(s);
+        if(score<minScore)return false;
+        if(certReq&&s.certs.indexOf(certReq)<0)return false;
+        return true;
+      });
+      filtered.sort(function(a,b){
+        if(sortBy==='score')return calcScore(b)-calcScore(a);
+        if(sortBy==='capacity')return b.capacity-a.capacity;
+        if(sortBy==='transactions')return b.transactions-a.transactions;
+        if(sortBy==='years')return b.years-a.years;
+        return 0;
+      });
+      var html='<h3>🔍 搜索结果</h3>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">匹配供应商</span><span class="fr-val">'+filtered.length+' 家</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">平均评分</span><span class="fr-val">'+(filtered.length>0?Math.round(filtered.reduce(function(s,sp){return s+calcScore(sp);},0)/filtered.length):0)+' 分</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">总产能</span><span class="fr-val">'+filtered.reduce(function(s,sp){return s+sp.capacity;},0).toLocaleString()+' 件/月</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var listHtml='';
+      if(filtered.length===0){listHtml='<div style="text-align:center;padding:40px;color:var(--muted)">未找到匹配供应商，请调整筛选条件</div>';}
+      filtered.forEach(function(s,i){
+        var score=calcScore(s);
+        listHtml+='<div class="supplier-card">';
+        listHtml+='<div class="sc-header"><div><div class="sc-name">'+s.name+'<span class="sc-tag" style="background:var(--accent-bg);color:var(--accent)">'+s.region+'</span><span class="sc-tag" style="background:var(--gold-bg);color:var(--gold)">'+s.years+'年</span></div>';
+        listHtml+='<div style="font-size:12px;color:var(--muted);margin-top:4px">响应时间: '+s.responseTime+' · 价格等级: '+s.priceLevel+'</div></div>';
+        listHtml+='<div class="sc-score '+sc(score)+'">'+score+'</div></div>';
+        listHtml+='<div class="sc-body">';
+        listHtml+='<div class="sc-metric"><div class="sm-val">'+(s.capacity/10000).toFixed(1)+'W</div><div class="sm-lbl">月产能</div></div>';
+        listHtml+='<div class="sc-metric"><div class="sm-val">'+s.transactions.toLocaleString()+'</div><div class="sm-lbl">交易量</div></div>';
+        listHtml+='<div class="sc-metric"><div class="sm-val">'+s.quality+'</div><div class="sm-lbl">质量分</div></div>';
+        listHtml+='<div class="sc-metric"><div class="sm-val">'+s.delivery+'</div><div class="sm-lbl">交货分</div></div>';
+        listHtml+='</div>';
+        listHtml+='<div style="margin-top:10px">';
+        s.certs.forEach(function(c){listHtml+='<span class="cert-badge cert-yes">'+c+' ✓</span>';});
+        listHtml+='</div></div>';
+      });
+      $('supplierList').innerHTML=listHtml;
+      if(filtered.length===0){$('compareMatrix').innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)">无对比数据</div>';return;}
+      var mHtml='<table class="data-table"><thead><tr><th>供应商</th><th>综合评分</th><th>月产能</th><th>交易量</th><th>质量</th><th>服务</th><th>交货</th><th>认证数</th></tr></thead><tbody>';
+      filtered.slice(0,6).forEach(function(s){
+        var score=calcScore(s);
+        mHtml+='<tr><td style="font-weight:600">'+s.name+'</td>';
+        mHtml+='<td><span class="score-badge '+sc(score)+'">'+score+'</span></td>';
+        mHtml+='<td>'+s.capacity.toLocaleString()+'</td>';
+        mHtml+='<td>'+s.transactions.toLocaleString()+'</td>';
+        mHtml+='<td>'+s.quality+'</td>';
+        mHtml+='<td>'+s.service+'</td>';
+        mHtml+='<td>'+s.delivery+'</td>';
+        mHtml+='<td>'+s.certs.length+'</td></tr>';
+      });
+      mHtml+='</tbody></table>';
+      $('compareMatrix').innerHTML=mHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SDS.search);}else{SDS.search();}
+</script>
+</body>
+</html>

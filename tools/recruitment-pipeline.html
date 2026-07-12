@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="招聘漏斗管理器：输入岗位需求和候选人列表，输出招聘漏斗(CSS漏斗图)、面试评估表、Offer管理，招聘流程管理利器。">
+<meta name="keywords" content="招聘漏斗,候选人管理,面试评估,Offer管理,招聘流程,CSS漏斗图,人才招聘">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/recruitment-pipeline.html">
+<title>招聘漏斗管理器 - 漏斗图·面试评估·Offer管理 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.funnel{display:flex;flex-direction:column;align-items:center;gap:4px;margin:24px 0}
+.funnel-stage{padding:14px 0;text-align:center;color:#fff;font-weight:600;transition:all .3s;position:relative;overflow:hidden}
+.funnel-stage .fs-name{font-size:14px}
+.funnel-stage .fs-count{font-size:20px;font-weight:800}
+.funnel-stage .fs-rate{font-size:11px;opacity:.8}
+.interview-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:18px;margin-bottom:12px;transition:all .2s}
+.interview-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.06);border-color:var(--accent)}
+.interview-card .ic-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.interview-card .ic-name{font-size:15px;font-weight:700}
+.interview-card .ic-score{font-size:18px;font-weight:800}
+.interview-card .ic-dims{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.interview-card .ic-dim{text-align:center;padding:8px;background:var(--bg-soft);border-radius:6px}
+.interview-card .ic-dim .id-val{font-size:16px;font-weight:700}
+.interview-card .ic-dim .id-lbl{font-size:10px;color:var(--muted)}
+</style>
+</head>
+<body class="tool-page" data-tool="recruitment_pipeline">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <a href="okr-goal-tracker.html" class="step">OKR追踪</a>
+      <span class="arrow">→</span>
+      <a href="training-onboarding-manager.html" class="step">培训入职</a>
+      <span class="arrow">→</span>
+      <a href="performance-review-system.html" class="step">绩效考核</a>
+      <span class="arrow">→</span>
+      <a href="role-permission-manager.html" class="step">权限管理</a>
+      <span class="arrow">→</span>
+      <a href="team-workflow-automation.html" class="step">工作流自动化</a>
+      <span class="arrow">→</span>
+      <span class="step current">招聘漏斗</span>
+      <span class="arrow">→</span>
+      <a href="competency-model-builder.html" class="step">胜任力模型</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 标准版</span>
+      <h1>招聘漏斗 <em>管理器</em></h1>
+      <p class="tool-hero-desc">输入岗位需求和候选人列表，输出招聘漏斗(CSS漏斗图)、面试评估表、Offer管理，帮你系统化管理招聘全流程。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>👥 招聘漏斗配置</h2>
+          <p class="calc-form-subtitle">输入招聘信息，生成招聘漏斗和面试评估</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>招聘岗位</label><input type="text" id="position" value="高级运营专员" oninput="RP.calc()"></div>
+            <div class="calc-field"><label>招聘名额</label><input type="number" id="headcount" value="3" min="1" step="1" oninput="RP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>简历投递数</label><input type="number" id="applied" value="150" min="0" step="1" oninput="RP.calc()"></div>
+            <div class="calc-field"><label>简历筛选通过</label><input type="number" id="screened" value="45" min="0" step="1" oninput="RP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>初试人数</label><input type="number" id="phone" value="30" min="0" step="1" oninput="RP.calc()"></div>
+            <div class="calc-field"><label>复试人数</label><input type="number" id="onsite" value="12" min="0" step="1" oninput="RP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>终面人数</label><input type="number" id="final" value="5" min="0" step="1" oninput="RP.calc()"></div>
+            <div class="calc-field"><label>Offer发放</label><input type="number" id="offer" value="3" min="0" step="1" oninput="RP.calc()"></div>
+          </div>
+          <div class="calc-field"><label>平均薪资预算 ($)</label><input type="number" id="salary" value="8000" min="0" step="500" oninput="RP.calc()"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🔻 招聘漏斗</h3>
+        <div class="funnel" id="funnel"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📝 面试评估表</h3>
+        <div id="interviewArea"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="team-workflow-automation.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第10步</span>工作流自动化 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="competency-model-builder.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第12步</span>胜任力模型 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="recruitment-pipeline.html">招聘漏斗</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var RP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function sc(s){return s>=80?'var(--green)':(s>=60?'var(--accent)':'var(--red)');}
+  return{
+    calc:function(){
+      var pos=$('position').value,hc=v('headcount');
+      var applied=v('applied'),screened=v('screened'),phone=v('phone');
+      var onsite=v('onsite'),final=v('final'),offer=v('offer');
+      var salary=v('salary');
+      var stages=[
+        {name:'简历投递',count:applied,width:100,color:'#4f46e5',rate:100},
+        {name:'简历筛选',count:screened,width:80,color:'#6366f1',rate:applied>0?Math.round(screened/applied*100):0},
+        {name:'初试',count:phone,width:65,color:'#818cf8',rate:applied>0?Math.round(phone/applied*100):0},
+        {name:'复试',count:onsite,width:50,color:'#a5b4fc',rate:applied>0?Math.round(onsite/applied*100):0},
+        {name:'终面',count:final,width:35,color:'#c7d2fe',rate:applied>0?Math.round(final/applied*100):0},
+        {name:'Offer发放',count:offer,width:20,color:'#10b981',rate:applied>0?Math.round(offer/applied*100):0}
+      ];
+      var totalCost=offer*salary*12;
+      var costPerHire=offer>0?Math.round(totalCost/offer):0;
+      var html='<h3>👥 招聘概览</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">招聘转化率</div><div class="hc-value">'+(applied>0?Math.round(offer/applied*100):0)+'%</div><div class="hc-sub">'+applied+'→'+offer+'</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">年薪酬总额</div><div class="hc-value">$'+(totalCost/1000).toFixed(0)+'K</div><div class="hc-sub">'+offer+'人 · $'+salary+'/月</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">招聘岗位</span><span class="fr-val">'+pos+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">招聘名额</span><span class="fr-val">'+hc+'人</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">Offer发放</span><span class="fr-val">'+offer+'/'+hc+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">单人招聘成本</span><span class="fr-val">$'+costPerHire.toLocaleString()+'/年</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var fHtml='';
+      stages.forEach(function(s){
+        fHtml+='<div class="funnel-stage" style="width:'+s.width+'%;background:'+s.color+'">';
+        fHtml+='<div class="fs-name">'+s.name+'</div>';
+        fHtml+='<div class="fs-count">'+s.count+'</div>';
+        fHtml+='<div class="fs-rate">转化率 '+s.rate+'%</div>';
+        fHtml+='</div>';
+      });
+      $('funnel').innerHTML=fHtml;
+      var candidates=[
+        {name:'王明',exp:5,tech:88,comm:85,culture:90,overall:88,status:'已发Offer'},
+        {name:'李婷',exp:3,tech:82,comm:92,culture:85,overall:86,status:'已发Offer'},
+        {name:'张伟',exp:4,tech:85,comm:78,culture:80,overall:81,status:'已发Offer'},
+        {name:'刘洋',exp:2,tech:75,comm:80,culture:75,overall:77,status:'候补'},
+        {name:'陈静',exp:6,tech:90,comm:85,culture:88,overall:88,status:'已拒绝'}
+      ];
+      var iHtml='';
+      candidates.forEach(function(c){
+        var color=sc(c.overall);
+        iHtml+='<div class="interview-card"><div class="ic-header"><div class="ic-name">'+c.name+' <span style="font-size:12px;color:var(--muted);font-weight:400">'+c.exp+'年经验</span></div>';
+        iHtml+='<div class="ic-score" style="color:'+color+'">'+c.overall+'</div></div>';
+        iHtml+='<div class="ic-dims">';
+        iHtml+='<div class="ic-dim"><div class="id-val" style="color:'+sc(c.tech)+'">'+c.tech+'</div><div class="id-lbl">技术</div></div>';
+        iHtml+='<div class="ic-dim"><div class="id-val" style="color:'+sc(c.comm)+'">'+c.comm+'</div><div class="id-lbl">沟通</div></div>';
+        iHtml+='<div class="ic-dim"><div class="id-val" style="color:'+sc(c.culture)+'">'+c.culture+'</div><div class="id-lbl">文化</div></div>';
+        iHtml+='<div class="ic-dim"><div class="id-val" style="color:'+sc(c.exp*10)+'">'+c.exp+'</div><div class="id-lbl">经验</div></div>';
+        iHtml+='</div>';
+        var stColor=c.status==='已发Offer'?'var(--green)':(c.status==='已拒绝'?'var(--red)':'var(--gold)');
+        iHtml+='<div style="margin-top:10px"><span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:'+stColor+'22;color:'+stColor+'">'+c.status+'</span></div>';
+        iHtml+='</div>';
+      });
+      $('interviewArea').innerHTML=iHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RP.calc);}else{RP.calc();}
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SKU级利润分析器：多SKU利润对比、贡献度排名、亏损品识别、利润象限分析（高量高利/高量低利/低量高利/低量低利），CSS四象限图。">
+<title>SKU利润分析器 - 四象限分析·贡献度排名·亏损预警 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px;letter-spacing:-.5px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.25)}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.35)}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid #fecaca}.btn-danger:hover{background:var(--danger);color:#fff}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--ink)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.sku-table{width:100%;border-collapse:collapse;font-size:13px}.sku-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px}.sku-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}.sku-table input{width:80px;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;font-size:13px;font-family:inherit}.sku-table input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(79,70,229,.1)}
+.quad-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--rule);border-radius:var(--radius);overflow:hidden;position:relative;min-height:400px;margin-top:16px}.quad{padding:20px;position:relative;min-height:200px}.quad-tl{background:rgba(16,185,129,.06);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}.quad-tr{background:rgba(79,70,229,.06);border-bottom:1px solid var(--rule)}.quad-bl{background:rgba(245,158,11,.06);border-right:1px solid var(--rule)}.quad-br{background:rgba(239,68,68,.06)}.quad-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}.quad-tl .quad-label{color:var(--success)}.quad-tr .quad-label{color:var(--primary)}.quad-bl .quad-label{color:var(--warning)}.quad-br .quad-label{color:var(--danger)}.quad-title{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--ink)}.quad-item{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;margin:2px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}.quad-axis-x{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--muted);font-weight:600}.quad-axis-y{position:absolute;top:50%;left:-40px;transform:translateY(-50%) rotate(-90deg);font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.contribution-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}.cb-label{width:120px;font-size:13px;font-weight:600;color:var(--ink-soft);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cb-track{flex:1;height:28px;background:var(--rule-light);border-radius:6px;overflow:hidden;position:relative}.cb-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;transition:width .6s}.cb-val{width:100px;font-size:13px;font-weight:700;text-align:right;flex-shrink:0}
+.alert-box{padding:16px;border-radius:var(--radius);margin-bottom:12px;display:flex;align-items:flex-start;gap:12px}.alert-danger{background:var(--danger-bg);border:1px solid #fecaca}.alert-warning{background:var(--warning-bg);border:1px solid #fde68a}.alert-icon{font-size:20px;flex-shrink:0}.alert-content h4{font-size:14px;font-weight:700;margin-bottom:2px}.alert-content p{font-size:13px;color:var(--muted)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.footer a:hover{text-decoration:underline}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}.contribution-bar .cb-label{width:80px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W5 财务利润工作流</div><div class="workflow-steps">
+<a href="fba-calculator.html" class="workflow-step">FBA利润</a><a href="margin-markup.html" class="workflow-step">利润率</a><a href="roi-payback.html" class="workflow-step">ROI回本</a><a href="break-even-volume.html" class="workflow-step">盈亏平衡</a><a href="cash-flow-forecast.html" class="workflow-step">现金流预测</a><a href="fba-refund-claim-tracker.html" class="workflow-step">索赔追踪</a><a href="fee-breakdown-decomposer.html" class="workflow-step">费用拆解</a><a href="sku-profit-analyzer.html" class="workflow-step active">SKU分析</a><a href="multi-country-vat-calculator.html" class="workflow-step">VAT计算</a><a href="reimbursement-finder.html" class="workflow-step">赔偿查找</a><a href="profit-trend-analyzer.html" class="workflow-step">利润趋势</a><a href="cost-optimization-advisor.html" class="workflow-step">成本优化</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W5 财务利润</a><span>/</span>SKU利润分析器</div>
+<div class="tool-header"><span class="tool-badge">W5 财务利润工作流 · 深度版</span><h1>SKU<em>利润分析器</em></h1><p>多SKU利润对比、贡献度排名、亏损品识别、利润象限分析（高量高利/高量低利/低量高利/低量低利），CSS四象限图直观定位每个SKU的战略位置。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotalSKU">0</div><div class="stat-lbl">SKU总数</div></div>
+<div class="stat-card"><div class="stat-val success" id="sTotalProfit">$0</div><div class="stat-lbl">总利润</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sAvgMargin">0%</div><div class="stat-lbl">平均利润率</div></div>
+<div class="stat-card"><div class="stat-val danger" id="sLossCount">0</div><div class="stat-lbl">亏损SKU数</div></div>
+</div>
+
+<div class="card"><h2>SKU数据输入</h2>
+<div style="overflow-x:auto"><table class="sku-table" id="skuTable"><thead><tr><th>SKU名称</th><th>销量</th><th>售价($)</th><th>成本($)</th><th>利润</th><th>利润率</th><th>操作</th></tr></thead><tbody id="skuBody"></tbody></table></div>
+<div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-primary" onclick="SKU.addRow()">+ 添加SKU</button><button class="btn btn-secondary" onclick="SKU.loadSample()">载入示例</button></div>
+</div>
+
+<div class="card"><h2>利润象限分析</h2>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;color:var(--muted)"><span>← 低销量</span><span>高销量 →</span></div>
+<div class="quad-wrap" id="quadWrap">
+<div class="quad quad-tl"><div class="quad-label">Q2 低量高利</div><div class="quad-title">潜力之星</div><div id="quadTL"></div></div>
+<div class="quad quad-tr"><div class="quad-label">Q1 高量高利</div><div class="quad-title">核心引擎</div><div id="quadTR"></div></div>
+<div class="quad quad-bl"><div class="quad-label">Q3 低量低利</div><div class="quad-title">观察待定</div><div id="quadBL"></div></div>
+<div class="quad quad-br"><div class="quad-label">Q4 高量低利</div><div class="quad-title">调整优化</div><div id="quadBR"></div></div>
+</div>
+<div style="text-align:center;margin-top:36px;font-size:12px;color:var(--muted)">↑ 低利润率 &nbsp;&nbsp;|&nbsp;&nbsp; 高利润率 ↑</div>
+</div>
+
+<div class="card"><h2>利润贡献度排名</h2><div id="contribWrap"></div></div>
+<div class="card"><h2>亏损预警</h2><div id="alertWrap"></div></div>
+
+<div class="related-grid">
+<a href="fee-breakdown-decomposer.html" class="related-card"><span class="rc-icon">💰</span><div><h4>费用拆解器</h4><p>费用明细可视化</p></div></a>
+<a href="profit-trend-analyzer.html" class="related-card"><span class="rc-icon">📈</span><div><h4>利润趋势分析器</h4><p>12月利润趋势图</p></div></a>
+<a href="fba-calculator.html" class="related-card"><span class="rc-icon">📦</span><div><h4>FBA利润计算器</h4><p>三产品对比计算</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const SKU = {
+  data: [],
+  STORAGE_KEY: 'jx_sku_profit',
+  init() {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    if (saved) { try { this.data = JSON.parse(saved); } catch(e) {} }
+    if (!this.data || this.data.length === 0) this.loadSample();
+    else this.renderTable();
+  },
+  addRow(name='', qty=0, price=0, cost=0) {
+    this.data.push({id:Date.now()+Math.random(), name: name||'SKU-'+(this.data.length+1), qty, price, cost});
+    this.persist(); this.renderTable();
+  },
+  del(id) { this.data = this.data.filter(s => s.id !== id); this.persist(); this.renderTable(); },
+  update(id, field, val) {
+    const s = this.data.find(x => x.id === id);
+    if (s) { s[field] = field === 'name' ? val : (parseFloat(val)||0); this.persist(); this.calc(); }
+  },
+  loadSample() {
+    this.data = [
+      {id:1,name:'SKU-A01 蓝牙耳机',qty:850,price:29.99,cost:14.50},
+      {id:2,name:'SKU-B02 手机壳',qty:1200,price:12.99,cost:3.20},
+      {id:3,name:'SKU-C03 充电器',qty:420,price:19.99,cost:9.80},
+      {id:4,name:'SKU-D04 数据线',qty:1500,price:9.99,cost:4.50},
+      {id:5,name:'SKU-E05 支架',qty:180,price:15.99,cost:11.20},
+      {id:6,name:'SKU-F06 保护膜',qty:680,price:7.99,cost:5.80},
+    ];
+    this.persist(); this.renderTable();
+  },
+  persist() { localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data)); },
+  renderTable() {
+    const body = document.getElementById('skuBody');
+    body.innerHTML = this.data.map(s => {
+      const profit = (s.price - s.cost) * s.qty;
+      const margin = s.price > 0 ? ((s.price - s.cost) / s.price * 100) : 0;
+      return `<tr>
+        <td><input type="text" value="${s.name}" style="width:160px" oninput="SKU.update(${s.id},'name',this.value)"></td>
+        <td><input type="number" value="${s.qty}" min="0" oninput="SKU.update(${s.id},'qty',this.value)"></td>
+        <td><input type="number" value="${s.price}" step="0.01" min="0" oninput="SKU.update(${s.id},'price',this.value)"></td>
+        <td><input type="number" value="${s.cost}" step="0.01" min="0" oninput="SKU.update(${s.id},'cost',this.value)"></td>
+        <td style="font-weight:700;color:${profit>=0?'var(--success)':'var(--danger)'}">$${profit.toFixed(0)}</td>
+        <td style="color:${margin>=30?'var(--success)':margin>=10?'var(--warning)':'var(--danger)'};font-weight:600">${margin.toFixed(1)}%</td>
+        <td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="SKU.del(${s.id})">删除</button></td>
+      </tr>`;
+    }).join('');
+    this.calc();
+  },
+  calc() {
+    const items = this.data.map(s => ({
+      ...s,
+      revenue: s.price * s.qty,
+      profit: (s.price - s.cost) * s.qty,
+      margin: s.price > 0 ? (s.price - s.cost) / s.price * 100 : 0
+    }));
+    const totalProfit = items.reduce((s,i) => s + i.profit, 0);
+    const totalRev = items.reduce((s,i) => s + i.revenue, 0);
+    const avgMargin = totalRev > 0 ? (totalProfit / totalRev * 100) : 0;
+    const lossCount = items.filter(i => i.profit < 0).length;
+    document.getElementById('sTotalSKU').textContent = items.length;
+    document.getElementById('sTotalProfit').textContent = '$' + totalProfit.toFixed(0);
+    document.getElementById('sAvgMargin').textContent = avgMargin.toFixed(1) + '%';
+    document.getElementById('sLossCount').textContent = lossCount;
+    this.renderQuadrant(items);
+    this.renderContribution(items, totalProfit);
+    this.renderAlerts(items);
+  },
+  renderQuadrant(items) {
+    if (items.length === 0) return;
+    const avgQty = items.reduce((s,i) => s + i.qty, 0) / items.length;
+    const avgMargin = items.reduce((s,i) => s + i.margin, 0) / items.length;
+    const q = {TL:[],TR:[],BL:[],BR:[]};
+    items.forEach(i => {
+      if (i.qty >= avgQty && i.margin >= avgMargin) q.TR.push(i);
+      else if (i.qty < avgQty && i.margin >= avgMargin) q.TL.push(i);
+      else if (i.qty < avgQty && i.margin < avgMargin) q.BL.push(i);
+      else q.BR.push(i);
+    });
+    const renderQ = (arr) => arr.map(i => `<span class="quad-item" style="border-left:3px solid ${i.profit>=0?'var(--success)':'var(--danger)'}">${i.name.split(' ')[0]}</span>`).join('');
+    document.getElementById('quadTR').innerHTML = renderQ(q.TR) || '<span style="color:var(--muted);font-size:12px">暂无</span>';
+    document.getElementById('quadTL').innerHTML = renderQ(q.TL) || '<span style="color:var(--muted);font-size:12px">暂无</span>';
+    document.getElementById('quadBL').innerHTML = renderQ(q.BL) || '<span style="color:var(--muted);font-size:12px">暂无</span>';
+    document.getElementById('quadBR').innerHTML = renderQ(q.BR) || '<span style="color:var(--muted);font-size:12px">暂无</span>';
+  },
+  renderContribution(items, total) {
+    const sorted = [...items].sort((a,b) => b.profit - a.profit);
+    const maxP = Math.max(...sorted.map(i => Math.abs(i.profit)), 1);
+    let html = '';
+    sorted.forEach(i => {
+      const pct = total !== 0 ? (i.profit / total * 100) : 0;
+      const barW = Math.abs(i.profit) / maxP * 100;
+      const color = i.profit >= 0 ? (pct > 20 ? '#10b981' : '#34d399') : '#ef4444';
+      html += `<div class="contribution-bar"><span class="cb-label" title="${i.name}">${i.name}</span><div class="cb-track"><div class="cb-fill" style="width:${barW}%;background:${color}">${pct.toFixed(1)}%</div></div><span class="cb-val" style="color:${i.profit>=0?'var(--success)':'var(--danger)'}">$${i.profit.toFixed(0)}</span></div>`;
+    });
+    document.getElementById('contribWrap').innerHTML = html;
+  },
+  renderAlerts(items) {
+    const losses = items.filter(i => i.profit < 0);
+    const lowMargin = items.filter(i => i.profit >= 0 && i.margin < 10);
+    let html = '';
+    if (losses.length > 0) {
+      html += `<div class="alert-box alert-danger"><div class="alert-icon">🚨</div><div class="alert-content"><h4>亏损SKU警告 (${losses.length}个)</h4><p>${losses.map(l => l.name+' ($'+l.profit.toFixed(0)+')').join('， ')} — 建议立即审查定价或淘汰</p></div></div>`;
+    }
+    if (lowMargin.length > 0) {
+      html += `<div class="alert-box alert-warning"><div class="alert-icon">⚠️</div><div class="alert-content"><h4>低利润率预警 (${lowMargin.length}个)</h4><p>${lowMargin.map(l => l.name+' ('+l.margin.toFixed(1)+'%)').join('， ')} — 利润率低于10%，建议优化成本或提价</p></div></div>`;
+    }
+    if (!html) html = '<div class="alert-box" style="background:var(--success-bg);border:1px solid #a7f3d0"><div class="alert-icon">✅</div><div class="alert-content"><h4>一切正常</h4><p>所有SKU均盈利且利润率健康</p></div></div>';
+    document.getElementById('alertWrap').innerHTML = html;
+  }
+};
+SKU.init();
+</script>
+</body>
+</html>

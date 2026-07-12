@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="主播管理器：排班+绩效+话术培训+佣金计算+能力评估，CSS主播矩阵，能力雷达图，排班表。免费直播运营工具。">
+<meta name="keywords" content="主播管理,主播排班,能力评估,话术培训,主播佣金,主播矩阵,雷达图,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-talent-manager.html">
+<title>主播管理器 - 排班·绩效·能力雷达·佣金计算 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.talent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:12px}
+.talent-card{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:18px;position:relative;transition:all .2s}
+.talent-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:#4f46e5}
+.tc-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.tc-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0}
+.tc-name{font-size:15px;font-weight:700}
+.tc-level{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
+.lv-S{background:#fef3c7;color:#92400e}.lv-A{background:#ecfdf5;color:#065f46}.lv-B{background:#eff6ff;color:#1e40af}.lv-C{background:#fef2f2;color:#991b1b}
+.btn-del{position:absolute;top:12px;right:12px;padding:3px 9px;border-radius:6px;border:1px solid #ef4444;background:#fff;font-size:11px;cursor:pointer;color:#ef4444}
+.btn-add{padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;max-width:520px;width:90%;max-height:85vh;overflow-y:auto}
+.radar-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:12px 0}
+.radar-chart{position:relative;width:240px;height:240px}
+.radar-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:1px dashed var(--rule);border-radius:50%}
+.radar-label{position:absolute;font-size:10px;font-weight:600;color:var(--ink-soft);text-align:center;line-height:1.2;transform:translate(-50%,-50%)}
+.schedule-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.schedule-table th{background:var(--bg-soft);padding:8px 6px;border:1px solid var(--rule);font-weight:600;color:var(--ink-soft)}
+.schedule-table td{padding:8px 6px;border:1px solid var(--rule-light);text-align:center}
+.slot-booked{background:#e0e7ff;color:#4f46e5;font-weight:600;border-radius:4px;padding:3px}
+.slot-free{color:var(--muted-light);font-size:11px}
+.perf-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.perf-table th{background:var(--bg-soft);padding:10px 8px;text-align:left;border-bottom:2px solid var(--rule);font-weight:600}
+.perf-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light)}
+.bar-track{height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden;min-width:60px}
+.bar-fill{height:100%;border-radius:4px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"主播管理器","description":"主播排班+绩效+话术培训+佣金计算+能力评估，CSS主播矩阵与能力雷达图。","url":"https://juxin-consulting.help/tools/live-talent-manager.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_talent_manager">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📺</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="live-product-selection.html" class="step">直播选品</a><span class="arrow">›</span>
+      <a href="live-product-lineup.html" class="step">排品</a><span class="arrow">›</span>
+      <a href="live-script-generator.html" class="step">话术</a><span class="arrow">›</span>
+      <a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">›</span>
+      <a href="live-interaction-calc.html" class="step">互动计算</a><span class="arrow">›</span>
+      <a href="live-replay-analyzer.html" class="step">复盘分析</a><span class="arrow">›</span>
+      <a href="live-promo-text.html" class="step">促销文案</a><span class="arrow">›</span>
+      <a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">›</span>
+      <a href="live-competitor-analysis.html" class="step">竞品分析</a><span class="arrow">›</span>
+      <a href="live-checklist.html" class="step">直播清单</a><span class="arrow">›</span>
+      <a href="live-traffic-source-analyzer.html" class="step">流量来源</a><span class="arrow">›</span>
+      <span class="step current">主播管理</span><span class="arrow">›</span>
+      <a href="live-post-stream-debrief.html" class="step">直播复盘</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📺 直播运营工具</span>
+      <h1>主播<em>管理器</em></h1>
+      <p class="tool-hero-desc">管理主播排班、绩效、话术培训与佣金计算，SVG能力雷达图评估主播6维能力，CSS排班表与绩效矩阵一目了然，数据保存至本地。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <h2 style="margin:0">🎤 主播团队</h2>
+        <div style="display:flex;gap:8px">
+          <select id="commMode" onchange="TM.render()" style="padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px"><option value="gmv">佣金按GMV</option><option value="profit">佣金按利润</option></select>
+          <button class="btn-add" onclick="TM.openModal()">+ 添加主播</button>
+        </div>
+      </div>
+      <div class="talent-grid" id="talentGrid"></div>
+      <div class="section-block" id="radarSection">
+        <h3>📡 主播能力雷达图</h3>
+        <div class="radar-wrap"><div class="radar-chart" id="radarChart"></div><div id="radarInfo" style="font-size:13px;color:var(--muted)"></div></div>
+      </div>
+      <div class="section-block" id="scheduleSection">
+        <h3>📅 本周排班表</h3>
+        <div style="overflow-x:auto"><table class="schedule-table" id="scheduleTable"></table></div>
+      </div>
+      <div class="section-block" id="perfSection">
+        <h3>📊 主播绩效矩阵</h3>
+        <div style="overflow-x:auto"><table class="perf-table" id="perfTable"></table></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="live-traffic-source-analyzer.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 流量来源</span></a>
+        <a href="live-post-stream-debrief.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">直播复盘 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="modal-overlay" id="modalOverlay"><div class="modal">
+  <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">添加/编辑主播</h3>
+  <div class="calc-row-2">
+    <div class="calc-field"><label>主播昵称</label><input type="text" id="mName" placeholder="如 小美"></div>
+    <div class="calc-field"><label>等级</label><select id="mLevel"><option value="S">S级</option><option value="A">A级</option><option value="B">B级</option><option value="C">C级</option></select></div>
+  </div>
+  <div class="fee-rule-box" style="margin:12px 0"><h4>6维能力评分 (0-10)</h4></div>
+  <div class="calc-row-2">
+    <div class="calc-field"><label>表现力</label><input type="number" id="mExpress" value="8" min="0" max="10"></div>
+    <div class="calc-field"><label>话术能力</label><input type="number" id="mSpeech" value="7" min="0" max="10"></div>
+  </div>
+  <div class="calc-row-2">
+    <div class="calc-field"><label>互动控场</label><input type="number" id="mInteract" value="8" min="0" max="10"></div>
+    <div class="calc-field"><label>转化促单</label><input type="number" id="mConvert" value="7" min="0" max="10"></div>
+  </div>
+  <div class="calc-row-2">
+    <div class="calc-field"><label>产品讲解</label><input type="number" id="mProduct" value="7" min="0" max="10"></div>
+    <div class="calc-field"><label>形象气质</label><input type="number" id="mImage" value="8" min="0" max="10"></div>
+  </div>
+  <div class="fee-rule-box" style="margin:12px 0"><h4>绩效与佣金</h4></div>
+  <div class="calc-row-2">
+    <div class="calc-field"><label>月直播GMV <span class="hint">($)</span></label><input type="number" id="mGmv" value="50000" min="0"></div>
+    <div class="calc-field"><label>月直播时长 <span class="hint">(小时)</span></label><input type="number" id="mHours" value="80" min="0"></div>
+  </div>
+  <div class="calc-row-2">
+    <div class="calc-field"><label>佣金比例 <span class="hint">(%)</span></label><input type="number" id="mCommRate" value="3" min="0" max="20" step="0.5"></div>
+    <div class="calc-field"><label>底薪 <span class="hint">($)</span></label><input type="number" id="mBase" value="1500" min="0"></div>
+  </div>
+  <div class="calc-field"><label>培训状态</label><select id="mTrain"><option value="done">已完成话术培训</option><option value="progress">培训中</option><option value="none">未培训</option></select></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn-add" onclick="TM.saveModal()">保存</button><button onclick="TM.closeModal()" style="padding:10px 20px;border-radius:10px;border:1px solid var(--rule);background:#fff;font-size:14px;cursor:pointer">取消</button></div>
+</div></div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-talent-manager.html">主播管理器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var TM=(function(){
+  'use strict';
+  var KEY='jx_live_talents';
+  var data=[];var editIdx=-1;
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value;}
+  var DIMS=[{k:'express',n:'表现力'},{k:'speech',n:'话术'},{k:'interact',n:'互动'},{k:'convert',n:'转化'},{k:'product',n:'产品'},{k:'image',n:'形象'}];
+  function load(){try{var s=localStorage.getItem(KEY);if(s)data=JSON.parse(s)||[];}catch(e){data=[];}if(!data.length){data=[{name:'小美',level:'S',express:9,speech:8,interact:9,convert:8,product:7,image:9,gmv:120000,hours:120,commRate:3.5,base:2000,train:'done'},{name:'阿杰',level:'A',express:7,speech:8,interact:7,convert:8,product:8,image:6,gmv:65000,hours:90,commRate:3,base:1500,train:'done'},{name:'乐乐',level:'B',express:7,speech:6,interact:7,convert:6,product:6,image:8,gmv:30000,hours:60,commRate:2.5,base:1000,train:'progress'}];save();}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+  function avgScore(t){var s=0;DIMS.forEach(function(d){s+=t[d.k];});return s/DIMS.length;}
+  function comm(t){var mode=$('commMode').value;var base=t.commRate/100;var c=mode==='gmv'?t.gmv*base:t.gmv*base*0.6;return c;}
+  function render(){
+    if(!data.length){$('talentGrid').innerHTML='<p style="text-align:center;color:var(--muted);padding:40px">暂无主播，点击添加</p>';return;}
+    $('talentGrid').innerHTML=data.map(function(t,idx){
+      var avg=avgScore(t);var c=comm(t);var total=t.base+c;
+      var trainBadge=t.train==='done'?'<span style="color:#10b981;font-size:11px">✓ 已培训</span>':t.train==='progress'?'<span style="color:#f59e0b;font-size:11px">培训中</span>':'<span style="color:#ef4444;font-size:11px">未培训</span>';
+      return '<div class="talent-card"><button class="btn-del" onclick="TM.del('+idx+')">删除</button>'+
+        '<div class="tc-head"><div class="tc-avatar">'+t.name.substring(0,1)+'</div><div><div class="tc-name">'+t.name+'</div><span class="tc-level lv-'+t.level+'">'+t.level+'级</span> '+trainBadge+'</div></div>'+
+        '<div style="font-size:13px;color:var(--ink-soft);line-height:1.7">'+
+        '能力均分：<strong style="color:#4f46e5">'+avg.toFixed(1)+'</strong>/10<br>'+
+        '月GMV：<strong>$'+t.gmv.toLocaleString()+'</strong><br>'+
+        '月时长：'+t.hours+'小时<br>'+
+        '佣金('+(t.commRate)+'%)：<strong style="color:#10b981">$'+c.toFixed(0)+'</strong> + 底薪$'+t.base+' = <strong>$'+total.toFixed(0)+'</strong></div>'+
+        '<div style="margin-top:8px">'+DIMS.map(function(d){var w=t[d.k]*10;return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="font-size:11px;width:36px;color:var(--muted)">'+d.n+'</span><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:'+w+'%;background:linear-gradient(90deg,#4f46e5,#6366f1)"></div></div><span style="font-size:11px;color:#4f46e5;font-weight:600;width:24px">'+t[d.k]+'</span></div>';}).join('')+'</div>'+
+        '</div>';
+    }).join('');
+    renderRadar();renderSchedule();renderPerf();
+  }
+  function renderRadar(){
+    var cx=120,cy=120,maxR=90;
+    var avgScores=data.map(function(t){return DIMS.map(function(d){return t[d.k];});});
+    var avgDim=DIMS.map(function(d,i){var s=0;data.forEach(function(t){s+=t[d.k];});return s/data.length;});
+    function pts(scores){return scores.map(function(s,i){var a=(-90+i*60)*Math.PI/180;var r=(s/10)*maxR;return (cx+r*Math.cos(a))+','+(cy+r*Math.sin(a));}).join(' ');}
+    var fullPts=pts([10,10,10,10,10,10]);
+    var avgPts=pts(avgDim);
+    var labels=DIMS.map(function(d,i){var a=(-90+i*60)*Math.PI/180;var lx=cx+108*Math.cos(a),ly=cy+108*Math.sin(a);return '<div class="radar-label" style="left:'+lx+'px;top:'+ly+'px">'+d.n+'<br><strong style="color:#4f46e5">'+avgDim[i].toFixed(1)+'</strong></div>';}).join('');
+    var polys=data.map(function(t,i){var c=['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6'][i%5];return '<polygon points="'+pts(DIMS.map(function(d){return t[d.k];}))+'" fill="'+c+'22" stroke="'+c+'" stroke-width="1.5"/>';}).join('');
+    $('radarChart').innerHTML='<div class="radar-ring" style="width:150px;height:150px"></div><div class="radar-ring" style="width:100px;height:100px"></div><div class="radar-ring" style="width:50px;height:50px"></div>'+
+      '<svg width="240" height="240" style="position:absolute;top:0;left:0"><polygon points="'+fullPts+'" fill="none" stroke="var(--rule)" stroke-dasharray="3,3"/>'+polys+'<polygon points="'+avgPts+'" fill="rgba(79,70,229,0.15)" stroke="#4f46e5" stroke-width="2.5"/></svg>'+labels;
+    $('radarInfo').innerHTML='团队平均能力 '+avgDim.reduce(function(s,v){return s+v;},0).toFixed(1)+'/60 · 实线为团队均值，半透明为各主播';
+  }
+  function renderSchedule(){
+    var days=['周一','周二','周三','周四','周五','周六','周日'];
+    var slots=['10-14','14-18','18-22','22-02'];
+    var html='<thead><tr><th>时段</th>'+days.map(function(d){return '<th>'+d+'</th>';}).join('')+'</tr></thead><tbody>';
+    slots.forEach(function(s){
+      html+='<tr><td><strong>'+s+'</strong></td>';
+      days.forEach(function(d,idx){
+        var assigned=data.filter(function(t,i){return t.hours>0 && ((i+idx)%4===0);});
+        var slotIdx=slots.indexOf(s);
+        var talent=assigned[slotIdx%Math.max(1,assigned.length)];
+        html+='<td>'+(talent?'<div class="slot-booked">'+talent.name+'</div>':'<span class="slot-free">空闲</span>')+'</td>';
+      });
+      html+='</tr>';
+    });
+    html+='</tbody>';
+    $('scheduleTable').innerHTML=html;
+  }
+  function renderPerf(){
+    var sorted=data.slice().sort(function(a,b){return b.gmv-a.gmv;});
+    var maxGmv=Math.max.apply(null,data.map(function(t){return t.gmv;}))||1;
+    $('perfTable').innerHTML='<thead><tr><th>主播</th><th>等级</th><th>能力均分</th><th>月GMV</th><th>GMV占比</th><th>时长</th><th>时薪产出</th><th>佣金</th><th>总收入</th><th>培训</th></tr></thead><tbody>'+
+      sorted.map(function(t){var avg=avgScore(t);var c=comm(t);var total=t.base+c;var share=(t.gmv/maxGmv*100);var hourly=t.hours>0?t.gmv/t.hours:0;return '<tr><td><strong>'+t.name+'</strong></td><td><span class="tc-level lv-'+t.level+'">'+t.level+'</span></td><td>'+avg.toFixed(1)+'</td><td>$'+t.gmv.toLocaleString()+'</td><td><div class="bar-track" style="display:inline-block;vertical-align:middle"><div class="bar-fill" style="width:'+share+'%;background:#4f46e5"></div></div> '+share.toFixed(0)+'%</td><td>'+t.hours+'h</td><td>$'+hourly.toFixed(0)+'/h</td><td>$'+c.toFixed(0)+'</td><td><strong>$'+total.toFixed(0)+'</strong></td><td>'+(t.train==='done'?'✓':t.train==='progress'?'⏳':'✗')+'</td></tr>';}).join('')+'</tbody>';
+  }
+  function openModal(idx){editIdx=typeof idx==='number'?idx:-1;var t=editIdx>=0?data[editIdx]:{};$('mName').value=t.name||'';$('mLevel').value=t.level||'A';DIMS.forEach(function(d){$('m'+d.k.charAt(0).toUpperCase()+d.k.slice(1)).value=t[d.k]||7;});$('mGmv').value=t.gmv||50000;$('mHours').value=t.hours||80;$('mCommRate').value=t.commRate||3;$('mBase').value=t.base||1500;$('mTrain').value=t.train||'none';$('modalOverlay').classList.add('show');}
+  function closeModal(){$('modalOverlay').classList.remove('show');}
+  function saveModal(){
+    var name=v('mName');if(!name){alert('请输入主播昵称');return;}
+    var t={name:name,level:v('mLevel'),express:parseFloat(v('mExpress'))||0,speech:parseFloat(v('mSpeech'))||0,interact:parseFloat(v('mInteract'))||0,convert:parseFloat(v('mConvert'))||0,product:parseFloat(v('mProduct'))||0,image:parseFloat(v('mImage'))||0,gmv:parseFloat(v('mGmv'))||0,hours:parseFloat(v('mHours'))||0,commRate:parseFloat(v('mCommRate'))||0,base:parseFloat(v('mBase'))||0,train:v('mTrain')};
+    if(editIdx>=0)data[editIdx]=t;else data.push(t);
+    save();closeModal();render();
+  }
+  function del(i){if(!confirm('确定删除'+data[i].name+'？'))return;data.splice(i,1);save();render();}
+  function init(){load();render();}
+  return{render:render,openModal:openModal,closeModal:closeModal,saveModal:saveModal,del:del,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TM.init);}else{TM.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

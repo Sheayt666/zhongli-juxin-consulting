@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="供应商风险监控器：财务/产能/合规风险评分，CSS风险矩阵，替代方案建议。免费在线跨境电商供应商风险管理工具。">
+<meta name="keywords" content="供应商风险,风险监控,风险矩阵,财务风险,产能风险,合规风险,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/supplier-risk-monitor.html">
+<title>供应商风险监控器 - 财务产能合规风险·CSS矩阵·替代方案 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.srm-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.srm-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.dim-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dim-input{padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.dim-input .di-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dim-input .di-icon{font-size:20px}
+.dim-input .di-name{font-size:13px;font-weight:700;color:var(--ink)}
+.dim-slider{display:flex;flex-direction:column;gap:4px}
+.dim-slider label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.dim-slider input[type=range]{width:100%;accent-color:#ef4444}
+.matrix-wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.risk-matrix{display:grid;grid-template-columns:50px repeat(5,1fr);grid-template-rows:28px repeat(5,50px);gap:4px;flex:1;min-width:360px}
+.rm-corner{grid-column:1;grid-row:1}
+.rm-x{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted)}
+.rm-y{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);writing-mode:vertical-rl}
+.rm-cell{border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.matrix-legend{flex:1;min-width:200px}
+.legend-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12px;border-bottom:1px solid var(--rule-light)}
+.legend-item:last-child{border-bottom:none}
+.legend-swatch{width:22px;height:22px;border-radius:6px;flex-shrink:0}
+.alt-list{list-style:none;padding:0;margin:0}
+.alt-list li{padding:12px 0 12px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.6}
+.alt-list li:last-child{border-bottom:none}
+.alt-list li::before{content:'🔄';position:absolute;left:0;top:12px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.dim-inputs{grid-template-columns:1fr}.risk-matrix{min-width:300px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"供应商风险监控器","description":"财务/产能/合规风险评分，CSS风险矩阵，替代方案建议。","url":"https://juxin-consulting.help/tools/supplier-risk-monitor.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"供应商风险监控器","item":"https://juxin-consulting.help/tools/supplier-risk-monitor.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="supplier_risk_monitor">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚠️ 采购管理工作流</span>
+      <h1>供应商风险 <em>监控器</em></h1>
+      <p class="tool-hero-desc">从财务、产能、合规三大维度评估供应商风险，概率×影响5×5风险矩阵可视化，输出风险等级与替代方案建议，防范供应链中断与断供风险。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a><span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a><span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a><span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本</a><span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a><span class="arrow">→</span>
+      <a href="supplier-database-search-w18.html" class="step">供应商搜索</a><span class="arrow">→</span>
+      <a href="purchase-order-manager.html" class="step">采购订单</a><span class="arrow">→</span>
+      <a href="supplier-performance-scorecard-w18.html" class="step">供应商记分卡</a><span class="arrow">→</span>
+      <a href="price-negotiation-strategist.html" class="step">价格谈判</a><span class="arrow">→</span>
+      <a href="incoming-qc-manager.html" class="step">来料质检</a><span class="arrow">→</span>
+      <span class="step current">供应商风险</span><span class="arrow">→</span>
+      <a href="purchase-cost-tracker.html" class="step">采购成本</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="srm-section">
+        <h3>🎯 风险维度评分</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">设置各维度风险概率（1-5）与影响（1-5），5为最高</p>
+        <div class="dim-inputs" id="dimInputs"></div>
+      </div>
+
+      <div class="srm-section">
+        <h3>🔥 风险矩阵</h3>
+        <div class="matrix-wrap">
+          <div class="risk-matrix" id="matrix"></div>
+          <div class="matrix-legend">
+            <div style="font-size:13px;font-weight:700;margin-bottom:10px">风险等级</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#10b981"></div><div><strong>低风险</strong> (1-4)<br><span style="color:var(--muted);font-size:11px">可接受</span></div></div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f59e0b"></div><div><strong>中风险</strong> (5-9)<br><span style="color:var(--muted);font-size:11px">需关注</span></div></div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#ef4444"></div><div><strong>高风险</strong> (10-25)<br><span style="color:var(--muted);font-size:11px">需处理</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calculator-wrap" style="margin-top:24px">
+        <div class="calc-results" style="margin:0 auto"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="srm-section">
+        <h3>🔄 替代方案建议</h3>
+        <ul class="alt-list" id="altList"></ul>
+      </div>
+
+      <div class="srm-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="supplier-audit.html" class="related-card"><span class="related-card-icon">🔍</span><div class="related-card-content"><h5>供应商评估</h5><p>资质审核</p></div></a>
+          <a href="supplier-database-search-w18.html" class="related-card"><span class="related-card-icon">🏭</span><div class="related-card-content"><h5>供应商搜索</h5><p>备选供应商</p></div></a>
+          <a href="supplier-performance-scorecard-w18.html" class="related-card"><span class="related-card-icon">📊</span><div class="related-card-content"><h5>供应商记分卡</h5><p>绩效评分</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="incoming-qc-manager.html" class="wbn-btn prev">← 上一步：来料质检</a>
+        <a href="purchase-cost-tracker.html" class="wbn-btn next">下一步：采购成本 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-risk-monitor.html">供应商风险监控</a></li><li><a href="supplier-audit.html">供应商评估</a></li><li><a href="purchase-cost-tracker.html">采购成本</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var SRM=(function(){
+  'use strict';
+  var SK='jx_supplier_risk';
+  var DIMS=[
+    {key:'finance',icon:'💰',name:'财务风险',p:2,i:5,strat:'供应商财务状况恶化可能导致断供。建议定期获取供应商财务报表，关注账期变化与产能扩张信号，预付比例控制在30%以内。'},
+    {key:'capacity',icon:'🏭',name:'产能风险',p:3,i:4,strat:'产能不足或产能过剩均存在风险。旺季前确认排产计划，要求提供产能数据，分散订单至2-3家供应商避免单点依赖。'},
+    {key:'compliance',icon:'✅',name:'合规风险',p:2,i:5,strat:'环保、劳工、知识产权合规问题可能导致停产。定期要求提供ISO/BSCI认证，突击验厂，明确合同中合规责任条款。'}
+  ];
+  function load(){try{var d=JSON.parse(localStorage.getItem(SK)||'{}');DIMS.forEach(function(m){if(d[m.key]){m.p=d[m.key].p;m.i=d[m.key].i;}});}catch(e){}}
+  function save(){try{var d={};DIMS.forEach(function(m){d[m.key]={p:m.p,i:m.i};});localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function colorFor(s){return s>=10?'#ef4444':(s>=5?'#f59e0b':'#10b981');}
+  function levelFor(s){return s>=10?'高风险':(s>=5?'中风险':'低风险');}
+  function renderInputs(){
+    var h='';
+    DIMS.forEach(function(m){
+      h+='<div class="dim-input"><div class="di-head"><span class="di-icon">'+m.icon+'</span><span class="di-name">'+m.name+'</span></div>';
+      h+='<div class="dim-slider"><label><span>发生概率</span><span id="p_'+m.key+'_v">'+m.p+'</span></label><input type="range" min="1" max="5" value="'+m.p+'" oninput="SRM.update(\''+m.key+'\',\'p\',this.value)"></div>';
+      h+='<div class="dim-slider"><label><span>影响程度</span><span id="i_'+m.key+'_v">'+m.i+'</span></label><input type="range" min="1" max="5" value="'+m.i+'" oninput="SRM.update(\''+m.key+'\',\'i\',this.value)"></div>';
+      h+='<div style="text-align:center;margin-top:8px;font-size:13px;font-weight:700;color:'+colorFor(m.p*m.i)+'">风险得分: '+(m.p*m.i)+'</div></div>';
+    });
+    document.getElementById('dimInputs').innerHTML=h;
+  }
+  function update(key,type,val){
+    DIMS.forEach(function(m){if(m.key===key){m[type]=parseInt(val);document.getElementById(type+'_'+key+'_v').textContent=val;}});
+    save();renderAll();
+  }
+  function renderMatrix(){
+    var h='<div class="rm-corner"></div>';
+    for(var x=1;x<=5;x++)h+='<div class="rm-x">影响 '+x+'</div>';
+    for(var y=5;y>=1;y--){
+      h+='<div class="rm-y">概率 '+y+'</div>';
+      for(var x=1;x<=5;x++){
+        var score=x*y;var dims=DIMS.filter(function(m){return m.p===y&&m.i===x;});
+        var label=dims.map(function(d){return d.icon;}).join(' ')||score;
+        h+='<div class="rm-cell" style="background:'+colorFor(score)+'">'+label+'</div>';
+      }
+    }
+    document.getElementById('matrix').innerHTML=h;
+  }
+  function renderResult(){
+    var totalScore=DIMS.reduce(function(s,m){return s+m.p*m.i;},0);
+    var avg=Math.round(totalScore/DIMS.length);
+    var high=DIMS.filter(function(m){return m.p*m.i>=10;}).length;
+    var level=levelFor(avg);
+    var c=colorFor(avg);
+    document.getElementById('resultCard').innerHTML=
+      '<h3>⚠️ 风险评估</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">综合风险</div><div class="ri-value" style="color:'+c+'">'+level+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">平均得分</div><div class="ri-value" style="color:'+c+'">'+avg+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">高风险维度</div><div class="ri-value '+(high?'negative':'positive')+'">'+high+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">总风险得分</div><div class="ri-value" style="color:'+c+'">'+totalScore+'</div></div>'+
+      '</div><div class="result-note">⚠️ '+(high?'存在'+high+'个高风险维度，需立即制定替代方案':(avg>=5?'整体风险中等，建议持续监控并准备备选供应商':'整体风险可控，保持定期评估'))+'</div>';
+  }
+  function renderAlt(){
+    var sorted=DIMS.slice().sort(function(a,b){return (b.p*b.i)-(a.p*a.i);});
+    var h='';
+    sorted.forEach(function(m){
+      var s=m.p*m.i;
+      h+='<li><strong>'+m.icon+' '+m.name+'（得分'+s+'·'+levelFor(s)+'）</strong><br>'+m.strat+'</li>';
+    });
+    h+='<li><strong>多元化采购策略</strong><br>核心物料至少培育2-3家合格供应商，按60%/25%/15%分配订单量，既能保证主供应商规模优势，又保留应急切换能力。</li>';
+    document.getElementById('altList').innerHTML=h;
+  }
+  function renderAll(){renderInputs();renderMatrix();renderResult();renderAlt();}
+  function init(){load();renderAll();}
+  return {update:update,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SRM.init);}else{SRM.init();}
+</script>
+</body>
+</html>

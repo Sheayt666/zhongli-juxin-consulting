@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="广告归因分析器：自然流量vs广告流量数据，增量归因分析，广告贡献度，CSS归因瀑布图。">
+<title>广告归因分析器 - 增量归因·广告贡献度·瀑布图 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.waterfall{display:flex;align-items:flex-end;gap:0;height:280px;padding:16px 0;border-bottom:2px solid var(--rule);position:relative;overflow-x:auto}.waterfall-step{min-width:120px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}.wf-bar{width:60px;border-radius:4px 4px 0 0;transition:height .6s;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-size:11px;font-weight:700;color:#fff}.wf-label{font-size:11px;color:var(--muted);text-align:center;white-space:nowrap}.wf-connector{position:absolute;width:2px;background:var(--rule);z-index:0}
+.pie-wrap{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center}.conic-pie{width:180px;height:180px;border-radius:50%;position:relative;box-shadow:var(--shadow-lg)}.conic-pie::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:var(--surface)}.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1}.pie-legend{display:flex;flex-direction:column;gap:8px}.legend-item{display:flex;align-items:center;gap:8px;font-size:13px}.legend-dot{width:14px;height:14px;border-radius:4px}.legend-item .l-name{color:var(--ink-soft);flex:1}.legend-item .l-val{font-weight:700}
+.contribution-bar{display:flex;align-items:center;gap:12px;margin-bottom:12px}.cb-label{width:120px;font-size:13px;font-weight:600;flex-shrink:0}.cb-track{flex:1;height:28px;background:var(--rule-light);border-radius:6px;overflow:hidden}.cb-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff}.cb-val{width:80px;font-size:13px;font-weight:700;text-align:right}
+.insight-box{padding:16px;border-radius:var(--radius);margin-bottom:10px;display:flex;gap:12px}.insight-box.good{background:var(--success-bg);border:1px solid #a7f3d0}.insight-box.warn{background:var(--warning-bg);border:1px solid #fde68a}.insight-box.bad{background:var(--danger-bg);border:1px solid #fecaca}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W6 运营数据工作流</div><div class="workflow-steps">
+<a href="sales-estimator.html" class="workflow-step">销量估算</a><a href="bsr-tracker.html" class="workflow-step">BSR追踪</a><a href="conversion-funnel.html" class="workflow-step">转化漏斗</a><a href="review-analyzer.html" class="workflow-step">评论分析</a><a href="profit-calendar.html" class="workflow-step">利润日历</a><a href="real-time-sales-dashboard.html" class="workflow-step">实时仪表盘</a><a href="product-performance-integrator.html" class="workflow-step">表现整合</a><a href="session-page-analyzer.html" class="workflow-step">会话分析</a><a href="ad-attribution-analyzer.html" class="workflow-step active">广告归因</a><a href="buy-box-win-rate-monitor.html" class="workflow-step">购物车监控</a><a href="traffic-source-breakdown.html" class="workflow-step">流量拆解</a><a href="daily-ops-report-generator.html" class="workflow-step">日报生成</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W6 运营数据</a><span>/</span>广告归因分析器</div>
+<div class="tool-header"><span class="tool-badge">W6 运营数据工作流</span><h1>广告<em>归因分析器</em></h1><p>自然流量vs广告流量增量归因分析，广告真实贡献度计算，CSS归因瀑布图直观展示广告为整体销售带来的增量价值。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotalSales">$0</div><div class="stat-lbl">总销售额</div></div>
+<div class="stat-card"><div class="stat-val success" id="sIncremental">$0</div><div class="stat-lbl">广告增量销售额</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sContribution">0%</div><div class="stat-lbl">广告贡献度</div></div>
+<div class="stat-card"><div class="stat-val" id="sIncrementalROAS">0x</div><div class="stat-lbl">增量ROAS (iROAS)</div></div>
+</div>
+
+<div class="card"><h2>输入数据</h2><div class="form-grid">
+<div class="form-field"><label>总销售额 <span class="hint">($)</span></label><input type="number" id="totalSales" value="25000" step="100" min="0" oninput="Attrib.calc()"></div>
+<div class="form-field"><label>广告销售额 <span class="hint">($)</span></label><input type="number" id="adSales" value="12000" step="100" min="0" oninput="Attrib.calc()"></div>
+<div class="form-field"><label>自然销售额 <span class="hint">($)</span></label><input type="number" id="organicSales" value="13000" step="100" min="0" oninput="Attrib.calc()"></div>
+<div class="form-field"><label>广告花费 <span class="hint">($)</span></label><input type="number" id="adSpend" value="3000" step="50" min="0" oninput="Attrib.calc()"></div>
+<div class="form-field"><label>无广告时自然销售额 <span class="hint">(预估,$)</span></label><input type="number" id="baselineOrganic" value="8000" step="100" min="0" oninput="Attrib.calc()"></div>
+<div class="form-field"><label>广告带来的 halo 自然销售 <span class="hint">($)</span></label><input type="number" id="haloSales" value="2000" step="100" min="0" oninput="Attrib.calc()"></div>
+</div></div>
+
+<div class="card"><h2>归因瀑布图 (Waterfall)</h2><div class="waterfall" id="waterfall"></div></div>
+<div class="card"><h2>广告贡献度分析</h2><div id="contribWrap"></div></div>
+<div class="card"><h2>归因洞察</h2><div id="insightWrap"></div></div>
+
+<div class="related-grid">
+<a href="traffic-source-breakdown.html" class="related-card"><span class="rc-icon">🌐</span><div><h4>流量来源拆解</h4><p>各来源占比分析</p></div></a>
+<a href="product-performance-integrator.html" class="related-card"><span class="rc-icon">📊</span><div><h4>产品表现整合</h4><p>多维度评分</p></div></a>
+<a href="conversion-funnel.html" class="related-card"><span class="rc-icon">🔻</span><div><h4>转化漏斗</h4><p>转化各阶段分析</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Attrib={
+  calc(){
+    const total=parseFloat(document.getElementById('totalSales').value)||0;
+    const adSales=parseFloat(document.getElementById('adSales').value)||0;
+    const organic=parseFloat(document.getElementById('organicSales').value)||0;
+    const adSpend=parseFloat(document.getElementById('adSpend').value)||0;
+    const baseline=parseFloat(document.getElementById('baselineOrganic').value)||0;
+    const halo=parseFloat(document.getElementById('haloSales').value)||0;
+    const incremental=adSales+halo-(organic-baseline);
+    const contribution=total>0?incremental/total*100:0;
+    const iROAS=adSpend>0?incremental/adSpend:0;
+    const roas=adSpend>0?adSales/adSpend:0;
+    document.getElementById('sTotalSales').textContent='$'+total.toLocaleString();
+    document.getElementById('sIncremental').textContent='$'+incremental.toLocaleString();
+    document.getElementById('sContribution').textContent=contribution.toFixed(1)+'%';
+    document.getElementById('sIncrementalROAS').textContent=iROAS.toFixed(2)+'x';
+    this.renderWaterfall(baseline,organic-baseline,adSales,halo,total);
+    this.renderContrib(adSales,organic,halo,baseline,incremental,roas,iROAS);
+    this.renderInsights(contribution,iROAS,roas,incremental);
+  },
+  renderWaterfall(baseline,organicLift,adSales,halo,total){
+    const steps=[
+      {label:'基线自然销售',val:baseline,color:'#94a3b8',type:'base'},
+      {label:'自然增量',val:organicLift,color:'#10b981',type:'add'},
+      {label:'广告直接销售',val:adSales,color:'#4f46e5',type:'add'},
+      {label:'Halo效应',val:halo,color:'#8b5cf6',type:'add'},
+      {label:'总销售额',val:total,color:'#0f172a',type:'total'},
+    ];
+    const maxVal=Math.max(...steps.map(s=>s.val),total,1);
+    let cumStart=0;
+    const wf=steps.map((s,i)=>{
+      const h=s.val/maxVal*220;
+      let bottom=0;
+      if(s.type==='base'||s.type==='total'){bottom=0;}
+      else{bottom=cumStart/maxVal*220;}
+      if(s.type==='add')cumStart+=s.val;
+      else if(s.type==='base')cumStart=s.val;
+      else cumStart=s.val;
+      return `<div class="waterfall-step"><div class="wf-bar" style="height:${h}px;background:${s.color};margin-bottom:${bottom}px">$${s.val.toLocaleString()}</div><div class="wf-label">${s.label}</div></div>`;
+    }).join('');
+    document.getElementById('waterfall').innerHTML=wf;
+  },
+  renderContrib(adSales,organic,halo,baseline,incremental,roas,iROAS){
+    const items=[
+      {label:'广告直接销售',val:adSales,color:'#4f46e5',pct:adSales},
+      {label:'自然销售',val:organic,color:'#10b981',pct:organic},
+      {label:'Halo效应销售',val:halo,color:'#8b5cf6',pct:halo},
+      {label:'广告增量销售',val:incremental,color:'#ec4899',pct:incremental},
+    ];
+    const total=adSales+organic+halo;
+    document.getElementById('contribWrap').innerHTML=items.map(i=>{
+      const pct=total>0?i.val/total*100:0;
+      const w=Math.abs(pct);
+      return `<div class="contribution-bar"><span class="cb-label">${i.label}</span><div class="cb-track"><div class="cb-fill" style="width:${w}%;background:${i.color}">${pct.toFixed(1)}%</div></div><span class="cb-val">$${i.val.toLocaleString()}</span></div>`;
+    }).join('')+
+    `<div style="margin-top:16px;display:flex;gap:24px;justify-content:center"><div style="text-align:center"><div style="font-size:12px;color:var(--muted)">ROAS (广告直接)</div><div style="font-size:24px;font-weight:800;color:var(--primary)">${roas.toFixed(2)}x</div></div><div style="text-align:center"><div style="font-size:12px;color:var(--muted)">iROAS (增量)</div><div style="font-size:24px;font-weight:800;color:var(--success)">${iROAS.toFixed(2)}x</div></div></div>`;
+  },
+  renderInsights(contribution,iROAS,roas,incremental){
+    let insights=[];
+    if(iROAS>3)insights.push({type:'good',icon:'🎯',title:'广告增量效率优秀',desc:`iROAS达${iROAS.toFixed(2)}x，广告每花费$1带来$${iROAS.toFixed(2)}增量销售，建议继续加大投入`});
+    else if(iROAS<1)insights.push({type:'bad',icon:'⚠️',title:'广告增量不足',desc:`iROAS仅${iROAS.toFixed(2)}x，低于1.0说明广告增量销售低于花费，建议优化广告结构`});
+    if(contribution>50)insights.push({type:'warn',icon:'📊',title:'广告依赖度高',desc:`广告贡献度${contribution.toFixed(1)}%超过50%，过度依赖广告驱动销售，建议加强自然排名优化`});
+    if(roas>iROAS*2)insights.push({type:'warn',icon:'🔍',title:'ROAS与iROAS差异大',desc:`ROAS ${roas.toFixed(2)}x远高于iROAS ${iROAS.toFixed(2)}x，说明大量广告销售本可自然产生，建议测试降预算验证增量`});
+    if(insights.length===0)insights.push({type:'good',icon:'✅',title:'归因指标健康',desc:'广告增量贡献合理，ROAS与iROAS差异在正常范围'});
+    document.getElementById('insightWrap').innerHTML=insights.map(i=>{
+      const bg=i.type==='good'?'var(--success-bg)':i.type==='warn'?'var(--warning-bg)':'var(--danger-bg)';
+      const border=i.type==='good'?'#a7f3d0':i.type==='warn'?'#fde68a':'#fecaca';
+      return `<div class="insight-box ${i.type}" style="background:${bg};border:1px solid ${border}"><span style="font-size:20px">${i.icon}</span><div><strong style="font-size:14px">${i.title}</strong><p style="font-size:13px;color:var(--muted);margin-top:2px">${i.desc}</p></div></div>`;
+    }).join('');
+  }
+};
+Attrib.calc();
+</script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="客户旅程地图绘制器(深度版)：5阶段旅程(认知→考虑→购买→使用→推荐)，每阶段触点/情绪/痛点/机会标注，CSS旅程可视化，体验评分。">
+<title>客户旅程地图绘制器 - 5阶段体验分析工具 | 跨境卖家工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.journey-map{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:24px 0}
+.journey-stage{background:var(--surface);border:2px solid var(--rule);border-radius:var(--radius-lg);padding:20px 16px;position:relative;transition:all .2s}
+.journey-stage:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.journey-stage .js-num{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.journey-stage .js-icon{font-size:32px;text-align:center;margin-bottom:8px}
+.journey-stage .js-title{font-size:14px;font-weight:700;text-align:center;margin-bottom:10px;color:var(--accent)}
+.journey-stage .js-section{margin-bottom:10px}
+.journey-stage .js-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.journey-stage .js-touchpoint{font-size:12px;color:var(--ink-soft);padding:3px 0}
+.journey-stage .js-emotion{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-bottom:4px}
+.journey-stage .js-pain{font-size:12px;color:var(--red);padding:2px 0}
+.journey-stage .js-opportunity{font-size:12px;color:var(--green);padding:2px 0}
+.journey-stage .js-score{text-align:center;padding:8px;border-radius:var(--radius-sm);margin-top:8px;font-size:20px;font-weight:800}
+.stage-input{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:20px;margin-bottom:12px}
+.stage-input h4{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.stage-input textarea{width:100%;padding:10px;border:1px solid var(--rule);border-radius:6px;font-size:13px;font-family:inherit;resize:vertical;min-height:60px}
+.experience-score{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}
+.exp-card{padding:16px;border-radius:var(--radius-md);text-align:center}
+.exp-card .ec-score{font-size:28px;font-weight:800}
+.exp-card .ec-label{font-size:11px;color:var(--muted);margin-top:4px}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">客户旅程地图绘制器</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">🗺️ 客户运营工具 (深度版)</span><h1>客户旅程<em>地图绘制器</em></h1><p class="tool-hero-desc">5阶段客户旅程可视化(认知→考虑→购买→使用→推荐)，触点/情绪/痛点/机会全标注，体验评分</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">👥</span><span class="workflow-name">客户运营工作流</span></div><div class="workflow-nav-steps"><a href="variation-strategy.html" class="step">变体策略</a><span class="arrow">→</span><a href="listing-split-test.html" class="step">Listing测试</a><span class="arrow">→</span><a href="refund-rate-calculator.html" class="step">退款率</a><span class="arrow">→</span><a href="customer-ltv.html" class="step">客户LTV</a><span class="arrow">→</span><a href="review-response-generator.html" class="step">评论回复</a><span class="arrow">→</span><a href="review-request-automation.html" class="step">索评自动化</a><span class="arrow">→</span><a href="negative-review-alert-system.html" class="step">差评预警</a><span class="arrow">→</span><a href="buyer-message-manager.html" class="step">站内信</a><span class="arrow">→</span><a href="feedback-management-system.html" class="step">Feedback管理</a><span class="arrow">→</span><a href="customer-journey-mapper.html" class="step current">客户旅程</a><span class="arrow">→</span><a href="review-velocity-tracker.html" class="step">评论增速</a><span class="arrow">→</span><a href="post-purchase-engagement.html" class="step">购后互动</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>🗺️ 客户旅程数据输入</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:16px">为5个阶段(认知→考虑→购买→使用→推荐)输入触点、情绪、痛点和机会</p>
+<div class="stage-input"><h4>1️⃣ 认知阶段</h4>
+<div class="form-row"><div class="form-group"><label>触点 (逗号分隔)</label><input type="text" id="s1_touch" value="广告,搜索,社交媒体" oninput="renderJourney()"></div><div class="form-group"><label>体验评分 (1-10)</label><input type="number" id="s1_score" value="6" min="1" max="10" oninput="renderJourney()"></div></div>
+<textarea id="s1_pain" placeholder="痛点" oninput="renderJourney()">广告不够精准,品牌认知度低</textarea></div>
+<div class="stage-input"><h4>2️⃣ 考虑阶段</h4>
+<div class="form-row"><div class="form-group"><label>触点</label><input type="text" id="s2_touch" value="Listing详情页,评价,对比文章" oninput="renderJourney()"></div><div class="form-group"><label>体验评分</label><input type="number" id="s2_score" value="7" min="1" max="10" oninput="renderJourney()"></div></div>
+<textarea id="s2_pain" placeholder="痛点" oninput="renderJourney()">图片不够清晰,评价数量少</textarea></div>
+<div class="stage-input"><h4>3️⃣ 购买阶段</h4>
+<div class="form-row"><div class="form-group"><label>触点</label><input type="text" id="s3_touch" value="购物车,结算页,支付" oninput="renderJourney()"></div><div class="form-group"><label>体验评分</label><input type="number" id="s3_score" value="8" min="1" max="10" oninput="renderJourney()"></div></div>
+<textarea id="s3_pain" placeholder="痛点" oninput="renderJourney()">运费偏高,支付方式有限</textarea></div>
+<div class="stage-input"><h4>4️⃣ 使用阶段</h4>
+<div class="form-row"><div class="form-group"><label>触点</label><input type="text" id="s4_touch" value="开箱,说明书,产品体验" oninput="renderJourney()"></div><div class="form-group"><label>体验评分</label><input type="number" id="s4_score" value="7" min="1" max="10" oninput="renderJourney()"></div></div>
+<textarea id="s4_pain" placeholder="痛点" oninput="renderJourney()">说明书不够详细,初次使用有门槛</textarea></div>
+<div class="stage-input"><h4>5️⃣ 推荐阶段</h4>
+<div class="form-row"><div class="form-group"><label>触点</label><input type="text" id="s5_touch" value="评价请求,社群分享,复购提醒" oninput="renderJourney()"></div><div class="form-group"><label>体验评分</label><input type="number" id="s5_score" value="5" min="1" max="10" oninput="renderJourney()"></div></div>
+<textarea id="s5_pain" placeholder="痛点" oninput="renderJourney()">缺乏激励机制,分享路径不畅</textarea></div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="post-purchase-engagement.html" class="related-card"><span class="ricon">🎁</span><span class="rtext">购后互动引擎</span></a><a href="feedback-management-system.html" class="related-card"><span class="ricon">📊</span><span class="rtext">Feedback管理</span></a><a href="customer-ltv.html" class="related-card"><span class="ricon">💰</span><span class="rtext">客户LTV</span></a><a href="review-request-automation.html" class="related-card"><span class="ricon">⭐</span><span class="rtext">索评自动化</span></a><a href="buyer-message-manager.html" class="related-card"><span class="ricon">📨</span><span class="rtext">站内信管理</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+var STAGE_DATA=[
+{num:1,icon:'👁️',title:'认知',emotion:'好奇'},
+{num:2,icon:'🤔',title:'考虑',emotion:'比较'},
+{num:3,icon:'🛒',title:'购买',emotion:'期待'},
+{num:4,icon:'📦',title:'使用',emotion:'体验'},
+{num:5,icon:'💬',title:'推荐',emotion:'满意/失望'}
+];
+function renderJourney(){
+var stages=[];
+for(var i=1;i<=5;i++){
+var touch=document.getElementById('s'+i+'_touch').value.trim();
+var score=parseInt(document.getElementById('s'+i+'_score').value)||0;
+var pain=document.getElementById('s'+i+'_pain').value.trim();
+stages.push({touch:touch,score:score,pain:pain});
+}
+var totalScore=stages.reduce(function(s,st){return s+st.score;},0);
+var avgScore=(totalScore/5).toFixed(1);
+var html='<div class="result-card"><h3 style="font-size:18px;font-weight:700;margin-bottom:16px">🗺️ 客户旅程地图</h3>';
+html+='<div class="journey-map">';
+stages.forEach(function(st,i){
+var sd=STAGE_DATA[i];
+var scoreColor=st.score>=8?'var(--green)':st.score>=5?'var(--gold)':'var(--red)';
+var emotionColor=st.score>=7?'var(--green-bg)':st.score>=5?'var(--gold-bg)':'var(--red-bg)';
+var emotionText=st.score>=7?'正面':st.score>=5?'中性':'负面';
+var opportunities=[];
+if(st.score<8){
+if(i===0)opportunities=['优化广告投放精准度','提升品牌搜索可见度'];
+if(i===1)opportunities=['优化Listing图片','增加早期评价'];
+if(i===2)opportunities=['优化运费策略','增加支付方式'];
+if(i===3)opportunities=['改善开箱体验','提供视频教程'];
+if(i===4)opportunities=['建立会员激励','简化分享流程'];
+}
+html+='<div class="journey-stage">';
+html+='<div class="js-num">'+sd.num+'</div>';
+html+='<div class="js-icon">'+sd.icon+'</div>';
+html+='<div class="js-title">'+sd.title+'</div>';
+html+='<div class="js-section"><div class="js-section-label" style="color:var(--accent)">触点</div>';
+st.touch.split(',').forEach(function(t){html+='<div class="js-touchpoint">• '+t.trim()+'</div>';});
+html+='</div>';
+html+='<div class="js-section"><div class="js-section-label" style="color:var(--gold)">情绪</div><span class="js-emotion" style="background:'+emotionColor+';color:'+(st.score>=7?'var(--green)':st.score>=5?'var(--gold)':'var(--red)')+'">'+emotionText+'</span></div>';
+html+='<div class="js-section"><div class="js-section-label" style="color:var(--red)">痛点</div>';
+st.pain.split(/[,，]/).forEach(function(p){if(p.trim())html+='<div class="js-pain">⚠ '+p.trim()+'</div>';});
+html+='</div>';
+html+='<div class="js-section"><div class="js-section-label" style="color:var(--green)">机会</div>';
+opportunities.forEach(function(o){html+='<div class="js-opportunity">✓ '+o+'</div>';});
+html+='</div>';
+html+='<div class="js-score" style="background:'+(st.score>=8?'var(--green-bg)':st.score>=5?'var(--gold-bg)':'var(--red-bg)')+';color:'+scoreColor+'">'+st.score+'/10</div>';
+html+='</div>';
+});
+html+='</div>';
+html+='<div class="experience-score">';
+stages.forEach(function(st,i){
+var sd=STAGE_DATA[i];
+var color=st.score>=8?'var(--green)':st.score>=5?'var(--gold)':'var(--red)';
+var bg=st.score>=8?'var(--green-bg)':st.score>=5?'var(--gold-bg)':'var(--red-bg)';
+html+='<div class="exp-card" style="background:'+bg+'"><div class="ec-score" style="color:'+color+'">'+st.score+'</div><div class="ec-label">'+sd.title+'阶段</div></div>';
+});
+html+='</div>';
+html+='<div style="padding:20px;background:linear-gradient(135deg,var(--accent-bg),var(--green-bg));border-radius:var(--radius-lg);margin-top:16px">';
+html+='<h4 style="font-size:16px;font-weight:700;margin-bottom:10px">📊 体验分析总结</h4>';
+html+='<div style="font-size:14px;color:var(--ink-soft);line-height:1.8">';
+html+='<div>整体体验评分: <strong style="color:'+ (avgScore>=7?'var(--green)':avgScore>=5?'var(--gold)':'var(--red'))+'">'+avgScore+'/10</strong></div>';
+var weakestStage=stages.indexOf(stages.reduce(function(min,st){return st.score<min.score?st:min;}));
+html+='<div>最薄弱环节: <strong style="color:var(--red)">'+STAGE_DATA[weakestStage].title+'阶段 ('+stages[weakestStage].score+'分)</strong></div>';
+var strongestStage=stages.indexOf(stages.reduce(function(max,st){return st.score>max.score?st:max;}));
+html+='<div>最佳体验环节: <strong style="color:var(--green)">'+STAGE_DATA[strongestStage].title+'阶段 ('+stages[strongestStage].score+'分)</strong></div>';
+html+='<div>优化优先级: <strong>'+STAGE_DATA[weakestStage].title+' → '+STAGE_DATA[(weakestStage+1)%5].title+' → 全链路提升</strong></div>';
+html+='</div></div>';
+html+='<div style="margin-top:16px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);font-size:13px;color:var(--muted)">💡 深度洞察：客户旅程5阶段中，推荐阶段往往是最大短板。建议建立系统性购后互动机制(包裹插页→使用指南→社群引导→复购激励→评价请求)，将满意客户转化为品牌传播者。</div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var saved=JSON.parse(localStorage.getItem('jx_journey_map')||'{}');
+saved.lastView=Date.now();
+saved.avgScore=avgScore;
+saved.stages=stages.map(function(s){return s.score;});
+localStorage.setItem('jx_journey_map',JSON.stringify(saved));
+}
+renderJourney();
+
+</script>
+</body>
+</html>

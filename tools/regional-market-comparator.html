@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="区域市场对比器：输入产品类目，输出各站点需求量、竞争度、准入门槛、利润空间对比，CSS对比矩阵，帮你选择最优目标市场。">
+<meta name="keywords" content="区域市场对比,站点选择,需求量分析,竞争度评估,准入门槛,利润空间,跨境电商市场">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/regional-market-comparator.html">
+<title>区域市场对比器 - 需求量·竞争度·准入门槛·利润空间 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.fee-row.total .fr-val{color:var(--red)}
+.fee-row.profit .fr-val{color:var(--green)}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.matrix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.matrix-cell{padding:16px;border-radius:10px;text-align:center;border:1px solid var(--rule);background:#fff;transition:all .3s}
+.matrix-cell .mc-icon{font-size:24px;margin-bottom:6px}
+.matrix-cell .mc-score{font-size:22px;font-weight:800;margin:4px 0}
+.matrix-cell .mc-label{font-size:12px;color:var(--muted)}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.region-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:16px}
+.region-card{padding:18px;border-radius:12px;border:2px solid var(--rule);background:#fff;transition:all .3s;text-align:center}
+.region-card.best{border-color:var(--green);background:var(--green-bg)}
+.region-card .rg-flag{font-size:28px;margin-bottom:6px}
+.region-card .rg-name{font-size:15px;font-weight:700;margin-bottom:8px}
+.region-card .rg-score{font-size:28px;font-weight:800;margin:6px 0}
+.rg-bar{height:6px;border-radius:3px;background:var(--bg-soft);overflow:hidden;margin:4px 0}
+.rg-fill{height:100%;border-radius:3px}
+</style>
+</head>
+<body class="tool-page" data-tool="regional_market_comparator">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🌐</span><span class="workflow-name">多平台运营工作流</span><span class="workflow-step">第12步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="ebay-fees.html" class="step">eBay费用</a>
+      <span class="arrow">→</span>
+      <a href="walmart-fees.html" class="step">Walmart费用</a>
+      <span class="arrow">→</span>
+      <a href="shopify-costs.html" class="step">Shopify成本</a>
+      <span class="arrow">→</span>
+      <a href="tiktok-shop-calc.html" class="step">TikTok利润</a>
+      <span class="arrow">→</span>
+      <a href="temu-pricing.html" class="step">Temu定价</a>
+      <span class="arrow">→</span>
+      <a href="platform-profit-comparison.html" class="step">平台利润对比</a>
+      <span class="arrow">→</span>
+      <a href="cross-platform-listing-sync.html" class="step">Listing同步</a>
+      <span class="arrow">→</span>
+      <a href="aliexpress-fees-calc.html" class="step">速卖通费用</a>
+      <span class="arrow">→</span>
+      <a href="etsy-fees-calc.html" class="step">Etsy费用</a>
+      <span class="arrow">→</span>
+      <a href="multichannel-inventory-allocator.html" class="step">库存分配</a>
+      <span class="arrow">→</span>
+      <a href="platform-selection-matrix.html" class="step">平台选择</a>
+      <span class="arrow">→</span>
+      <span class="step current">区域对比</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌐 多平台运营工作流 · 标准版</span>
+      <h1>区域市场 <em>对比器</em></h1>
+      <p class="tool-hero-desc">输入产品类目，输出Amazon各站点（US/UK/DE/JP/AE/IN等）需求量、竞争度、准入门槛、利润空间对比，CSS对比矩阵，帮你选择最优目标市场。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🌍 区域市场对比</h2>
+          <p class="calc-form-subtitle">输入产品类目和售价，对比各区域市场表现</p>
+          <div class="calc-field"><label>产品类目</label><select id="category" onchange="RMC.calc()">
+            <option value="electronics" selected>3C电子</option>
+            <option value="apparel">服装鞋帽</option>
+            <option value="home">家居园艺</option>
+            <option value="beauty">美妆个护</option>
+            <option value="jewelry">珠宝手表</option>
+            <option value="sports">运动户外</option>
+          </select></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品售价 ($)</label><input type="number" id="price" value="29.99" min="0" step="0.01" oninput="RMC.calc()"></div>
+            <div class="calc-field"><label>采购成本 ($)</label><input type="number" id="cost" value="10" min="0" step="0.01" oninput="RMC.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>头程物流 ($)</label><input type="number" id="logistics" value="4" min="0" step="0.5" oninput="RMC.calc()"></div>
+            <div class="calc-field"><label>关税税率 (%)</label><input type="number" id="tariff" value="5" min="0" max="50" step="0.5" oninput="RMC.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🌍 各区域市场评分卡片</h3>
+        <div class="region-grid" id="regionGrid"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 详细对比矩阵</h3>
+        <table class="data-table" id="compareTable"></table>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="platform-selection-matrix.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第11步</span>平台选择 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="index.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第0步</span>工具中心 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li>
+<li><a href="regional-market-comparator.html">区域市场</a></li>
+<li><a href="platform-profit-comparison.html">平台利润对比</a></li>
+<li><a href="regional-market-comparator.html">区域对比</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var RMC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var REGIONS={
+    'US':{flag:'🇺🇸',name:'美国站',demand:95,competition:85,entry:3,margin:28,vat:0},
+    'UK':{flag:'🇬🇧',name:'英国站',demand:72,competition:65,entry:5,margin:32,vat:20},
+    'DE':{flag:'🇩🇪',name:'德国站',demand:80,competition:60,entry:6,margin:35,vat:19},
+    'JP':{flag:'🇯🇵',name:'日本站',demand:75,competition:55,entry:4,margin:30,vat:10},
+    'AE':{flag:'🇦🇪',name:'阿联酋站',demand:55,competition:35,entry:7,margin:40,vat:5},
+    'IN':{flag:'🇮🇳',name:'印度站',demand:88,competition:45,entry:8,margin:25,vat:18},
+    'AU':{flag:'🇦🇺',name:'澳洲站',demand:50,competition:40,entry:4,margin:33,vat:10},
+    'BR':{flag:'🇧🇷',name:'巴西站',demand:65,competition:30,entry:7,margin:38,vat:17}
+  };
+  var CAT_MOD={
+    electronics:{US:1.0,UK:0.9,DE:1.0,JP:1.1,AE:0.7,IN:0.8,AU:0.8,BR:0.6},
+    apparel:{US:1.0,UK:1.1,DE:0.9,JP:0.8,AE:0.6,IN:0.9,AU:0.9,BR:0.7},
+    home:{US:1.0,UK:0.9,DE:1.0,JP:0.8,AE:0.8,IN:0.7,AU:0.8,BR:0.6},
+    beauty:{US:1.0,UK:1.0,DE:0.9,JP:1.2,AE:0.7,IN:0.8,AU:0.8,BR:0.7},
+    jewelry:{US:1.0,UK:0.9,DE:0.8,JP:0.9,AE:1.1,IN:0.7,AU:0.7,BR:0.5},
+    sports:{US:1.0,UK:0.9,DE:0.9,JP:0.8,AE:0.6,IN:0.7,AU:1.1,BR:0.6}
+  };
+  function sc(s){return s>=75?'score-high':(s>=50?'score-mid':'score-low');}
+  return{
+    calc:function(){
+      var price=v('price'),cost=v('cost'),logistics=v('logistics'),tariff=v('tariff');
+      var cat=$('category').value;var mod=CAT_MOD[cat]||{};
+      var scores={};var profits={};
+      for(var k in REGIONS){
+        var r=REGIONS[k];var m=mod[k]||1.0;
+        var demand=r.demand*m;var competition=r.competition;
+        var profit=price-cost-logistics-price*(tariff/100)-price*0.15;
+        var margin=price>0?(profit/price*100):0;
+        var score=Math.round(demand*0.3+(100-competition)*0.25+(10-r.entry)*0.15+margin*0.3);
+        scores[k]=Math.max(0,Math.min(100,score));profits[k]=profit;
+      }
+      var best=Object.keys(scores).reduce(function(a,b){return scores[a]>scores[b]?a:b;});
+      var html='<h3>🌍 市场对比结果</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">最优市场</div><div class="hc-value">'+REGIONS[best].flag+' '+REGIONS[best].name+'</div><div class="hc-sub">综合评分 '+scores[best]+'</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">预估利润</div><div class="hc-value">$'+profits[best].toFixed(2)+'</div><div class="hc-sub">利润率 '+(profits[best]/price*100).toFixed(1)+'%</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      var sorted=Object.keys(scores).sort(function(a,b){return scores[b]-scores[a];});
+      sorted.forEach(function(k){
+        html+='<div class="fee-row"><span class="fr-lbl">'+REGIONS[k].flag+' '+REGIONS[k].name+'</span><span class="fr-val">'+scores[k]+'分 · $'+profits[k].toFixed(2)+'</span></div>';
+      });
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var gridHtml='';
+      sorted.forEach(function(k){
+        var s=scores[k];var isBest=k===best;
+        gridHtml+='<div class="region-card'+(isBest?' best':'')+'">';
+        gridHtml+='<div class="rg-flag">'+REGIONS[k].flag+'</div>';
+        gridHtml+='<div class="rg-name">'+REGIONS[k].name+(isBest?' ⭐':'')+'</div>';
+        gridHtml+='<div class="rg-score '+sc(s)+'">'+s+'</div>';
+        gridHtml+='<div class="rg-bar"><div class="rg-fill" style="width:'+REGIONS[k].demand+'%;background:var(--accent)"></div></div>';
+        gridHtml+='<div style="font-size:11px;color:var(--muted)">需求 '+Math.round(REGIONS[k].demand*(mod[k]||1))+'</div>';
+        gridHtml+='<div class="rg-bar"><div class="rg-fill" style="width:'+(100-REGIONS[k].competition)+'%;background:var(--green)"></div></div>';
+        gridHtml+='<div style="font-size:11px;color:var(--muted)">竞争 '+(100-REGIONS[k].competition)+'</div>';
+        gridHtml+='</div>';
+      });
+      $('regionGrid').innerHTML=gridHtml;
+      var dtHtml='<thead><tr><th>区域</th><th>需求量</th><th>竞争度</th><th>准入门槛</th><th>利润空间</th><th>总评分</th></tr></thead><tbody>';
+      sorted.forEach(function(k){
+        var s=scores[k];var r=REGIONS[k];var profit=profits[k];
+        dtHtml+='<tr><td style="font-weight:700">'+r.flag+' '+r.name+(k===best?' ⭐':'')+'</td>';
+        dtHtml+='<td>'+Math.round(r.demand*(mod[k]||1))+'/100</td>';
+        dtHtml+='<td>'+(100-r.competition)+'/100</td>';
+        dtHtml+='<td>'+'★'.repeat(r.entry)+'</td>';
+        dtHtml+='<td>$'+profit.toFixed(2)+' ('+(profit/price*100).toFixed(1)+'%)</td>';
+        dtHtml+='<td class="'+sc(s)+'">'+s+'</td></tr>';
+      });
+      dtHtml+='</tbody></table>';
+      $('compareTable').innerHTML=dtHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RMC.calc);}else{RMC.calc();}
+</script>
+</body>
+</html>

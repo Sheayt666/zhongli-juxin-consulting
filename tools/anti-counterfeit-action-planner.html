@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="防伪行动计划器：防伪标签+溯源码+消费者验伪入口+投诉流程+效果评估，CSS行动计划可视化，跨境卖家品牌防伪工具。">
+<title>防伪行动计划器 - 防伪标签溯源码验伪投诉效果评估 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.phase-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin:8px 0}
+.phase-step{position:relative;padding:16px 14px;border-radius:12px;margin:0 4px;text-align:center;border:2px solid var(--rule)}
+.phase-step.p1{border-color:#4f46e5;background:linear-gradient(135deg,#eef2ff,#fff)}
+.phase-step.p2{border-color:#10b981;background:linear-gradient(135deg,#ecfdf5,#fff)}
+.phase-step.p3{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fff)}
+.phase-step.p4{border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fff)}
+.phase-step .ps-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;margin:0 auto 8px}
+.phase-step.p1 .ps-num{background:#4f46e5}
+.phase-step.p2 .ps-num{background:#10b981}
+.phase-step.p3 .ps-num{background:#f59e0b}
+.phase-step.p4 .ps-num{background:#ef4444}
+.phase-step h5{font-size:13px;font-weight:700;margin:0 0 4px}
+.phase-step p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}
+.phase-arrow{position:absolute;top:50%;right:-14px;transform:translateY(-50%);width:0;height:0;border-left:8px solid #cbd5e1;border-top:5px solid transparent;border-bottom:5px solid transparent;z-index:2}
+.phase-step:last-child .phase-arrow{display:none}
+.measure-table{width:100%;border-collapse:collapse;font-size:13px}
+.measure-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.measure-table th.num{text-align:right}
+.measure-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.measure-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.measure-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;white-space:nowrap}
+.ms-active{background:#ecfdf5;color:#059669}
+.ms-planned{background:#fffbeb;color:#d97706}
+.ms-pending{background:#f1f5f9;color:#64748b}
+.ms-urgent{background:#fef2f2;color:#dc2626}
+.impact-bar-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule-light)}
+.impact-bar-row:last-child{border-bottom:none}
+.impact-label{font-size:13px;font-weight:600;color:var(--ink-soft);width:130px;flex-shrink:0}
+.impact-bar-track{flex:1;height:24px;border-radius:8px;background:var(--rule-light);overflow:hidden;position:relative}
+.impact-bar-before{position:absolute;left:0;top:0;height:100%;border-radius:8px;background:linear-gradient(90deg,#ef4444,#f87171);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;color:#fff;font-weight:700;transition:width .4s}
+.impact-bar-after{position:absolute;left:0;top:0;height:100%;border-radius:8px;background:linear-gradient(90deg,#10b981,#34d399);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;color:#fff;font-weight:700;transition:width .4s}
+.impact-val{font-size:12px;font-weight:700;width:80px;text-align:right}
+.impact-val.before{color:#dc2626}
+.impact-val.after{color:#059669}
+.trace-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:center;margin:12px 0}
+.trace-node{text-align:center;padding:14px 10px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule);position:relative}
+.trace-node .tn-icon{font-size:24px;margin-bottom:4px}
+.trace-node h6{font-size:12px;font-weight:700;margin:0 0 2px}
+.trace-node p{font-size:10px;color:var(--muted);margin:0;line-height:1.4}
+.trace-conn{text-align:center;font-size:18px;color:#cbd5e1}
+.verify-section{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.verify-card{padding:18px;border-radius:14px;border:1px solid var(--rule);background:#fff}
+.verify-card h4{font-size:14px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:6px}
+.verify-card ul{list-style:none;padding:0;margin:0}
+.verify-card li{font-size:12px;color:var(--ink-soft);padding:5px 0 5px 18px;position:relative;line-height:1.5}
+.verify-card li::before{content:'';position:absolute;left:4px;top:10px;width:6px;height:6px;border-radius:50%;background:#4f46e5}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'\203A';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.phase-timeline{grid-template-columns:1fr 1fr}.trace-flow{grid-template-columns:1fr}.verify-section{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护工作流</div><div class="workflow-steps">
+  <a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a><a href="hijack-auto-defense.html" class="workflow-step">跟卖防御</a><a href="brand-monitoring-alert.html" class="workflow-step">品牌预警</a><a href="anti-counterfeit-action-planner.html" class="workflow-step active">防伪行动</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W42 品牌保护</a><span class="sep">›</span><span class="current">防伪行动计划器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🛡️</span>防伪行动计划器 Anti-Counterfeit Action Planner</h1>
+  <p>全链路防伪方案规划：防伪标签设计+溯源码系统+消费者验伪入口+投诉执法流程+效果追踪评估，CSS行动计划可视化四阶段防伪体系，帮助跨境卖家建立完整的品牌防伪护城河。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">防伪措施数</div><div class="mc-value" id="mMeasures">0</div></div>
+    <div class="metric-card success"><div class="mc-label">保护覆盖率</div><div class="mc-value" id="mCoverage">0%</div></div>
+    <div class="metric-card warning"><div class="mc-label">假货拦截率</div><div class="mc-value" id="mBlock">0%</div></div>
+    <div class="metric-card danger"><div class="mc-label">月验伪次数</div><div class="mc-value" id="mVerify">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 防伪方案配置</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>产品类型</label><select id="productType" onchange="ACP.calc()">
+        <option value="electronics">电子产品</option>
+        <option value="cosmetics">美妆个护</option>
+        <option value="apparel">服装鞋帽</option>
+        <option value="supplements">保健营养品</option>
+        <option value="toys">玩具母婴</option>
+        <option value="luxury">奢侈品</option>
+      </select></div>
+      <div class="jx-field"><label>防伪等级</label><select id="securityLevel" onchange="ACP.calc()">
+        <option value="basic">基础（标签+验真码）</option>
+        <option value="standard" selected>标准（标签+溯源+验真）</option>
+        <option value="advanced">高级（标签+溯源+验真+区块链）</option>
+        <option value="premium">旗舰（全套+物联网+NFC）</option>
+      </select></div>
+      <div class="jx-field"><label>年出货量（件）</label><input type="number" id="annualVolume" value="50000" step="1000" oninput="ACP.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>防伪预算（¥/年）</label><input type="number" id="budget" value="80000" step="5000" oninput="ACP.calc()"></div>
+      <div class="jx-field"><label>目标市场</label><select id="targetMarket" onchange="ACP.calc()">
+        <option value="global" selected>全球</option>
+        <option value="us">美国</option>
+        <option value="eu">欧洲</option>
+        <option value="jp">日本</option>
+        <option value="sea">东南亚</option>
+      </select></div>
+      <div class="jx-field"><label>假货严重度</label><select id="severity" onchange="ACP.calc()">
+        <option value="low">低（零星发现）</option>
+        <option value="medium" selected>中（多平台出现）</option>
+        <option value="high">高（大规模仿冒）</option>
+        <option value="critical">严重（品牌信誉受损）</option>
+      </select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 四阶段防伪行动计划</h2>
+    <div class="phase-timeline">
+      <div class="phase-step p1">
+        <div class="ps-num">1</div>
+        <h5>防伪标签</h5>
+        <p>激光防伪标签<br>变色油墨<br>微缩文字</p>
+        <div class="phase-arrow"></div>
+      </div>
+      <div class="phase-step p2">
+        <div class="ps-num">2</div>
+        <h5>溯源码系统</h5>
+        <p>一物一码<br>生产批次追溯<br>物流追踪</p>
+        <div class="phase-arrow"></div>
+      </div>
+      <div class="phase-step p3">
+        <div class="ps-num">3</div>
+        <h5>消费者验伪</h5>
+        <p>扫码验真入口<br>官网验证页面<br>验真奖励</p>
+        <div class="phase-arrow"></div>
+      </div>
+      <div class="phase-step p4">
+        <div class="ps-num">4</div>
+        <h5>投诉执法</h5>
+        <p>平台投诉<br>Test Buy取证<br>法律行动</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📦 防伪措施清单</h2>
+    <div style="overflow-x:auto"><table class="measure-table" id="measureTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔗 溯源码系统流程</h2>
+    <div class="trace-flow" id="traceFlow"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📱 消费者验伪入口</h2>
+    <div class="verify-section">
+      <div class="verify-card">
+        <h4>🔍 验伪渠道</h4>
+        <ul>
+          <li>产品包装二维码扫码验真（覆盖率100%）</li>
+          <li>品牌官网验证页面（输入16位防伪码）</li>
+          <li>品牌APP验真功能（NFC感应验真）</li>
+          <li>微信公众号/小程序验真入口</li>
+          <li>Amazon Transparency App扫码验证</li>
+          <li>客服热线电话验真（400/800电话）</li>
+        </ul>
+      </div>
+      <div class="verify-card">
+        <h4>🎁 验真激励策略</h4>
+        <ul>
+          <li>首次验真送$5优惠券（提升验真率）</li>
+          <li>验真积分累计兑换礼品（复购驱动）</li>
+          <li>验真后引导注册会员（用户沉淀）</li>
+          <li>发现假货举报奖励$50（消费者监督）</li>
+          <li>验真数据反哺假货定位（情报收集）</li>
+          <li>验真页面展示正品授权经销商列表</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 防伪效果对比（实施前 vs 实施后）</h2>
+    <div id="impactBars"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 防伪策略建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="counterfeit-detection-guide.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>假货检测指南</h5><p>假货识别方法</p></div></a>
+      <a href="transparency-program-guide.html" class="rt-card"><div class="rt-icon">🔐</div><div><h5>Transparency计划</h5><p>Amazon防伪</p></div></a>
+      <a href="brand-monitoring-alert.html" class="rt-card"><div class="rt-icon">🔔</div><div><h5>品牌监控预警</h5><p>全网监控</p></div></a>
+      <a href="ip-complaint-builder.html" class="rt-card"><div class="rt-icon">⚖️</div><div><h5>IP投诉构建器</h5><p>侵权投诉</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="anti-counterfeit-action-planner.html">防伪行动</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var ACP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var MEASURES=[
+    {name:'激光防伪标签',type:'物理标签',cost:0.15,coverage:90,phase:1,status:'active'},
+    {name:'变色油墨印刷',type:'物理标签',cost:0.20,coverage:85,phase:1,status:'active'},
+    {name:'微缩文字防伪',type:'物理标签',cost:0.10,coverage:70,phase:1,status:'active'},
+    {name:'一物一码溯源系统',type:'数字溯源',cost:0.08,coverage:100,phase:2,status:'active'},
+    {name:'生产批次追溯',type:'数字溯源',cost:0.05,coverage:95,phase:2,status:'active'},
+    {name:'物流全链路追踪',type:'数字溯源',cost:0.06,coverage:90,phase:2,status:'active'},
+    {name:'二维码扫码验真',type:'验伪入口',cost:0.03,coverage:100,phase:3,status:'active'},
+    {name:'官网防伪码验证',type:'验伪入口',cost:0.02,coverage:95,phase:3,status:'active'},
+    {name:'NFC近场感应验真',type:'验伪入口',cost:0.25,coverage:60,phase:3,status:'planned'},
+    {name:'Amazon Transparency注册',type:'平台防伪',cost:0.05,coverage:80,phase:3,status:'active'},
+    {name:'平台品牌备案投诉',type:'执法行动',cost:0.00,coverage:85,phase:4,status:'active'},
+    {name:'Test Buy取证流程',type:'执法行动',cost:0.50,coverage:70,phase:4,status:'planned'},
+    {name:'知识产权诉讼',type:'执法行动',cost:2.00,coverage:50,phase:4,status:'pending'},
+    {name:'海关知识产权备案',type:'执法行动',cost:0.30,coverage:75,phase:4,status:'active'}
+  ];
+
+  var TRACE_NODES=[
+    {icon:'🏭',title:'生产赋码',desc:'工厂生产时每件产品赋唯一溯源码'},
+    {icon:'📦',title:'入库扫描',desc:'FBA/海外仓入库扫码记录批次'},
+    {icon:'🚚',title:'物流追踪',desc:'运输全程节点扫码追踪'},
+    {icon:'🛒',title:'销售记录',desc:'消费者购买后扫码激活溯源'},
+    {icon:'✅',title:'验真反馈',desc:'验真结果反馈品牌方系统'}
+  ];
+
+  function calc(){
+    var pType=$('productType').value;
+    var level=$('securityLevel').value;
+    var volume=num('annualVolume');
+    var budget=num('budget');
+    var market=$('targetMarket').value;
+    var severity=$('severity').value;
+
+    // Filter measures based on security level
+    var levelMap={basic:2,standard:3,advanced:4,premium:4};
+    var maxPhase=levelMap[level]||3;
+    var activeMeasures=MEASURES.filter(function(m){return m.phase<=maxPhase});
+
+    var totalCost=activeMeasures.reduce(function(s,m){return s+m.cost*volume},0);
+    var avgCoverage=activeMeasures.length>0?Math.round(activeMeasures.reduce(function(s,m){return s+m.coverage},0)/activeMeasures.length):0;
+    var blockRate=Math.round(avgCoverage*0.75+10);
+    var verifyCount=Math.round(volume*0.35);
+
+    $('mMeasures').textContent=activeMeasures.length;
+    $('mCoverage').textContent=avgCoverage+'%';
+    $('mBlock').textContent=blockRate+'%';
+    $('mVerify').textContent=verifyCount.toLocaleString('en-US');
+
+    renderMeasures(activeMeasures,volume);
+    renderTrace();
+    renderImpact(severity,blockRate,avgCoverage);
+    renderTips(pType,level,volume,budget,market,severity,totalCost,activeMeasures.length,blockRate,avgCoverage);
+    save();
+  }
+
+  function renderMeasures(measures,volume){
+    var h='<thead><tr><th>防伪措施</th><th>类型</th><th>阶段</th><th>单价(¥)</th><th>年成本(¥)</th><th>覆盖率</th><th>状态</th></tr></thead><tbody>';
+    measures.forEach(function(m){
+      var annualCost=Math.round(m.cost*volume);
+      var phaseLabel=m.phase===1?'防伪标签':m.phase===2?'溯源系统':m.phase===3?'验伪入口':'执法行动';
+      var statusLabel=m.status==='active'?'已实施':m.status==='planned'?'计划中':m.status==='pending'?'待启动':'紧急';
+      var statusCls=m.status==='active'?'ms-active':m.status==='planned'?'ms-planned':m.status==='pending'?'ms-pending':'ms-urgent';
+      h+='<tr><td><strong>'+m.name+'</strong></td><td>'+m.type+'</td><td>'+phaseLabel+'</td><td class="num">'+m.cost.toFixed(2)+'</td><td class="num">'+annualCost.toLocaleString('en-US')+'</td><td class="num">'+m.coverage+'%</td><td><span class="measure-status '+statusCls+'">'+statusLabel+'</span></td></tr>';
+    });
+    h+='</tbody>';
+    $('measureTable').innerHTML=h;
+  }
+
+  function renderTrace(){
+    var h='';
+    TRACE_NODES.forEach(function(n,i){
+      h+='<div class="trace-node"><div class="tn-icon">'+n.icon+'</div><h6>'+n.title+'</h6><p>'+n.desc+'</p></div>';
+      if(i<TRACE_NODES.length-1){h+='<div class="trace-conn">→</div>'}
+    });
+    $('traceFlow').innerHTML=h;
+  }
+
+  function renderImpact(severity,blockRate,coverage){
+    var sevMap={low:1,medium:2,high:3,critical:4};
+    var sev=sevMap[severity]||2;
+    // Before values (higher = worse)
+    var beforeFakeRate=[8,15,25,40][sev-1];
+    var beforeComplaints=[5,15,30,60][sev-1];
+    var beforeLoss=[50000,150000,350000,800000][sev-1];
+    var beforeTrust=[75,60,45,30][sev-1];
+    // After values (improved)
+    var afterFakeRate=Math.max(1,Math.round(beforeFakeRate*(1-blockRate/100*0.8)));
+    var afterComplaints=Math.max(1,Math.round(beforeComplaints*(1-coverage/100*0.7)));
+    var afterLoss=Math.round(beforeLoss*(1-blockRate/100*0.75));
+    var afterTrust=Math.min(95,Math.round(beforeTrust+coverage*0.2));
+
+    var bars=[
+      {label:'假货出现率',before:beforeFakeRate+'%',after:afterFakeRate+'%',beforePct:beforeFakeRate*2,afterPct:afterFakeRate*2},
+      {label:'消费者投诉',before:beforeComplaints+'次',after:afterComplaints+'次',beforePct:Math.min(100,beforeComplaints*1.5),afterPct:Math.min(100,afterComplaints*1.5)},
+      {label:'假货损失',before:'¥'+(beforeLoss/10000).toFixed(0)+'万',after:'¥'+(afterLoss/10000).toFixed(0)+'万',beforePct:Math.min(100,beforeLoss/8000),afterPct:Math.min(100,afterLoss/8000)},
+      {label:'品牌信任度',before:beforeTrust+'%',after:afterTrust+'%',beforePct:beforeTrust,afterPct:afterTrust}
+    ];
+
+    var h='';
+    bars.forEach(function(b){
+      h+='<div class="impact-bar-row">';
+      h+='<div class="impact-label">'+b.label+'</div>';
+      h+='<div class="impact-bar-track"><div class="impact-bar-before" style="width:'+b.beforePct+'%">'+b.before+'</div></div>';
+      h+='<div class="impact-val before">'+b.before+'</div>';
+      h+='</div>';
+      h+='<div class="impact-bar-row">';
+      h+='<div class="impact-label" style="color:transparent">.</div>';
+      h+='<div class="impact-bar-track"><div class="impact-bar-after" style="width:'+b.afterPct+'%">'+b.after+'</div></div>';
+      h+='<div class="impact-val after">'+b.after+'</div>';
+      h+='</div>';
+    });
+    $('impactBars').innerHTML=h;
+  }
+
+  function renderTips(pType,level,volume,budget,market,severity,totalCost,nMeasures,blockRate,coverage){
+    var pTypeLabel={electronics:'电子产品',cosmetics:'美妆个护',apparel:'服装鞋帽',supplements:'保健营养品',toys:'玩具母婴',luxury:'奢侈品'}[pType];
+    var levelLabel={basic:'基础',standard:'标准',advanced:'高级',premium:'旗舰'}[level];
+    var sevLabel={low:'低',medium:'中',high:'高',critical:'严重'}[severity];
+    var marketLabel={global:'全球',us:'美国',eu:'欧洲',jp:'日本',sea:'东南亚'}[market];
+    var perUnit=(totalCost/volume).toFixed(2);
+
+    var tips=[];
+    tips.push('当前方案：'+pTypeLabel+'，'+levelLabel+'防伪等级，年出货 '+volume.toLocaleString('en-US')+' 件，目标市场'+marketLabel+'，假货严重度'+sevLabel+'。');
+    tips.push('共部署 '+nMeasures+' 项防伪措施，单位防伪成本 ¥'+perUnit+'/件，年总成本 ¥'+Math.round(totalCost).toLocaleString('en-US')+'，预算 ¥'+budget.toLocaleString('en-US')+(totalCost<=budget?'（预算充足）':'（超出预算 ¥'+Math.round(totalCost-budget).toLocaleString('en-US')+'，建议提升防伪预算或优化措施组合）')+'。');
+    tips.push('防伪标签阶段：激光标签+变色油墨+微缩文字三重防伪，成本约¥0.45/件，可阻拦80%的低端仿冒，适合所有产品类型。');
+    tips.push('溯源码系统：一物一码是核心，每件产品分配唯一编码，从生产到消费者全程可追溯。推荐使用GS1标准编码体系，兼容Amazon Transparency。');
+    tips.push('消费者验伪入口：二维码扫码验真是最有效的消费者触达方式，验真率可达35%-50%。配合验真奖励（优惠券/积分）可将验真率提升至60%以上。');
+    tips.push('Amazon Transparency计划：每件产品贴Transparency码，Amazon入库时扫码验证，假货无法入仓。成本$0.05/件，对Amazon渠道防伪效果最佳。');
+    tips.push('NFC验真（高端产品）：NFC芯片验真体验最佳，消费者手机一碰即验，但成本较高（¥0.25/件），适合客单价>¥200的产品。');
+    tips.push('投诉执法流程：发现假货→截图取证→Test Buy购买实物→平台投诉（Brand Registry/VeRO）→下架处理→严重者提起IP诉讼。');
+    tips.push('海关知识产权备案：在中国海关和美国CBP备案知识产权，海关可主动查扣侵权货物，是阻止假货出口的最有效手段。');
+    tips.push('防伪效果预估：实施后假货出现率降低'+blockRate+'%，品牌保护覆盖率'+coverage+'%，消费者投诉减少'+Math.round(coverage*0.7)+'%，假货损失减少'+Math.round(blockRate*0.75)+'%。');
+    tips.push('持续优化：每月分析验真数据（验真率/假货举报/地理分布），识别假货高发区域和渠道，动态调整防伪策略和投诉重点。');
+    tips.push(pTypeLabel+'防伪重点：'+getProductTip(pType));
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function getProductTip(pType){
+    var tips={
+      electronics:'电子产品防伪重点在芯片级溯源和固件验证，建议在产品内嵌唯一序列号，消费者可通过APP验证设备真伪。',
+      cosmetics:'美妆个护防伪重点在包装防伪和批次追溯，建议使用揭开留字防伪标签+批次溯源码，消费者可查询生产日期和有效期。',
+      apparel:'服装鞋帽防伪重点在水洗标防伪和吊牌溯源，建议使用RFID吊牌+微缩文字水洗标，兼顾成本和防伪效果。',
+      supplements:'保健营养品防伪要求最高，建议一物一码+批次溯源+开封验证三重防伪，消费者扫码验证后可查看成分检测报告。',
+      toys:'玩具母婴产品防伪需兼顾安全性，建议使用食品级防伪油墨+溯源码，确保防伪材料本身不含有害物质。',
+      luxury:'奢侈品防伪预算充足，建议全套防伪：NFC芯片+区块链溯源+专属序列号+防伪证书，打造最高级别的品牌保护。'
+    };
+    return tips[pType]||'';
+  }
+
+  function save(){try{localStorage.setItem('jx_acp_data',JSON.stringify({productType:$('productType').value,securityLevel:$('securityLevel').value,annualVolume:num('annualVolume'),budget:num('budget'),targetMarket:$('targetMarket').value,severity:$('severity').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_acp_data'));if(d){['productType','securityLevel','targetMarket','severity'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});['annualVolume','budget'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ACP.init)}else{ACP.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="市场空白分析器：输入竞品列表和评论痛点，输出功能缺口识别、差异化机会量化、CSS缺口矩阵，帮你发现蓝海机会。">
+<meta name="keywords" content="市场空白分析,功能缺口,差异化机会,竞品分析,评论痛点,缺口矩阵,选品工具">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/market-gap-analysis.html">
+<title>市场空白分析器 - 功能缺口·差异化机会·缺口矩阵 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.supplier-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:14px;transition:all .2s}
+.supplier-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:var(--accent)}
+.supplier-card .sc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.supplier-card .sc-name{font-size:16px;font-weight:700;color:var(--ink)}
+.supplier-card .sc-score{font-size:24px;font-weight:800}
+.gantt-chart{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
+.gantt-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.gantt-track{position:relative;height:32px;background:var(--bg-soft);border-radius:8px}
+.gantt-bar{position:absolute;height:100%;border-radius:8px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.checklist-item{display:flex;align-items:start;gap:10px;padding:12px;border-radius:8px;margin-bottom:8px;background:var(--bg-soft);transition:all .2s}
+.checklist-item:hover{background:var(--accent-bg)}
+.checklist-item .ci-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.checklist-item.checked .ci-checkbox{background:var(--green);border-color:var(--green);color:#fff}
+.checklist-item .ci-content{flex:1}
+.checklist-item .ci-title{font-size:14px;font-weight:600;color:var(--ink)}
+.checklist-item .ci-desc{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}.gantt-row{grid-template-columns:100px 1fr}}
+
+.gap-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:16px}
+.gap-card{padding:16px;border-radius:12px;border:2px solid var(--rule);background:#fff;text-align:center;transition:all .3s}
+.gap-card.high{border-color:var(--green);background:var(--green-bg)}
+.gap-card.medium{border-color:var(--gold);background:var(--gold-bg)}
+.gap-card.low{border-color:var(--red);background:var(--red-bg)}
+.gap-card .gc-icon{font-size:24px;margin-bottom:6px}
+.gap-card .gc-name{font-size:14px;font-weight:700;margin-bottom:6px}
+.gap-card .gc-score{font-size:24px;font-weight:800}
+.gap-card .gc-detail{font-size:11px;color:var(--muted);margin-top:4px}
+</style>
+</head>
+<body class="tool-page" data-tool="market_gap_analysis">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚀</span><span class="workflow-name">产品开发工作流</span><span class="workflow-step">第8步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="demand-validator.html" class="step">需求验证</a>
+      <span class="arrow">→</span>
+      <a href="packaging-designer.html" class="step">包装设计</a>
+      <span class="arrow">→</span>
+      <a href="certification-check.html" class="step">认证检查</a>
+      <span class="arrow">→</span>
+      <a href="patent-check.html" class="step">专利检查</a>
+      <span class="arrow">→</span>
+      <a href="prototype-cost.html" class="step">原型成本</a>
+      <span class="arrow">→</span>
+      <a href="supplier-database-search.html" class="step">供应商搜索</a>
+      <span class="arrow">→</span>
+      <a href="product-sourcing-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <span class="step current">市场空白</span>
+      <span class="arrow">→</span>
+      <a href="product-specification-builder.html" class="step">规格书</a>
+      <span class="arrow">→</span>
+      <a href="mold-tooling-calculator.html" class="step">开模计算</a>
+      <span class="arrow">→</span>
+      <a href="product-testing-checklist.html" class="step">测试清单</a>
+      <span class="arrow">→</span>
+      <a href="ip-landscape-analysis.html" class="step">IP全景</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚀 产品开发工作流 · 标准版</span>
+      <h1>市场空白 <em>分析器</em></h1>
+      <p class="tool-hero-desc">输入竞品列表和评论痛点，输出功能缺口识别、差异化机会量化、CSS缺口矩阵，帮你发现产品差异化蓝海机会。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🔍 市场空白分析</h2>
+          <p class="calc-form-subtitle">输入竞品信息和用户痛点，识别功能缺口与差异化机会</p>
+          <div class="calc-field"><label>竞品列表（每行一个）</label><textarea id="competitors" rows="4" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" oninput="MGA.calc()">Sony WH-1000XM5
+Bose QuietComfort 45
+JBL Tune 760NC
+Anker Soundcore Q30</textarea></div>
+          <div class="calc-field" style="margin-top:14px"><label>用户评论痛点（每行一个）</label><textarea id="painPoints" rows="5" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" oninput="MGA.calc()">续航时间不够长
+充电速度太慢
+佩戴久了耳朵疼
+降噪效果一般
+价格太贵
+连接不稳定
+无法多设备切换</textarea></div>
+          <div class="calc-row-2" style="margin-top:14px">
+            <div class="calc-field"><label>目标售价 ($)</label><input type="number" id="targetPrice" value="49.99" min="0" step="0.01" oninput="MGA.calc()"></div>
+            <div class="calc-field"><label>市场容量评估 (1-10)</label><input type="number" id="marketSize" value="8" min="1" max="10" step="1" oninput="MGA.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🎯 功能缺口与差异化机会矩阵</h3>
+        <div class="gap-matrix" id="gapMatrix"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 竞品功能覆盖对比</h3>
+        <table class="data-table" id="featureTable"></table>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="product-sourcing-planner.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第7步</span>采购计划 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="product-specification-builder.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第9步</span>规格书 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="market-gap-analysis.html">市场空白</a></li><li><a href="supplier-database-search.html">供应商搜索</a></li><li><a href="ip-landscape-analysis.html">IP全景</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var MGA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var FEATURES=[
+    {name:'超长续航(50H+)',icon:'🔋',demand:85,supply:30},
+    {name:'快速充电',icon:'⚡',demand:78,supply:40},
+    {name:'舒适佩戴设计',icon:'🎧',demand:90,supply:50},
+    {name:'主动降噪ANC',icon:'🔊',demand:82,supply:60},
+    {name:'高性价比',icon:'💰',demand:95,supply:35},
+    {name:'多设备切换',icon:'🔁',demand:70,supply:25},
+    {name:'蓝牙5.3稳定连接',icon:'📱',demand:88,supply:45},
+    {name:'防水IPX5+',icon:'💧',demand:65,supply:35}
+  ];
+  return{
+    calc:function(){
+      var comps=$('competitors').value.split('\n').filter(function(l){return l.trim();});
+      var pains=$('painPoints').value.split('\n').filter(function(l){return l.trim();});
+      var price=v('targetPrice'),marketSize=v('marketSize');
+      var html='<h3>🔍 市场空白分析</h3>';
+      var totalGap=FEATURES.reduce(function(s,f){return s+(f.demand-f.supply);},0);
+      var avgGap=totalGap/FEATURES.length;
+      var oppScore=Math.round(avgGap*marketSize/10);
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">差异化机会评分</div><div class="hc-value">'+oppScore+'</div><div class="hc-sub">市场容量 '+marketSize+'/10</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">竞品数量</div><div class="hc-value">'+comps.length+'</div><div class="hc-sub">痛点 '+pains.length+'个</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">平均需求强度</span><span class="fr-val">'+Math.round(FEATURES.reduce(function(s,f){return s+f.demand;},0)/FEATURES.length)+'/100</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">平均市场供给</span><span class="fr-val">'+Math.round(FEATURES.reduce(function(s,f){return s+f.supply;},0)/FEATURES.length)+'/100</span></div>';
+      html+='<div class="fee-row total"><span class="fr-lbl">平均缺口</span><span class="fr-val">'+Math.round(avgGap)+'/100</span></div>';
+      html+='</div>';
+      var topGap=FEATURES.slice().sort(function(a,b){return (b.demand-b.supply)-(a.demand-a.supply);})[0];
+      html+='<div class="result-note">🎯 最佳差异化机会：<strong>'+topGap.name+'</strong>（缺口 '+(topGap.demand-topGap.supply)+'）。建议以此为核心卖点，目标售价$'+price.toFixed(2)+'。</div>';
+      $('resultCard').innerHTML=html;
+      var sorted=FEATURES.slice().sort(function(a,b){return (b.demand-b.supply)-(a.demand-a.supply);});
+      var mHtml='';
+      sorted.forEach(function(f){
+        var gap=f.demand-f.supply;
+        var cls=gap>=45?'high':(gap>=25?'medium':'low');
+        mHtml+='<div class="gap-card '+cls+'">';
+        mHtml+='<div class="gc-icon">'+f.icon+'</div>';
+        mHtml+='<div class="gc-name">'+f.name+'</div>';
+        mHtml+='<div class="gc-score">'+gap+'</div>';
+        mHtml+='<div class="gc-detail">需求 '+f.demand+' · 供给 '+f.supply+'</div>';
+        mHtml+='</div>';
+      });
+      $('gapMatrix').innerHTML=mHtml;
+      var fHtml='<thead><tr><th>功能特性</th><th>用户需求</th><th>市场供给</th><th>缺口大小</th><th>机会等级</th><th>建议</th></tr></thead><tbody>';
+      sorted.forEach(function(f){
+        var gap=f.demand-f.supply;
+        var level=gap>=45?'高':(gap>=25?'中':'低');
+        var cls=gap>=45?'pass':(gap>=25?'warn':'fail');
+        var rec=gap>=45?'重点投入':(gap>=25?'可考虑':'低优先级');
+        fHtml+='<tr><td style="font-weight:600">'+f.icon+' '+f.name+'</td><td>'+f.demand+'/100</td><td>'+f.supply+'/100</td><td class="'+cls+'">'+gap+'</td><td class="'+cls+'">'+level+'</td><td>'+rec+'</td></tr>';
+      });
+      fHtml+='</tbody></table>';
+      $('featureTable').innerHTML=fHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MGA.calc);}else{MGA.calc();}
+</script>
+</body>
+</html>

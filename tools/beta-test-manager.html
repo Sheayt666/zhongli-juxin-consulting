@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Beta测试管理器：测试用户招募+反馈收集+Bug追踪+改进优先级，CSS测试看板与反馈矩阵。免费产品开发管理工具。">
+<meta name="keywords" content="Beta测试,测试管理,Bug追踪,用户反馈,改进优先级,产品开发">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/beta-test-manager.html">
+<title>Beta测试管理器 - 用户招募·反馈收集·Bug追踪 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.kanban-col{background:var(--bg-soft);border-radius:12px;padding:14px;min-height:200px}
+.kanban-col-header{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.kanban-col-count{background:#4f46e5;color:#fff;padding:1px 8px;border-radius:10px;font-size:11px}
+.bug-card{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:12px;margin-bottom:8px;transition:all .2s;cursor:pointer}
+.bug-card:hover{box-shadow:var(--shadow-md);border-color:#4f46e5}
+.bug-card .bc-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.bug-card .bc-meta{display:flex;gap:8px;font-size:11px;color:var(--muted)}
+.severity-badge{display:inline-block;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.sev-p0{background:#fee2e2;color:#dc2626}
+.sev-p1{background:#fef3c7;color:#d97706}
+.sev-p2{background:#dbeafe;color:#2563eb}
+.sev-p3{background:#d1fae5;color:#059669}
+.feedback-matrix{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:16px}
+.fm-header{background:#4f46e5;color:#fff;padding:8px;text-align:center;font-size:12px;font-weight:600;border-radius:6px}
+.fm-label{background:var(--bg-soft);padding:8px;text-align:center;font-size:12px;font-weight:600;color:var(--ink-soft);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.fm-cell{padding:12px;border-radius:6px;font-size:12px;text-align:center;min-height:50px;display:flex;align-items:center;justify-content:center}
+.btn-add{padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.btn-del{padding:2px 8px;border-radius:4px;border:1px solid #ef4444;background:#fff;font-size:10px;cursor:pointer;color:#ef4444}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
+@media(max-width:768px){.kanban-board{grid-template-columns:1fr 1fr}.feedback-matrix{font-size:11px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Beta测试管理器","description":"测试用户招募+反馈收集+Bug追踪+改进优先级。","url":"https://juxin-consulting.help/tools/beta-test-manager.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="beta_test_manager">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🔧</span><span class="workflow-name">产品开发管理工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="prd-template.html" class="step">PRD模板</a><span class="arrow">→</span>
+      <a href="mvp-definer.html" class="step">MVP定义</a><span class="arrow">→</span>
+      <a href="feature-priority-matrix.html" class="step">功能优先级</a><span class="arrow">→</span>
+      <a href="user-story-generator.html" class="step">用户故事</a><span class="arrow">→</span>
+      <a href="product-roadmap.html" class="step">产品路线图</a><span class="arrow">→</span>
+      <a href="acceptance-criteria.html" class="step">验收标准</a><span class="arrow">→</span>
+      <a href="competitive-feature-matrix.html" class="step">竞品功能矩阵</a><span class="arrow">→</span>
+      <a href="wbs-generator.html" class="step">WBS分解</a><span class="arrow">→</span>
+      <a href="lifecycle-cost.html" class="step">生命周期成本</a><span class="arrow">→</span>
+      <a href="product-launch-checklist.html" class="step">发布清单</a><span class="arrow">→</span>
+      <a href="sprint-planner.html" class="step">迭代规划</a><span class="arrow">→</span>
+      <span class="step current">Beta测试</span><span class="arrow">→</span>
+      <a href="release-notes-generator.html" class="step">发版说明</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔧 产品开发管理工具 · 标准版</span>
+      <h1>Beta测试<em>管理器</em></h1>
+      <p class="tool-hero-desc">管理Beta测试用户招募、反馈收集、Bug追踪全流程，CSS看板可视化Bug状态，反馈矩阵定位改进优先级，localStorage持久化(jx_beta_bugs)。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+          <h2 style="margin:0">📋 Bug与反馈看板</h2>
+          <button class="btn-add" onclick="BTM.openModal()">+ 添加Bug</button>
+        </div>
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <div class="kanban-board" id="kanbanBoard"></div>
+      </div>
+
+      <div class="section-block" id="matrixSection">
+        <h3>📊 反馈优先级矩阵</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">纵轴：用户影响 | 横轴：出现频率</p>
+        <div class="feedback-matrix" id="feedbackMatrix"></div>
+      </div>
+
+      <div class="section-block" id="improvementSection">
+        <h3>🎯 改进优先级排序</h3>
+        <div id="improvementList"></div>
+      </div>
+
+      <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+          <h3>添加Bug/反馈</h3>
+          <div class="calc-field"><label>问题描述</label><input type="text" id="mTitle" placeholder="如 支付页面加载缓慢"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>严重程度</label><select id="mSeverity"><option value="P0">P0-阻断</option><option value="P1">P1-严重</option><option value="P2" selected>P2-一般</option><option value="P3">P3-轻微</option></select></div>
+            <div class="calc-field"><label>状态</label><select id="mStatus"><option value="new" selected>新建</option><option value="in-progress">处理中</option><option value="resolved">已解决</option><option value="closed">已关闭</option></select></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>影响用户数</label><input type="number" id="mImpact" value="10" placeholder="受影响用户数"></div>
+            <div class="calc-field"><label>出现次数</label><input type="number" id="mFrequency" value="5" placeholder="出现次数"></div>
+          </div>
+          <div class="calc-field"><label>报告人</label><input type="text" id="mReporter" placeholder="如 user_001"></div>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <button class="btn-add" onclick="BTM.saveModal()">保存</button>
+            <button onclick="BTM.closeModal()" style="padding:10px 20px;border-radius:10px;border:1px solid var(--rule);background:#fff;font-size:14px;cursor:pointer">取消</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="sprint-planner.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 迭代规划</span></a>
+        <a href="release-notes-generator.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">发版说明 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="beta-test-manager.html">Beta测试</a></li><li><a href="sprint-planner.html">迭代规划</a></li><li><a href="release-notes-generator.html">发版说明</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var BTM=(function(){
+  'use strict';
+  var KEY='jx_beta_bugs';
+  var data=[];
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function load(){
+    try{var s=localStorage.getItem(KEY);if(s)data=JSON.parse(s)||[];}catch(e){data=[];}
+    if(!data.length){
+      data=[
+        {title:'支付页面白屏',severity:'P0',status:'resolved',impact:50,frequency:20,reporter:'user_001'},
+        {title:'商品图片不显示',severity:'P1',status:'in-progress',impact:30,frequency:15,reporter:'user_005'},
+        {title:'搜索功能无响应',severity:'P1',status:'new',impact:25,frequency:8,reporter:'user_012'},
+        {title:'优惠券无法使用',severity:'P2',status:'new',impact:15,frequency:10,reporter:'user_008'},
+        {title:'页面加载缓慢',severity:'P2',status:'in-progress',impact:40,frequency:25,reporter:'user_003'},
+        {title:'按钮文字溢出',severity:'P3',status:'closed',impact:5,frequency:3,reporter:'user_015'},
+        {title:'订单状态不更新',severity:'P1',status:'new',impact:20,frequency:6,reporter:'user_007'},
+        {title:'评价提交失败',severity:'P2',status:'resolved',impact:10,frequency:5,reporter:'user_020'}
+      ];
+      save();
+    }
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+  function statusLabel(s){return{sew:'new'}.hasOwnProperty?{new:'新建',inprogress:'处理中',resolved:'已解决',closed:'已关闭'}[s]:s;}
+  function calc(){
+    var counts={new:0,inprogress:0,resolved:0,closed:0};
+    var p0=0,p1=0;
+    data.forEach(function(d){
+      var k=d.status==='in-progress'?'inprogress':d.status;
+      counts[k]=(counts[k]||0)+1;
+      if(d.severity==='P0')p0++;
+      if(d.severity==='P1')p1++;
+    });
+    var resolveRate=data.length?Math.round((counts.resolved+counts.closed)/data.length*100):0;
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+data.length+'</div><div class="rsb-lbl">Bug总数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+p0+'</div><div class="rsb-lbl">P0阻断</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+p1+'</div><div class="rsb-lbl">P1严重</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+resolveRate+'%</div><div class="rsb-lbl">解决率</div></div>';
+    var cols=[
+      {key:'new',label:'新建',color:'#4f46e5'},
+      {key:'inprogress',label:'处理中',color:'#f59e0b'},
+      {key:'resolved',label:'已解决',color:'#10b981'},
+      {key:'closed',label:'已关闭',color:'#94a3b8'}
+    ];
+    $('kanbanBoard').innerHTML=cols.map(function(col){
+      var items=data.filter(function(d){
+        var k=d.status==='in-progress'?'inprogress':d.status;
+        return k===col.key;
+      });
+      return '<div class="kanban-col"><div class="kanban-col-header"><span>'+col.label+'</span><span class="kanban-col-count" style="background:'+col.color+'">'+items.length+'</span></div>'+
+        items.map(function(d){
+          return '<div class="bug-card"><div class="bc-title">'+d.title+'</div><div class="bc-meta"><span class="severity-badge sev-'+d.severity.toLowerCase()+'">'+d.severity+'</span><span>影响'+d.impact+'人</span><button class="btn-del" onclick="BTM.del('+data.indexOf(d)+')">删</button></div></div>';
+        }).join('')+
+      '</div>';
+    }).join('');
+    $('feedbackMatrix').innerHTML=
+      '<div class="fm-header"></div><div class="fm-header">低频</div><div class="fm-header">中频</div><div class="fm-header">高频</div>'+
+      '<div class="fm-label">高影响</div><div class="fm-cell" style="background:#fef3c7;color:#d97706">优先处理</div><div class="fm-cell" style="background:#fee2e2;color:#dc2626">紧急修复</div><div class="fm-cell" style="background:#fecaca;color:#991b1b;font-weight:700">立即修复</div>'+
+      '<div class="fm-label">中影响</div><div class="fm-cell" style="background:#d1fae5;color:#059669">排期处理</div><div class="fm-cell" style="background:#fef3c7;color:#d97706">优先处理</div><div class="fm-cell" style="background:#fee2e2;color:#dc2626">紧急修复</div>'+
+      '<div class="fm-label">低影响</div><div class="fm-cell" style="background:#dbeafe;color:#2563eb">记录待办</div><div class="fm-cell" style="background:#d1fae5;color:#059669">排期处理</div><div class="fm-cell" style="background:#fef3c7;color:#d97706">优先处理</div>';
+    var sevWeight={P0:4,P1:3,P2:2,P3:1};
+    var sorted=data.slice().sort(function(a,b){
+      var scoreA=sevWeight[a.severity]*a.impact*a.frequency;
+      var scoreB=sevWeight[b.severity]*b.impact*b.frequency;
+      return scoreB-scoreA;
+    }).slice(0,8);
+    $('improvementList').innerHTML=sorted.map(function(d,i){
+      var score=sevWeight[d.severity]*d.impact*d.frequency;
+      var statusColor=d.status==='resolved'?'#10b981':d.status==='closed'?'#94a3b8':d.status==='in-progress'?'#f59e0b':'#4f46e5';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid var(--rule-light)">'+
+        '<div style="width:28px;height:28px;border-radius:50%;background:#4f46e5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">'+(i+1)+'</div>'+
+        '<div style="flex:1"><div style="font-size:14px;font-weight:600">'+d.title+'</div><div style="font-size:12px;color:var(--muted)">'+d.reporter+' | 影响'+d.impact+'人 × '+d.frequency+'次</div></div>'+
+        '<span class="severity-badge sev-'+d.severity.toLowerCase()+'">'+d.severity+'</span>'+
+        '<span class="story-status" style="background:'+statusColor+'22;color:'+statusColor+';padding:2px 10px;border-radius:6px;font-size:11px;font-weight:600">{new:新建,in-progress:处理中,resolved:已解决,closed:已关闭}[d.status]'.replace('{new:新建,in-progress:处理中,resolved:已解决,closed:已关闭}[d.status]',({new:'新建','in-progress':'处理中',resolved:'已解决',closed:'已关闭'})[d.status])+'</span>'+
+        '<div style="font-size:13px;font-weight:700;color:#4f46e5;min-width:50px;text-align:right">'+score+'分</div>'+
+      '</div>';
+    }).join('');
+  }
+  function openModal(){$('modalOverlay').classList.add('show');}
+  function closeModal(){$('modalOverlay').classList.remove('show');}
+  function saveModal(){
+    var title=$('mTitle').value;if(!title){alert('请输入问题描述');return;}
+    data.push({title:title,severity:$('mSeverity').value,status:$('mStatus').value,impact:parseInt($('mImpact').value)||1,frequency:parseInt($('mFrequency').value)||1,reporter:$('mReporter').value||'匿名用户'});
+    save();closeModal();calc();
+    $('mTitle').value='';
+  }
+  function del(i){if(confirm('确认删除此Bug？')){data.splice(i,1);save();calc();}}
+  load();
+  return{calc:calc,openModal:openModal,closeModal:closeModal,saveModal:saveModal,del:del};
+})();
+BTM.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

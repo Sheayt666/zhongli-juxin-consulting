@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="博客SEO优化器：关键词布局+内链结构+Meta标签+结构化数据+内容评分，CSS SEO评分卡可视化，跨境卖家博客SEO工具。">
+<title>博客SEO优化器 - 关键词布局内链结构内容评分 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select,.jx-field textarea{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus,.jx-field textarea:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+/* SEO评分卡 */
+.seo-score-wrap{display:flex;align-items:center;gap:24px;padding:20px}
+.seo-score-circle{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.seo-score-circle::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--score-color) calc(var(--score-pct)*1%),#f1f5f9 0)}
+.seo-score-circle::after{content:'';position:absolute;inset:12px;border-radius:50%;background:#fff}
+.seo-score-val{position:relative;z-index:1;font-size:32px;font-weight:800;color:var(--score-color)}
+.seo-score-lbl{position:relative;z-index:1;font-size:11px;color:var(--muted);font-weight:600}
+.seo-grade{flex:1}
+.seo-grade h3{font-size:20px;font-weight:800;margin:0 0 4px}
+.seo-grade p{font-size:13px;color:var(--muted);margin:0}
+.seo-dim{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light)}
+.seo-dim:last-child{border-bottom:none}
+.seo-dim-name{font-size:13px;font-weight:600;flex:1;min-width:0}
+.seo-dim-desc{font-size:11px;color:var(--muted);margin-top:1px}
+.seo-dim-bar{width:80px;height:6px;border-radius:3px;background:#f1f5f9;overflow:hidden;flex-shrink:0}
+.seo-dim-fill{height:100%;border-radius:3px;transition:width .4s}
+.seo-dim-score{font-size:14px;font-weight:800;min-width:30px;text-align:right}
+.meta-preview{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8}
+.meta-preview .google-title{font-size:16px;font-weight:600;color:#1a56db;cursor:pointer;font-family:system-ui}
+.meta-preview .google-url{font-size:12px;color:#059669;font-family:system-ui}
+.meta-preview .google-desc{font-size:13px;color:#475569;font-family:system-ui;line-height:1.5}
+.schema-box{background:#f8fafc;border:1px solid var(--rule);border-radius:12px;padding:16px;font-family:'Courier New',monospace;font-size:12px;color:var(--ink-soft);line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.kw-table{width:100%;border-collapse:collapse;font-size:13px}
+.kw-table th{padding:8px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.kw-table td{padding:8px 12px;border-bottom:1px solid var(--rule-light)}
+.kw-density{display:inline-flex;align-items:center;gap:6px}
+.kw-density-bar{width:60px;height:5px;border-radius:3px;background:#f1f5f9;overflow:hidden}
+.kw-density-fill{height:100%;border-radius:3px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.seo-score-wrap{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W39 内容营销工作流</div><div class="workflow-steps">
+  <a href="content-calendar-planner.html" class="workflow-step">日历规划</a><a href="social-post-scheduler.html" class="workflow-step">发布排期</a><a href="content-pillar-builder.html" class="workflow-step">内容支柱</a><a href="video-script-optimizer.html" class="workflow-step">视频脚本</a><a href="hashtag-research-tool.html" class="workflow-step">标签研究</a><a href="content-repurpose-planner.html" class="workflow-step">内容复用</a><a href="engagement-rate-predictor.html" class="workflow-step">互动预测</a><a href="content-audit-checklist.html" class="workflow-step">内容审计</a><a href="brand-voice-guide-generator.html" class="workflow-step">品牌语音</a><a href="content-roi-tracker.html" class="workflow-step">ROI追踪</a><a href="blog-seo-optimizer.html" class="workflow-step active">博客SEO</a><a href="ugc-content-manager.html" class="workflow-step">UGC管理</a><a href="content-distribution-planner.html" class="workflow-step">内容分发</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W39 内容营销</a><span class="sep">›</span><span class="current">博客SEO优化器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔍</span>博客SEO优化器 Blog SEO Optimizer</h1>
+  <p>博客文章深度SEO优化，关键词密度布局分析，内链结构建议，Meta标签生成与Google预览，结构化数据Schema标记，8维度内容评分，CSS SEO评分卡可视化。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">SEO综合分</div><div class="mc-value" id="mScore">0</div></div>
+    <div class="metric-card success"><div class="mc-label">通过项</div><div class="mc-value" id="mPass">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">待优化</div><div class="mc-value" id="mWarn">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">需修复</div><div class="mc-value" id="mFail">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📝 博客文章信息</h2>
+    <div class="jx-row">
+      <div class="jx-field"><label>文章标题</label><input type="text" id="title" value="2026年跨境卖家必备的10款FBA利润计算工具" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>主关键词</label><input type="text" id="keyword" value="FBA利润计算工具" oninput="BSO.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>标题长度（字符）</label><input type="number" id="titleLen" value="28" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>文章字数</label><input type="number" id="wordCount" value="2500" step="100" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>主关键词出现次数</label><input type="number" id="kwCount" value="12" oninput="BSO.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>Meta描述</label><input type="text" id="metaDesc" value="2026年最新跨境卖家FBA利润计算工具合集，包含10款免费在线工具，实时计算亚马逊FBA费用、利润率、ROI。" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>H2标题数</label><input type="number" id="h2Count" value="6" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>内链数量</label><input type="number" id="internalLinks" value="8" oninput="BSO.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>外链数量</label><input type="number" id="externalLinks" value="3" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>图片数量</label><input type="number" id="imgCount" value="5" oninput="BSO.calc()"></div>
+      <div class="jx-field"><label>图片Alt标签覆盖率 <span class="hint">(%)</span></label><input type="number" id="altCoverage" value="80" min="0" max="100" oninput="BSO.calc()"></div>
+    </div>
+    <div class="jx-row">
+      <div class="jx-field"><label>内链结构 <span class="hint">（选择当前结构）</span></label><select id="linkStruct" onchange="BSO.calc()"><option value="hub">Hub页（主题集线器）</option><option value="pillar">Pillar页（支柱页面）</option><option value="cluster">Cluster页（集群页面）</option><option value="linear">线性结构</option><option value="none">无结构</option></select></div>
+      <div class="jx-field"><label>结构化数据类型</label><select id="schemaType" onchange="BSO.calc()"><option value="article">Article</option><option value="blog">BlogPosting</option><option value="howto">HowTo</option><option value="faq">FAQPage</option><option value="product">Product Review</option><option value="none">无</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 SEO评分卡</h2>
+    <div class="seo-score-wrap" id="scoreWrap"></div>
+    <div id="dimList" style="margin-top:16px"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔑 关键词密度分析</h2>
+    <div style="overflow-x:auto"><table class="kw-table" id="kwTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>👁️ Google搜索结果预览</h2>
+    <div class="meta-preview" id="googlePreview"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 结构化数据Schema</h2>
+    <div class="schema-box" id="schemaBox"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 SEO优化建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="keyword-research-matrix.html" class="rt-card"><div class="rt-icon">🔑</div><div><h5>关键词矩阵</h5><p>关键词研究</p></div></a>
+      <a href="content-pillar-builder.html" class="rt-card"><div class="rt-icon">🏗️</div><div><h5>内容支柱</h5><p>主题架构</p></div></a>
+      <a href="content-audit-checklist.html" class="rt-card"><div class="rt-icon">✅</div><div><h5>内容审计</h5><p>内容检查</p></div></a>
+      <a href="content-distribution-planner.html" class="rt-card"><div class="rt-icon">📡</div><div><h5>内容分发</h5><p>多渠道分发</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="blog-seo-optimizer.html">博客SEO</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var BSO=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var KW_DATA=[
+    {kw:'FBA利润计算工具',type:'主关键词',count:12,density:0.48,pos:['标题','首段','H2','结论']},
+    {kw:'亚马逊FBA费用',type:'次关键词',count:8,density:0.32,pos:['H2','正文','Alt']},
+    {kw:'FBA计算器',type:'长尾词',count:5,density:0.20,pos:['H3','正文']},
+    {kw:'跨境卖家工具',type:'相关词',count:6,density:0.24,pos:['首段','正文']},
+    {kw:'亚马逊利润率',type:'相关词',count:4,density:0.16,pos:['H3','正文']},
+    {kw:'FBA仓储费',type:'长尾词',count:3,density:0.12,pos:['正文','表格']}
+  ];
+
+  function calc(){
+    var title=$('title').value,kw=$('keyword').value;
+    var titleLen=num('titleLen'),wordCount=num('wordCount'),kwCount=num('kwCount');
+    var metaDesc=$('metaDesc').value,h2=num('h2Count'),il=num('internalLinks'),el=num('externalLinks');
+    var imgs=num('imgCount'),alt=num('altCoverage');
+    var linkStruct=$('linkStruct').value,schema=$('schemaType').value;
+
+    //8维度评分
+    var dims=[
+      {name:'标题优化',desc:'长度50-60字符，含主关键词',score:scoreTitle(titleLen,kw,title)},
+      {name:'关键词密度',desc:'主关键词密度0.5%-2.5%',score:scoreKwDensity(kwCount,wordCount)},
+      {name:'内容长度',desc:'至少1500词，深度内容',score:scoreWordCount(wordCount)},
+      {name:'标题结构',desc:'H2标签3-8个，含关键词',score:scoreH2(h2)},
+      {name:'内链建设',desc:'内链3-10个，结构合理',score:scoreInternalLinks(il,linkStruct)},
+      {name:'Meta描述',desc:'长度120-160字符，含关键词',score:scoreMeta(metaDesc,kw)},
+      {name:'图片优化',desc:'Alt标签覆盖率>80%',score:scoreImages(imgs,alt)},
+      {name:'结构化数据',desc:'Schema标记类型匹配',score:scoreSchema(schema)}
+    ];
+    var total=Math.round(dims.reduce(function(a,d){return a+d.score},0)/dims.length);
+    var passCount=dims.filter(function(d){return d.score>=80}).length;
+    var warnCount=dims.filter(function(d){return d.score>=50&&d.score<80}).length;
+    var failCount=dims.filter(function(d){return d.score<50}).length;
+    var scoreColor=total>=80?'#10b981':total>=60?'#f59e0b':'#ef4444';
+    var grade=total>=85?'优秀':total>=70?'良好':total>=55?'一般':'需优化';
+
+    $('mScore').textContent=total;$('mPass').textContent=passCount;$('mWarn').textContent=warnCount;$('mFail').textContent=failCount;
+    $('mScore').parentElement.style.background='linear-gradient(135deg,'+scoreColor+'15,#fff)';
+    $('mScore').style.color=scoreColor;
+
+    renderScoreCard(total,scoreColor,grade);
+    renderDims(dims);
+    renderKwTable(wordCount);
+    renderGoogle(title,metaDesc);
+    renderSchema(title,kw,schema);
+    renderTips(dims,total,kw,titleLen,wordCount,kwCount,metaDesc,il,linkStruct,alt,schema);
+    save();
+  }
+
+  function scoreTitle(len,kw,title){
+    var s=0;
+    if(len>=50&&len<=60)s+=40;else if(len>=40&&len<=70)s+=25;else s+=10;
+    if(kw&&title.toLowerCase().indexOf(kw.toLowerCase())>=0)s+=40;else s+=15;
+    if(len<=60)s+=20;else s+=5;
+    return Math.min(100,s);
+  }
+  function scoreKwDensity(count,words){
+    if(words===0)return 0;
+    var density=count/words*100;
+    if(density>=0.5&&density<=2.5)return 95;
+    if(density>=0.3&&density<=3)return 70;
+    if(density>3)return 40;
+    return 50;
+  }
+  function scoreWordCount(w){
+    if(w>=2000)return 95;if(w>=1500)return 85;if(w>=1000)return 65;if(w>=600)return 45;return 25;
+  }
+  function scoreH2(c){
+    if(c>=3&&c<=8)return 90;if(c>=1&&c<=10)return 65;return 30;
+  }
+  function scoreInternalLinks(c,struct){
+    var s=0;
+    if(c>=3&&c<=10)s+=50;else if(c>=1)s+=30;else s+=10;
+    if(struct==='pillar'||struct==='hub')s+=40;else if(struct==='cluster')s+=30;else if(struct==='linear')s+=15;else s+=5;
+    return Math.min(100,s);
+  }
+  function scoreMeta(meta,kw){
+    var s=0;var len=meta.length;
+    if(len>=120&&len<=160)s+=40;else if(len>=80&&len<=180)s+=25;else s+=10;
+    if(kw&&meta.toLowerCase().indexOf(kw.toLowerCase())>=0)s+=40;else s+=15;
+    if(len>0)s+=20;
+    return Math.min(100,s);
+  }
+  function scoreImages(imgs,alt){
+    if(imgs===0)return 50;
+    var s=0;
+    if(imgs>=3)s+=40;else if(imgs>=1)s+=25;else s+=10;
+    if(alt>=90)s+=60;else if(alt>=70)s+=40;else if(alt>=50)s+=25;else s+=10;
+    return Math.min(100,s);
+  }
+  function scoreSchema(s){
+    if(s==='article'||s==='blog')return 85;if(s==='howto'||s==='faq')return 95;if(s==='product')return 80;return 30;
+  }
+
+  function renderScoreCard(total,color,grade){
+    var h='<div class="seo-score-circle" style="--score-color:'+color+';--score-pct:'+total+'"><div class="seo-score-val" style="color:'+color+'">'+total+'</div><div class="seo-score-lbl">SEO Score</div></div>';
+    h+='<div class="seo-grade"><h3 style="color:'+color+'">'+grade+'</h3><p>8维度综合评分 · 目标85分以上</p></div>';
+    $('scoreWrap').innerHTML=h;
+  }
+
+  function renderDims(dims){
+    var h='';
+    dims.forEach(function(d){
+      var color=d.score>=80?'#10b981':d.score>=50?'#f59e0b':'#ef4444';
+      h+='<div class="seo-dim"><div class="seo-dim-name">'+d.name+'<div class="seo-dim-desc">'+d.desc+'</div></div><div class="seo-dim-bar"><div class="seo-dim-fill" style="width:'+d.score+'%;background:'+color+'"></div></div><div class="seo-dim-score" style="color:'+color+'">'+d.score+'</div></div>';
+    });
+    $('dimList').innerHTML=h;
+  }
+
+  function renderKwTable(wordCount){
+    var h='<thead><tr><th>关键词</th><th>类型</th><th class="num">出现次数</th><th>密度</th><th>位置</th><th>状态</th></tr></thead><tbody>';
+    KW_DATA.forEach(function(k){
+      var density=k.density;
+      var status=density>=0.5&&density<=2.5?'<span style="color:#059669;font-weight:700">合理</span>':density>2.5?'<span style="color:#dc2626;font-weight:700">过高</span>':'<span style="color:#d97706;font-weight:700">偏低</span>';
+      var dColor=density>=0.5&&density<=2.5?'#10b981':density>2.5?'#ef4444':'#f59e0b';
+      h+='<tr><td><strong>'+k.kw+'</strong></td><td>'+k.type+'</td><td style="text-align:center">'+k.count+'</td><td><div class="kw-density"><div class="kw-density-bar"><div class="kw-density-fill" style="width:'+Math.min(100,density*40)+'%;background:'+dColor+'"></div></div>'+density.toFixed(2)+'%</div></td><td style="font-size:12px">'+k.pos.join('、')+'</td><td>'+status+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('kwTable').innerHTML=h;
+  }
+
+  function renderGoogle(title,meta){
+    var h='<div class="google-title">'+(title||'文章标题')+'</div>';
+    h+='<div class="google-url">https://juxin-consulting.help/blog/2026-fba-tools</div>';
+    h+='<div class="google-desc">'+(meta||'Meta描述将显示在这里...')+'</div>';
+    $('googlePreview').innerHTML=h;
+  }
+
+  function renderSchema(title,kw,type){
+    var schemaMap={article:'Article',blog:'BlogPosting',howto:'HowTo',faq:'FAQPage',product:'Review'};
+    var typeName=schemaMap[type]||'Article';
+    var h='{\n  "@context": "https://schema.org",\n  "@type": "'+typeName+'",\n  "headline": "'+title+'",\n  "description": "'+($('metaDesc').value||'')+'",\n  "keywords": "'+kw+'",\n  "author": {\n    "@type": "Organization",\n    "name": "众力聚鑫咨询"\n  },\n  "publisher": {\n    "@type": "Organization",\n    "name": "众力聚鑫咨询",\n    "logo": {\n      "@type": "ImageObject",\n      "url": "https://juxin-consulting.help/logo.png"\n    }\n  },\n  "datePublished": "2026-07-12",\n  "dateModified": "2026-07-12",\n  "inLanguage": "zh-CN"\n}';
+    $('schemaBox').textContent=h;
+  }
+
+  function renderTips(dims,total,kw,titleLen,words,kwCount,meta,il,struct,alt,schema){
+    var tips=[];
+    tips.push('SEO综合评分 '+total+'/100，'+(total>=85?'优秀水平':total>=70?'良好水平':total>=55?'一般水平，需优化':'需要大幅优化')+'。8个维度中 '+dims.filter(function(d){return d.score>=80}).length+' 项达标。');
+    var lowest=dims.slice().sort(function(a,b){return a.score-b.score})[0];
+    tips.push('最低分维度「'+lowest.name+'」（'+lowest.score+'分），建议优先优化：'+lowest.desc+'。');
+    if(titleLen>60)tips.push('标题长度 '+titleLen+' 字符，超过60字符限制，Google搜索结果可能截断，建议精简标题。');
+    if(titleLen<50)tips.push('标题长度 '+titleLen+' 字符，低于50字符建议值，可增加修饰词提升点击率和关键词覆盖。');
+    var density=words>0?kwCount/words*100:0;
+    if(density>2.5)tips.push('主关键词密度 '+density.toFixed(2)+'% 过高，有堆砌风险，建议降低至0.5%-2.5%范围。');
+    if(density<0.5)tips.push('主关键词密度 '+density.toFixed(2)+'% 偏低，建议增加关键词出现频率至0.5%以上。');
+    if(meta.length<120||meta.length>160)tips.push('Meta描述长度 '+meta.length+' 字符，建议120-160字符，确保Google完整展示。');
+    if(il<3)tips.push('内链数量 '+il+' 个偏少，建议增加至3-10个，采用'+(struct==='none'?'Pillar/Hub':'当前')+'结构提升页面权重传递。');
+    if(alt<80)tips.push('图片Alt标签覆盖率 '+alt+'%，建议提升至80%以上，帮助图片搜索和可访问性。');
+    if(schema==='none')tips.push('未添加结构化数据，建议根据文章类型添加Schema标记（BlogPosting/HowTo/FAQ），获得Rich Snippet展示机会。');
+    tips.push('内链结构建议：采用Topic Cluster模型，1个Pillar页+5-10个Cluster页互相链接，形成主题权威性。');
+    tips.push('内容更新策略：每3个月更新一次文章内容，补充新工具/新数据，保持内容新鲜度，Google偏好近期更新的内容。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_bso_data',JSON.stringify({title:$('title').value,keyword:$('keyword').value,titleLen:num('titleLen'),wordCount:num('wordCount'),kwCount:num('kwCount'),metaDesc:$('metaDesc').value,h2Count:num('h2Count'),internalLinks:num('internalLinks'),externalLinks:num('externalLinks'),imgCount:num('imgCount'),altCoverage:num('altCoverage'),linkStruct:$('linkStruct').value,schemaType:$('schemaType').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_bso_data'));if(d){['title','keyword','metaDesc','linkStruct','schemaType'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});['titleLen','wordCount','kwCount','h2Count','internalLinks','externalLinks','imgCount','altCoverage'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',BSO.init)}else{BSO.init()}
+</script>
+</body>
+</html>

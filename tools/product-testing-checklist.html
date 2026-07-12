@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="产品测试清单：输入产品类型和目标市场，输出功能/可靠性/安全/合规测试项目+标准+通过判定，CSS检查表，跨境产品测试管理利器。">
+<meta name="keywords" content="产品测试清单,功能测试,可靠性测试,安全测试,合规测试,测试标准,产品质量">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/product-testing-checklist.html">
+<title>产品测试清单 - 功能·可靠性·安全·合规测试 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.supplier-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:14px;transition:all .2s}
+.supplier-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:var(--accent)}
+.supplier-card .sc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.supplier-card .sc-name{font-size:16px;font-weight:700;color:var(--ink)}
+.supplier-card .sc-score{font-size:24px;font-weight:800}
+.gantt-chart{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
+.gantt-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.gantt-track{position:relative;height:32px;background:var(--bg-soft);border-radius:8px}
+.gantt-bar{position:absolute;height:100%;border-radius:8px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.checklist-item{display:flex;align-items:start;gap:10px;padding:12px;border-radius:8px;margin-bottom:8px;background:var(--bg-soft);transition:all .2s}
+.checklist-item:hover{background:var(--accent-bg)}
+.checklist-item .ci-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.checklist-item.checked .ci-checkbox{background:var(--green);border-color:var(--green);color:#fff}
+.checklist-item .ci-content{flex:1}
+.checklist-item .ci-title{font-size:14px;font-weight:600;color:var(--ink)}
+.checklist-item .ci-desc{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}.gantt-row{grid-template-columns:100px 1fr}}
+
+.test-category{margin-bottom:20px}
+.test-cat-header{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);padding:10px 14px;border-radius:8px;background:var(--accent-bg);margin-bottom:10px}
+.test-progress{display:flex;gap:4px;margin-top:16px}
+.test-progress-bar{flex:1;height:8px;border-radius:4px;background:var(--rule);overflow:hidden}
+.test-progress-fill{height:100%;background:var(--green);transition:width .3s}
+</style>
+</head>
+<body class="tool-page" data-tool="product_testing_checklist">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚀</span><span class="workflow-name">产品开发工作流</span><span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="demand-validator.html" class="step">需求验证</a>
+      <span class="arrow">→</span>
+      <a href="packaging-designer.html" class="step">包装设计</a>
+      <span class="arrow">→</span>
+      <a href="certification-check.html" class="step">认证检查</a>
+      <span class="arrow">→</span>
+      <a href="patent-check.html" class="step">专利检查</a>
+      <span class="arrow">→</span>
+      <a href="prototype-cost.html" class="step">原型成本</a>
+      <span class="arrow">→</span>
+      <a href="supplier-database-search.html" class="step">供应商搜索</a>
+      <span class="arrow">→</span>
+      <a href="product-sourcing-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="market-gap-analysis.html" class="step">市场空白</a>
+      <span class="arrow">→</span>
+      <a href="product-specification-builder.html" class="step">规格书</a>
+      <span class="arrow">→</span>
+      <a href="mold-tooling-calculator.html" class="step">开模计算</a>
+      <span class="arrow">→</span>
+      <span class="step current">测试清单</span>
+      <span class="arrow">→</span>
+      <a href="ip-landscape-analysis.html" class="step">IP全景</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚀 产品开发工作流 · 标准版</span>
+      <h1>产品测试 <em>清单</em></h1>
+      <p class="tool-hero-desc">输入产品类型和目标市场，输出功能/可靠性/安全/合规测试项目+标准+通过判定，CSS检查表，帮你系统化管理产品测试流程。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🧪 产品测试配置</h2>
+          <p class="calc-form-subtitle">选择产品类型和目标市场，生成完整测试清单</p>
+          <div class="calc-field"><label>产品类型</label><select id="productType" onchange="PTC.gen()">
+            <option value="electronics" selected>3C电子产品</option>
+            <option value="apparel">服装鞋帽</option>
+            <option value="home">家居用品</option>
+            <option value="beauty">美妆个护</option>
+            <option value="toys">玩具母婴</option>
+            <option value="jewelry">珠宝饰品</option>
+          </select></div>
+          <div class="calc-field"><label>目标市场</label><select id="market" onchange="PTC.gen()">
+            <option value="us" selected>北美 (US/CA)</option>
+            <option value="eu">欧洲 (EU/UK)</option>
+            <option value="jp">日本</option>
+            <option value="global">全球</option>
+          </select></div>
+          <div class="calc-field"><label>产品含电池</label><select id="battery" onchange="PTC.gen()"><option value="no" selected>不含电池</option><option value="yes">含锂电池</option></select></div>
+          <div class="calc-field"><label>产品含无线功能</label><select id="wireless" onchange="PTC.gen()"><option value="no">不含无线</option><option value="yes" selected>含蓝牙/WiFi</option></select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🧪 测试清单</h3>
+        <div id="checklistArea"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="mold-tooling-calculator.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第10步</span>开模计算 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="ip-landscape-analysis.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第12步</span>IP全景 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="product-testing-checklist.html">产品测试</a></li><li><a href="supplier-database-search.html">供应商搜索</a></li><li><a href="ip-landscape-analysis.html">IP全景</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var PTC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var TESTS={
+    functional:{name:'功能测试',icon:'⚙️',items:[
+      {name:'开机启动测试',std:'开机成功率100%',method:'重复开关50次'},
+      {name:'蓝牙连接测试',std:'10m内稳定连接',method:'距离测试'},
+      {name:'按键功能测试',std:'所有按键响应正常',method:'逐键测试'},
+      {name:'音质测试',std:'无破音/噪音/断音',method:'音频测试'},
+      {name:'充电功能测试',std:'Type-C充电正常',method:'充电测试'}
+    ]},
+    reliability:{name:'可靠性测试',icon:'💪',items:[
+      {name:'高低温测试',std:'-20℃~60℃正常工作',method:'高低温箱测试'},
+      {name:'跌落测试',std:'1.5m落地合格',method:'自由落伋6次'},
+      {name:'密封测试',std:'IPX5防水等级',method:'防水测试'},
+      {name:'老化测试',std:'连续工作72小旰',method:'老化试验'},
+      {name:'振动测试',std:'模拟运输条件后正常',method:'振动台测试'}
+    ]},
+    safety:{name:'安全测试',icon:'🛡️',items:[
+      {name:'电气安全',std:'绝缘电阻≥100MΩ',method:'耐压测试'},
+      {name:'电池安全',std:'UN38.3认证',method:'电池测试(含电池时)'},
+      {name:'材料安全',std:'无毒无害',method:'RoHS/REACH检测'},
+      {name:'火灾安全',std:'V-0阻燃等级',method:'燃燒测试'}
+    ]},
+    compliance:{name:'合规测试',icon:'✅',items:[
+      {name:'FCC认证',std:'FCC Part 15B/C',method:'EMC测试'},
+      {name:'CE认证',std:'CE/RED指令',method:'CE测试'},
+      {name:'RoHS认证',std:'RoHS 2.0',method:'材料检测'},
+      {name:'包装标签',std:'符合目标市场标签法',method:'标签审查'}
+    ]}
+  };
+  var checked={};
+  return{
+    gen:function(){
+      var pt=$('productType').value,mk=$('market').value;
+      var hasBatt=$('battery').value==='yes',hasWireless=$('wireless').value==='yes';
+      var allItems=[];var total=0;
+      var html='<h3>🧪 测试清单概览</h3>';
+      html+='<div class="fee-breakdown">';
+      var catCount=0;
+      for(var k in TESTS){
+        var items=TESTS[k].items.filter(function(it){
+          if(it.name.indexOf('蓝牙')>=0&&!hasWireless)return false;
+          if(it.name.indexOf('电池')>=0&&!hasBatt)return false;
+          if(it.name.indexOf('FCC')>=0&&mk!=='us'&&mk!=='global')return false;
+          if(it.name.indexOf('CE')>=0&&mk!=='eu'&&mk!=='global')return false;
+          return true;
+        });
+        html+='<div class="fee-row"><span class="fr-lbl">'+TESTS[k].icon+' '+TESTS[k].name+'</span><span class="fr-val">'+items.length+'项</span></div>';
+        total+=items.length;catCount++;
+      }
+      html+='<div class="fee-row total"><span class="fr-lbl">总测试项目</span><span class="fr-val">'+total+'项</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var clHtml='';
+      var idx=0;
+      for(var k in TESTS){
+        var cat=TESTS[k];
+        var items=cat.items.filter(function(it){
+          if(it.name.indexOf('蓝牙')>=0&&!hasWireless)return false;
+          if(it.name.indexOf('电池')>=0&&!hasBatt)return false;
+          if(it.name.indexOf('FCC')>=0&&mk!=='us'&&mk!=='global')return false;
+          if(it.name.indexOf('CE')>=0&&mk!=='eu'&&mk!=='global')return false;
+          return true;
+        });
+        clHtml+='<div class="test-category"><div class="test-cat-header">'+cat.icon+' '+cat.name+' ('+items.length+'项)</div>';
+        items.forEach(function(it){
+          var cid='test_'+idx;idx++;
+          var isChecked=checked[cid];
+          clHtml+='<div class="checklist-item'+(isChecked?' checked':'')+'">';
+          clHtml+='<div class="ci-checkbox" onclick="PTC.toggle(''+cid+'')">'+(isChecked?'✓':'')+'</div>';
+          clHtml+='<div class="ci-content"><div class="ci-title">'+it.name+'</div><div class="ci-desc">标准: '+it.std+' · 方法: '+it.method+'</div></div>';
+          clHtml+='</div>';
+        });
+        clHtml+='</div>';
+      }
+      $('checklistArea').innerHTML=clHtml;
+    },
+    toggle:function(cid){
+      checked[cid]=!checked[cid];
+      this.gen();
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PTC.gen);}else{PTC.gen();}
+</script>
+</body>
+</html>

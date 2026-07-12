@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="风险热力图生成器（深度版）：账号/合规/库存/广告/品牌/财务6维度风险可视化，概率×影响5×5矩阵，风险等级标注，优先级排序，应对策略卡片。免费在线跨境电商风险管理工具。">
+<meta name="keywords" content="风险热力图,风险评估,5x5矩阵,风险管理,风险优先级,风险维度">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/risk-heatmap-generator.html">
+<title>风险热力图生成器 - 6维度·5×5矩阵·优先级排序 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.rhg-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.rhg-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.dim-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dim-input{padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.dim-input .di-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dim-input .di-icon{font-size:20px}
+.dim-input .di-name{font-size:13px;font-weight:700;color:var(--ink)}
+.dim-slider{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.dim-slider label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.dim-slider input[type=range]{width:100%;accent-color:#4f46e5}
+.heatmap-wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.heatmap{display:grid;grid-template-columns:60px repeat(5,1fr);grid-template-rows:30px repeat(5,60px);gap:4px;flex:1;min-width:380px}
+.hm-corner{grid-column:1;grid-row:1}
+.hm-x{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted)}
+.hm-y{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);writing-mode:vertical-rl}
+.hm-cell{border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;position:relative;transition:transform .2s;cursor:default}
+.hm-cell:hover{transform:scale(1.05);z-index:2}
+.heatmap-legend{flex:1;min-width:200px}
+.legend-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12px;border-bottom:1px solid var(--rule-light)}
+.legend-item:last-child{border-bottom:none}
+.legend-swatch{width:24px;height:24px;border-radius:6px;flex-shrink:0}
+.risk-list{display:flex;flex-direction:column;gap:10px}
+.risk-row{display:grid;grid-template-columns:40px 1fr 80px 80px 100px;gap:10px;align-items:center;padding:12px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.risk-row .rr-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px}
+.risk-row .rr-name{font-size:13px;font-weight:600;color:var(--ink)}
+.risk-row .rr-score{font-size:13px;font-weight:700;text-align:center}
+.risk-row .rr-level{text-align:center}
+.level-badge{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:700}
+.strat-card{padding:16px;border-radius:12px;border-left:4px solid #4f46e5;background:var(--bg-soft);margin-bottom:10px}
+.strat-card .sc-dim{font-size:13px;font-weight:700;margin-bottom:4px}
+.strat-card .sc-text{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.dim-inputs{grid-template-columns:1fr}.heatmap{min-width:300px}.risk-row{grid-template-columns:32px 1fr;gap:6px}.risk-row .rr-score,.risk-row .rr-level{display:none}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"风险热力图生成器","description":"6维度风险可视化，概率×影响5×5矩阵，风险等级标注，优先级排序，应对策略卡片。","url":"https://juxin-consulting.help/tools/risk-heatmap-generator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"风险热力图生成器","item":"https://juxin-consulting.help/tools/risk-heatmap-generator.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="risk_heatmap_generator">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔥 风险管理工作流 · 深度版</span>
+      <h1>风险热力图 <em>生成器</em></h1>
+      <p class="tool-hero-desc">账号/合规/库存/广告/品牌/财务6维度风险评估，概率×影响5×5矩阵可视化呈现，风险等级智能标注，按风险得分优先级排序，输出针对性应对策略卡片，全景掌握业务风险图谱。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第12步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a><span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a><span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a><span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a><span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a><span class="arrow">→</span>
+      <a href="appeal-letter-generator.html" class="step">申诉信生成</a><span class="arrow">→</span>
+      <a href="policy-update-tracker.html" class="step">政策追踪</a><span class="arrow">→</span>
+      <a href="listing-suppression-checker.html" class="step">Listing下架</a><span class="arrow">→</span>
+      <a href="account-suspension-recovery.html" class="step">封号恢复</a><span class="arrow">→</span>
+      <a href="performance-metric-monitor.html" class="step">绩效监控</a><span class="arrow">→</span>
+      <a href="ip-infringement-scanner.html" class="step">侵权扫描</a><span class="arrow">→</span>
+      <span class="step current">风险热力图</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="rhg-section">
+        <h3>🎯 6维度风险评分</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">拖动滑块设置各维度风险概率（1-5）与影响（1-5），5为最高</p>
+        <div class="dim-inputs" id="dimInputs"></div>
+      </div>
+
+      <div class="rhg-section">
+        <h3>🔥 5×5 风险热力图</h3>
+        <div class="heatmap-wrap">
+          <div class="heatmap" id="heatmap"></div>
+          <div class="heatmap-legend">
+            <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--ink)">风险等级图例</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#10b981"></div><div><strong>低风险</strong> (1-4)<br><span style="color:var(--muted);font-size:11px">可接受，定期监控</span></div></div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f59e0b"></div><div><strong>中风险</strong> (5-9)<br><span style="color:var(--muted);font-size:11px">需关注，制定预案</span></div></div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f97316"></div><div><strong>高风险</strong> (10-14)<br><span style="color:var(--muted);font-size:11px">需处理，限期整改</span></div></div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#ef4444"></div><div><strong>极高风险</strong> (15-25)<br><span style="color:var(--muted);font-size:11px">立即处理，最高优先</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rhg-section">
+        <h3>📋 风险清单（按优先级排序）</h3>
+        <div class="risk-list" id="riskList"></div>
+      </div>
+
+      <div class="rhg-section">
+        <h3>🛡️ 应对策略卡片</h3>
+        <div id="stratWrap"></div>
+      </div>
+
+      <div class="rhg-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="account-health.html" class="related-card"><span class="related-card-icon">🏥</span><div class="related-card-content"><h5>账号健康监控</h5><p>8维度检查</p></div></a>
+          <a href="compliance-check.html" class="related-card"><span class="related-card-icon">✅</span><div class="related-card-content"><h5>合规检查器</h5><p>合规自查</p></div></a>
+          <a href="emergency-plan.html" class="related-card"><span class="related-card-icon">🚨</span><div class="related-card-content"><h5>应急预案</h5><p>72小时清单</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="ip-infringement-scanner.html" class="wbn-btn prev">← 上一步：侵权扫描</a>
+        <a href="index.html" class="wbn-btn next">返回工具中心 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="risk-heatmap-generator.html">风险热力图</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="emergency-plan.html">应急预案</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var RHG=(function(){
+  'use strict';
+  var SK='jx_risk_heatmap';
+  var DIMS=[
+    {key:'account',icon:'🏥',name:'账号风险',p:3,i:5,strat:'建立账号健康日常监控，保持ODR/迟发率/取消率低于阈值，定期备份账号数据，准备备用账号方案。'},
+    {key:'compliance',icon:'✅',name:'合规风险',p:2,i:4,strat:'上架前合规审核，定期追踪政策变更，员工政策培训，建立合规检查清单。'},
+    {key:'inventory',icon:'📦',name:'库存风险',p:3,i:3,strat:'设置安全库存预警，多仓备货分散风险，滞销品及时清仓，IPI分数保持450以上。'},
+    {key:'ad',icon:'📢',name:'广告风险',p:4,i:3,strat:'设置广告预算上限，定期优化ACOS，避免关键词浪费，分时段调价控制成本。'},
+    {key:'brand',icon:'🏷️',name:'品牌风险',p:2,i:5,strat:'完成品牌备案，加入Transparency计划，监控跟卖与侵权，建立品牌保护维权流程。'},
+    {key:'finance',icon:'💰',name:'财务风险',p:2,i:4,strat:'保持3-6个月运营现金流，汇率对冲，定期核算利润率，分散收款渠道。'}
+  ];
+  function load(){try{var d=JSON.parse(localStorage.getItem(SK)||'{}');DIMS.forEach(function(m){if(d[m.key]){m.p=d[m.key].p;m.i=d[m.key].i;}});}catch(e){}}
+  function save(){try{var d={};DIMS.forEach(function(m){d[m.key]={p:m.p,i:m.i};});localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function colorFor(score){return score>=15?'#ef4444':(score>=10?'#f97316':(score>=5?'#f59e0b':'#10b981'));}
+  function levelFor(score){return score>=15?'极高':(score>=10?'高':(score>=5?'中':'低'));}
+  function renderInputs(){
+    var h='';
+    DIMS.forEach(function(m,idx){
+      h+='<div class="dim-input"><div class="di-head"><span class="di-icon">'+m.icon+'</span><span class="di-name">'+m.name+'</span></div>';
+      h+='<div class="dim-slider"><label><span>发生概率</span><span id="p_'+m.key+'_v">'+m.p+'</span></label><input type="range" min="1" max="5" value="'+m.p+'" oninput="RHG.update(\''+m.key+'\',\'p\',this.value)"></div>';
+      h+='<div class="dim-slider"><label><span>影响程度</span><span id="i_'+m.key+'_v">'+m.i+'</span></label><input type="range" min="1" max="5" value="'+m.i+'" oninput="RHG.update(\''+m.key+'\',\'i\',this.value)"></div>';
+      h+='<div style="text-align:center;margin-top:6px;font-size:13px;font-weight:700;color:'+colorFor(m.p*m.i)+'">风险得分: '+(m.p*m.i)+'</div>';
+      h+='</div>';
+    });
+    document.getElementById('dimInputs').innerHTML=h;
+  }
+  function update(key,type,val){
+    DIMS.forEach(function(m){if(m.key===key){m[type]=parseInt(val);document.getElementById(type+'_'+key+'_v').textContent=val;}});
+    save();renderHeatmap();renderList();renderStrat();renderInputs();
+  }
+  function renderHeatmap(){
+    var h='<div class="hm-corner"></div>';
+    for(var x=1;x<=5;x++)h+='<div class="hm-x">影响 '+x+'</div>';
+    for(var y=5;y>=1;y--){
+      h+='<div class="hm-y">概率 '+y+'</div>';
+      for(var x=1;x<=5;x++){
+        var score=x*y;
+        var dims=DIMS.filter(function(m){return m.p===y&&m.i===x;});
+        var label=dims.map(function(d){return d.icon;}).join(' ')||score;
+        h+='<div class="hm-cell" style="background:'+colorFor(score)+'" title="概率'+y+'×影响'+x+'='+score+(dims.length?' ('+dims.map(function(d){return d.name;}).join(',')+')':'')+'">'+label+'</div>';
+      }
+    }
+    document.getElementById('heatmap').innerHTML=h;
+  }
+  function renderList(){
+    var sorted=DIMS.slice().sort(function(a,b){return (b.p*b.i)-(a.p*a.i);});
+    var h='';
+    sorted.forEach(function(m,idx){
+      var score=m.p*m.i;
+      var c=colorFor(score);
+      h+='<div class="risk-row"><div class="rr-rank" style="background:'+c+'">'+(idx+1)+'</div><div class="rr-name">'+m.icon+' '+m.name+'</div><div class="rr-score" style="color:'+c+'">'+score+'</div><div class="rr-level"><span class="level-badge" style="background:'+c+'22;color:'+c+'">'+levelFor(score)+'</span></div><div style="font-size:11px;color:var(--muted);text-align:center">概率'+m.p+'×影响'+m.i+'</div></div>';
+    });
+    document.getElementById('riskList').innerHTML=h;
+  }
+  function renderStrat(){
+    var sorted=DIMS.slice().sort(function(a,b){return (b.p*b.i)-(a.p*a.i);});
+    var h='';
+    sorted.forEach(function(m){
+      var score=m.p*m.i;
+      var c=colorFor(score);
+      h+='<div class="strat-card" style="border-left-color:'+c+'"><div class="sc-dim">'+m.icon+' '+m.name+' <span style="color:'+c+';font-size:12px">（得分'+score+'·'+levelFor(score)+'）</span></div><div class="sc-text">'+m.strat+'</div></div>';
+    });
+    document.getElementById('stratWrap').innerHTML=h;
+  }
+  function init(){load();renderInputs();renderHeatmap();renderList();renderStrat();}
+  return {update:update,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RHG.init);}else{RHG.init();}
+</script>
+</body>
+</html>

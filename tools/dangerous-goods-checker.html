@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="危险品检查器：选择产品类型(电池/液体/粉末/磁性/化学品)，查看危险品分类、运输要求、申报文档清单和合规检查表。">
+<title>危险品检查器 - 跨境电商DG合规检查工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.dg-result{margin-top:20px}
+.dg-classification{display:flex;align-items:center;gap:16px;padding:20px;border-radius:var(--radius-lg);margin-bottom:20px}
+.dg-classification.danger{background:linear-gradient(135deg,var(--red-bg),#fee2e2);border:2px solid var(--red)}
+.dg-classification.warning{background:linear-gradient(135deg,var(--gold-bg),#fef3c7);border:2px solid var(--gold)}
+.dg-classification.safe{background:linear-gradient(135deg,var(--green-bg),#d1fae5);border:2px solid var(--green)}
+.dg-classification .dg-icon{font-size:48px}
+.dg-classification .dg-info h3{font-size:20px;font-weight:800;margin-bottom:4px}
+.dg-classification .dg-info p{font-size:14px;opacity:.8}
+.dg-checklist{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:24px;margin-bottom:16px}
+.dg-checklist h4{font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--rule-light)}
+.dg-check-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light)}
+.dg-check-item:last-child{border-bottom:none}
+.dg-check-item .dg-ci-status{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;margin-top:1px}
+.dg-check-item .dg-ci-status.required{background:var(--red-bg);color:var(--red)}
+.dg-check-item .dg-ci-status.recommended{background:var(--gold-bg);color:var(--gold)}
+.dg-check-item .dg-ci-status.optional{background:var(--green-bg);color:var(--green)}
+.dg-check-item .dg-ci-text{font-size:14px;color:var(--ink-soft);flex:1}
+.dg-check-item .dg-ci-text strong{color:var(--ink)}
+.dg-check-item .dg-ci-tag{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600}
+.dg-doc-list{list-style:none;padding:0}
+.dg-doc-list li{padding:8px 0;font-size:14px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+.dg-doc-list li::before{content:'📄';font-size:16px}
+.product-type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:16px}
+.product-type-card{padding:16px;border:2px solid var(--rule);border-radius:var(--radius-md);text-align:center;cursor:pointer;transition:all .2s}
+.product-type-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.product-type-card.selected{border-color:var(--accent);background:var(--accent-bg)}
+.product-type-card .ptc-icon{font-size:32px;margin-bottom:6px}
+.product-type-card .ptc-name{font-size:13px;font-weight:600;color:var(--ink)}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">危险品检查器</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">⚠️ 物流合规工具</span><h1>危险品<em>检查器</em></h1><p class="tool-hero-desc">选择产品类型，快速查看危险品分类、运输要求、申报文档清单和合规检查表</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">🚚</span><span class="workflow-name">物流合规工作流</span></div><div class="workflow-nav-steps"><a href="first-mile-shipping.html" class="step">头程运费</a><span class="arrow">→</span><a href="supplier-comparison.html" class="step">供应商比价</a><span class="arrow">→</span><a href="vat-calculator.html" class="step">VAT关税</a><span class="arrow">→</span><a href="tax-profit-calculator.html" class="step">税务利润</a><span class="arrow">→</span><a href="payment-fee.html" class="step">收款费率</a><span class="arrow">→</span><a href="currency-converter.html" class="step">汇率转换</a><span class="arrow">→</span><a href="hs-code-lookup.html" class="step">HS编码</a><span class="arrow">→</span><a href="customs-duty-calculator.html" class="step">关税计算</a><span class="arrow">→</span><a href="shipping-route-optimizer.html" class="step">路线优化</a><span class="arrow">→</span><a href="fba-label-batch-generator.html" class="step">FBA标签</a><span class="arrow">→</span><a href="dangerous-goods-checker.html" class="step current">危险品检查</a><span class="arrow">→</span><a href="import-export-compliance-guide.html" class="step">进出口合规</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>⚠️ 选择产品类型</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">选择您的产品类型，查看危险品分类、运输要求和申报文档清单</p>
+<div class="product-type-grid" id="typeGrid">
+<div class="product-type-card selected" data-type="battery" onclick="selectType('battery')"><div class="ptc-icon">🔋</div><div class="ptc-name">电池/锂电池</div></div>
+<div class="product-type-card" data-type="liquid" onclick="selectType('liquid')"><div class="ptc-icon">💧</div><div class="ptc-name">液体类</div></div>
+<div class="product-type-card" data-type="powder" onclick="selectType('powder')"><div class="ptc-icon">⚪</div><div class="ptc-name">粉末类</div></div>
+<div class="product-type-card" data-type="magnetic" onclick="selectType('magnetic')"><div class="ptc-icon">🧲</div><div class="ptc-name">磁性产品</div></div>
+<div class="product-type-card" data-type="chemical" onclick="selectType('chemical')"><div class="ptc-icon">⚗️</div><div class="ptc-name">化学品</div></div>
+<div class="product-type-card" data-type="normal" onclick="selectType('normal')"><div class="ptc-icon">📦</div><div class="ptc-name">普通商品</div></div>
+</div>
+<div class="form-group" style="margin-top:16px"><label>补充说明 (可选)</label><input type="text" id="detail" placeholder="如：内置锂电池10000mAh" oninput="checkDG()"></div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="import-export-compliance-guide.html" class="related-card"><span class="ricon">📋</span><span class="rtext">进出口合规指南</span></a><a href="hs-code-lookup.html" class="related-card"><span class="ricon">🔍</span><span class="rtext">HS编码查询器</span></a><a href="fba-label-batch-generator.html" class="related-card"><span class="ricon">🏷️</span><span class="rtext">FBA标签生成器</span></a><a href="shipping-route-optimizer.html" class="related-card"><span class="ricon">🚢</span><span class="rtext">物流路线优化器</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+var DG_DATA={
+battery:{level:'danger',icon:'🔋',class:'Class 9 - 锂电池 (UN3480/UN3481)',desc:'锂电池属于第9类危险品，需满足UN38.3测试和特殊运输规定',checks:[
+{text:'UN38.3测试报告',status:'required',tag:'必须'},
+{text:'MSDS (材料安全数据表)',status:'required',tag:'必须'},
+{text:'防短路包装(绝缘隔离)',status:'required',tag:'必须'},
+{text:'防意外启动包装',status:'required',tag:'必须'},
+{text:'1.2m跌落测试',status:'required',tag:'必须'},
+{text:'危险品运输申报单 (IATA DGD)',status:'required',tag:'必须'},
+{text:'空运需航空运输条件鉴定报告',status:'required',tag:'空运必须'},
+{text:'锂电池专属标签 (Class 9 Lithium Battery Mark)',status:'required',tag:'必须'},
+{text:'荷电量限制 (SOE≤30%空运)',status:'required',tag:'空运必须'},
+{text:'包装重量限制 (≤2.7Wh/单电池 简化运输)',status:'optional',tag:'条件适用'}
+],docs:['UN38.3测试报告','MSDS安全数据表','危险品申报单(DGD)','航空运输条件鉴定书','1.2m跌落测试报告','包装性能单']},
+liquid:{level:'warning',icon:'💧',class:'Class 3 - 易燃液体 (UN编号视具体成分)',desc:'液体产品需确认是否属于易燃液体，按闪点分类管理',checks:[
+{text:'闪点测试报告',status:'required',tag:'必须'},
+{text:'MSDS (材料安全数据表)',status:'required',tag:'必须'},
+{text:'防泄漏包装(三层密封)',status:'required',tag:'必须'},
+{text:'内衬吸水材料',status:'recommended',tag:'建议'},
+{text:'向上标签 (This Way Up)',status:'required',tag:'必须'},
+{text:'危险品运输申报单 (如属易燃)',status:'recommended',tag:'条件必须'},
+{text:'空运需航空运输条件鉴定报告',status:'recommended',tag:'空运建议'},
+{text:'包装UN编码认证(4G/4GV组合包装)',status:'required',tag:'必须(易燃)'}
+],docs:['闪点测试报告','MSDS安全数据表','包装性能检验单','危险品申报单(如适用)','航空运输条件鉴定书(如适用)']},
+powder:{level:'warning',icon:'⚪',class:'Class 4.1/4.2 - 易燃固体/自燃物品',desc:'粉末产品需确认是否属于易燃固体，化妆品粉末通常为非危品',checks:[
+{text:'燃烧性测试报告',status:'required',tag:'必须'},
+{text:'MSDS (材料安全数据表)',status:'required',tag:'必须'},
+{text:'防潮防泄漏包装',status:'required',tag:'必须'},
+{text:'内层塑料袋密封+外层铝箔袋',status:'recommended',tag:'建议'},
+{text:'自燃温度测试',status:'recommended',tag:'建议'},
+{text:'粉尘爆炸性评估',status:'recommended',tag:'建议'},
+{text:'危险品运输申报单 (如属易燃)',status:'recommended',tag:'条件必须'}
+],docs:['燃烧性测试报告','MSDS安全数据表','包装性能检验单','危险品申报单(如适用)']},
+magnetic:{level:'warning',icon:'🧲',class:'Class 9 - 磁性物质 (UN2807)',desc:'磁性产品可能干扰航空导航系统，空运需磁性测试',checks:[
+{text:'磁性测试报告 (空运必须)',status:'required',tag:'空运必须'},
+{text:'MSDS (材料安全数据表)',status:'recommended',tag:'建议'},
+{text:'消磁或磁屏蔽包装',status:'required',tag:'空运必须'},
+{text:'5m距离磁场强度≤0.418A/m可豁免',status:'optional',tag:'豁免条件'},
+{text:'磁性物质标签 (Magnetized Material)',status:'required',tag:'空运必须'},
+{text:'海运通常不限制',status:'optional',tag:'海运适用'}
+],docs:['磁性测试报告','MSDS安全数据表(建议)','磁屏蔽包装证明']},
+chemical:{level:'danger',icon:'⚗️',class:'视成分定 (Class 2-9)',desc:'化学品需根据具体成分确定危险品分类，建议委托专业机构鉴定',checks:[
+{text:'成分分析报告',status:'required',tag:'必须'},
+{text:'MSDS (材料安全数据表)',status:'required',tag:'必须'},
+{text:'危险品分类鉴定报告',status:'required',tag:'必须'},
+{text:'UN编号确认',status:'required',tag:'必须'},
+{text:'包装UN编码认证',status:'required',tag:'必须'},
+{text:'危险品运输申报单 (DGD)',status:'required',tag:'必须'},
+{text:'进出口许可证 (如属管制化学品)',status:'required',tag:'条件必须'},
+{text:'REACH注册 (欧盟)',status:'recommended',tag:'欧盟建议'},
+{text:'TSCA声明 (美国)',status:'recommended',tag:'美国建议'}
+],docs:['成分分析报告','MSDS安全数据表','危险品分类鉴定报告','包装性能检验单','危险品申报单(DGD)','进出口许可证(如适用)']},
+normal:{level:'safe',icon:'📦',class:'非危险品 (Not Restricted)',desc:'普通商品无特殊运输限制，但仍需确保包装合规',checks:[
+{text:'产品合规认证 (FCC/CE等)',status:'recommended',tag:'建议'},
+{text:'包装ISPM-15木箱处理标识(木箱)',status:'recommended',tag:'木箱建议'},
+{text:'产品标签合规',status:'recommended',tag:'建议'},
+{text:'无需危险品申报',status:'optional',tag:'豁免'}
+],docs:['产品合规认证(建议)','包装合规声明']}
+};
+var currentType='battery';
+function selectType(type){
+currentType=type;
+document.querySelectorAll('.product-type-card').forEach(function(c){c.classList.remove('selected');});
+document.querySelector('[data-type="'+type+'"]').classList.add('selected');
+checkDG();
+}
+function checkDG(){
+var d=DG_DATA[currentType];
+var detail=document.getElementById('detail').value.trim();
+var html='<div class="dg-result">';
+var levelClass=d.level==='danger'?'danger':d.level==='warning'?'warning':'safe';
+var levelText=d.level==='danger'?'危险品 - 需特殊运输':d.level==='warning'?'条件性危险品 - 需评估':'非危险品 - 无特殊限制';
+html+='<div class="dg-classification '+levelClass+'"><div class="dg-icon">'+d.icon+'</div><div class="dg-info"><h3>'+levelText+'</h3><p><strong>'+d.class+'</strong></p><p>'+d.desc+(detail?' | 补充: '+detail:'')+'</p></div></div>';
+html+='<div class="dg-checklist"><h4>📋 合规检查清单</h4>';
+d.checks.forEach(function(c){
+var statusIcon=c.status==='required'?'!':c.status==='recommended'?'?':'✓';
+var statusTag=c.tag;
+html+='<div class="dg-check-item"><div class="dg-ci-status '+c.status+'">'+statusIcon+'</div><div class="dg-ci-text"><strong>'+c.text+'</strong></div><span class="dg-ci-tag" style="background:'+(c.status==='required'?'var(--red-bg)':c.status==='recommended'?'var(--gold-bg)':'var(--green-bg)')+';color:'+(c.status==='required'?'var(--red)':c.status==='recommended'?'var(--gold)':'var(--green)')+'">'+statusTag+'</span></div>';
+});
+html+='</div>';
+html+='<div class="dg-checklist"><h4>📄 申报文档清单</h4><ul class="dg-doc-list">';
+d.docs.forEach(function(doc){html+='<li>'+doc+'</li>';});
+html+='</ul></div>';
+var requiredCount=d.checks.filter(function(c){return c.status==='required';}).length;
+html+='<div style="padding:16px;background:var(--bg-soft);border-radius:var(--radius-md);font-size:14px;text-align:center">必须项: <strong style="color:var(--red)">'+requiredCount+'</strong> 项 | 建议项: <strong style="color:var(--gold)">'+d.checks.filter(function(c){return c.status==='recommended';}).length+'</strong> 项 | 文档总数: <strong style="color:var(--accent)">'+d.docs.length+'</strong> 份</div>';
+html+='<div style="margin-top:16px;padding:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius-sm);font-size:13px;color:#92400e">⚠️ 重要：危险品分类需以专业检测机构报告为准。以上信息仅供参考，实际运输请咨询物流服务商并遵守IATA DGR、IMDG Code等国际运输规定。</div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var h=JSON.parse(localStorage.getItem('jx_dg_check')||'[]');
+h.unshift({type:currentType,level:d.level,time:Date.now()});
+if(h.length>10)h=h.slice(0,10);
+localStorage.setItem('jx_dg_check',JSON.stringify(h));
+}
+checkDG();
+
+</script>
+</body>
+</html>

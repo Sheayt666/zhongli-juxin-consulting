@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="胜任力模型构建器：输入岗位和能力维度，输出能力定义+等级标准+评估方法+发展路径，CSS能力矩阵展示。">
+<meta name="keywords" content="胜任力模型,能力定义,等级标准,评估方法,发展路径,能力矩阵,人才管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/competency-model-builder.html">
+<title>胜任力模型构建器 - 能力定义·等级标准·发展路径 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.comp-card{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;transition:all .2s}
+.comp-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.06);border-color:var(--accent)}
+.comp-card .cc-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.comp-card .cc-icon{font-size:24px}
+.comp-card .cc-name{font-size:15px;font-weight:700}
+.comp-level{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--rule-light)}
+.comp-level:last-child{border-bottom:none}
+.comp-level .cl-badge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.comp-level .cl-name{font-size:13px;font-weight:600;flex:1}
+.comp-level .cl-desc{font-size:11px;color:var(--muted)}
+.path-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:16px;justify-content:center}
+.path-node{padding:12px 20px;border-radius:10px;text-align:center;min-width:100px}
+.path-arrow{font-size:18px;color:var(--accent)}
+</style>
+</head>
+<body class="tool-page" data-tool="competency_model_builder">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第12步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <a href="okr-goal-tracker.html" class="step">OKR追踪</a>
+      <span class="arrow">→</span>
+      <a href="training-onboarding-manager.html" class="step">培训入职</a>
+      <span class="arrow">→</span>
+      <a href="performance-review-system.html" class="step">绩效考核</a>
+      <span class="arrow">→</span>
+      <a href="role-permission-manager.html" class="step">权限管理</a>
+      <span class="arrow">→</span>
+      <a href="team-workflow-automation.html" class="step">工作流自动化</a>
+      <span class="arrow">→</span>
+      <a href="recruitment-pipeline.html" class="step">招聘漏斗</a>
+      <span class="arrow">→</span>
+      <span class="step current">胜任力模型</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 标准版</span>
+      <h1>胜任力模型 <em>构建器</em></h1>
+      <p class="tool-hero-desc">输入岗位和能力维度，输出能力定义+等级标准+评估方法+发展路径，CSS能力矩阵展示，帮你系统化构建人才胜任力模型。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🧠 胜任力模型配置</h2>
+          <p class="calc-form-subtitle">选择岗位和能力维度，生成胜任力模型</p>
+          <div class="calc-field"><label>目标岗位</label><select id="position" onchange="CMB.gen()">
+            <option value="ops" selected>运营专员</option>
+            <option value="manager">运营经理</option>
+            <option value="director">运营总监</option>
+            <option value="product">产品经理</option>
+          </select></div>
+          <div class="calc-field"><label>行业</label><select id="industry" onchange="CMB.gen()">
+            <option value="crossborder" selected>跨境电商</option>
+            <option value="domestic">国内电商</option>
+            <option value="brand">品牌出海</option>
+          </select></div>
+          <div class="calc-field"><label>评估层级数</label><select id="levels" onchange="CMB.gen()">
+            <option value="3">3级 (初级/中级/高级)</option>
+            <option value="4" selected>4级 (初级/中级/高级/专家)</option>
+            <option value="5">5级 (入门/初级/中级/高级/专家)</option>
+          </select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🧠 胜任力能力矩阵</h3>
+        <div class="comp-grid" id="compGrid"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🛈 发展路径</h3>
+        <div class="path-flow" id="pathFlow"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="recruitment-pipeline.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第11步</span>招聘漏斗 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="index.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第0步</span>工具中心 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var CMB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var COMPETENCIES={
+    ops:[
+      {name:'平台运营能力',icon:'🌐',dims:['Amazon运营','eBay运营','广告投放','数据分析']},
+      {name:'数据分析能力',icon:'📊',dims:['报表制作','趋势分析','竞品分析','预测建模']},
+      {name:'沟通协作能力',icon:'💬',dims:['跨部门协作','客户沟通','团队协作','上级汇报']},
+      {name:'执行力',icon:'⚡',dims:['任务完成','效率管理','问题解决','结果导向']}
+    ],
+    manager:[
+      {name:'团队管理能力',icon:'👥',dims:['团队建设','绩效管理','人才培养','冲突解决']},
+      {name:'战略规划能力',icon:'🎯',dims:['目标制定','资源分配','风险评估','战略落地']},
+      {name:'业务理解能力',icon:'💡',dims:['行业洞察','产品理解','市场分析','竞争策略']},
+      {name:'沟通影响力',icon:'💬',dims:['跨部门协调','上级影响','外部沟通','内部宣贯']}
+    ],
+    director:[
+      {name:'战略性思维',icon:'💡',dims:['宏观趋势','战略制定','跨界整合','创新驱动']},
+      {name:'组织架构能力',icon:'🏢',dims:['架构设计','流程优化','变革管理','文化建设']},
+      {name:'决策能力',icon:'⚖️',dims:['数据决策','风险决策','资源决策','危机处理']},
+      {name:'行业影响力',icon:'🌍',dims:['行业地位','资源整合','品牌建设','社交网络']}
+    ],
+    product:[
+      {name:'产品思维',icon:'💡',dims:['需求分析','产品规划','用户体验','迭代管理']},
+      {name:'数据驱动',icon:'📊',dims:['数据分析','A/B测试','指标体系','增长策略']},
+      {name:'项目管理',icon:'📁',dims:['进度管理','风险控制','跨部协作','资源协调']},
+      {name:'用户洞察',icon:'👁️',dims:['用户研究','场景分析','痛点识识','需求挖掘']}
+    ]
+  };
+  var LEVELS=[
+    {name:'入门',color:'#ef4444',desc:'在指导下完成基本任务'},
+    {name:'熟练',color:'#f59e0b',desc:'独立完成常规任务'},
+    {name:'精通',color:'#4f46e5',desc:'独立解决复杂问题'},
+    {name:'专家',color:'#10b981',desc:'指导他人，引领变革'},
+    {name:'大师',color:'#8b5cf6',desc:'行业领军，开创方法论'}
+  ];
+  return{
+    gen:function(){
+      var pos=$('position').value,levels=parseInt($('levels').value);
+      var comps=COMPETENCIES[pos]||COMPETENCIES.ops;
+      var usedLevels=LEVELS.slice(0,levels);
+      var html='<h3>🧠 胜任力模型概览</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">能力维度</div><div class="hc-value">'+comps.length+'</div><div class="hc-sub">评估等级 '+levels+'级</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">展示能力</div><div class="hc-value">'+comps.reduce(function(s,c){return s+c.dims.length;},0)+'</div><div class="hc-sub">个具体能力项</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">岗位</span><span class="fr-val">'+({ops:'运营专员',manager:'运营经理',director:'运营总监',product:'产品经理'}[pos])+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">能力维度数</span><span class="fr-val">'+comps.length+'个</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">评估等级</span><span class="fr-val">'+levels+'级</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var gHtml='';
+      comps.forEach(function(c){
+        gHtml+='<div class="comp-card"><div class="cc-header"><span class="cc-icon">'+c.icon+'</span><span class="cc-name">'+c.name+'</span></div>';
+        usedLevels.forEach(function(lv,i){
+          gHtml+='<div class="comp-level"><div class="cl-badge" style="background:'+lv.color+'">'+(i+1)+'</div>';
+          gHtml+='<div><div class="cl-name">'+lv.name+'</div><div class="cl-desc">'+lv.desc+'</div></div></div>';
+        });
+        gHtml+='<div style="margin-top:10px;font-size:12px;color:var(--muted)"><strong>评估方法：</strong>360评佰 + 项目实战 + 面谈</div>';
+        gHtml+='</div>';
+      });
+      $('compGrid').innerHTML=gHtml;
+      var posName={ops:'运营专员',manager:'运营经理',director:'运营总监',product:'产品经理'}[pos];
+      var paths=[
+        {name:'入门',color:'#ef4444'},
+        {name:posName,color:'#f59e0b'},
+        {name:'高级'+posName,color:'#4f46e5'},
+        {name:'部门负责人',color:'#10b981'},
+        {name:'业务负责人',color:'#8b5cf6'}
+      ];
+      var pHtml='';
+      paths.forEach(function(p,i){
+        pHtml+='<div class="path-node" style="background:'+p.color+'22;border:2px solid '+p.color+';color:'+p.color+'"><div style="font-weight:700;font-size:14px">'+p.name+'</div><div style="font-size:11px;margin-top:4px">'+(i+1)+'年+</div></div>';
+        if(i<paths.length-1)pHtml+='<div class="path-arrow">→</div>';
+      });
+      $('pathFlow').innerHTML=pHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CMB.gen);}else{CMB.gen();}
+</script>
+</body>
+</html>

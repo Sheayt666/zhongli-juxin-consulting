@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="违禁词扫描器：FDA/医疗声明/杀虫剂词/敏感词自动检测+替换建议+Listing全文扫描，CSS扫描报告可视化，跨境卖家合规工具。">
+<title>违禁词扫描器 - FDA医疗声明敏感词检测替换 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field textarea{width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s;resize:vertical;min-height:120px;line-height:1.6}
+.jx-field textarea:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.scan-result{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:16px;font-size:14px;line-height:1.8;max-height:400px;overflow-y:auto}
+.scan-result .highlight-danger{background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:4px;font-weight:700;text-decoration:line-through}
+.scan-result .highlight-warn{background:#fffbeb;color:#d97706;padding:2px 6px;border-radius:4px;font-weight:600}
+.scan-result .highlight-safe{background:#ecfdf5;color:#059669;padding:2px 6px;border-radius:4px}
+.violation-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:10px;border:1px solid var(--rule);margin-bottom:8px}
+.violation-item.danger{border-color:#fecaca;background:#fef2f2}
+.violation-item.warn{border-color:#fde68a;background:#fffbeb}
+.violation-item.safe{border-color:#a7f3d0;background:#ecfdf5}
+.vi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.vi-body{flex:1}.vi-body h4{font-size:13px;font-weight:700;margin:0 0 4px}.vi-body p{font-size:12px;color:var(--muted);margin:0 0 4px}
+.vi-suggest{font-size:12px;padding:4px 10px;border-radius:6px;background:#eef2ff;color:#4f46e5;font-weight:600;display:inline-block}
+.cat-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.cat-tab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+.cat-tab.active{border-color:#4f46e5;background:#4f46e5;color:#fff}
+.kw-lib-table{width:100%;border-collapse:collapse;font-size:13px}
+.kw-lib-table th{padding:8px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.kw-lib-table td{padding:8px 12px;border-bottom:1px solid var(--rule-light)}
+.kw-cat{display:inline-block;padding:2px 10px;border-radius:6px;font-size:11px;font-weight:700}
+.cat-fda{background:#fef2f2;color:#dc2626}
+.cat-medical{background:#fffbeb;color:#d97706}
+.cat-pesticide{background:#fef2f2;color:#dc2626}
+.cat-sensitive{background:#fffbeb;color:#d97706}
+.cat-ip{background:#eef2ff;color:#4f46e5}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+  <a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a><a href="restricted-keyword-scanner.html" class="workflow-step active">违禁词扫描</a><a href="children-product-certification.html" class="workflow-step">儿童认证</a><a href="environmental-compliance-checker.html" class="workflow-step">环保合规</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W41 合规深度</a><span class="sep">›</span><span class="current">违禁词扫描器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🚫</span>违禁词扫描器 Restricted Keyword Scanner</h1>
+  <p>Listing全文深度扫描，自动检测FDA违禁声明、医疗效果声称、杀虫剂词汇、敏感词和侵权词汇，提供替换建议，CSS扫描报告高亮标记违规词汇，确保Listing合规上架。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">扫描词汇数</div><div class="mc-value" id="mScanned">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">高危违禁词</div><div class="mc-value" id="mDanger">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">警告词</div><div class="mc-value" id="mWarn">0</div></div>
+    <div class="metric-card success"><div class="mc-label">合规评分</div><div class="mc-value" id="mScore">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📝 Listing文本输入</h2>
+    <div class="jx-field">
+      <label>粘贴Listing标题、五点描述、产品描述全文</label>
+      <textarea id="listingText" oninput="RKS.scan()" placeholder="在此粘贴你的Listing文本...">Premium Organic Anti-Aging Face Serum with Vitamin C - Reduces Wrinkles, Heals Skin, Cures Acne, 100% Natural Treatment, Antibacterial Formula, FDA Approved, Best Seller, Guaranteed Results or Money Back. Kills 99% of Bacteria. Medical Grade Skincare for All Skin Types.</textarea>
+    </div>
+    <div class="cat-tabs" id="catTabs">
+      <div class="cat-tab active" onclick="RKS.switchCat('all')">全部</div>
+      <div class="cat-tab" onclick="RKS.switchCat('fda')">FDA声明</div>
+      <div class="cat-tab" onclick="RKS.switchCat('medical')">医疗效果</div>
+      <div class="cat-tab" onclick="RKS.switchCat('pesticide')">杀虫剂词</div>
+      <div class="cat-tab" onclick="RKS.switchCat('sensitive')">敏感词</div>
+      <div class="cat-tab" onclick="RKS.switchCat('ip')">侵权词</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 扫描结果 — 高亮文本</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">红色删除线=高危违禁词，黄色=警告词，绿色=安全词</p>
+    <div class="scan-result" id="scanResult"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚠️ 违规词汇详情与替换建议</h2>
+    <div id="violationList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📚 违禁词库参考</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">常见违禁词分类及替换建议</p>
+    <div style="overflow-x:auto"><table class="kw-lib-table" id="kwLibTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 合规建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="fda-label-checker.html" class="rt-card"><div class="rt-icon">🏥</div><div><h5>FDA标签</h5><p>FDA合规检查</p></div></a>
+      <a href="product-safety-assessment.html" class="rt-card"><div class="rt-icon">🛡️</div><div><h5>安全评估</h5><p>产品安全</p></div></a>
+      <a href="label-translation-verifier.html" class="rt-card"><div class="rt-icon">🌐</div><div><h5>标签翻译</h5><p>多语言验证</p></div></a>
+      <a href="compliance-audit-scorecard.html" class="rt-card"><div class="rt-icon">📋</div><div><h5>审计评分</h5><p>合规审计</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="restricted-keyword-scanner.html">违禁词扫描</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var RKS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+
+  var KW_LIB=[
+    //FDA违禁声明
+    {word:'FDA Approved',cat:'fda',level:'danger',suggest:'已通过质量检测',reason:'FDA不允许声称"批准"除非确实获得FDA批准'},
+    {word:'FDA Certified',cat:'fda',level:'danger',suggest:'通过ISO质量认证',reason:'同上，FDA不"认证"产品'},
+    {word:'Cures',cat:'medical',level:'danger',suggest:'有助于改善',reason:'医疗效果声明违反FDA规定'},
+    {word:'Heals',cat:'medical',level:'danger',suggest:'舒缓',reason:'暗示治疗功效'},
+    {word:'Treats',cat:'medical',level:'danger',suggest:'护理',reason:'暗示医疗治疗'},
+    {word:'Antibacterial',cat:'pesticide',level:'danger',suggest:'清洁配方',reason:'抗菌声明属于EPA杀虫剂监管'},
+    {word:'Kills 99%',cat:'pesticide',level:'danger',suggest:'有效清洁',reason:'杀菌率声明需EPA注册'},
+    {word:'Medical Grade',cat:'medical',level:'warn',suggest:'专业级',reason:'医疗级别声明需证据支持'},
+    {word:'Guaranteed Results',cat:'sensitive',level:'warn',suggest:'满意度保障',reason:'保证效果的声明可能违反广告法'},
+    {word:'Money Back',cat:'sensitive',level:'warn',suggest:'退款政策',reason:'退款保证需符合平台政策'},
+    {word:'Best Seller',cat:'sensitive',level:'warn',suggest:'热销产品',reason:'除非有平台数据支持否则不可声称'},
+    {word:'100% Natural',cat:'sensitive',level:'warn',suggest:'天然成分',reason:'100%声明需全部成分验证'},
+    {word:'Anti-Aging',cat:'medical',level:'warn',suggest:'抗皱修护',reason:'抗衰老可能被视为医疗声明'},
+    {word:'Reduces Wrinkles',cat:'medical',level:'warn',suggest:'淡化细纹',reason:'减少皱纹属于功效声明'},
+    {word:'Cures Acne',cat:'medical',level:'danger',suggest:'适合痘痘肌',reason:'治疗痘痘属于医疗声明'}
+  ];
+
+  var currentCat='all';
+
+  function scan(){
+    var text=$('listingText').value;
+    var words=text.split(/\s+/);
+    var dangerCount=0,warnCount=0;
+    var violations=[];
+    var highlighted=text;
+
+    KW_LIB.forEach(function(kw){
+      var regex=new RegExp(kw.word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+      if(regex.test(text)){
+        if(kw.level==='danger')dangerCount++;
+        else warnCount++;
+        violations.push(kw);
+        //高亮替换
+        if(kw.level==='danger'){
+          highlighted=highlighted.replace(regex,'<span class="highlight-danger">'+kw.word+'</span>');
+        }else{
+          highlighted=highlighted.replace(regex,'<span class="highlight-warn">'+kw.word+'</span>');
+        }
+      }
+    });
+
+    var totalWords=words.length;
+    var score=Math.max(0,100-dangerCount*15-warnCount*5);
+
+    $('mScanned').textContent=totalWords;
+    $('mDanger').textContent=dangerCount;
+    $('mWarn').textContent=warnCount;
+    $('mScore').textContent=score;
+    $('mScore').parentElement.className='metric-card '+(score>=80?'success':score>=50?'warning':'danger');
+
+    $('scanResult').innerHTML=highlighted;
+    renderViolations(violations);
+    renderKwLib();
+    renderTips(dangerCount,warnCount,score,totalWords);
+    save();
+  }
+
+  function renderViolations(violations){
+    if(violations.length===0){
+      $('violationList').innerHTML='<div class="violation-item safe"><div class="vi-icon" style="background:#a7f3d0">✓</div><div class="vi-body"><h4>未发现违规词汇</h4><p>Listing文本扫描通过，未检测到违禁词。</p></div></div>';
+      return;
+    }
+    var h='';
+    violations.forEach(function(v){
+      var cls=v.level==='danger'?'danger':'warn';
+      var icon=v.level==='danger'?'⛔':'⚠️';
+      var iconBg=v.level==='danger'?'#fecaca':'#fde68a';
+      var catLabel={fda:'FDA声明',medical:'医疗效果',pesticide:'杀虫剂词',sensitive:'敏感词',ip:'侵权词'}[v.cat];
+      h+='<div class="violation-item '+cls+'"><div class="vi-icon" style="background:'+iconBg+'">'+icon+'</div><div class="vi-body"><h4>「'+v.word+'」 — '+catLabel+'</h4><p>'+v.reason+'</p><span class="vi-suggest">替换建议：'+v.suggest+'</span></div></div>';
+    });
+    $('violationList').innerHTML=h;
+  }
+
+  function renderKwLib(){
+    var filtered=currentCat==='all'?KW_LIB:KW_LIB.filter(function(k){return k.cat===currentCat});
+    var h='<thead><tr><th>违禁词</th><th>类别</th><th>等级</th><th>替换建议</th><th>原因</th></tr></thead><tbody>';
+    filtered.forEach(function(k){
+      var catLabel={fda:'FDA声明',medical:'医疗效果',pesticide:'杀虫剂词',sensitive:'敏感词',ip:'侵权词'}[k.cat];
+      var catCls='cat-'+k.cat;
+      var lvlTxt=k.level==='danger'?'高危':'警告';
+      var lvlColor=k.level==='danger'?'#dc2626':'#d97706';
+      h+='<tr><td><strong style="color:'+lvlColor+'">'+k.word+'</strong></td><td><span class="kw-cat '+catCls+'">'+catLabel+'</span></td><td><span style="font-size:12px;font-weight:700;color:'+lvlColor+'">'+lvlTxt+'</span></td><td style="color:#4f46e5;font-weight:600">'+k.suggest+'</td><td style="font-size:12px;color:var(--muted)">'+k.reason+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('kwLibTable').innerHTML=h;
+  }
+
+  function renderTips(danger,warn,score,total){
+    var tips=[];
+    tips.push('扫描完成：共扫描 '+total+' 词，发现 '+danger+' 个高危违禁词，'+warn+' 个警告词，合规评分 '+score+'/100。');
+    if(danger>0)tips.push('发现 '+danger+' 个高危违禁词，必须立即替换！这些词汇可能导致Listing被下架、账号被警告甚至封号。');
+    if(warn>0)tips.push('发现 '+warn+' 个警告词，建议替换以降低合规风险，虽然不一定立即导致下架但长期存在风险。');
+    if(score>=80)tips.push('合规评分 '+score+' 分，良好。建议持续监控，定期扫描确保Listing合规。');
+    else if(score>=50)tips.push('合规评分 '+score+' 分，一般。需替换警告词，优化至80分以上。');
+    else tips.push('合规评分 '+score+' 分，危险！必须立即修改Listing，替换所有高危违禁词后重新提交。');
+    tips.push('FDA合规要点：不可声称"治愈/治疗/预防"疾病，不可使用"FDA批准/认证"除非确实获得批准，化妆品不可声称药理效果。');
+    tips.push('杀虫剂合规要点："抗菌/杀菌/杀灭细菌"等声明属于EPA管辖，需EPA注册号，建议使用"清洁/净化"等非功效词。');
+    tips.push('广告法合规要点：避免"最好/第一/100%/保证效果"等绝对化用语，避免"退款保证"除非有明确退款政策。');
+    tips.push('定期扫描建议：每次Listing修改后扫描，每季度全量扫描一次，关注平台政策更新和新增违禁词。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function switchCat(cat){
+    currentCat=cat;
+    var tabs=document.querySelectorAll('.cat-tab');
+    tabs.forEach(function(t){t.classList.remove('active')});
+    event.target.classList.add('active');
+    renderKwLib();
+  }
+
+  function save(){try{localStorage.setItem('jx_rks_data',JSON.stringify({listingText:$('listingText').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_rks_data'));if(d&&d.listingText)$('listingText').value=d.listingText}catch(e){}}
+  return {scan:scan,switchCat:switchCat,init:function(){load();scan()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RKS.init)}else{RKS.init()}
+</script>
+</body>
+</html>

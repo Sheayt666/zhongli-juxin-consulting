@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="跨平台Listing同步器：输入Amazon Listing内容，自动生成eBay/Walmart/Shopify/TikTok各平台适配版本，字符限制检查、格式要求、图片规格对照表，一键复制。">
+<meta name="keywords" content="Listing同步,跨平台Listing,Amazon eBay Walmart适配,字符限制,图片要求,多平台发布">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/cross-platform-listing-sync.html">
+<title>跨平台Listing同步器 - 多平台适配·字符检查·格式对照 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.sync-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.sync-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.platform-tab{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab-btn{padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);cursor:pointer;transition:all .2s}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab-btn:hover:not(.active){border-color:var(--accent);color:var(--accent)}
+.char-counter{display:flex;justify-content:space-between;font-size:12px;margin-top:4px}
+.char-counter .ok{color:var(--green)}
+.char-counter .warn{color:var(--gold)}
+.char-counter .over{color:var(--red)}
+.sync-output{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:20px;margin-top:12px;font-size:13px;line-height:1.8;color:var(--ink-soft)}
+.sync-output .field-block{margin-bottom:16px;padding-bottom:16px;border-bottom:1px dashed var(--rule-light)}
+.sync-output .field-block:last-child{border-bottom:none}
+.sync-output .fb-label{font-weight:700;color:var(--ink);font-size:13px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.sync-output .fb-content{color:var(--ink-soft);white-space:pre-wrap}
+.btn-copy-sm{padding:5px 14px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+.req-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.req-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.req-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.req-table .pass{color:var(--green);font-weight:600}
+.req-table .fail{color:var(--red);font-weight:600}
+.req-table .warn{color:var(--gold);font-weight:600}
+@media(max-width:768px){.req-table{font-size:11px}.req-table th,.req-table td{padding:6px 8px}}
+</style>
+</head>
+<body class="tool-page" data-tool="cross_platform_listing_sync">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🌐</span><span class="workflow-name">多平台运营工作流</span><span class="workflow-step">第7步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="ebay-fees.html" class="step">eBay费用</a><span class="arrow">→</span>
+      <a href="walmart-fees.html" class="step">Walmart费用</a><span class="arrow">→</span>
+      <a href="shopify-costs.html" class="step">Shopify成本</a><span class="arrow">→</span>
+      <a href="tiktok-shop-calc.html" class="step">TikTok利润</a><span class="arrow">→</span>
+      <a href="temu-pricing.html" class="step">Temu定价</a><span class="arrow">→</span>
+      <a href="platform-profit-comparison.html" class="step">平台利润对比</a><span class="arrow">→</span>
+      <span class="step current">Listing同步</span><span class="arrow">→</span>
+      <a href="aliexpress-fees-calc.html" class="step">速卖通费用</a><span class="arrow">→</span>
+      <a href="etsy-fees-calc.html" class="step">Etsy费用</a><span class="arrow">→</span>
+      <a href="multichannel-inventory-allocator.html" class="step">库存分配</a><span class="arrow">→</span>
+      <a href="platform-selection-matrix.html" class="step">平台选择</a><span class="arrow">→</span>
+      <a href="regional-market-comparator.html" class="step">区域对比</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌐 多平台运营工作流 · 标准版</span>
+      <h1>跨平台Listing <em>同步器</em></h1>
+      <p class="tool-hero-desc">输入Amazon Listing内容，自动生成eBay/Walmart/Shopify/TikTok各平台适配版本，字符限制检查、格式要求对照、图片规格提示，一键复制。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📝 输入Amazon Listing</h2>
+          <p class="calc-form-subtitle">填写原始Amazon Listing内容，系统自动适配各平台</p>
+          <div class="calc-field"><label>产品标题</label><input type="text" id="amzTitle" value="Wireless Bluetooth Headphones Noise Cancelling Over-Ear Headset with Microphone 40H Playtime" oninput="SYNC.render()"></div>
+          <div class="char-counter"><span>当前长度</span><span id="titleLen">0</span></div>
+          <div class="calc-field" style="margin-top:14px"><label>五点描述（每行一点）</label><textarea id="amzBullets" rows="5" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" oninput="SYNC.render()">Active Noise Cancellation blocks up to 90% of ambient noise
+40-hour battery life for all-day listening comfort
+Built-in microphone for hands-free calls and voice assistant
+Memory foam ear cushions for extended wear comfort
+Foldable design with premium carrying case included</textarea></div>
+          <div class="calc-field" style="margin-top:14px"><label>产品描述</label><textarea id="amzDesc" rows="4" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" oninput="SYNC.render()">Experience premium sound quality with our Wireless Bluetooth Headphones. Featuring advanced active noise cancellation technology, these over-ear headphones deliver crystal-clear audio for music, podcasts, and calls. The ergonomic design ensures comfort for hours of use.</textarea></div>
+          <div class="calc-row-2" style="margin-top:14px">
+            <div class="calc-field"><label>主关键词</label><input type="text" id="keywords" value="bluetooth headphones, noise cancelling headphones, wireless headset" oninput="SYNC.render()"></div>
+            <div class="calc-field"><label>品牌名</label><input type="text" id="brand" value="SoundMax" oninput="SYNC.render()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="sync-section">
+        <h3>🔄 平台适配输出</h3>
+        <div class="platform-tab" id="tabBar"></div>
+        <div id="outputArea"></div>
+      </div>
+      <div class="sync-section">
+        <h3>📋 各平台规格要求对照表</h3>
+        <div id="reqTable"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="platform-profit-comparison.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第6步</span>平台利润对比 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="aliexpress-fees-calc.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第8步</span>速卖通费用 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="cross-platform-listing-sync.html">Listing同步</a></li><li><a href="platform-profit-comparison.html">平台利润对比</a></li><li><a href="multichannel-inventory-allocator.html">库存分配</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">© 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var SYNC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var PLATFORMS={
+    eBay:{name:'eBay',titleMax:80,bulletMax:500,descMax:500000,imgMax:12,imgSize:'1600px',color:'#e53238'},
+    Walmart:{name:'Walmart',titleMax:50,bulletMax:200,descMax:4000,imgMax:9,imgSize:'2000px',color:'#0071dc'},
+    Shopify:{name:'Shopify',titleMax:255,bulletMax:1000,descMax:32000,imgMax:250,imgSize:'4472px',color:'#95bf47'},
+    TikTok:{name:'TikTok',titleMax:100,bulletMax:500,descMax:2000,imgMax:5,imgSize:'1000px',color:'#000000'}
+  };
+  var currentTab='eBay';
+  function truncate(str,max){return str.length>max?str.substring(0,max-3)+'...':str;}
+  function adaptTitle(title,platform){
+    if(platform==='eBay')return title.substring(0,80);
+    if(platform==='Walmart')return title.substring(0,50);
+    if(platform==='Shopify')return title;
+    if(platform==='TikTok')return title.substring(0,100);
+    return title;
+  }
+  function adaptBullets(bullets,platform){
+    var lines=bullets.split('\n').filter(function(l){return l.trim();});
+    var max=PLATFORMS[platform].bulletMax;
+    return lines.map(function(l){return truncate(l,max);}).join('\n');
+  }
+  function adaptDesc(desc,platform){
+    return truncate(desc,PLATFORMS[platform].descMax);
+  }
+  function render(){
+    var title=$('amzTitle').value;
+    var bullets=$('amzBullets').value;
+    var desc=$('amzDesc').value;
+    var kw=$('keywords').value;
+    var brand=$('brand').value;
+    $('titleLen').textContent=title.length+' / 200';
+    var titleClass=title.length>150?'over':(title.length>120?'warn':'ok');
+    $('titleLen').className=titleClass;
+    var summary='<h3>📊 适配摘要</h3>';
+    summary+='<div class="fee-breakdown" style="background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px">';
+    Object.keys(PLATFORMS).forEach(function(k){
+      var p=PLATFORMS[k];
+      var tLen=adaptTitle(title,k).length;
+      var status=tLen<=p.titleMax?'pass':'fail';
+      summary+='<div class="fee-row"><span class="fr-lbl" style="color:'+p.color+'">● '+p.name+'</span><span class="fr-val">标题 '+tLen+'/'+p.titleMax+'字符 '+(status==='pass'?'✓':'✗ 超限')+'</span></div>';
+    });
+    summary+='</div>';
+    $('resultCard').innerHTML=summary;
+    renderTabs();
+    renderOutput(title,bullets,desc,kw,brand);
+    renderReqTable(title,bullets,desc);
+  }
+  function renderTabs(){
+    var html='';
+    Object.keys(PLATFORMS).forEach(function(k){
+      html+='<button class="tab-btn'+(k===currentTab?' active':'')+'" onclick="SYNC.setTab(\''+k+'\')" style="'+(k===currentTab?'background:'+PLATFORMS[k].color+';border-color:'+PLATFORMS[k].color:'')+'">'+PLATFORMS[k].name+'</button>';
+    });
+    $('tabBar').innerHTML=html;
+  }
+  function renderOutput(title,bullets,desc,kw,brand){
+    var p=PLATFORMS[currentTab];
+    var aTitle=adaptTitle(title,currentTab);
+    var aBullets=adaptBullets(bullets,currentTab);
+    var aDesc=adaptDesc(desc,currentTab);
+    var html='<div class="sync-output">';
+    html+='<div class="field-block"><div class="fb-label">📌 标题 <button class="btn-copy-sm" onclick="SYNC.copy(this,\''+aTitle.replace(/'/g,"\\'")+'\')">复制</button></div>';
+    html+='<div class="fb-content">'+aTitle+'</div>';
+    html+='<div class="char-counter"><span>长度: '+aTitle.length+'</span><span class="'+(aTitle.length<=p.titleMax?'ok':'over')+'">限制: '+p.titleMax+'</span></div></div>';
+    html+='<div class="field-block"><div class="fb-label">📝 五点描述 <button class="btn-copy-sm" onclick="SYNC.copy(this,\''+aBullets.replace(/'/g,"\\'").replace(/\n/g,'\\n')+'\')">复制</button></div>';
+    html+='<div class="fb-content" style="white-space:pre-wrap">'+aBullets+'</div></div>';
+    html+='<div class="field-block"><div class="fb-label">📄 产品描述 <button class="btn-copy-sm" onclick="SYNC.copy(this,\''+aDesc.replace(/'/g,"\\'")+'\')">复制</button></div>';
+    html+='<div class="fb-content">'+aDesc+'</div></div>';
+    html+='<div class="field-block"><div class="fb-label">🔍 关键词</div><div class="fb-content">'+kw+'</div></div>';
+    html+='<div class="field-block"><div class="fb-label">🏷️ 品牌</div><div class="fb-content">'+brand+'</div></div>';
+    html+='<div class="field-block"><div class="fb-label">📷 图片要求</div><div class="fb-content">最多 '+p.imgMax+' 张 · 推荐尺寸 '+p.imgSize+'px · 主图白底无水印</div></div>';
+    html+='</div>';
+    $('outputArea').innerHTML=html;
+  }
+  function renderReqTable(title,bullets,desc){
+    var html='<table class="req-table"><thead><tr><th>要求项</th>';
+    Object.keys(PLATFORMS).forEach(function(k){html+='<th style="color:'+PLATFORMS[k].color+'">'+PLATFORMS[k].name+'</th>';});
+    html+='</tr></thead><tbody>';
+    var rows=[
+      {label:'标题字符限制',getVal:function(p){return PLATFORMS[p].titleMax;},getSt:function(p){var l=adaptTitle(title,p).length;return l<=PLATFORMS[p].titleMax?'pass':'fail';},getTxt:function(p){var l=adaptTitle(title,p).length;return l+'/'+PLATFORMS[p].titleMax;}},
+      {label:'五点描述限制',getVal:function(p){return PLATFORMS[p].bulletMax;},getSt:function(p){return 'pass';},getTxt:function(p){return PLATFORMS[p].bulletMax+'字符/点';}},
+      {label:'描述字符限制',getVal:function(p){return PLATFORMS[p].descMax;},getSt:function(p){return 'pass';},getTxt:function(p){return PLATFORMS[p].descMax+'字符';}},
+      {label:'图片数量上限',getVal:function(p){return PLATFORMS[p].imgMax;},getSt:function(p){return 'pass';},getTxt:function(p){return PLATFORMS[p].imgMax+'张';}},
+      {label:'推荐图片尺寸',getVal:function(p){return PLATFORMS[p].imgSize;},getSt:function(p){return 'pass';},getTxt:function(p){return PLATFORMS[p].imgSize+'px';}}
+    ];
+    rows.forEach(function(r){
+      html+='<tr><td><strong>'+r.label+'</strong></td>';
+      Object.keys(PLATFORMS).forEach(function(k){html+='<td class="'+r.getSt(k)+'">'+r.getTxt(k)+'</td>';});
+      html+='</tr>';
+    });
+    html+='</tbody></table>';
+    $('reqTable').innerHTML=html;
+  }
+  return{
+    setTab:function(t){currentTab=t;render();},
+    copy:function(btn,text){
+      if(navigator.clipboard){navigator.clipboard.writeText(text.replace(/\\n/g,'\n'));}
+      btn.textContent='已复制!';
+      setTimeout(function(){btn.textContent='复制';},1500);
+    },
+    render:render,
+    init:render
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SYNC.init);}else{SYNC.init();}
+</script>
+</body>
+</html>

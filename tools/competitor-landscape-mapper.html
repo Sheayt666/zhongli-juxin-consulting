@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="竞争格局图谱器：CSS竞争格局气泡图、HHI垄断度分析、新进入者趋势追踪、竞品对比矩阵。跨境卖家战略决策利器。">
+<title>竞争格局图谱器 - HHI垄断分析·竞争气泡图·新进入者趋势 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.comp-row{display:grid;grid-template-columns:40px 1.5fr 1fr 1fr 1fr 1fr 1fr 40px;gap:8px;align-items:center;padding:10px 12px;border-radius:10px;border:1px solid var(--rule);margin-bottom:8px;transition:all .2s}.comp-row.header{background:var(--bg);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border:none}.comp-row:not(.header):hover{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.08)}.comp-row .comp-idx{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}.comp-row .comp-name{font-weight:600;font-size:14px}.comp-row .comp-val{text-align:right;font-size:13px;font-weight:600}.comp-row .comp-bar{height:6px;border-radius:3px;background:var(--rule-light);overflow:hidden;margin-top:2px}.comp-row .comp-bar-fill{height:100%;border-radius:3px;transition:width .4s}.comp-row .comp-del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;opacity:.5;transition:opacity .2s}.comp-row .comp-del:hover{opacity:1}
+.btn-add{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:12px}.btn-add:hover{background:var(--primary-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.landscape-map{position:relative;width:100%;height:420px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border-radius:var(--radius);border:1px solid var(--rule);overflow:hidden}.landscape-map .axis-x{position:absolute;bottom:40px;left:60px;right:20px;height:1px;background:var(--rule)}.landscape-map .axis-y{position:absolute;bottom:40px;left:60px;top:20px;width:1px;background:var(--rule)}.landscape-map .axis-label{position:absolute;font-size:11px;color:var(--muted);font-weight:600}.landscape-map .bubble{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(0,0,0,.15)}.landscape-map .bubble:hover{transform:scale(1.15);z-index:10}.landscape-map .quadrant-label{position:absolute;font-size:10px;color:var(--muted);font-weight:600;opacity:.6}
+.hhi-bar{height:24px;border-radius:12px;background:linear-gradient(90deg,#10b981 0%,#10b981 15%,#f59e0b 15%,#f59e0b 25%,#ef4444 25%,#ef4444 100%);position:relative;margin:16px 0}.hhi-marker{position:absolute;top:-6px;width:4px;height:36px;background:var(--ink);border-radius:2px;transition:left .4s}.hhi-marker::after{content:attr(data-val);position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}
+.entrant-list{display:flex;flex-direction:column;gap:8px}.entrant-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg);border-radius:10px;border-left:4px solid}.entrant-item.high{border-left-color:var(--danger)}.entrant-item.med{border-left-color:var(--warning)}.entrant-item.low{border-left-color:var(--success)}.entrant-item .ent-icon{font-size:18px}.entrant-item .ent-info{flex:1}.entrant-item .ent-info h4{font-size:13px;font-weight:700}.entrant-item .ent-info p{font-size:12px;color:var(--muted)}.entrant-item .ent-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}.entrant-item.high .ent-badge{background:var(--danger-bg);color:var(--danger)}.entrant-item.med .ent-badge{background:var(--warning-bg);color:var(--warning)}.entrant-item.low .ent-badge{background:var(--success-bg);color:var(--success)}
+.hhi-status{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:700}.hhi-status.low{background:var(--success-bg);color:var(--success)}.hhi-status.med{background:var(--warning-bg);color:var(--warning)}.hhi-status.high{background:var(--danger-bg);color:var(--danger)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.comp-row{grid-template-columns:30px 1fr 80px 80px 80px 30px;font-size:12px}.comp-row .col-hide{display:none}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W8 战略决策工作流</div><div class="workflow-steps">
+<a href="market-entry-evaluator.html" class="workflow-step">市场进入</a><a href="competitive-advantage.html" class="workflow-step">竞争优势</a><a href="market-share.html" class="workflow-step">市场份额</a><a href="annual-budget-planner.html" class="workflow-step">年度预算</a><a href="referral-fee.html" class="workflow-step">佣金计算</a><a href="market-trend-forecaster.html" class="workflow-step">趋势预测</a><a href="competitor-landscape-mapper.html" class="workflow-step active">竞争格局</a><a href="category-opportunity-analyzer.html" class="workflow-step">类目机会</a><a href="resource-allocation-optimizer.html" class="workflow-step">资源优化</a><a href="growth-strategy-roadmap.html" class="workflow-step">增长路线图</a><a href="scenario-planner.html" class="workflow-step">场景规划</a><a href="okr-goal-framework.html" class="workflow-step">OKR目标</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W8 战略决策</a><span>/</span>竞争格局图谱器</div>
+<div class="tool-header"><span class="tool-badge">W8 战略决策工作流</span><h1>竞争格局<em>图谱器</em></h1><p>CSS竞争格局气泡图、HHI垄断度分析、新进入者趋势追踪，全面掌握市场竞争态势，制定精准竞争策略。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sCompetitors">0</div><div class="stat-lbl">竞品数量</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sHHI">0</div><div class="stat-lbl">HHI垄断指数</div></div>
+<div class="stat-card"><div class="stat-val success" id="sCR4">0%</div><div class="stat-lbl">CR4集中度</div></div>
+<div class="stat-card"><div class="stat-val primary" id="sAvgPrice">$0</div><div class="stat-lbl">市场均价</div></div>
+</div>
+
+<div class="card">
+<h2>竞品数据输入</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">添加各竞品数据，实时生成竞争格局图谱和垄断度分析。</p>
+<div class="comp-row header">
+<span>#</span><span>竞品名称</span><span>市场份额(%)</span><span>月销额($K)</span><span>均价($)</span><span>评分</span><span>评论数</span><span></span>
+</div>
+<div id="compList"></div>
+<button class="btn-add" onclick="Landscape.add()">+ 添加竞品</button>
+</div>
+
+<div class="card">
+<h2>竞争格局气泡图</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:16px">X轴：价格 | Y轴：市场份额 | 气泡大小：月销售额</p>
+<div class="landscape-map" id="landscapeMap">
+<div class="axis-x"></div><div class="axis-y"></div>
+<div class="axis-label" style="bottom:14px;left:50%;transform:translateX(-50%)">价格 →</div>
+<div class="axis-label" style="left:14px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left center">市场份额 →</div>
+<div class="quadrant-label" style="top:20px;left:70px">高份额·低价</div>
+<div class="quadrant-label" style="top:20px;right:20px">高份额·高价</div>
+<div class="quadrant-label" style="bottom:50px;left:70px">低份额·低价</div>
+<div class="quadrant-label" style="bottom:50px;right:20px">低份额·高价</div>
+</div>
+</div>
+
+<div class="card">
+<h2>HHI垄断度分析</h2>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+<span style="font-size:13px;color:var(--muted)">Herfindahl-Hirschman Index (0-10000)</span>
+<span class="hhi-status" id="hhiStatus">--</span>
+</div>
+<div class="hhi-bar"><div class="hhi-marker" id="hhiMarker" data-val="0" style="left:0%"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px">
+<span>竞争型 (&lt;1500)</span><span>适度集中 (1500-2500)</span><span>高度集中 (>2500)</span>
+</div>
+<div id="hhiAnalysis" style="margin-top:16px;padding:16px;background:var(--bg);border-radius:var(--radius);font-size:13px;color:var(--ink-soft);line-height:1.7"></div>
+</div>
+
+<div class="card">
+<h2>新进入者趋势分析</h2>
+<div class="entrant-list" id="entrantList"></div>
+</div>
+
+<div class="related-grid">
+<a href="market-trend-forecaster.html" class="related-card"><span class="rc-icon">📈</span><div><h4>趋势预测器</h4><p>市场趋势预测</p></div></a>
+<a href="category-opportunity-analyzer.html" class="related-card"><span class="rc-icon">🎯</span><div><h4>类目机会分析</h4><p>类目进入策略</p></div></a>
+<a href="market-share.html" class="related-card"><span class="rc-icon">📊</span><div><h4>市场份额</h4><p>市场份额分析</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Landscape={
+  data:[],
+  colors:['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#84cc16'],
+  init(){
+    this.data=[
+      {name:'Brand A',share:32,revenue:480,price:29.99,rating:4.5,reviews:12500},
+      {name:'Brand B',share:24,revenue:360,price:34.99,rating:4.3,reviews:8200},
+      {name:'Brand C',share:18,revenue:270,price:27.99,rating:4.6,reviews:15600},
+      {name:'Brand D',share:12,revenue:180,price:39.99,rating:4.1,reviews:4300},
+      {name:'Brand E',share:8,revenue:120,price:24.99,rating:4.2,reviews:6700},
+      {name:'其他',share:6,revenue:90,price:22.99,rating:4.0,reviews:2100}
+    ];
+    this.render();
+  },
+  add(){
+    const idx=this.data.length+1;
+    this.data.push({name:'竞品'+idx,share:5,revenue:75,price:29.99,rating:4.2,reviews:1000});
+    this.render();
+  },
+  del(i){this.data.splice(i,1);this.render()},
+  update(i,field,val){this.data[i][field]=parseFloat(val)||0;this.render()},
+  render(){
+    const list=document.getElementById('compList');
+    list.innerHTML=this.data.map((c,i)=>{
+      const color=this.colors[i%this.colors.length];
+      const maxShare=Math.max(...this.data.map(d=>d.share),1);
+      const barW=(c.share/maxShare)*100;
+      return `<div class="comp-row">
+      <span class="comp-idx" style="background:${color}">${i+1}</span>
+      <input type="text" value="${c.name}" style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%" oninput="Landscape.update(${i},'name',this.value)">
+      <input type="number" value="${c.share}" step="0.5" min="0" style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%;text-align:right" oninput="Landscape.update(${i},'share',this.value)">
+      <input type="number" value="${c.revenue}" step="10" min="0" style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%;text-align:right" oninput="Landscape.update(${i},'revenue',this.value)">
+      <input type="number" value="${c.price}" step="0.5" min="0" style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%;text-align:right" oninput="Landscape.update(${i},'price',this.value)">
+      <input type="number" value="${c.rating}" step="0.1" min="0" max="5" style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%;text-align:right" oninput="Landscape.update(${i},'rating',this.value)">
+      <input type="number" value="${c.reviews}" step="100" min="0" style="border:1px solid var(--rule);border-radius:8px;padding:6px 10px;font-size:13px;width:100%;text-align:right" oninput="Landscape.update(${i},'reviews',this.value)">
+      <button class="comp-del" onclick="Landscape.del(${i})">×</button>
+      </div>`;
+    }).join('');
+    this.calcStats();
+    this.renderMap();
+    this.renderEntrants();
+  },
+  calcStats(){
+    const n=this.data.length;
+    const totalShare=this.data.reduce((s,d)=>s+d.share,0);
+    const hhi=this.data.reduce((s,d)=>s+(d.share*d.share),0);
+    const sorted=[...this.data].sort((a,b)=>b.share-a.share);
+    const cr4=sorted.slice(0,4).reduce((s,d)=>s+d.share,0);
+    const avgPrice=this.data.reduce((s,d)=>s+d.price,0)/n;
+    document.getElementById('sCompetitors').textContent=n;
+    document.getElementById('sHHI').textContent=Math.round(hhi);
+    document.getElementById('sCR4').textContent=cr4.toFixed(1)+'%';
+    document.getElementById('sAvgPrice').textContent='$'+avgPrice.toFixed(2);
+    const marker=document.getElementById('hhiMarker');
+    const pct=Math.min(hhi/10000*100,100);
+    marker.style.left=pct+'%';
+    marker.setAttribute('data-val',Math.round(hhi));
+    const status=document.getElementById('hhiStatus');
+    const analysis=document.getElementById('hhiAnalysis');
+    if(hhi<1500){status.className='hhi-status low';status.textContent='竞争型市场';
+      analysis.innerHTML='<strong>市场特征：</strong>竞争激烈，无单一品牌主导。<br><strong>策略建议：</strong>差异化定位是关键，可通过产品创新、品牌建设或细分市场切入获取份额。价格竞争压力大，需关注成本优化。<br><strong>风险提示：</strong>新进入者门槛相对较低，需持续建立竞争壁垒。';
+    }else if(hhi<2500){status.className='hhi-status med';status.textContent='适度集中';
+      analysis.innerHTML='<strong>市场特征：</strong>中等集中，头部品牌有一定优势但未垄断。<br><strong>策略建议：</strong>分析头部品牌的薄弱环节，寻找差异化机会。可考虑并购或联盟提升市场地位。<br><strong>风险提示：</strong>头部品牌可能通过价格战或资源优势挤压新进入者。';
+    }else{status.className='hhi-status high';status.textContent='高度集中';
+      analysis.innerHTML='<strong>市场特征：</strong>高度垄断，少数品牌主导市场。<br><strong>策略建议：</strong>避免正面竞争，寻找细分利基市场。可通过差异化产品或创新模式切入。<br><strong>风险提示：</strong>市场进入门槛极高，头部品牌具有强大的品牌效应和规模优势。';
+    }
+  },
+  renderMap(){
+    const map=document.getElementById('landscapeMap');
+    const bubbles=map.querySelectorAll('.bubble');
+    bubbles.forEach(b=>b.remove());
+    const maxShare=Math.max(...this.data.map(d=>d.share),1);
+    const maxPrice=Math.max(...this.data.map(d=>d.price),1);
+    const maxRev=Math.max(...this.data.map(d=>d.revenue),1);
+    const mapW=map.offsetWidth||800;
+    const mapH=420;
+    const padL=60,padR=20,padT=20,padB=40;
+    const plotW=mapW-padL-padR;
+    const plotH=mapH-padT-padB;
+    this.data.forEach((c,i)=>{
+      const color=this.colors[i%this.colors.length];
+      const x=padL+(c.price/maxPrice)*plotW;
+      const y=padT+plotH-(c.share/maxShare)*plotH;
+      const size=30+(c.revenue/maxRev)*60;
+      const bubble=document.createElement('div');
+      bubble.className='bubble';
+      bubble.style.cssText=`left:${x-size/2}px;top:${y-size/2}px;width:${size}px;height:${size}px;background:${color}`;
+      bubble.textContent=c.share+'%';
+      bubble.title=`${c.name}\n份额:${c.share}%\n均价:$${c.price}\n月销:$${c.revenue}K`;
+      map.appendChild(bubble);
+    });
+  },
+  renderEntrants(){
+    const list=document.getElementById('entrantList');
+    const sorted=[...this.data].sort((a,b)=>b.reviews-a.reviews);
+    const totalRev=this.data.reduce((s,d)=>s+d.revenue,0);
+    const items=[];
+    sorted.forEach((c,i)=>{
+      const reviewGrowth=c.reviews/c.revenue;
+      let level,icon,badge;
+      if(i<2&&c.share>15){level='low';icon='🛡️';badge='壁垒高';}
+      else if(c.reviews<3000&&c.share<10){level='high';icon='⚠️';badge='易被颠覆';}
+      else if(c.rating<4.2){level='high';icon='⚠️';badge='口碑薄弱';}
+      else if(c.share<10){level='med';icon='⚡';badge='可超越';}
+      else{level='med';icon='📊';badge='稳定竞争';}
+      items.push(`<div class="entrant-item ${level}">
+      <span class="ent-icon">${icon}</span>
+      <div class="ent-info"><h4>${c.name}</h4><p>份额${c.share}% · 均价$${c.price} · ${c.reviews}评论 · 评分${c.rating}</p></div>
+      <span class="ent-badge">${badge}</span>
+      </div>`);
+    });
+    list.innerHTML=items.join('');
+  }
+};
+Landscape.init();
+window.addEventListener('resize',()=>Landscape.renderMap());
+</script>
+</body>
+</html>

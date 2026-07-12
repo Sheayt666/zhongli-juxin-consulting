@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="产品改进创意器：VOC分析+功能优先级+差异化方向，改进创意列表+用户需求映射+实施优先级，CSS创意矩阵可视化，跨境卖家产品迭代工具。">
+<title>产品改进创意器 - VOC需求映射实施优先级 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.idea-card{border:1px solid var(--rule);border-radius:14px;padding:16px;background:#fff;position:relative;transition:all .2s}
+.idea-card:hover{box-shadow:0 8px 20px rgba(79,70,229,.1);border-color:#c7d2fe;transform:translateY(-2px)}
+.idea-card .ic-priority{position:absolute;top:-1px;right:-1px;padding:4px 12px;font-size:10px;font-weight:800;color:#fff;border-radius:0 14px 0 10px}
+.ic-priority.quick{background:#10b981}.ic-priority.core{background:#4f46e5}.ic-priority.breakthrough{background:#8b5cf6}
+.idea-card .ic-icon{font-size:28px;margin-bottom:8px}
+.idea-card .ic-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.idea-card .ic-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.idea-card .ic-map{font-size:11px;padding:6px 8px;background:#f0f4ff;border-radius:6px;color:#4f46e5;margin-bottom:8px;font-weight:600}
+.idea-card .ic-stats{display:flex;gap:10px;font-size:10px}
+.idea-card .ic-stat{flex:1;text-align:center}
+.idea-card .ic-stat .is-val{font-size:14px;font-weight:800;color:var(--ink)}
+.idea-card .ic-stat .is-lab{color:var(--muted)}
+.prio-matrix{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:6px;margin-top:8px}
+.prio-matrix .pm-cell{padding:8px;text-align:center;font-size:11px;border-radius:8px;font-weight:600}
+.prio-matrix .pm-head{background:var(--bg-soft);color:var(--ink);font-weight:700}
+.prio-matrix .pm-row{background:var(--bg-soft);color:var(--ink);font-weight:700;display:flex;align-items:center;justify-content:center}
+.prio-matrix .pm-q{background:#ecfdf5;color:#059669;cursor:pointer}
+.prio-matrix .pm-c{background:#f0f4ff;color:#4f46e5;cursor:pointer}
+.prio-matrix .pm-b{background:#f5f3ff;color:#8b5cf6;cursor:pointer}
+.prio-matrix .pm-x{background:var(--bg-soft);color:var(--muted)}
+.idea-table{width:100%;border-collapse:collapse;font-size:13px}
+.idea-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.idea-table th.num{text-align:right}
+.idea-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.idea-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.prio-matrix{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+  <a href="product-research-scorecard.html" class="workflow-step">选品评分</a>
+  <a href="market-gap-finder.html" class="workflow-step">市场空白</a>
+  <a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a>
+  <a href="competition-density-mapper.html" class="workflow-step">竞争密度</a>
+  <a href="product-differentiation-planner.html" class="workflow-step">差异化</a>
+  <a href="seasonality-checker.html" class="workflow-step">季节性</a>
+  <a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a>
+  <a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a>
+  <a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a>
+  <a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+  <a href="blue-ocean-scanner.html" class="workflow-step">蓝海扫描</a>
+  <a href="review-pain-point-miner.html" class="workflow-step">痛点挖掘</a>
+  <a href="product-improvement-ideator.html" class="workflow-step active">改进创意</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W36 选品深度</a><span class="sep">›</span><span class="current">产品改进创意器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">💡</span>产品改进创意器 Product Improvement Ideator</h1>
+  <p>基于VOC用户声音分析与功能优先级评估，生成产品改进创意列表，映射用户需求，量化实施优先级（速赢/核心/突破），CSS创意矩阵可视化，帮助跨境卖家系统化产品迭代。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">创意总数</div><div class="mc-value" id="mIdeas">0</div></div>
+    <div class="metric-card success"><div class="mc-label">速赢改进</div><div class="mc-value" id="mQuick">0</div></div>
+    <div class="metric-card"><div class="mc-label">核心改进</div><div class="mc-value" id="mCore">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">突破创新</div><div class="mc-value" id="mBreak">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 改进方向输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>产品品类</label><input type="text" id="category" value="蓝牙耳机" oninput="PII.calc()"></div>
+      <div class="jx-field"><label>核心痛点（来自VOC）</label><input type="text" id="painPoints" value="续航短,降噪弱,舒适度差,连接不稳" oninput="PII.calc()"></div>
+      <div class="jx-field"><label>差异化方向</label><input type="text" id="diffDir" value="超长续航,极致舒适,智能降噪" oninput="PII.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 改进创意矩阵</h2>
+    <div class="idea-grid" id="ideaGrid"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📐 优先级矩阵（影响×成本）</h2>
+    <div class="prio-matrix" id="prioMatrix"></div>
+    <div style="display:flex;gap:16px;margin-top:12px;font-size:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#10b981"></div>速赢（高影响·低成本）</div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#4f46e5"></div>核心（高影响·高成本）</div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#8b5cf6"></div>突破（超高影响·高成本）</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 创意实施清单</h2>
+    <div style="overflow-x:auto"><table class="idea-table" id="ideaTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 迭代策略建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="review-pain-point-miner.html" class="rt-card"><div class="rt-icon">⛏️</div><div><h5>评论痛点挖掘</h5><p>VOC痛点分析</p></div></a>
+      <a href="product-differentiation-planner.html" class="rt-card"><div class="rt-icon">🎨</div><div><h5>差异化规划</h5><p>差异化定位</p></div></a>
+      <a href="product-research-scorecard.html" class="rt-card"><div class="rt-icon">⭐</div><div><h5>选品评分卡</h5><p>选品评分</p></div></a>
+      <a href="product-launch-timeline.html" class="rt-card"><div class="rt-icon">📅</div><div><h5>上线时间线</h5><p>产品上线规划</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="product-improvement-ideator.html">改进创意器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var PII=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var ideas=[
+    {icon:'🔋',title:'升级大容量电池',desc:'电池容量从80mAh提升至120mAh，续航30h+',need:'续航短痛点',impact:9,cost:4,type:'quick'},
+    {icon:'🔇',title:'主动降噪芯片升级',desc:'采用新一代ANC芯片，降噪深度35dB+',need:'降噪弱痛点',impact:9,cost:7,type:'core'},
+    {icon:'👂',title:'多尺寸记忆海绵耳塞',desc:'标配4尺寸+记忆海绵耳塞，舒适度提升',need:'舒适度差痛点',impact:7,cost:2,type:'quick'},
+    {icon:'📶',title:'蓝牙5.3双路传输',desc:'升级蓝牙5.3，抗干扰强化，断连率降低80%',need:'连接不稳痛点',impact:8,cost:5,type:'core'},
+    {icon:'🤖',title:'AI智能降噪自适应',desc:'AI识别环境自动调节降噪模式',need:'差异化·智能降噪',impact:9,cost:8,type:'breakthrough'},
+    {icon:'⚡',title:'磁吸快充+无线充电',desc:'支持Qi无线充电，磁吸快充5分钟用2h',need:'差异化·超长续航',impact:8,cost:6,type:'core'},
+    {icon:'📊',title:'APP健康监测',desc:'APP内置听力健康监测，使用时长提醒',need:'差异化·智能体验',impact:6,cost:5,type:'core'},
+    {icon:'🎨',title:'多色金属外壳',desc:'推出5款莫兰迪色系，金属阳极氧化工艺',need:'差异化·颜值',impact:6,cost:3,type:'quick'},
+    {icon:'🛡️',title:'IPX7防水升级',desc:'防水等级提升至IPX7，支持游泳佩戴',need:'差异化·运动场景',impact:7,cost:5,type:'core'},
+    {icon:'📦',title:'礼盒包装升级',desc:'磁吸开合礼盒+收纳盒+定制耳机架',need:'包装痛点',impact:4,cost:2,type:'quick'},
+    {icon:'🌍',title:'多语言智能配对',desc:'一键配对+多语言语音引导动画',need:'本地化痛点',impact:5,cost:3,type:'quick'},
+    {icon:'🎵',title:'LDAC高清音质',desc:'支持LDAC/aptX Lossless高清解码',need:'差异化·音质',impact:7,cost:6,type:'core'}
+  ];
+
+  function calc(){
+    var quick=ideas.filter(function(i){return i.type==='quick'}).length;
+    var core=ideas.filter(function(i){return i.type==='core'}).length;
+    var brk=ideas.filter(function(i){return i.type==='breakthrough'}).length;
+    $('mIdeas').textContent=ideas.length;
+    $('mQuick').textContent=quick;
+    $('mCore').textContent=core;
+    $('mBreak').textContent=brk;
+    renderGrid();renderMatrix();renderTable();renderTips(quick,core,brk);
+  }
+
+  function renderGrid(){
+    var typeLabel={quick:'速赢',core:'核心',breakthrough:'突破'};
+    var sorted=ideas.slice().sort(function(a,b){return b.impact-a.impact});
+    var h='';
+    sorted.forEach(function(i){
+      h+='<div class="idea-card"><div class="ic-priority '+i.type+'">'+typeLabel[i.type]+'</div>';
+      h+='<div class="ic-icon">'+i.icon+'</div>';
+      h+='<div class="ic-title">'+i.title+'</div>';
+      h+='<div class="ic-desc">'+i.desc+'</div>';
+      h+='<div class="ic-map">🎯 映射：'+i.need+'</div>';
+      h+='<div class="ic-stats"><div class="ic-stat"><div class="is-val" style="color:'+(i.impact>=8?'#dc2626':i.impact>=6?'#d97706':'#4f46e5')+'">'+i.impact+'</div><div class="is-lab">影响度</div></div>';
+      h+='<div class="ic-stat"><div class="is-val" style="color:'+(i.cost<=3?'#059669':i.cost<=6?'#d97706':'#dc2626')+'">'+i.cost+'</div><div class="is-lab">实施成本</div></div>';
+      h+='<div class="ic-stat"><div class="is-val">'+(i.impact-i.cost)+'</div><div class="is-lab">ROI分</div></div></div></div>';
+    });
+    $('ideaGrid').innerHTML=h;
+  }
+
+  function renderMatrix(){
+    var h='<div class="pm-cell pm-head"></div><div class="pm-cell pm-head">低成本(1-3)</div><div class="pm-cell pm-head">中成本(4-6)</div><div class="pm-cell pm-head">高成本(7-9)</div>';
+    var rows=[{label:'高影响(8-9)',min:8},{label:'中影响(5-7)',min:5},{label:'低影响(1-4)',min:1}];
+    rows.forEach(function(r){
+      h+='<div class="pm-cell pm-row">'+r.label+'</div>';
+      for(var c=1;c<=3;c++){
+        var cMin=c===1?1:c===2?4:7;var cMax=c===1?3:c===2?6:9;
+        var cellIdeas=ideas.filter(function(i){return i.impact>=r.min&&(r.label.indexOf('高')>=0?i.impact>=8:r.label.indexOf('中')>=0?i.impact>=5&&i.impact<=7:i.impact<=4)&&i.cost>=cMin&&i.cost<=cMax});
+        var cls=cellIdeas.length?(r.min>=8&&c<=3?'pm-q':r.min>=8?'pm-c':'pm-b'):'pm-x';
+        h+='<div class="pm-cell '+cls+'">'+(cellIdeas.length?cellIdeas.length+'项':'-')+'</div>';
+      }
+    });
+    $('prioMatrix').innerHTML=h;
+  }
+
+  function renderTable(){
+    var typeLabel={quick:'速赢',core:'核心',breakthrough:'突破'};
+    var typeClass={quick:'score-blue',core:'score-gap',breakthrough:'score-niche'};
+    var sorted=ideas.slice().sort(function(a,b){return (b.impact-b.cost)-(a.impact-a.cost)});
+    var h='<thead><tr><th>创意</th><th>映射需求</th><th class="num">影响度</th><th class="num">成本</th><th class="num">ROI分</th><th>类型</th><th>实施建议</th></tr></thead><tbody>';
+    sorted.forEach(function(i){
+      var roi=i.impact-i.cost;
+      h+='<tr><td><strong>'+i.icon+' '+i.title+'</strong></td><td style="font-size:12px">'+i.need+'</td><td class="num">'+i.impact+'</td><td class="num">'+i.cost+'</td><td class="num" style="color:'+(roi>=4?'#059669':roi>=0?'#d97706':'#dc2626')+';font-size:15px;font-weight:800">'+roi+'</td><td><span class="score-badge '+typeClass[i.type]+'">'+typeLabel[i.type]+'</span></td><td style="font-size:12px">'+(i.type==='quick'?'立即排期，1-2周完成':i.type==='core'?'纳入下代产品，1-2月':'中长期规划，需研发投入')+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('ideaTable').innerHTML=h;
+  }
+
+  function renderTips(quick,core,brk){
+    var tips=[];
+    tips.push('共生成 '+ideas.length+' 个改进创意，其中速赢 '+quick+' 个、核心 '+core+' 个、突破 '+brk+' 个。');
+    var topROI=ideas.slice().sort(function(a,b){return (b.impact-b.cost)-(a.impact-a.cost)})[0];
+    if(topROI)tips.push('ROI最高创意「'+topROI.title+'」（影响'+topROI.impact+'-成本'+topROI.cost+'=ROI '+(topROI.impact-topROI.cost)+'），建议优先实施。');
+    tips.push('速赢类创意（'+quick+'个）成本低见效快，建议本季度立即排期，快速提升好评率与差异化。');
+    tips.push('核心类创意（'+core+'个）需中等投入，是下代产品的核心卖点，建议纳入产品路线图1-2月迭代。');
+    tips.push('突破类创意（'+brk+'个）投入大但可形成技术壁垒，建议中长期规划，申请专利保护。');
+    tips.push('建议将高影响度创意（影响≥8）转化为Listing五点描述与A+内容核心卖点，直接传递差异化价值。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  return {calc:calc,init:function(){calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PII.init)}else{PII.init()}
+</script>
+</body>
+</html>

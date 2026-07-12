@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="利益相关者分析矩阵：权力/利益矩阵+沟通策略，CSS 2×2矩阵，管理优先级。免费项目立项工具。">
+<meta name="keywords" content="利益相关者,权力利益矩阵,沟通策略,干系人管理,项目管理,项目立项">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/stakeholder-analysis-matrix.html">
+<title>利益相关者分析矩阵 - 权力/利益·CSS 2×2矩阵·沟通策略 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.matrix-wrap{display:flex;gap:24px;margin:16px 0;flex-wrap:wrap}
+.matrix-box{position:relative;width:420px;height:420px;background:linear-gradient(135deg,#f8f9ff,#f0f4ff);border:1px solid var(--rule);border-radius:14px;flex-shrink:0}
+.matrix-quad{position:absolute;width:50%;height:50%;display:flex;align-items:flex-start;justify-content:center;padding:10px;font-size:11px;font-weight:600;text-align:center}
+.q-manage{top:0;left:50%;background:rgba(79,70,229,.08);color:#4f46e5}
+.q-monitor{top:0;left:0;background:rgba(59,130,246,.08);color:#3b82f6}
+.q-keep{bottom:0;left:50%;background:rgba(16,185,129,.08);color:#10b981}
+.q-inform{bottom:0;left:0;background:rgba(245,158,11,.08);color:#f59e0b}
+.matrix-axis{position:absolute;font-size:11px;color:var(--muted);font-weight:600}
+.stake-dot{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;border:2px solid #fff;box-shadow:var(--shadow-sm);transition:all .2s;z-index:2}
+.stake-dot:hover{transform:translate(-50%,-50%) scale(1.4);z-index:3}
+.stake-label{position:absolute;font-size:10px;font-weight:600;color:var(--ink);transform:translate(-50%,8px);white-space:nowrap;background:#fff;padding:1px 5px;border-radius:4px;box-shadow:var(--shadow-sm);z-index:1}
+.stake-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.stake-table th{background:var(--bg-soft);padding:10px 8px;text-align:left;border-bottom:2px solid var(--rule);font-weight:600}
+.stake-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light)}
+.btn-del{padding:3px 9px;border-radius:6px;border:1px solid #ef4444;background:#fff;font-size:11px;cursor:pointer;color:#ef4444}
+.btn-add{padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.quad-strat{padding:14px;border-radius:10px;margin-bottom:10px;border-left:4px solid}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"利益相关者分析矩阵","description":"权力/利益矩阵+沟通策略，CSS 2×2矩阵与管理优先级。","url":"https://juxin-consulting.help/tools/stakeholder-analysis-matrix.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="stakeholder_analysis_matrix">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📋</span><span class="workflow-name">项目立项工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="project-feasibility-score.html" class="step">可行性</a><span class="arrow">›</span>
+      <a href="tam-sam-som-calculator.html" class="step">TAM/SAM</a><span class="arrow">›</span>
+      <a href="business-model-canvas.html" class="step">商业模式</a><span class="arrow">›</span>
+      <a href="go-nogo-decision.html" class="step">Go/NoGo</a><span class="arrow">›</span>
+      <a href="npv-calculator.html" class="step">NPV</a><span class="arrow">›</span>
+      <a href="irr-calculator.html" class="step">IRR</a><span class="arrow">›</span>
+      <a href="sensitivity-analysis.html" class="step">敏感性</a><span class="arrow">›</span>
+      <a href="project-gantt-chart.html" class="step">甘特图</a><span class="arrow">›</span>
+      <a href="project-budget-allocator.html" class="step">预算</a><span class="arrow">›</span>
+      <a href="project-risk-matrix.html" class="step">风险</a><span class="arrow">›</span>
+      <a href="competitor-deep-analysis.html" class="step">竞品分析</a><span class="arrow">›</span>
+      <span class="step current">利益相关</span><span class="arrow">›</span>
+      <a href="milestone-definition-tool.html" class="step">里程碑</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📋 项目立项工具</span>
+      <h1>利益相关者<em>分析矩阵</em></h1>
+      <p class="tool-hero-desc">用权力/利益2×2矩阵定位项目干系人，识别"重点管理/保持满意/及时告知/定期监督"四类，输出差异化沟通策略与管理优先级，数据保存至本地。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <h2 style="margin:0">👥 利益相关者清单</h2>
+        <button class="btn-add" onclick="SAM.openModal()">+ 添加干系人</button>
+      </div>
+      <div class="section-block" style="margin-top:0">
+        <h3>🎯 权力/利益矩阵</h3>
+        <div class="matrix-wrap">
+          <div class="matrix-box" id="matrixBox"></div>
+          <div style="flex:1;min-width:280px">
+            <h4 style="font-size:15px;font-weight:700;margin-bottom:12px">📌 四象限策略</h4>
+            <div class="quad-strat" style="border-color:#4f46e5;background:#eef2ff"><strong style="color:#4f46e5">重点管理 (高权力高利益)</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:4px">密切参与，定期深度沟通，满足核心诉求</div></div>
+            <div class="quad-strat" style="border-color:#3b82f6;background:#eff6ff"><strong style="color:#3b82f6">保持满意 (高权力低利益)</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:4px">维持良好关系，避免干扰，关键节点告知</div></div>
+            <div class="quad-strat" style="border-color:#10b981;background:#ecfdf5"><strong style="color:#10b981">及时告知 (低权力高利益)</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:4px">定期通报进展，吸纳反馈，培养支持者</div></div>
+            <div class="quad-strat" style="border-color:#f59e0b;background:#fffbeb"><strong style="color:#f59e0b">定期监督 (低权力低利益)</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:4px">一般性关注，低成本监控，避免舆情</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="section-block">
+        <h3>📋 干系人明细表</h3>
+        <div style="overflow-x:auto"><table class="stake-table" id="stakeTable"></table></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="competitor-deep-analysis.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 竞品分析</span></a>
+        <a href="milestone-definition-tool.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">里程碑 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="modal-overlay" id="modalOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;justify-content:center;align-items:center"><div style="background:#fff;border-radius:16px;padding:28px;max-width:480px;width:90%">
+  <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">添加干系人</h3>
+  <div class="calc-row-2"><div class="calc-field"><label>姓名/角色</label><input type="text" id="mName" placeholder="如 投资人张总"></div><div class="calc-field"><label>所属方</label><select id="mParty"><option>投资方</option><option>管理层</option><option>客户</option><option>供应商</option><option>团队成员</option><option>监管机构</option></select></div></div>
+  <div class="calc-row-2"><div class="calc-field"><label>权力 <span class="hint">(1-10)</span></label><input type="number" id="mPower" value="7" min="1" max="10"></div><div class="calc-field"><label>利益 <span class="hint">(1-10)</span></label><input type="number" id="mInterest" value="6" min="1" max="10"></div></div>
+  <div class="calc-field"><label>核心诉求</label><input type="text" id="mNeed" placeholder="如 财务回报"></div>
+  <div class="calc-field"><label>沟通方式</label><select id="mChannel"><option>面谈</option><option>邮件</option><option>会议</option><option>电话</option><option>报告</option></select></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn-add" onclick="SAM.saveModal()">保存</button><button onclick="SAM.closeModal()" style="padding:10px 20px;border-radius:10px;border:1px solid var(--rule);background:#fff;font-size:14px;cursor:pointer">取消</button></div>
+</div></div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="stakeholder-analysis-matrix.html">利益相关者分析矩阵</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var SAM=(function(){
+  'use strict';
+  var KEY='jx_stakeholders';
+  var data=[];var editIdx=-1;
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value;}
+  var COLORS=['#4f46e5','#10b981','#f59e0b','#ef4444','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+  function load(){try{var s=localStorage.getItem(KEY);if(s)data=JSON.parse(s)||[];}catch(e){}if(!data.length){data=[{name:'CEO王总',party:'管理层',power:9,interest:9,need:'战略达成',channel:'面谈'},{name:'投资人基金A',party:'投资方',power:8,interest:7,need:'财务回报',channel:'报告'},{name:'核心用户群',party:'客户',power:4,interest:9,need:'产品体验',channel:'会议'},{name:'供应链商',party:'供应商',power:6,interest:4,need:'订单稳定',channel:'电话'}];save();}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+  function quad(p,i){return p>=5.5&&i>=5.5?'manage':p>=5.5&&i<5.5?'satisfy':p<5.5&&i>=5.5?'inform':'monitor';}
+  function qName(q){return{manage:'重点管理',satisfy:'保持满意',inform:'及时告知',monitor:'定期监督'}[q];}
+  function render(){
+    var box=$('matrixBox');
+    var html='<div class="matrix-quad q-monitor">定期监督<br>低权力·低利益</div><div class="matrix-quad q-manage">重点管理<br>高权力·高利益</div><div class="matrix-quad q-inform">及时告知<br>低权力·高利益</div><div class="matrix-quad q-keep">保持满意<br>高权力·低利益</div>';
+    html+='<div class="matrix-axis" style="left:50%;bottom:-20px;transform:translateX(-50%)">利益(Interest) →</div><div class="matrix-axis" style="left:-30px;top:50%;transform:rotate(-90deg) translateX(50%)">权力(Power) →</div>';
+    html+='<div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--rule)"></div><div style="position:absolute;top:50%;left:0;right:0;height:1px;background:var(--rule)"></div>';
+    data.forEach(function(s,idx){
+      var x=s.power/10*100,y=(1-s.interest/10)*100;
+      var c=COLORS[idx%COLORS.length];
+      html+='<div class="stake-dot" style="left:'+x+'%;top:'+y+'%;background:'+c+'" title="'+s.name+'"></div>';
+      html+='<div class="stake-label" style="left:'+x+'%;top:'+y+'%">'+s.name+'</div>';
+    });
+    box.innerHTML=html;
+    var sorted=data.slice().sort(function(a,b){return (b.power+b.interest)-(a.power+a.interest);});
+    $('stakeTable').innerHTML='<thead><tr><th>姓名/角色</th><th>所属方</th><th>权力</th><th>利益</th><th>象限</th><th>核心诉求</th><th>沟通方式</th><th>优先级</th><th>操作</th></tr></thead><tbody>'+
+      sorted.map(function(s){
+        var originalIdx=data.indexOf(s);
+        var q=quad(s.power,s.interest);
+        var pri=q==='manage'?'<span style="color:#4f46e5;font-weight:700">P1</span>':q==='satisfy'?'<span style="color:#3b82f6;font-weight:700">P2</span>':q==='inform'?'<span style="color:#10b981;font-weight:700">P3</span>':'<span style="color:#f59e0b;font-weight:700">P4</span>';
+        return '<tr><td><strong>'+s.name+'</strong></td><td>'+s.party+'</td><td>'+s.power+'/10</td><td>'+s.interest+'/10</td><td><span style="font-size:12px;font-weight:600;color:{manage:#4f46e5,satisfy:#3b82f6,inform:#10b981,monitor:#f59e0b}[q]'.replace('{manage:#4f46e5,satisfy:#3b82f6,inform:#10b981,monitor:#f59e0b}[q]',({manage:'#4f46e5',satisfy:'#3b82f6',inform:'#10b981',monitor:'#f59e0b'}[q]))+'">'+qName(q)+'</span></td><td>'+s.need+'</td><td>'+s.channel+'</td><td>'+pri+'</td><td><button class="btn-del" onclick="SAM.del('+originalIdx+')">删除</button></td></tr>';
+      }).join('')+'</tbody>';
+  }
+  function openModal(){editIdx=-1;$('mName').value='';$('mParty').value='管理层';$('mPower').value=7;$('mInterest').value=6;$('mNeed').value='';$('mChannel').value='面谈';$('modalOverlay').style.display='flex';}
+  function closeModal(){$('modalOverlay').style.display='none';}
+  function saveModal(){var name=v('mName');if(!name){alert('请输入姓名/角色');return;}data.push({name:name,party:v('mParty'),power:parseFloat(v('mPower'))||5,interest:parseFloat(v('mInterest'))||5,need:v('mNeed')||'-',channel:v('mChannel')});save();closeModal();render();}
+  function del(i){if(!confirm('删除'+data[i].name+'？'))return;data.splice(i,1);save();render();}
+  function init(){load();render();}
+  return{openModal:openModal,closeModal:closeModal,saveModal:saveModal,del:del,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SAM.init);}else{SAM.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

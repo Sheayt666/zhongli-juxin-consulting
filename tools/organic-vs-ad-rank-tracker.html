@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="自然vs广告排名对比器：输入关键词自然排名和广告排名，生成双排名对比表，互相影响分析，CSS对比图，优化策略。">
+<title>自然vs广告排名对比器 - Dual Rank分析工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.dual-rank-table{width:100%;border-collapse:collapse;margin-top:16px}
+.dual-rank-table th{background:var(--accent-bg);color:var(--accent);padding:12px;text-align:left;font-size:12px;font-weight:700}
+.dual-rank-table td{padding:12px;border-bottom:1px solid var(--rule-light);font-size:13px}
+.dual-rank-table .rank-cell{font-weight:700;font-size:16px}
+.dual-rank-table .rank-organic{color:var(--green)}
+.dual-rank-table .rank-ad{color:var(--accent)}
+.dual-rank-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.rank-card{padding:20px;border-radius:var(--radius-lg);text-align:center}
+.rank-card.organic{background:linear-gradient(135deg,var(--green-bg),#d1fae5);border:1px solid #d1fae5}
+.rank-card.ad{background:linear-gradient(135deg,var(--accent-bg),#e0e7ff);border:1px solid #c7d2fe}
+.rank-card .rc-label{font-size:13px;font-weight:600;margin-bottom:8px}
+.rank-card .rc-rank{font-size:36px;font-weight:800}
+.rank-card .rc-trend{font-size:13px;margin-top:4px}
+.rank-correlation{padding:16px;border-radius:var(--radius-md);margin:16px 0}
+.bar-compare{display:flex;gap:4px;align-items:center;margin:8px 0}
+.bar-compare .bc-label{width:60px;font-size:12px;text-align:right}
+.bar-compare .bc-track{flex:1;height:20px;background:var(--rule-light);border-radius:4px;overflow:hidden}
+.bar-compare .bc-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;font-weight:600;color:#fff}
+.bar-compare .bc-value{width:40px;font-size:12px;text-align:left;margin-left:4px}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">自然vs广告排名对比器</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">🔄 关键词SEO工具</span><h1>自然vs广告<em>排名对比器</em></h1><p class="tool-hero-desc">对比自然排名与广告排名，分析互相影响关系，制定协同优化策略</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">🔍</span><span class="workflow-name">关键词SEO工作流</span></div><div class="workflow-nav-steps"><a href="keyword-rank-tracker.html" class="step">排名追踪</a><span class="arrow">→</span><a href="a-plus-optimizer.html" class="step">A+优化</a><span class="arrow">→</span><a href="brand-story-designer.html" class="step">品牌故事</a><span class="arrow">→</span><a href="posts-scheduler.html" class="step">Posts排期</a><span class="arrow">→</span><a href="seo-audit.html" class="step">SEO审计</a><span class="arrow">→</span><a href="index-checker.html" class="step">收录检查</a><span class="arrow">→</span><a href="rank-trend-analyzer.html" class="step">排名趋势</a><span class="arrow">→</span><a href="serp-feature-tracker.html" class="step">SERP特征</a><span class="arrow">→</span><a href="listing-indexation-audit.html" class="step">收录审计</a><span class="arrow">→</span><a href="organic-vs-ad-rank-tracker.html" class="step current">自然vs广告</a><span class="arrow">→</span><a href="keyword-share-of-voice.html" class="step">声量份额</a><span class="arrow">→</span><a href="category-node-advisor.html" class="step">类目节点</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>🔄 自然vs广告排名对比</h2>
+<div class="form-row">
+<div class="form-group"><label>关键词</label><input type="text" id="keyword" value="wireless bluetooth earbuds" oninput="compareRanks()"></div>
+<div class="form-group"><label>ASIN</label><input type="text" id="asin" value="B08XYZ1234" oninput="compareRanks()"></div>
+</div>
+<div class="form-group"><label>关键词排名数据 (每行: 关键词,自然排名,广告排名)</label><textarea id="rankData" rows="6" oninput="compareRanks()">wireless bluetooth earbuds,8,3
+bluetooth earbuds,15,7
+noise cancelling earbuds,22,5
+wireless earbuds cheap,5,12
+best bluetooth earbuds,35,8
+earbuds with mic,18,not running
+gaming earbuds,40,not running
+waterproof earbuds,12,4</textarea></div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="rank-trend-analyzer.html" class="related-card"><span class="ricon">📈</span><span class="rtext">排名趋势分析</span></a><a href="keyword-rank-tracker.html" class="related-card"><span class="ricon">📊</span><span class="rtext">排名追踪</span></a><a href="serp-feature-tracker.html" class="related-card"><span class="ricon">🎯</span><span class="rtext">SERP特征追踪</span></a><a href="keyword-share-of-voice.html" class="related-card"><span class="ricon">🔊</span><span class="rtext">声量份额</span></a><a href="index-checker.html" class="related-card"><span class="ricon">🔍</span><span class="rtext">收录检查器</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+function compareRanks(){
+var keyword=document.getElementById('keyword').value.trim();
+var asin=document.getElementById('asin').value.trim();
+var dataText=document.getElementById('rankData').value.trim();
+if(!keyword||!dataText){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">🔄</div><p>输入关键词和排名数据<br>对比自然与广告排名</p></div>';return;}
+var data=[];
+dataText.split('\n').forEach(function(line){
+line=line.trim();
+if(!line)return;
+var parts=line.split(',');
+if(parts.length>=3){
+var organic=parseInt(parts[1])||0;
+var adText=parts[2].trim();
+var ad=adText==='not running'?null:parseInt(adText)||0;
+data.push({keyword:parts[0].trim(),organic:organic,ad:ad,adRunning:ad!==null});
+}
+});
+if(data.length===0){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">🔄</div><p>输入关键词和排名数据<br>对比自然与广告排名</p></div>';return;}
+var adRunning=data.filter(function(d){return d.adRunning;}).length;
+var avgOrganic=Math.round(data.reduce(function(s,d){return s+d.organic;},0)/data.length);
+var avgAd=adRunning>0?Math.round(data.filter(function(d){return d.adRunning;}).reduce(function(s,d){return s+d.ad;},0)/adRunning):0;
+var bothTop10=data.filter(function(d){return d.organic<=10&&d.adRunning&&d.ad<=10;}).length;
+var organicOnly=data.filter(function(d){return d.organic<=10&&(!d.adRunning||d.ad>10);}).length;
+var adOnly=data.filter(function(d){return d.adRunning&&d.ad<=10&&d.organic>10;}).length;
+var neither=data.filter(function(d){return d.organic>10&&(!d.adRunning||d.ad>10);}).length;
+var html='<div class="result-card"><h3 style="font-size:18px;font-weight:700;margin-bottom:16px">🔄 自然vs广告排名对比 — '+asin+'</h3>';
+html+='<div class="dual-rank-compare">';
+html+='<div class="rank-card organic"><div class="rc-label">🌿 自然排名</div><div class="rc-rank" style="color:var(--green)">#'+avgOrganic+'</div><div class="rc-trend">平均排名 (越低越好)</div></div>';
+html+='<div class="rank-card ad"><div class="rc-label">📢 广告排名</div><div class="rc-rank" style="color:var(--accent)">'+(avgAd>0?'#'+avgAd:'N/A')+'</div><div class="rc-trend">'+(adRunning>0?'平均排名 ('+adRunning+'词投放中)':'无广告投放')+'</div></div>';
+html+='</div>';
+html+='<div class="stat-grid">';
+html+='<div class="stat-card"><div class="sc-num green">'+bothTop10+'</div><div class="sc-label">双Top10</div></div>';
+html+='<div class="stat-card"><div class="sc-num accent">'+organicOnly+'</div><div class="sc-label">仅自然Top10</div></div>';
+html+='<div class="stat-card"><div class="sc-num gold">'+adOnly+'</div><div class="sc-label">仅广告Top10</div></div>';
+html+='<div class="stat-card"><div class="sc-num red">'+neither+'</div><div class="sc-label">均未Top10</div></div>';
+html+='</div>';
+html+='<h4 style="font-size:14px;font-weight:600;margin:16px 0 8px">📋 双排名对比表</h4>';
+html+='<table class="dual-rank-table"><thead><tr><th>关键词</th><th>自然排名</th><th>广告排名</th><th>广告状态</th><th>互相影响</th></tr></thead><tbody>';
+data.forEach(function(d){
+var impact='';
+if(d.adRunning){
+if(d.ad<d.organic)impact='<span style="color:var(--accent)">广告拉动自然</span>';
+else if(d.ad>d.organic)impact='<span style="color:var(--green)">自然拉动广告</span>';
+else impact='<span style="color:var(--muted)">排名一致</span>';
+}else{
+impact='<span style="color:var(--muted)">未投放广告</span>';
+}
+html+='<tr><td>'+d.keyword+'</td><td class="rank-cell rank-organic">#'+d.organic+'</td><td class="rank-cell rank-ad">'+(d.adRunning?'#'+d.ad:'—')+'</td><td>'+(d.adRunning?'<span style="color:var(--green)">投放中</span>':'<span style="color:var(--muted)">未投放</span>')+'</td><td>'+impact+'</td></tr>';
+});
+html+='</tbody></table>';
+html+='<div class="rank-correlation" style="background:var(--accent-bg)"><h4 style="font-size:14px;font-weight:700;margin-bottom:10px">📊 互相影响分析</h4>';
+html+='<div class="bar-compare"><div class="bc-label">双Top10</div><div class="bc-track"><div class="bc-fill" style="width:'+Math.round(bothTop10/data.length*100)+'%;background:var(--green)">'+bothTop10+'</div></div><div class="bc-value">'+Math.round(bothTop10/data.length*100)+'%</div></div>';
+html+='<div class="bar-compare"><div class="bc-label">仅自然</div><div class="bc-track"><div class="bc-fill" style="width:'+Math.round(organicOnly/data.length*100)+'%;background:var(--green)">'+organicOnly+'</div></div><div class="bc-value">'+Math.round(organicOnly/data.length*100)+'%</div></div>';
+html+='<div class="bar-compare"><div class="bc-label">仅广告</div><div class="bc-track"><div class="bc-fill" style="width:'+Math.round(adOnly/data.length*100)+'%;background:var(--accent)">'+adOnly+'</div></div><div class="bc-value">'+Math.round(adOnly/data.length*100)+'%</div></div>';
+html+='<div class="bar-compare"><div class="bc-label">均未</div><div class="bc-track"><div class="bc-fill" style="width:'+Math.round(neither/data.length*100)+'%;background:var(--red)">'+neither+'</div></div><div class="bc-value">'+Math.round(neither/data.length*100)+'%</div></div>';
+html+='</div>';
+html+='<div style="padding:16px;background:var(--green-bg);border-radius:var(--radius-md);margin-top:16px"><h4 style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:8px">💡 优化策略建议</h4><div style="font-size:13px;color:var(--ink-soft);line-height:1.8">';
+html+='<div><strong>1. 双Top10词 ('+bothTop10+'个)：</strong>维持广告投入，自然排名稳定后可适当降低竞价</div>';
+html+='<div><strong>2. 仅自然Top10词 ('+organicOnly+'个)：</strong>增加广告投放，抢占更多SERP曝光位</div>';
+html+='<div><strong>3. 仅广告Top10词 ('+adOnly+'个)：</strong>优化Listing SEO，提升自然排名降低广告依赖</div>';
+html+='<div><strong>4. 均未Top10词 ('+neither+'个)：</strong>评估关键词价值，低价值词可暂停，高价值词需同时优化SEO+PPC</div>';
+html+='<div><strong>5. 协同效应：</strong>自然+广告同时Top10的关键词转化率最高，优先争取</div>';
+html+='</div></div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var saved=JSON.parse(localStorage.getItem('jx_organic_ad_rank')||'{}');
+saved.lastRun=Date.now();
+saved.asin=asin;
+saved.avgOrganic=avgOrganic;
+saved.avgAd=avgAd;
+localStorage.setItem('jx_organic_ad_rank',JSON.stringify(saved));
+}
+compareRanks();
+
+</script>
+</body>
+</html>

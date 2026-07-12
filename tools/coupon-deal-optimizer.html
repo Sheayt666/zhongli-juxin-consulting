@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Coupon/Deal优化器：折扣ROI、增量销售计算、最佳折扣建议、CSS效果对比。免费在线跨境电商Coupon Deal优化工具。">
+<meta name="keywords" content="Coupon优化,Deal优化,折扣ROI,增量销售,最佳折扣,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/coupon-deal-optimizer.html">
+<title>Coupon/Deal优化器 - 折扣ROI·增量销售·最佳折扣 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.cdo-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.cdo-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.discount-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.disc-card{padding:18px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center;transition:all .2s}
+.disc-card.best{border:2px solid #10b981;background:#ecfdf5;transform:scale(1.03)}
+.disc-card .dc-pct{font-size:22px;font-weight:800;color:var(--ink)}
+.disc-card.best .dc-pct{color:#10b981}
+.disc-card .dc-type{font-size:11px;color:var(--muted);margin-top:2px}
+.disc-card .dc-metrics{margin-top:10px;font-size:12px;color:var(--ink-soft);line-height:1.8}
+.disc-card .dc-roi{font-size:16px;font-weight:800;margin-top:6px}
+.disc-card .dc-tag{font-size:10px;font-weight:700;color:#10b981;margin-top:4px}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px}
+.compare-table th{background:var(--bg-soft);padding:10px;text-align:center;font-weight:600;border-bottom:2px solid var(--rule)}
+.compare-table td{padding:10px;text-align:center;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.compare-table tr.best{background:#ecfdf5}
+.strategy-box{padding:18px;border-radius:12px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;margin-bottom:12px}
+.strategy-box h4{font-size:14px;font-weight:700;margin-bottom:8px;color:#4f46e5}
+.strategy-box p{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.discount-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Coupon/Deal优化器","description":"折扣ROI、增量销售计算、最佳折扣建议、CSS效果对比。","url":"https://juxin-consulting.help/tools/coupon-deal-optimizer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"Coupon/Deal优化器","item":"https://juxin-consulting.help/tools/coupon-deal-optimizer.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="coupon_deal_optimizer">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎟️ 定价策略工作流</span>
+      <h1>Coupon/Deal <em>优化器</em></h1>
+      <p class="tool-hero-desc">模拟不同折扣力度的Coupon与Deal效果，计算折扣ROI与增量销售，对比4档折扣方案（5%/10%/15%/20%）的利润影响，推荐最佳折扣力度，平衡增量与利润。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第10步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <a href="price-elasticity-tester.html" class="step">价格弹性</a><span class="arrow">→</span>
+      <a href="repricing-rules-engine.html" class="step">自动调价</a><span class="arrow">→</span>
+      <a href="psychological-pricing-analyzer.html" class="step">心理定价</a><span class="arrow">→</span>
+      <a href="price-war-simulator.html" class="step">价格战模拟</a><span class="arrow">→</span>
+      <span class="step current">Coupon优化</span><span class="arrow">→</span>
+      <a href="multi-variant-pricing-strategy.html" class="step">多变体定价</a><span class="arrow">→</span>
+      <a href="price-history-analyzer.html" class="step">价格历史</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 产品与历史数据</h2>
+          <p class="calc-form-subtitle">填写售价、成本与基准销量</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品售价 <span class="hint">($)</span></label><input type="number" id="price" value="29.99" step="0.01" oninput="CDO.calc()"></div>
+            <div class="calc-field"><label>产品成本 <span class="hint">($)</span></label><input type="number" id="cost" value="11.00" step="0.01" oninput="CDO.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>基准月销量 <span class="hint">(无折扣)</span></label><input type="number" id="baseVol" value="800" oninput="CDO.calc()"></div>
+            <div class="calc-field"><label>Coupon费用承担</label><select id="feeBearer" onchange="CDO.calc()"><option value="seller" selected>卖家承担</option><option value="shared">买卖各半</option></select></div>
+          </div>
+          <div class="calc-field"><label>促销类型</label><select id="promoType" onchange="CDO.calc()"><option value="coupon" selected>Coupon（优惠券）</option><option value="lightning">Lightning Deal（秒杀）</option><option value="deal">7-Day Deal（7天促销）</option></select></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="cdo-section">
+        <h3>🎟️ 四档折扣效果对比</h3>
+        <div class="discount-grid" id="discountGrid"></div>
+      </div>
+
+      <div class="cdo-section">
+        <h3>📊 详细效果对比表</h3>
+        <table class="compare-table">
+          <thead><tr><th>折扣力度</th><th>实付价</th><th>预估销量</th><th>增量销售</th><th>毛利/件</th><th>总毛利</th><th>折扣ROI</th></tr></thead>
+          <tbody id="compareTable"></tbody>
+        </table>
+      </div>
+
+      <div class="cdo-section">
+        <h3>🎯 优化策略建议</h3>
+        <div id="strategyWrap"></div>
+      </div>
+
+      <div class="cdo-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="promo-pricing.html" class="related-card"><span class="related-card-icon">🏷️</span><div class="related-card-content"><h5>促销定价</h5><p>促销策略</p></div></a>
+          <a href="psychological-pricing-analyzer.html" class="related-card"><span class="related-card-icon">🧠</span><div class="related-card-content"><h5>心理定价</h5><p>尾数效应</p></div></a>
+          <a href="bundle-pricing.html" class="related-card"><span class="related-card-icon">📦</span><div class="related-card-content"><h5>套餐定价</h5><p>组合优惠</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="price-war-simulator.html" class="wbn-btn prev">← 上一步：价格战模拟</a>
+        <a href="multi-variant-pricing-strategy.html" class="wbn-btn next">下一步：多变体定价 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="coupon-deal-optimizer.html">Coupon优化器</a></li><li><a href="promo-pricing.html">促销定价</a></li><li><a href="price-history-analyzer.html">价格历史</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var CDO=(function(){
+  'use strict';
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function n(id){return parseFloat(document.getElementById(id).value)||0;}
+  // 折扣力度对应的销量提升倍数（弹性模拟）
+  function volMultiplier(discPct,promoType){
+    var base=1+discPct*0.06; // 每折扣1%提升6%销量
+    if(promoType==='lightning')base*=1.8;
+    if(promoType==='deal')base*=1.4;
+    return base;
+  }
+  function calc(){
+    var price=n('price'),cost=n('cost'),baseVol=n('baseVol'),bearer=v('feeBearer'),ptype=v('promoType');
+    var discounts=[0.05,0.10,0.15,0.20];
+    var results=[];
+    discounts.forEach(function(d){
+      var discAmt=price*d;
+      var payPrice=price-discAmt;
+      var fee=bearer==='shared'?discAmt/2:discAmt;
+      var vol=Math.round(baseVol*volMultiplier(d*100,ptype));
+      var incrVol=vol-baseVol;
+      var margin=payPrice-cost-fee;
+      var totalMargin=margin*vol;
+      var baseTotalMargin=(price-cost)*baseVol;
+      var incrMargin=totalMargin-baseTotalMargin;
+      var roi=incrMargin>0?(incrMargin/(fee*vol)*100).toFixed(0):'N/A';
+      results.push({d:d,discAmt:discAmt,payPrice:payPrice,fee:fee,vol:vol,incrVol:incrVol,margin:margin,totalMargin:totalMargin,incrMargin:incrMargin,roi:roi});
+    });
+    var best=results.slice().sort(function(a,b){return b.incrMargin-a.incrMargin;})[0];
+    // discount cards
+    var dh='';
+    results.forEach(function(r){
+      var isBest=r.d===best.d;
+      var roiColor=parseFloat(r.roi)>=100?'#10b981':(parseFloat(r.roi)>=50?'#f59e0b':'#ef4444');
+      dh+='<div class="disc-card'+(isBest?' best':'')+'"><div class="dc-pct">'+(r.d*100)+'%</div><div class="dc-type">'+(ptype==='coupon'?'Coupon':ptype==='lightning'?'秒杀':'7天促销')+'</div><div class="dc-metrics">销量 '+r.vol+'<br>增量 +'+r.incrVol+'<br>总毛利 $'+r.totalMargin.toLocaleString('en-US',{maximumFractionDigits:0})+'</div><div class="dc-roi" style="color:'+roiColor+'">ROI '+r.roi+'%</div>'+(isBest?'<div class="dc-tag">★ 最优</div>':'')+'</div>';
+    });
+    document.getElementById('discountGrid').innerHTML=dh;
+    // table
+    var th='';
+    results.forEach(function(r){
+      var isBest=r.d===best.d;
+      th+='<tr'+(isBest?' class="best"':'')+'><td>'+(r.d*100)+'%</td><td>$'+r.payPrice.toFixed(2)+'</td><td>'+r.vol+'</td><td style="color:#10b981;font-weight:700">+'+r.incrVol+'</td><td>$'+r.margin.toFixed(2)+'</td><td>$'+r.totalMargin.toLocaleString('en-US',{maximumFractionDigits:0})+'</td><td style="color:'+(parseFloat(r.roi)>=100?'#10b981':parseFloat(r.roi)>=50?'#f59e0b':'#ef4444')+';font-weight:700">'+r.roi+'%</td></tr>';
+    });
+    document.getElementById('compareTable').innerHTML=th;
+    // strategy
+    var sh='<div class="strategy-box"><h4>🎯 最佳折扣推荐：'+(best.d*100)+'%</h4><p>推荐设置'+(best.d*100)+'%折扣的'+(ptype==='coupon'?'Coupon':ptype==='lightning'?'Lightning Deal':'7-Day Deal')+'，预计销量'+best.vol+'件（增量+'+best.incrVol+'），总毛利$'+best.totalMargin.toLocaleString('en-US',{maximumFractionDigits:0})+'，相比无折扣'+(best.incrMargin>=0?'增加':'减少')+'$'+Math.abs(best.incrMargin).toLocaleString('en-US',{maximumFractionDigits:0})+'，折扣ROI '+best.roi+'%。</p></div>';
+    sh+='<div class="strategy-box"><h4>💡 优化要点</h4><p>1. Coupon面额建议$2-$5或5%-15%，过小无吸引力过大侵蚀利润<br>2. Lightning Deal费用固定$150-$500，需确保增量毛利覆盖费用<br>3. 折扣期间同步加大广告预算，放大流量红利<br>4. 折扣后注意恢复原价，避免BSR权重下降<br>5. 高复购品类可用Coupon拉新，关注LTV而非单次利润</p></div>';
+    document.getElementById('strategyWrap').innerHTML=sh;
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🎟️ 优化概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">最佳折扣</div><div class="ri-value" style="color:#10b981">'+(best.d*100)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">增量销售</div><div class="ri-value positive">+'+best.incrVol+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">增量毛利</div><div class="ri-value '+(best.incrMargin>=0?'positive':'negative')+'">'+(best.incrMargin>=0?'+':'')+'$'+best.incrMargin.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">折扣ROI</div><div class="ri-value positive">'+best.roi+'%</div></div>'+
+      '</div><div class="result-note">💡 '+(best.incrMargin>=0?(best.d*100)+'%折扣可带来$'+best.incrMargin.toLocaleString('en-US',{maximumFractionDigits:0})+'增量利润':'所有折扣力度均侵蚀利润，建议优化成本或提升产品溢价后再促销')+'</div>';
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CDO.init);}else{CDO.init();}
+</script>
+</body>
+</html>

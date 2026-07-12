@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="价格弹性测试器（深度版）：不同价格点需求变化模拟，弹性系数计算，最优定价点识别，SVG需求曲线，收入最大化分析。免费在线跨境电商定价策略工具。">
+<meta name="keywords" content="价格弹性,需求曲线,弹性系数,最优定价,收入最大化,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/price-elasticity-tester.html">
+<title>价格弹性测试器 - 弹性系数·SVG需求曲线·收入最大化 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pet-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pet-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.chart-box{background:var(--bg-soft);border-radius:12px;padding:20px}
+.point-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.point-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.point-card.optimal{border:2px solid #10b981;background:#ecfdf5}
+.point-card .pc-price{font-size:18px;font-weight:800;color:var(--ink)}
+.point-card .pc-vol{font-size:13px;color:var(--muted);margin-top:4px}
+.point-card .pc-rev{font-size:14px;font-weight:700;margin-top:6px}
+.point-card .pc-tag{font-size:10px;font-weight:700;color:#10b981;margin-top:4px}
+.elasticity-table{width:100%;border-collapse:collapse;font-size:13px}
+.elasticity-table th{background:var(--bg-soft);padding:10px;text-align:left;font-weight:600;border-bottom:2px solid var(--rule)}
+.elasticity-table td{padding:10px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.elasticity-table tr.optimal{background:#ecfdf5}
+.e-badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:700}
+.e-badge.elastic{background:#fee2e2;color:#dc2626}.e-badge.inelastic{background:#d1fae5;color:#059669}.e-badge.unit{background:#fef3c7;color:#d97706}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.point-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"价格弹性测试器","description":"不同价格点需求变化模拟，弹性系数计算，最优定价点识别，SVG需求曲线，收入最大化分析。","url":"https://juxin-consulting.help/tools/price-elasticity-tester.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"价格弹性测试器","item":"https://juxin-consulting.help/tools/price-elasticity-tester.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="price_elasticity_tester">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 定价策略工作流 · 深度版</span>
+      <h1>价格弹性 <em>测试器</em></h1>
+      <p class="tool-hero-desc">模拟不同价格点的需求变化，计算价格弹性系数（PED），识别收入最大化的最优定价点，SVG需求曲线与收入曲线双轴可视化，支持四点对比分析。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第6步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <span class="step current">价格弹性</span><span class="arrow">→</span>
+      <a href="repricing-rules-engine.html" class="step">自动调价</a><span class="arrow">→</span>
+      <a href="psychological-pricing-analyzer.html" class="step">心理定价</a><span class="arrow">→</span>
+      <a href="price-war-simulator.html" class="step">价格战模拟</a><span class="arrow">→</span>
+      <a href="coupon-deal-optimizer.html" class="step">Coupon优化</a><span class="arrow">→</span>
+      <a href="multi-variant-pricing-strategy.html" class="step">多变体定价</a><span class="arrow">→</span>
+      <a href="price-history-analyzer.html" class="step">价格历史</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 价格测试点</h2>
+          <p class="calc-form-subtitle">输入4个价格点及对应销量</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>当前价格 <span class="hint">($)</span></label><input type="number" id="p0" value="19.99" step="0.01" oninput="PET.calc()"></div>
+            <div class="calc-field"><label>当前月销量</label><input type="number" id="q0" value="2000" oninput="PET.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>测试点1价格 <span class="hint">($)</span></label><input type="number" id="p1" value="17.99" step="0.01" oninput="PET.calc()"></div>
+            <div class="calc-field"><label>测试点1销量</label><input type="number" id="q1" value="2800" oninput="PET.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>测试点2价格 <span class="hint">($)</span></label><input type="number" id="p2" value="21.99" step="0.01" oninput="PET.calc()"></div>
+            <div class="calc-field"><label>测试点2销量</label><input type="number" id="q2" value="1500" oninput="PET.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>测试点3价格 <span class="hint">($)</span></label><input type="number" id="p3" value="24.99" step="0.01" oninput="PET.calc()"></div>
+            <div class="calc-field"><label>测试点3销量</label><input type="number" id="q3" value="900" oninput="PET.calc()"></div>
+          </div>
+          <div class="calc-field"><label>单位成本 <span class="hint">($)</span></label><input type="number" id="cost" value="8.5" step="0.01" oninput="PET.calc()"></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="pet-section">
+        <h3>📈 需求曲线 & 收入曲线（SVG）</h3>
+        <div class="chart-box" id="chartBox"></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px">
+          <div style="display:flex;align-items:center;gap:6px;color:var(--ink-soft)"><div style="width:14px;height:3px;border-radius:2px;background:#4f46e5"></div>需求曲线（价格↑销量↓）</div>
+          <div style="display:flex;align-items:center;gap:6px;color:var(--ink-soft)"><div style="width:14px;height:3px;border-radius:2px;background:#10b981"></div>收入曲线</div>
+          <div style="display:flex;align-items:center;gap:6px;color:var(--ink-soft)"><div style="width:14px;height:3px;border-radius:2px;background:#f59e0b"></div>利润曲线</div>
+        </div>
+      </div>
+
+      <div class="pet-section">
+        <h3>🎯 价格点对比</h3>
+        <div class="point-grid" id="pointGrid"></div>
+      </div>
+
+      <div class="pet-section">
+        <h3>📊 弹性系数分析表</h3>
+        <table class="elasticity-table">
+          <thead><tr><th>价格区间</th><th>价格变动</th><th>销量变动</th><th>弹性系数PED</th><th>弹性类型</th><th>收入影响</th></tr></thead>
+          <tbody id="elastTable"></tbody>
+        </table>
+      </div>
+
+      <div class="pet-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="dynamic-pricing.html" class="related-card"><span class="related-card-icon">⚡</span><div class="related-card-content"><h5>动态定价</h5><p>实时调价</p></div></a>
+          <a href="psychological-pricing-analyzer.html" class="related-card"><span class="related-card-icon">🧠</span><div class="related-card-content"><h5>心理定价分析</h5><p>$9.99效应</p></div></a>
+          <a href="repricing-rules-engine.html" class="related-card"><span class="related-card-icon">⚙️</span><div class="related-card-content"><h5>自动调价引擎</h5><p>调价规则</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="regional-pricing.html" class="wbn-btn prev">← 上一步：区域定价</a>
+        <a href="repricing-rules-engine.html" class="wbn-btn next">下一步：自动调价 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="price-elasticity-tester.html">价格弹性测试</a></li><li><a href="dynamic-pricing.html">动态定价</a></li><li><a href="price-history-analyzer.html">价格历史</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PET=(function(){
+  'use strict';
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function calc(){
+    var pts=[
+      {p:v('p0'),q:v('q0'),label:'当前'},
+      {p:v('p1'),q:v('q1'),label:'测试1'},
+      {p:v('p2'),q:v('q2'),label:'测试2'},
+      {p:v('p3'),q:v('q3'),label:'测试3'}
+    ];
+    var cost=v('cost');
+    pts.forEach(function(pt){pt.rev=pt.p*pt.q;pt.profit=(pt.p-cost)*pt.q;});
+    // 按价格排序
+    pts.sort(function(a,b){return a.p-b.p;});
+    // 最优收入点
+    var maxRevPt=pts.slice().sort(function(a,b){return b.rev-a.rev;})[0];
+    var maxProfitPt=pts.slice().sort(function(a,b){return b.profit-a.profit;})[0];
+    drawChart(pts,cost);
+    // point cards
+    var ph='';
+    pts.forEach(function(pt){
+      var opt=pt.p===maxRevPt.p&&pt.q===maxRevPt.q;
+      ph+='<div class="point-card'+(opt?' optimal':'')+'"><div class="pc-price">$'+pt.p.toFixed(2)+'</div><div class="pc-vol">销量 '+pt.q.toLocaleString()+'</div><div class="pc-rev" style="color:#4f46e5">收入 $'+pt.rev.toLocaleString('en-US',{maximumFractionDigits:0})+'</div><div class="pc-rev" style="color:#10b981">利润 $'+pt.profit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div>'+(opt?'<div class="pc-tag">★ 收入最优</div>':'')+'</div>';
+    });
+    document.getElementById('pointGrid').innerHTML=ph;
+    // elasticity table
+    var eh='';
+    for(var i=1;i<pts.length;i++){
+      var pa=pts[i-1],pb=pts[i];
+      var dP=(pb.p-pa.p)/pa.p;
+      var dQ=(pb.q-pa.q)/pa.q;
+      var ped=Math.abs(dQ/dP);
+      var type=ped>1?'elastic':(ped<1?'inelastic':'unit');
+      var typeLabel=ped>1?'富有弹性':(ped<1?'缺乏弹性':'单位弹性');
+      var revImpact=pb.rev>pa.rev?'+':'';
+      eh+='<tr'+(pb.p===maxRevPt.p?' class="optimal"':'')+'><td>$'+pa.p.toFixed(2)+' → $'+pb.p.toFixed(2)+'</td><td>'+(dP>0?'+':'')+(dP*100).toFixed(1)+'%</td><td>'+(dQ>0?'+':'')+(dQ*100).toFixed(1)+'%</td><td><strong>'+ped.toFixed(2)+'</strong></td><td><span class="e-badge '+type+'">'+typeLabel+'</span></td><td style="color:'+(pb.rev>pa.rev?'#10b981':'#ef4444')+'">'+revImpact+'$'+(pb.rev-pa.rev).toLocaleString('en-US',{maximumFractionDigits:0})+'</td></tr>';
+    }
+    document.getElementById('elastTable').innerHTML=eh;
+    var curRev=pts.filter(function(pt){return pt.label==='当前';})[0]||pts[0];
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🎯 弹性分析结论</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">最优定价</div><div class="ri-value" style="color:#10b981">$'+maxRevPt.p.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">最大收入</div><div class="ri-value positive">$'+maxRevPt.rev.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">最大利润</div><div class="ri-value positive">$'+maxProfitPt.profit.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">收入提升</div><div class="ri-value positive">+'+((maxRevPt.rev/curRev.rev-1)*100).toFixed(1)+'%</div></div>'+
+      '</div><div class="result-note">💡 建议'+(maxRevPt.p>curRev.p?'适度提价':'适度降价')+'至$'+maxRevPt.p.toFixed(2)+'，收入可提升'+((maxRevPt.rev/curRev.rev-1)*100).toFixed(1)+'%。该产品价格弹性'+(pts.length>1&&Math.abs((pts[1].q-pts[0].q)/pts[0].q/((pts[1].p-pts[0].p)/pts[0].p))>1?'较高（敏感）':'较低（不敏感）')+'，'+(Math.abs((pts[1].q-pts[0].q)/pts[0].q/((pts[1].p-pts[0].p)/pts[0].p))>1?'降价策略收益更明显':'提价对销量冲击较小')+'</div>';
+  }
+  function drawChart(pts,cost){
+    var W=720,H=320,padL=55,padR=55,padT=20,padB=40;
+    var prices=pts.map(function(p){return p.p;});
+    var qs=pts.map(function(p){return p.q;});
+    var revs=pts.map(function(p){return p.rev;});
+    var profits=pts.map(function(p){return p.profit;});
+    var minP=Math.min.apply(null,prices)*0.95,maxP=Math.max.apply(null,prices)*1.05;
+    var minQ=0,maxQ=Math.max.apply(null,qs)*1.15;
+    var maxRev=Math.max.apply(null,revs)*1.1;
+    var maxProfit=Math.max.apply(null,profits)*1.1;
+    var xW=W-padL-padR;
+    function xP(p){return padL+xW*(p-minP)/(maxP-minP);}
+    function yQ(q){return padT+(H-padT-padB)*(1-q/maxQ);}
+    function yRev(r){return padT+(H-padT-padB)*(1-r/maxRev);}
+    var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">';
+    for(var i=0;i<=4;i++){var gy=padT+(H-padT-padB)*i/4;svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#e2e8f0" stroke-width="1"/>';var gv=Math.round(maxQ*(1-i/4));svg+='<text x="'+(padL-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#4f46e5">'+gv+'</text>';var gr=Math.round(maxRev*(1-i/4));svg+='<text x="'+(W-padR+8)+'" y="'+(gy+4)+'" font-size="9" fill="#10b981">'+gr+'</text>';}
+    var sortedP=pts.slice().sort(function(a,b){return a.p-b.p;});
+    var dPath=sortedP.map(function(pt,i){return (i===0?'M':'L')+xP(pt.p)+','+yQ(pt.q);}).join(' ');
+    var rPath=sortedP.map(function(pt,i){return (i===0?'M':'L')+xP(pt.p)+','+yRev(pt.rev);}).join(' ');
+    var prPath=sortedP.map(function(pt,i){return (i===0?'M':'L')+xP(pt.p)+','+yRev(pt.profit);}).join(' ');
+    svg+='<path d="'+dPath+'" fill="none" stroke="#4f46e5" stroke-width="2.5"/>';
+    svg+='<path d="'+rPath+'" fill="none" stroke="#10b981" stroke-width="2.5"/>';
+    svg+='<path d="'+prPath+'" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3"/>';
+    sortedP.forEach(function(pt){svg+='<circle cx="'+xP(pt.p)+'" cy="'+yQ(pt.q)+'" r="4" fill="#4f46e5"/>';svg+='<circle cx="'+xP(pt.p)+'" cy="'+yRev(pt.rev)+'" r="4" fill="#10b981"/>';});
+    svg+='<text x="'+(W/2)+'" y="'+(H-5)+'" text-anchor="middle" font-size="11" fill="#94a3b8">价格 ($)</text>';
+    svg+='<text x="15" y="'+(H/2)+'" text-anchor="middle" font-size="10" fill="#4f46e5" transform="rotate(-90 15 '+(H/2)+')">销量</text>';
+    svg+='<text x="'+(W-15)+'" y="'+(H/2)+'" text-anchor="middle" font-size="10" fill="#10b981" transform="rotate(90 '+(W-15)+' '+(H/2)+')">收入/利润</text>';
+    svg+='</svg>';
+    document.getElementById('chartBox').innerHTML=svg;
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PET.init);}else{PET.init();}
+</script>
+</body>
+</html>

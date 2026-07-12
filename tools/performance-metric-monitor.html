@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="绩效指标监控器：ODR/迟发率/取消率/有效追踪率四项绩效实时监控，阈值预警，CSS仪表盘，改善建议引擎。免费在线亚马逊账号绩效监控工具。">
+<meta name="keywords" content="绩效指标监控,ODR,迟发率,取消率,有效追踪率,账号绩效,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/performance-metric-monitor.html">
+<title>绩效指标监控器 - 四项绩效·阈值预警·CSS仪表盘 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pmm-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pmm-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.gauge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.gauge-card{padding:20px;border-radius:14px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.gauge-ring{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;position:relative}
+.gauge-ring::before{content:'';position:absolute;width:90px;height:90px;border-radius:50%;background:#fff}
+.gauge-ring .gr-inner{position:relative;z-index:1}
+.gauge-ring .gr-val{font-size:22px;font-weight:800;line-height:1}
+.gauge-ring .gr-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.gauge-card .gc-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.gauge-card .gc-status{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:700;display:inline-block}
+.gauge-card .gc-thr{font-size:11px;color:var(--muted);margin-top:6px}
+.suggest-list{list-style:none;padding:0;margin:0}
+.suggest-list li{padding:12px 0 12px 28px;font-size:13px;color:var(--ink-soft);position:relative;line-height:1.7;border-bottom:1px solid var(--rule-light)}
+.suggest-list li:last-child{border-bottom:none}
+.suggest-list li::before{content:'⚠️';position:absolute;left:0;top:12px;font-size:14px}
+.history-bar{display:flex;gap:8px;height:32px;align-items:flex-end;margin-top:8px}
+.history-bar .hb-col{flex:1;border-radius:4px 4px 0 0;min-height:4px;transition:height .4s}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.gauge-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"绩效指标监控器","description":"ODR/迟发率/取消率/有效追踪率四项绩效实时监控，阈值预警，CSS仪表盘，改善建议引擎。","url":"https://juxin-consulting.help/tools/performance-metric-monitor.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"绩效指标监控器","item":"https://juxin-consulting.help/tools/performance-metric-monitor.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="performance_metric_monitor">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📊 风险管理工作流</span>
+      <h1>绩效指标 <em>监控器</em></h1>
+      <p class="tool-hero-desc">ODR订单缺陷率、迟发率、取消率、有效追踪率四项核心绩效实时监控，CSS conic-gradient仪表盘可视化，阈值智能预警，针对超标指标输出改善建议，历史趋势记录自动持久化。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第10步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a><span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a><span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a><span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a><span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a><span class="arrow">→</span>
+      <a href="appeal-letter-generator.html" class="step">申诉信生成</a><span class="arrow">→</span>
+      <a href="policy-update-tracker.html" class="step">政策追踪</a><span class="arrow">→</span>
+      <a href="listing-suppression-checker.html" class="step">Listing下架</a><span class="arrow">→</span>
+      <a href="account-suspension-recovery.html" class="step">封号恢复</a><span class="arrow">→</span>
+      <span class="step current">绩效监控</span><span class="arrow">→</span>
+      <a href="ip-infringement-scanner.html" class="step">侵权扫描</a><span class="arrow">→</span>
+      <a href="risk-heatmap-generator.html" class="step">风险热力图</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入绩效数据</h2>
+          <p class="calc-form-subtitle">填写四项核心绩效指标当前值与阈值</p>
+          <div class="calc-row-2"><div class="calc-field"><label>ODR订单缺陷率 <span class="hint">(%)</span></label><input type="number" id="odr" value="0.8" step="0.01" oninput="PMM.calc()"></div><div class="calc-field"><label>ODR阈值 <span class="hint">(%)</span></label><input type="number" id="odr_t" value="1" step="0.01" oninput="PMM.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>迟发率 <span class="hint">(%)</span></label><input type="number" id="late" value="3.2" step="0.1" oninput="PMM.calc()"></div><div class="calc-field"><label>迟发率阈值 <span class="hint">(%)</span></label><input type="number" id="late_t" value="4" step="0.1" oninput="PMM.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>取消率 <span class="hint">(%)</span></label><input type="number" id="cancel" value="1.5" step="0.1" oninput="PMM.calc()"></div><div class="calc-field"><label>取消率阈值 <span class="hint">(%)</span></label><input type="number" id="cancel_t" value="2.5" step="0.1" oninput="PMM.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>有效追踪率 <span class="hint">(%)</span></label><input type="number" id="track" value="97" step="0.5" oninput="PMM.calc()"></div><div class="calc-field"><label>有效追踪率阈值 <span class="hint">(%)</span></label><input type="number" id="track_t" value="95" step="0.5" oninput="PMM.calc()"></div></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="pmm-section">
+        <h3>🎛️ 四项绩效仪表盘</h3>
+        <div class="gauge-grid" id="gaugeGrid"></div>
+      </div>
+
+      <div class="pmm-section" id="suggestSection" style="display:none">
+        <h3>🧠 改善建议</h3>
+        <ul class="suggest-list" id="suggestList"></ul>
+      </div>
+
+      <div class="pmm-section">
+        <h3>📅 历史趋势记录</h3>
+        <div id="historyWrap"></div>
+      </div>
+
+      <div class="pmm-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="account-health.html" class="related-card"><span class="related-card-icon">🏥</span><div class="related-card-content"><h5>账号健康监控</h5><p>8维度检查</p></div></a>
+          <a href="ban-prevention.html" class="related-card"><span class="related-card-icon">🛡️</span><div class="related-card-content"><h5>封号预防</h5><p>风险预警</p></div></a>
+          <a href="account-suspension-recovery.html" class="related-card"><span class="related-card-icon">🚑</span><div class="related-card-content"><h5>封号恢复SOP</h5><p>72小时清单</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="account-suspension-recovery.html" class="wbn-btn prev">← 上一步：封号恢复</a>
+        <a href="ip-infringement-scanner.html" class="wbn-btn next">下一步：侵权扫描 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="performance-metric-monitor.html">绩效指标监控</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="risk-heatmap-generator.html">风险热力图</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PMM=(function(){
+  'use strict';
+  var SK='jx_perf_monitor';
+  var history=[];
+  var METRICS=[
+    {key:'odr',name:'ODR订单缺陷率',icon:'📋',lowerBetter:true,desc:'A-to-Z索赔率+差评率+信用卡拒付率'},
+    {key:'late',name:'迟发率',icon:'⏰',lowerBetter:true,desc:'承诺发货日后才发货的订单占比'},
+    {key:'cancel',name:'取消率',icon:'❌',lowerBetter:true,desc:'卖家主动取消的订单占比'},
+    {key:'track',name:'有效追踪率',icon:'📍',lowerBetter:false,desc:'有效物流追踪单号占比'}
+  ];
+  var SUGGEST={
+    odr:'ODR超标：逐条核查A-to-Z索赔订单，主动联系差评客户解决问题，改善产品质量与Listing描述准确性，考虑切换FBA发货。',
+    late:'迟发率偏高：确保48小时内发货，优化FBA发货流程，设置安全库存预警避免超卖，升级物流商。',
+    cancel:'取消率偏高：检查库存准确性，及时同步库存数据，避免无货超卖，设置备货缓冲。',
+    track:'有效追踪率不足：所有包裹使用可追踪物流方式，及时上传有效追踪单号，确保≥95%。'
+  };
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function load(){try{var d=localStorage.getItem(SK);if(d)history=JSON.parse(d);}catch(e){}}
+  function save(){try{localStorage.setItem(SK,JSON.stringify(history));}catch(e){}}
+  function calc(){
+    var items=METRICS.map(function(m){
+      var cur=v(m.key),thr=v(m.key+'_t');
+      var pct;
+      if(m.lowerBetter){pct=cur>=thr?(thr/cur*100):100;}
+      else{pct=cur>=thr?100:(cur/thr*100);}
+      var status=pct>=90?'green':(pct>=70?'yellow':'red');
+      var color=status==='green'?'#10b981':(status==='yellow'?'#f59e0b':'#ef4444');
+      var label=status==='green'?'正常':(status==='yellow'?'注意':'危险');
+      return {m:m,cur:cur,thr:thr,pct:Math.round(pct),status:status,color:color,label:label};
+    });
+    var avgPct=Math.round(items.reduce(function(s,i){return s+i.pct;},0)/items.length);
+    var overallColor=avgPct>=90?'#10b981':(avgPct>=70?'#f59e0b':'#ef4444');
+    var overallLabel=avgPct>=90?'健康':(avgPct>=70?'注意':'危险');
+    var warn=items.filter(function(i){return i.status!=='green';});
+    var gh='';
+    items.forEach(function(it){
+      var deg=it.pct/100*360;
+      gh+='<div class="gauge-card"><div class="gauge-ring" style="background:conic-gradient('+it.color+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)"><div class="gr-inner"><div class="gr-val" style="color:'+it.color+'">'+it.cur+(it.m.key==='track'?'%':'%')+'</div><div class="gr-lbl">健康度 '+it.pct+'%</div></div></div><div class="gc-name">'+it.m.icon+' '+it.m.name+'</div><span class="gc-status" style="background:'+(it.status==='green'?'#d1fae5':it.status==='yellow'?'#fef3c7':'#fee2e2')+';color:'+it.color+'">'+it.label+'</span><div class="gc-thr">阈值: '+it.thr+'% · '+it.m.desc+'</div></div>';
+    });
+    document.getElementById('gaugeGrid').innerHTML=gh;
+    if(warn.length){
+      document.getElementById('suggestSection').style.display='block';
+      var sh='';
+      warn.forEach(function(it){sh+='<li><strong>'+it.m.name+'</strong>（当前 '+it.cur+'%，阈值 '+it.thr+'%）：'+SUGGEST[it.m.key]+'</li>';});
+      document.getElementById('suggestList').innerHTML=sh;
+    }else{document.getElementById('suggestSection').style.display='none';}
+    document.getElementById('resultCard').innerHTML=
+      '<h3>📊 绩效监控概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">综合健康度</div><div class="ri-value" style="color:'+overallColor+'">'+avgPct+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">整体状态</div><div class="ri-value" style="color:'+overallColor+'">'+overallLabel+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">正常指标</div><div class="ri-value positive">'+(4-warn.length)+'/4</div></div>'+
+      '<div class="result-item"><div class="ri-label">预警指标</div><div class="ri-value '+(warn.length?'negative':'positive')+'">'+warn.length+'</div></div>'+
+      '</div><div class="result-note">💡 '+(warn.length?'有 '+warn.length+' 项指标需关注，详见改善建议':'四项绩效全部达标，账号运营良好')+'</div><div style="text-align:center;margin-top:16px"><button class="btn-copy" style="padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600" onclick="PMM.saveRecord()">💾 保存本次监控</button></div>';
+    renderHistory();
+  }
+  function renderHistory(){
+    if(!history.length){document.getElementById('historyWrap').innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">暂无历史记录</div>';return;}
+    var html='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">';
+    history.slice(-4).forEach(function(h){
+      var c=h.pct>=90?'#10b981':(h.pct>=70?'#f59e0b':'#ef4444');
+      html+='<div style="text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:6px">'+h.date+'</div><div class="history-bar">';
+      h.metrics.forEach(function(m){html+='<div class="hb-col" style="height:'+(m.pct*0.3)+'px;background:'+m.color+'" title="'+m.name+': '+m.cur+'%"></div>';});
+      html+='</div><div style="font-size:12px;font-weight:700;color:'+c+';margin-top:4px">'+h.pct+'%</div></div>';
+    });
+    html+='</div>';
+    document.getElementById('historyWrap').innerHTML=html;
+  }
+  function saveRecord(){
+    var items=METRICS.map(function(m){
+      var cur=v(m.key),thr=v(m.key+'_t');
+      var pct=m.lowerBetter?(cur>=thr?thr/cur*100:100):(cur>=thr?100:cur/thr*100);
+      var status=pct>=90?'green':(pct>=70?'yellow':'red');
+      var color=status==='green'?'#10b981':(status==='yellow'?'#f59e0b':'#ef4444');
+      return {name:m.name,cur:cur,pct:Math.round(pct),color:color};
+    });
+    var avg=Math.round(items.reduce(function(s,i){return s+i.pct;},0)/items.length);
+    history.push({date:new Date().toLocaleDateString('zh-CN'),pct:avg,metrics:items});
+    if(history.length>12)history=history.slice(-12);
+    save();renderHistory();alert('监控记录已保存！');
+  }
+  function init(){load();calc();}
+  return {calc:calc,saveRecord:saveRecord,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PMM.init);}else{PMM.init();}
+</script>
+</body>
+</html>

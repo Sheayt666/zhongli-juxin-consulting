@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="市场份额增长追踪器：输入自身和竞品份额数据，追踪份额变化趋势，竞品此消彼长分析，CSS份额图可视化。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="市场份额,竞品分析,份额变化,增长追踪,市场占比">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/market-share-growth-tracker.html">
+<title>市场份额增长追踪器 - 份额趋势·竞品对比·CSS份额图 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.msg-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.msg-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.share-display{display:flex;align-items:center;gap:32px;justify-content:center;padding:24px 0;flex-wrap:wrap}
+.share-donut{width:200px;height:200px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.share-donut::before{content:'';position:absolute;width:130px;height:130px;border-radius:50%;background:#fff}
+.share-donut-inner{position:relative;z-index:1;text-align:center}
+.share-donut-inner .sd-val{font-size:36px;font-weight:800;line-height:1}
+.share-donut-inner .sd-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.share-info{flex:1;min-width:240px}
+.share-info .si-title{font-size:16px;font-weight:700;margin-bottom:10px}
+.share-info .si-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--rule-light);font-size:13px;align-items:center}
+.share-info .si-row .sr-lbl{display:flex;align-items:center;gap:6px;color:var(--ink-soft)}
+.share-info .si-row .sr-dot{width:10px;height:10px;border-radius:50%}
+.share-info .si-row .sr-val{font-weight:700}
+.share-info .si-row .sr-change{font-size:11px;padding:2px 6px;border-radius:4px;margin-left:6px}
+.share-info .si-row .sr-change.up{background:#d1fae5;color:#059669}
+.share-info .si-row .sr-change.down{background:#fee2e2;color:#dc2626}
+.share-info .si-row .sr-change.flat{background:#e0e7ff;color:#4f46e5}
+.bar-chart-row{display:flex;align-items:flex-end;gap:16px;height:200px;padding:20px 10px 30px;border-bottom:2px solid var(--rule);overflow-x:auto}
+.bcr-col{display:flex;flex-direction:column;align-items:center;min-width:80px;flex:1;height:100%;justify-content:flex-end}
+.bcr-bar-group{display:flex;gap:4px;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.bcr-bar{width:24px;border-radius:4px 4px 0 0;transition:height .5s;min-height:2px}
+.bcr-bar.prev{background:#c7d2fe}
+.bcr-bar.curr{background:linear-gradient(180deg,#4f46e5,#6366f1)}
+.bcr-val{font-size:10px;font-weight:700;margin-bottom:2px;white-space:nowrap}
+.bcr-label{font-size:11px;color:var(--muted);margin-top:4px;text-align:center}
+.legend{display:flex;gap:20px;justify-content:center;margin-top:12px;font-size:12px}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.battle-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.battle-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.battle-card .bc-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.battle-card .bc-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.battle-card .bc-row .br-lbl{color:var(--muted)}
+.battle-card .bc-row .br-val{font-weight:700}
+.battle-card .bc-bar{height:8px;border-radius:4px;background:#e0e7ff;overflow:hidden;margin:6px 0}
+.battle-card .bc-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.battle-card .bc-verdict{font-size:12px;font-weight:700;margin-top:6px;padding:4px 8px;border-radius:4px;display:inline-block}
+.battle-card .bc-verdict.winning{background:#d1fae5;color:#059669}
+.battle-card .bc-verdict.losing{background:#fee2e2;color:#dc2626}
+.battle-card .bc-verdict.holding{background:#e0e7ff;color:#4f46e5}
+.strategy-box{padding:20px;border-radius:12px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;margin-top:16px}
+.strategy-box .sb-title{font-size:15px;font-weight:700;color:#4f46e5;margin-bottom:10px}
+.strategy-box ul{list-style:none;padding:0;margin:0}
+.strategy-box ul li{padding:6px 0 6px 20px;font-size:13px;color:var(--ink-soft);position:relative;line-height:1.6}
+.strategy-box ul li::before{content:'▸';color:#4f46e5;font-weight:700;position:absolute;left:0}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.related-grid a{display:block;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;text-align:center;transition:all .2s}
+.related-grid a:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;transform:translateY(-2px)}
+@media(max-width:768px){.battle-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:repeat(2,1fr)}.share-display{flex-direction:column;gap:16px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"市场份额增长追踪器","description":"输入自身和竞品份额数据，追踪份额变化趋势，竞品此消彼长分析，CSS份额图可视化。","url":"https://juxin-consulting.help/tools/market-share-growth-tracker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"市场份额增长追踪器","item":"https://juxin-consulting.help/tools/market-share-growth-tracker.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="market_share">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 增长分析工作流 · 标准版</span>
+      <h1>市场份额 <em>增长追踪器</em></h1>
+      <p class="tool-hero-desc">输入自身和竞品市场份额数据，追踪份额变化趋势，竞品此消彼长分析，CSS份额饼图和柱状图对比，自动判断竞争态势并给出策略建议。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <a href="growth-driver-decomposer.html" class="step">增长拆解</a><span class="arrow">→</span>
+      <a href="funnel-conversion-analyzer.html" class="step">漏斗转化</a><span class="arrow">→</span>
+      <a href="viral-coefficient-calculator.html" class="step">病毒系数</a><span class="arrow">→</span>
+      <a href="ltv-prediction-model.html" class="step">LTV预测</a><span class="arrow">→</span>
+      <a href="growth-experiment-tracker.html" class="step">增长实验</a><span class="arrow">→</span>
+      <span class="step current">市场份额</span><span class="arrow">→</span>
+      <a href="unit-economics-builder.html" class="step">单位经济</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入市场份额数据</h2>
+          <p class="calc-form-subtitle">填写上期和本期的市场份额数据（%）</p>
+          <div class="calc-field"><label>市场总规模 <span class="hint">($百万/月)</span></label><input type="number" id="marketSize" value="50" step="0.5" min="0" oninput="MSG.calc()"></div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin:16px 0 8px">上期份额 (%)</div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>我的份额 <span class="hint">(%)</span></label><input type="number" id="myPrev" value="12" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+            <div class="calc-field"><label>竞品A份额 <span class="hint">(%)</span></label><input type="number" id="compAPrev" value="25" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>竞品B份额 <span class="hint">(%)</span></label><input type="number" id="compBPrev" value="18" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+            <div class="calc-field"><label>其他份额 <span class="hint">(%)</span></label><input type="number" id="otherPrev" value="45" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin:16px 0 8px">本期份额 (%)</div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>我的份额 <span class="hint">(%)</span></label><input type="number" id="myCurr" value="16" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+            <div class="calc-field"><label>竞品A份额 <span class="hint">(%)</span></label><input type="number" id="compACurr" value="23" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>竞品B份额 <span class="hint">(%)</span></label><input type="number" id="compBCurr" value="20" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+            <div class="calc-field"><label>其他份额 <span class="hint">(%)</span></label><input type="number" id="otherCurr" value="41" step="0.5" min="0" max="100" oninput="MSG.calc()"></div>
+          </div>
+          <div class="fee-rule-box"><h4>📐 份额分析说明</h4><ul><li>市场份额 = 自身销量 / 市场总销量 x 100%</li><li>份额变化 > 0：份额增长，竞争力提升</li><li>份额变化 < 0：份额下降，需关注竞品动态</li><li>此消彼长：分析份额从哪个竞品转移而来</li></ul></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="msg-section">
+        <h3>🥧 份额分布图</h3>
+        <div class="share-display" id="shareDisplay"></div>
+      </div>
+
+      <div class="msg-section">
+        <h3>📊 上期 vs 本期 份额对比</h3>
+        <div class="bar-chart-row" id="barChart"></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#c7d2fe"></div>上期</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#4f46e5"></div>本期</div>
+        </div>
+      </div>
+
+      <div class="msg-section">
+        <h3>⚔️ 竞品此消彼长分析</h3>
+        <div class="battle-grid" id="battleGrid"></div>
+      </div>
+
+      <div class="msg-section">
+        <h3>💡 策略建议</h3>
+        <div class="strategy-box" id="strategyBox"></div>
+      </div>
+
+      <div class="msg-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="competitor-landscape-mapper.html">竞品格局图谱</a>
+          <a href="competitor-monitor.html">竞品监控器</a>
+          <a href="growth-rate.html">增长率计算</a>
+          <a href="unit-economics-builder.html">单位经济模型</a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="growth-experiment-tracker.html" class="wbn-btn prev">← 上一步：增长实验</a>
+        <a href="unit-economics-builder.html" class="wbn-btn next">下一步：单位经济 →</a>
+      </div>
+      <div style="text-align:center;margin:20px auto;max-width:1152px"><a href="index.html" style="display:inline-block;padding:10px 28px;border-radius:50px;background:var(--bg-soft);color:var(--ink-soft);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--rule)">← 返回工具中心</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-rate.html">增长率计算</a></li><li><a href="cohort-analysis.html">同期群分析</a></li><li><a href="retention-rate.html">留存率分析</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var MSG=(function(){
+  'use strict';
+  var SK='jx_market_share';
+  function v(id){var el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
+  function fmt(n){return n.toFixed(1)+'%';}
+  function calc(){
+    var mSize=v('marketSize');
+    var myP=v('myPrev'),cAP=v('compAPrev'),cBP=v('compBPrev'),oP=v('otherPrev');
+    var myC=v('myCurr'),cAC=v('compACurr'),cBC=v('compBCurr'),oC=v('otherCurr');
+    if(myC<=0){document.getElementById('resultCard').innerHTML='<p style="text-align:center;color:var(--muted)">请输入市场份额数据</p>';return;}
+    var myChange=myC-myP, cAChange=cAC-cAP, cBChange=cBC-cBP, oChange=oC-oP;
+    var myRev=mSize*myC/100*1000000, prevRev=mSize*myP/100*1000000, revGrowth=prevRev>0?(myRev-prevRev)/prevRev*100:0;
+    // Result card
+    var html='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val blue">'+fmt(myC)+'</div><div class="rsb-lbl">我的份额</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val '+(myChange>=0?'green':'red')+'">'+(myChange>=0?'+':'')+myChange.toFixed(1)+'pp</div><div class="rsb-lbl">份额变化</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">$'+(myRev/1000000).toFixed(1)+'M</div><div class="rsb-lbl">月收入预估</div></div>';
+    html+='</div>';
+    html+='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val '+(revGrowth>=0?'green':'red')+'">'+(revGrowth>=0?'+':'')+revGrowth.toFixed(1)+'%</div><div class="rsb-lbl">收入增长</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+(myChange>=0?'上升':'下降')+'</div><div class="rsb-lbl">竞争态势</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+fmt(myC+100-myP-myC<=0?0:100-myC)+'</div><div class="rsb-lbl">竞品合计</div></div>';
+    html+='</div>';
+    document.getElementById('resultCard').innerHTML=html;
+    // Donut chart
+    var colors={me:'#4f46e5',a:'#ef4444',b:'#f59e0b',other:'#94a3b8'};
+    var currData=[
+      {name:'我的份额',val:myC,color:colors.me,change:myChange},
+      {name:'竞品A',val:cAC,color:colors.a,change:cAChange},
+      {name:'竞品B',val:cBC,color:colors.b,change:cBChange},
+      {name:'其他',val:oC,color:colors.other,change:oChange}
+    ];
+    var total=myC+cAC+cBC+oC;
+    if(total<=0)total=100;
+    var cumAngle=0;
+    var donutBg='conic-gradient(';
+    currData.forEach(function(d,i){
+      var angle=d.val/total*360;
+      donutBg+=d.color+' '+cumAngle+'deg '+(cumAngle+angle)+'deg';
+      if(i<3)donutBg+=', ';
+      cumAngle+=angle;
+    });
+    donutBg+=')';
+    var dh='<div class="share-donut" style="background:'+donutBg+'">';
+    dh+='<div class="share-donut-inner"><div class="sd-val" style="color:#4f46e5">'+fmt(myC)+'</div><div class="sd-lbl">我的份额</div></div></div>';
+    dh+='<div class="share-info"><div class="si-title">本期份额分布</div>';
+    currData.forEach(function(d){
+      var changeCls=d.change>0?'up':d.change<0?'down':'flat';
+      var changeText=d.change>0?'+'+d.change.toFixed(1)+'pp':d.change<0?d.change.toFixed(1)+'pp':'持平';
+      dh+='<div class="si-row"><span class="sr-lbl"><span class="sr-dot" style="background:'+d.color+'"></span>'+d.name+'</span><span><span class="sr-val">'+fmt(d.val)+'</span><span class="sr-change '+changeCls+'">'+changeText+'</span></span></div>';
+    });
+    dh+='</div>';
+    document.getElementById('shareDisplay').innerHTML=dh;
+    // Bar chart
+    var maxVal=Math.max(myP,myC,cAP,cAC,cBP,cBC,oP,oC,1);
+    var players=[
+      {name:'我的',prev:myP,curr:myC},
+      {name:'竞品A',prev:cAP,curr:cAC},
+      {name:'竞品B',prev:cBP,curr:cBC},
+      {name:'其他',prev:oP,curr:oC}
+    ];
+    var bh='';
+    players.forEach(function(p){
+      var ph=maxVal>0?p.prev/maxVal*100:0;
+      var ch=maxVal>0?p.curr/maxVal*100:0;
+      bh+='<div class="bcr-col"><div class="bcr-bar-group">';
+      bh+='<div class="bcr-bar prev" style="height:'+Math.max(ph,2)+'%" title="上期:'+p.prev+'%"></div>';
+      bh+='<div class="bcr-bar curr" style="height:'+Math.max(ch,2)+'%" title="本期:'+p.curr+'%"></div>';
+      bh+='</div><div class="bcr-val">'+p.curr.toFixed(1)+'%</div><div class="bcr-label">'+p.name+'</div></div>';
+    });
+    document.getElementById('barChart').innerHTML=bh;
+    // Battle analysis
+    var battles=[
+      {name:'我 vs 竞品A',myChange:myChange,compChange:cAChange,color:colors.a},
+      {name:'我 vs 竞品B',myChange:myChange,compChange:cBChange,color:colors.b}
+    ];
+    var bth='';
+    battles.forEach(function(b){
+      var verdict,verdictCls;
+      if(b.myChange>0&&b.compChange<0){verdict='抢夺份额中';verdictCls='winning';}
+      else if(b.myChange<0&&b.compChange>0){verdict='被抢份额';verdictCls='losing';}
+      else if(b.myChange>b.compChange){verdict='领先增长';verdictCls='winning';}
+      else if(b.myChange<b.compChange){verdict:'增长落后';verdictCls='losing';}
+      else{verdict='势均力敌';verdictCls='holding';}
+      bth+='<div class="battle-card">';
+      bth+='<div class="bc-name"><span class="sr-dot" style="width:10px;height:10px;border-radius:50%;background:'+b.color+';display:inline-block"></span>'+b.name+'</div>';
+      bth+='<div class="bc-row"><span class="br-lbl">我的变化</span><span class="br-val" style="color:'+(b.myChange>=0?'#10b981':'#ef4444')+'">'+(b.myChange>=0?'+':'')+b.myChange.toFixed(1)+'pp</span></div>';
+      bth+='<div class="bc-bar"><div class="bc-bar-fill" style="width:'+Math.abs(b.myChange)*10+'%;background:'+(b.myChange>=0?'#10b981':'#ef4444')+'"></div></div>';
+      bth+='<div class="bc-row"><span class="br-lbl">竞品变化</span><span class="br-val" style="color:'+(b.compChange>=0?'#10b981':'#ef4444')+'">'+(b.compChange>=0?'+':'')+b.compChange.toFixed(1)+'pp</span></div>';
+      bth+='<div class="bc-bar"><div class="bc-bar-fill" style="width:'+Math.abs(b.compChange)*10+'%;background:'+(b.compChange>=0?'#10b981':'#ef4444')+'"></div></div>';
+      bth+='<div class="bc-verdict '+verdictCls+'">'+verdict+'</div>';
+      bth+='</div>';
+    });
+    document.getElementById('battleGrid').innerHTML=bth;
+    // Strategy
+    var sh='<div class="sb-title">基于份额变化的策略建议</div><ul>';
+    if(myChange>0){
+      sh+='<li>份额增长 '+myChange.toFixed(1)+' 个百分点，保持当前策略并加大投入</li>';
+      if(cAChange<0)sh+='<li>竞品A份额下降 '+Math.abs(cAChange).toFixed(1)+'pp，分析其失误并学习避免</li>';
+      if(cBChange>0)sh+='<li>竞品B份额增长 '+cBChange.toFixed(1)+'pp，关注其策略并寻找差异化优势</li>';
+      sh+='<li>收入增长 '+revGrowth.toFixed(1)+'%，可考虑扩大产能和广告投入</li>';
+    }else{
+      sh+='<li>份额下降 '+Math.abs(myChange).toFixed(1)+' 个百分点，需立即分析原因</li>';
+      if(cAChange>0)sh+='<li>竞品A份额增长 '+cAChange.toFixed(1)+'pp，分析其优势领域并制定应对</li>';
+      if(cBChange>0)sh+='<li>竞品B份额增长 '+cBChange.toFixed(1)+'pp，关注其产品/价格变化</li>';
+      sh+='<li>考虑差异化策略：价格调整、产品升级、广告加强或新市场开拓</li>';
+    }
+    sh+='<li>其他份额变化 '+oChange.toFixed(1)+'pp，关注长尾竞品动态</li>';
+    sh+='</ul>';
+    document.getElementById('strategyBox').innerHTML=sh;
+    save({mSize:mSize,myP:myP,cAP:cAP,cBP:cBP,oP:oP,myC:myC,cAC:cAC,cBC:cBC,oC:oC});
+  }
+  function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function init(){
+    try{var d=JSON.parse(localStorage.getItem(SK));if(d){
+      if(d.mSize){document.getElementById('marketSize').value=d.mSize;}
+      if(d.myP){document.getElementById('myPrev').value=d.myP;}
+      if(d.cAP){document.getElementById('compAPrev').value=d.cAP;}
+      if(d.cBP){document.getElementById('compBPrev').value=d.cBP;}
+      if(d.oP){document.getElementById('otherPrev').value=d.oP;}
+      if(d.myC){document.getElementById('myCurr').value=d.myC;}
+      if(d.cAC){document.getElementById('compACurr').value=d.cAC;}
+      if(d.cBC){document.getElementById('compBCurr').value=d.cBC;}
+      if(d.oC){document.getElementById('otherCurr').value=d.oC;}
+    }}catch(e){}
+    calc();
+  }
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MSG.init);}else{MSG.init();}
+</script>
+</body>
+</html>

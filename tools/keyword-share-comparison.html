@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="关键词份额对比器：输入自身和3个竞品关键词，分析共享词/独占词/缺失词，CSS韦恩图，流量重叠度，竞争强度评分。">
+<title>关键词份额对比器 - 韦恩图与流量重叠分析 | 跨境卖家工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--cyan:#0891b2;--cyan-bg:#ecfeff;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.result-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat-card{padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.stat-card .sc-num{font-size:26px;font-weight:800;color:var(--accent)}
+.stat-card .sc-num.green{color:var(--green)}.stat-card .sc-num.red{color:var(--red)}.stat-card .sc-num.gold{color:var(--gold)}
+.stat-card .sc-label{font-size:12px;color:var(--muted);margin-top:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row,.form-row-3{grid-template-columns:1fr}.top-nav-links{display:none}}
+
+.venn-container{display:flex;justify-content:center;align-items:center;height:300px;position:relative;margin:20px 0}
+.venn-circle{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;transition:all .2s}
+.venn-circle:hover{transform:scale(1.05)}
+.venn-circle.self{width:180px;height:180px;background:rgba(79,70,229,0.6);top:60px;left:30%}
+.venn-circle.comp1{width:140px;height:140px;background:rgba(16,185,129,0.6);top:30px;left:45%}
+.venn-circle.comp2{width:140px;height:140px;background:rgba(245,158,11,0.6);top:120px;left:50%}
+.venn-circle.comp3{width:120px;height:120px;background:rgba(239,68,68,0.6);top:80px;left:55%}
+.keyword-set{padding:16px;border-radius:var(--radius-md);margin:12px 0}
+.keyword-set.self{background:var(--accent-bg);border-left:4px solid var(--accent)}
+.keyword-set.shared{background:var(--green-bg);border-left:4px solid var(--green)}
+.keyword-set.unique{background:var(--gold-bg);border-left:4px solid var(--gold)}
+.keyword-set.missing{background:var(--red-bg);border-left:4px solid var(--red)}
+.keyword-set h4{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.keyword-chip{display:inline-block;padding:4px 10px;background:#fff;border:1px solid var(--rule);border-radius:6px;font-size:12px;margin:2px;color:var(--ink-soft)}
+.overlap-meter{padding:16px;background:var(--bg-soft);border-radius:var(--radius-md);margin:12px 0}
+.overlap-bar{height:20px;background:var(--rule-light);border-radius:10px;overflow:hidden;margin:8px 0}
+.overlap-fill{height:100%;border-radius:10px;transition:width .5s}
+
+</style>
+</head>
+<body>
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+<div class="breadcrumb container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><span class="current">关键词份额对比器</span></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📊 竞争情报工具</span><h1>关键词份额<em>对比器</em></h1><p class="tool-hero-desc">对比自身与竞品关键词，CSS韦恩图可视化，识别共享/独占/缺失词，评估竞争强度</p></div></header>
+<div class="workflow-nav container"><div class="workflow-nav-header"><span class="workflow-icon">📊</span><span class="workflow-name">竞争情报工作流</span></div><div class="workflow-nav-steps"><a href="price-monitor.html" class="step">价格监控</a><span class="arrow">→</span><a href="review-monitor.html" class="step">评论监控</a><span class="arrow">→</span><a href="ad-spy.html" class="step">广告Spy</a><span class="arrow">→</span><a href="listing-spy.html" class="step">ListingSpy</a><span class="arrow">→</span><a href="bsr-spy.html" class="step">BSRSpy</a><span class="arrow">→</span><a href="competitor-sales-estimator.html" class="step">销量估算</a><span class="arrow">→</span><a href="competitor-inventory-predictor.html" class="step">库存预测</a><span class="arrow">→</span><a href="hijack-monitor.html" class="step">跟卖监控</a><span class="arrow">→</span><a href="new-listing-monitor.html" class="step">新品监控</a><span class="arrow">→</span><a href="keyword-share-comparison.html" class="step current">关键词份额</a><span class="arrow">→</span><a href="competitor-pricing-strategy.html" class="step">定价策略</a><span class="arrow">→</span><a href="store-revenue-estimator.html" class="step">营收估算</a></div></div>
+<main class="tool-section"><div class="container">
+
+<div class="input-card">
+<h2>📊 关键词份额对比</h2>
+<div class="form-group"><label>自身关键词 (逗号分隔)</label><input type="text" id="selfKw" value="wireless earbuds, bluetooth headphones, noise cancelling, earbuds for running, waterproof earbuds, gaming earbuds, earbuds with mic, true wireless" oninput="compareKeywords()"></div>
+<div class="form-group"><label>竞品A关键词 (逗号分隔)</label><input type="text" id="comp1Kw" value="wireless earbuds, bluetooth earbuds, noise cancelling, earbuds for iphone, sports earbuds, earbuds for sleeping, cheap earbuds" oninput="compareKeywords()"></div>
+<div class="form-group"><label>竞品B关键词 (逗号分隔)</label><input type="text" id="comp2Kw" value="bluetooth headphones, noise cancelling, gaming headset, earbuds with mic, best earbuds, samsung earbuds" oninput="compareKeywords()"></div>
+<div class="form-group"><label>竞品C关键词 (逗号分隔)</label><input type="text" id="comp3Kw" value="wireless earbuds, true wireless, earbuds for running, waterproof earbuds, noise isolating, bluetooth 5.0" oninput="compareKeywords()"></div>
+</div>
+<div class="result-area" id="resultArea"></div>
+
+<div class="related-tools"><h3>🔗 相关工具</h3><div class="related-grid"><a href="competitor-sales-estimator.html" class="related-card"><span class="ricon">📊</span><span class="rtext">竞品销量估算</span></a><a href="keyword-share-of-voice.html" class="related-card"><span class="ricon">🔊</span><span class="rtext">声量份额</span></a><a href="competitor-pricing-strategy.html" class="related-card"><span class="ricon">💲</span><span class="rtext">竞品定价策略</span></a><a href="listing-spy.html" class="related-card"><span class="ricon">🔍</span><span class="rtext">Listing监控</span></a><a href="new-listing-monitor.html" class="related-card"><span class="ricon">🆕</span><span class="rtext">新品监控</span></a></div></div>
+<div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div></main>
+<footer><div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div></footer>
+<script>
+function compareKeywords(){
+var selfKw=document.getElementById('selfKw').value.trim();
+var c1Kw=document.getElementById('comp1Kw').value.trim();
+var c2Kw=document.getElementById('comp2Kw').value.trim();
+var c3Kw=document.getElementById('comp3Kw').value.trim();
+if(!selfKw){document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">📊</div><p>输入自身和竞品关键词<br>对比关键词份额</p></div>';return;}
+function parseKw(s){return s.split(',').map(function(k){return k.trim().toLowerCase();}).filter(function(k){return k;});}
+var self=parseKw(selfKw);
+var comp1=parseKw(c1Kw);
+var comp2=parseKw(c2Kw);
+var comp3=parseKw(c3Kw);
+var allComp=[].concat(comp1,comp2,comp3);
+var shared=self.filter(function(k){return allComp.indexOf(k)>-1;});
+var unique=self.filter(function(k){return allComp.indexOf(k)===-1;});
+var missing=allComp.filter(function(k){return self.indexOf(k)===-1;});
+var missingUnique=[];
+missing.forEach(function(k){if(missingUnique.indexOf(k)===-1)missingUnique.push(k);});
+var overlapPct=Math.round(shared.length/self.length*100);
+var compOverlapPct=Math.round(shared.length/(self.length+allComp.length-shared.length)*100);
+var competitionScore=Math.min(100,Math.round((allComp.length/self.length)*30+shared.length*5));
+var html='<div class="result-card"><h3 style="font-size:18px;font-weight:700;margin-bottom:16px">📊 关键词份额对比</h3>';
+html+='<div class="stat-grid">';
+html+='<div class="stat-card"><div class="sc-num accent">'+self.length+'</div><div class="sc-label">自身关键词</div></div>';
+html+='<div class="stat-card"><div class="sc-num green">'+shared.length+'</div><div class="sc-label">共享词</div></div>';
+html+='<div class="stat-card"><div class="sc-num gold">'+unique.length+'</div><div class="sc-label">独占词</div></div>';
+html+='<div class="stat-card"><div class="sc-num red">'+missingUnique.length+'</div><div class="sc-label">缺失词</div></div>';
+html+='</div>';
+html+='<div class="venn-container" style="position:relative">';
+html+='<div class="venn-circle self">本品<br>'+self.length+'词</div>';
+if(c1Kw)html+='<div class="venn-circle comp1">竞品A<br>'+comp1.length+'词</div>';
+if(c2Kw)html+='<div class="venn-circle comp2">竞品B<br>'+comp2.length+'词</div>';
+if(c3Kw)html+='<div class="venn-circle comp3">竞品C<br>'+comp3.length+'词</div>';
+html+='</div>';
+html+='<div class="overlap-meter"><h4 style="font-size:13px;font-weight:700;margin-bottom:8px">📊 流量重叠度分析</h4>';
+html+='<div style="font-size:12px;color:var(--muted);margin-bottom:4px">与竞品共享关键词比例: '+overlapPct+'%</div>';
+html+='<div class="overlap-bar"><div class="overlap-fill" style="width:'+overlapPct+'%;background:'+(overlapPct>=60?'var(--red)':overlapPct>=30?'var(--gold)':'var(--green)')+'"></div></div>';
+html+='<div style="font-size:12px;color:var(--muted);margin-top:8px">整体关键词重叠度: '+compOverlapPct+'%</div>';
+html+='<div class="overlap-bar"><div class="overlap-fill" style="width:'+compOverlapPct+'%;background:var(--accent)"></div></div>';
+html+='<div style="font-size:13px;color:var(--ink-soft);margin-top:8px">竞争强度评分: <strong style="color:'+(competitionScore>=70?'var(--red)':competitionScore>=40?'var(--gold)':'var(--green)')+'">'+competitionScore+'/100</strong> ('+(competitionScore>=70?'激烈竞争':competitionScore>=40?'中等竞争':'竞争较小')+')</div>';
+html+='</div>';
+html+='<div class="keyword-set shared"><h4>🤝 共享关键词 ('+shared.length+'个) — 与竞品共同排名</h4>';
+shared.forEach(function(k){html+='<span class="keyword-chip">'+k+'</span>';});
+if(shared.length===0)html+='<span style="font-size:13px;color:var(--muted)">无共享关键词</span>';
+html+='</div>';
+html+='<div class="keyword-set unique"><h4>💎 独占关键词 ('+unique.length+'个) — 竞争优势区</h4>';
+unique.forEach(function(k){html+='<span class="keyword-chip">'+k+'</span>';});
+if(unique.length===0)html+='<span style="font-size:13px;color:var(--muted)">无独占关键词</span>';
+html+='</div>';
+html+='<div class="keyword-set missing"><h4>❌ 缺失关键词 ('+missingUnique.length+'个) — 竞品有但本品无</h4>';
+missingUnique.forEach(function(k){html+='<span class="keyword-chip" style="border-color:#fecaca;color:var(--red)">'+k+'</span>';});
+if(missingUnique.length===0)html+='<span style="font-size:13px;color:var(--green)">✓ 无缺失关键词</span>';
+html+='</div>';
+html+='<div style="padding:16px;background:var(--accent-bg);border-radius:var(--radius-md);margin-top:12px"><h4 style="font-size:14px;font-weight:700;margin-bottom:8px">💡 策略建议</h4><div style="font-size:13px;color:var(--ink-soft);line-height:1.8">';
+html+='<div><strong>1. 巩固独占词：</strong>'+unique.length+'个独占关键词是差异化优势，加大广告投入扩大份额</div>';
+html+='<div><strong>2. 争夺共享词：</strong>'+shared.length+'个共享词竞争激烈，优化Listing和广告竞价提升排名</div>';
+html+='<div><strong>3. 补充缺失词：</strong>'+missingUnique.length+'个缺失关键词代表流量盲区，建议添加到后台搜索词</div>';
+html+='<div><strong>4. 重叠度'+overlapPct+'%：</strong>'+(overlapPct>=60?'与竞品高度重叠，需寻找差异化关键词':overlapPct>=30?'适度重叠，保持差异化优势':'差异化程度高，覆盖面可能不足')+'</div>';
+html+='<div><strong>5. 竞争评分'+competitionScore+'：</strong>'+(competitionScore>=70?'关键词竞争激烈，建议聚焦长尾词突破':competitionScore>=40?'竞争适中，平衡头部词和长尾词':'竞争较小，可大胆拓展关键词覆盖')+'</div>';
+html+='</div></div>';
+html+='</div>';
+document.getElementById('resultArea').innerHTML=html;
+var saved=JSON.parse(localStorage.getItem('jx_kw_compare')||'{}');
+saved.lastRun=Date.now();
+saved.selfCount=self.length;
+saved.sharedCount=shared.length;
+saved.missingCount=missingUnique.length;
+saved.competitionScore=competitionScore;
+localStorage.setItem('jx_kw_compare',JSON.stringify(saved));
+}
+compareKeywords();
+
+</script>
+</body>
+</html>

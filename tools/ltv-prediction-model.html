@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="LTV预测模型：输入ARPU、毛利率、流失率计算客户生命周期价值，LTV/CAC比值健康度评估，CSS LTV趋势图可视化。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="LTV,客户生命周期价值,LTV/CAC,ARPU,流失率,增长分析">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/ltv-prediction-model.html">
+<title>LTV预测模型 - 生命周期价值·LTV/CAC比值·CSS趋势图 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.lpm-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.lpm-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.ltv-display{display:flex;align-items:center;gap:32px;justify-content:center;padding:24px 0;flex-wrap:wrap}
+.ltv-gauge{width:200px;height:200px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.ltv-gauge::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:#fff}
+.ltv-gauge-inner{position:relative;z-index:1;text-align:center}
+.ltv-gauge-inner .lg-val{font-size:36px;font-weight:800;line-height:1}
+.ltv-gauge-inner .lg-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.ltv-info{flex:1;min-width:240px}
+.ltv-info .li-title{font-size:16px;font-weight:700;margin-bottom:10px}
+.ltv-info .li-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--rule-light);font-size:13px}
+.ltv-info .li-row .lr-lbl{color:var(--muted)}
+.ltv-info .li-row .lr-val{font-weight:700}
+.ratio-box{padding:20px;border-radius:12px;margin-top:16px;text-align:center}
+.ratio-box.healthy{background:linear-gradient(135deg,#d1fae5,#ecfdf5);border:2px solid #10b981}
+.ratio-box.warning{background:linear-gradient(135deg,#fef3c7,#fffbeb);border:2px solid #f59e0b}
+.ratio-box.danger{background:linear-gradient(135deg,#fee2e2,#fef2f2);border:2px solid #ef4444}
+.ratio-box .rb-val{font-size:32px;font-weight:800}
+.ratio-box .rb-label{font-size:13px;color:var(--muted);margin-top:4px}
+.ratio-box .rb-status{font-size:14px;font-weight:700;margin-top:8px}
+.svg-chart-wrap{overflow-x:auto;padding:10px 0}
+.svg-chart-wrap svg{display:block;margin:0 auto;min-width:600px}
+.trend-table{width:100%;border-collapse:collapse;margin-top:16px}
+.trend-table th{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:10px 14px;font-size:12px;font-weight:600;text-align:left;border-radius:6px 6px 0 0}
+.trend-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--rule-light)}
+.trend-table tr:hover td{background:var(--bg-soft)}
+.formula-line{font-size:15px;font-family:'Courier New',monospace;color:var(--ink);margin-bottom:8px;padding:10px 14px;background:var(--bg-soft);border-radius:8px;border:1px solid var(--rule-light)}
+.formula-line strong{color:#4f46e5}
+.suggest-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.suggest-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);border-left:4px solid #10b981}
+.suggest-card .sc-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.suggest-card .sc-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.related-grid a{display:block;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;text-align:center;transition:all .2s}
+.related-grid a:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;transform:translateY(-2px)}
+@media(max-width:768px){.suggest-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:repeat(2,1fr)}.ltv-display{flex-direction:column;gap:16px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"LTV预测模型","description":"输入ARPU、毛利率、流失率计算客户生命周期价值，LTV/CAC比值健康度评估，CSS LTV趋势图可视化。","url":"https://juxin-consulting.help/tools/ltv-prediction-model.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"LTV预测模型","item":"https://juxin-consulting.help/tools/ltv-prediction-model.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="ltv_prediction">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 增长分析工作流 · 标准版</span>
+      <h1>LTV <em>预测模型</em></h1>
+      <p class="tool-hero-desc">基于ARPU、毛利率和流失率计算客户生命周期价值（LTV），评估LTV/CAC比值健康度，SVG趋势图展示12个月LTV累积曲线，提供提升LTV的策略建议。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第9步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <a href="growth-driver-decomposer.html" class="step">增长拆解</a><span class="arrow">→</span>
+      <a href="funnel-conversion-analyzer.html" class="step">漏斗转化</a><span class="arrow">→</span>
+      <a href="viral-coefficient-calculator.html" class="step">病毒系数</a><span class="arrow">→</span>
+      <span class="step current">LTV预测</span><span class="arrow">→</span>
+      <a href="growth-experiment-tracker.html" class="step">增长实验</a><span class="arrow">→</span>
+      <a href="market-share-growth-tracker.html" class="step">市场份额</a><span class="arrow">→</span>
+      <a href="unit-economics-builder.html" class="step">单位经济</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入LTV模型参数</h2>
+          <p class="calc-form-subtitle">填写客户收入和留存数据，实时计算LTV</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>月ARPU <span class="hint">($)</span></label><input type="number" id="arpu" value="45" step="1" min="0" oninput="LPM.calc()"></div>
+            <div class="calc-field"><label>毛利率 <span class="hint">(%)</span></label><input type="number" id="grossMargin" value="60" step="1" min="0" max="100" oninput="LPM.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>月流失率 <span class="hint">(%)</span></label><input type="number" id="churnRate" value="5" step="0.5" min="0" max="100" oninput="LPM.calc()"></div>
+            <div class="calc-field"><label>获客成本CAC <span class="hint">($)</span></label><input type="number" id="cac" value="80" step="1" min="0" oninput="LPM.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>折现率 <span class="hint">(%, 年化)</span></label><input type="number" id="discountRate" value="10" step="1" min="0" max="50" oninput="LPM.calc()"></div>
+            <div class="calc-field"><label>预测月数</label><input type="number" id="months" value="12" step="1" min="1" max="36" oninput="LPM.calc()"></div>
+          </div>
+          <div class="fee-rule-box"><h4>📐 LTV公式说明</h4><ul><li>简单LTV = ARPU x 毛利率 / 月流失率</li><li>LTV/CAC > 3：健康增长</li><li>LTV/CAC 1-3：需要优化</li><li>LTV/CAC < 1：亏损获客</li><li>折现LTV考虑资金时间价值，更精确</li></ul></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="lpm-section">
+        <h3>💎 LTV仪表盘</h3>
+        <div class="ltv-display" id="ltvDisplay"></div>
+      </div>
+
+      <div class="lpm-section">
+        <h3>📐 LTV计算公式</h3>
+        <div id="formulaWrap"></div>
+      </div>
+
+      <div class="lpm-section">
+        <h3>📊 SVG LTV累积趋势图</h3>
+        <div class="svg-chart-wrap" id="chartWrap"></div>
+        <table class="trend-table" id="trendTable"></table>
+      </div>
+
+      <div class="lpm-section">
+        <h3>💡 提升LTV策略</h3>
+        <div class="suggest-grid" id="suggestGrid"></div>
+      </div>
+
+      <div class="lpm-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="unit-economics-builder.html">单位经济模型</a>
+          <a href="cac-calculator.html">CAC计算器</a>
+          <a href="retention-rate.html">留存率分析</a>
+          <a href="aov-optimizer.html">客单价优化</a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="viral-coefficient-calculator.html" class="wbn-btn prev">← 上一步：病毒系数</a>
+        <a href="growth-experiment-tracker.html" class="wbn-btn next">下一步：增长实验 →</a>
+      </div>
+      <div style="text-align:center;margin:20px auto;max-width:1152px"><a href="index.html" style="display:inline-block;padding:10px 28px;border-radius:50px;background:var(--bg-soft);color:var(--ink-soft);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--rule)">← 返回工具中心</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-rate.html">增长率计算</a></li><li><a href="cohort-analysis.html">同期群分析</a></li><li><a href="retention-rate.html">留存率分析</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var LPM=(function(){
+  'use strict';
+  var SK='jx_ltv_model';
+  function v(id){var el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
+  function fmt(n){return '$'+n.toLocaleString('en-US',{maximumFractionDigits:2});}
+  function calc(){
+    var arpu=v('arpu'),gm=v('grossMargin')/100,churn=v('churnRate')/100,cac=v('cac'),dr=v('discountRate')/100,months=v('months');
+    if(months>36)months=36;
+    if(months<1)months=1;
+    var simpleLTV=churn>0?arpu*gm/churn:arpu*gm*12;
+    var customerLife=churn>0?1/churn:12;
+    var grossProfit=arpu*gm;
+    var monthlyDiscount=dr/12;
+    var discountedLTV=0;
+    var cumulativeData=[];
+    var cumSimple=0;
+    for(var m=1;m<=months;m++){
+      var retention=Math.pow(1-churn,m-1);
+      var discountedGP=grossProfit*retention/Math.pow(1+monthlyDiscount,m-1);
+      discountedLTV+=discountedGP;
+      cumSimple+=grossProfit*retention;
+      cumulativeData.push({month:m,retention:retention,monthlyGP:grossProfit*retention,cumSimple:cumSimple,cumDiscounted:discountedLTV});
+    }
+    var ratio=cac>0?discountedLTV/cac:0;
+    var ratioStatus, ratioCls, ratioDesc;
+    if(ratio>=3){ratioStatus='健康增长';ratioCls='healthy';ratioDesc='LTV/CAC >= 3，获客投资回报优秀，可以加大获客投入。';}
+    else if(ratio>=1){ratioStatus='需要优化';ratioCls='warning';ratioDesc='1 <= LTV/CAC < 3，获客勉强盈亏平衡，需提升LTV或降低CAC。';}
+    else{ratioStatus='亏损获客';ratioCls='danger';ratioDesc='LTV/CAC < 1，每个客户都在亏损，必须立即调整获客策略。';}
+    var paybackMonths=grossProfit>0?cac/grossProfit:0;
+    // Result card
+    var html='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val blue">'+fmt(discountedLTV)+'</div><div class="rsb-lbl">折现LTV</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+fmt(simpleLTV)+'</div><div class="rsb-lbl">简单LTV</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val green">'+ratio.toFixed(2)+'</div><div class="rsb-lbl">LTV/CAC比值</div></div>';
+    html+='</div>';
+    html+='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val">'+customerLife.toFixed(1)+'</div><div class="rsb-lbl">客户生命周期(月)</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val gold">'+fmt(grossProfit)+'</div><div class="rsb-lbl">月毛利</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+paybackMonths.toFixed(1)+'</div><div class="rsb-lbl">回本月数</div></div>';
+    html+='</div>';
+    document.getElementById('resultCard').innerHTML=html;
+    // LTV display
+    var ltvPct=Math.min(discountedLTV/(cac*5)*100,100);
+    var ratioColor=ratioCls==='healthy'?'#10b981':ratioCls==='warning'?'#f59e0b':'#ef4444';
+    var dh='<div class="ltv-gauge" style="background:conic-gradient('+ratioColor+' 0deg '+ltvPct*3.6+'deg, #e0e7ff '+(ltvPct*3.6)+'deg 360deg)">';
+    dh+='<div class="ltv-gauge-inner"><div class="lg-val" style="color:'+ratioColor+'">'+fmt(discountedLTV)+'</div><div class="lg-lbl">折现LTV</div></div></div>';
+    dh+='<div class="ltv-info"><div class="li-title">模型参数</div>';
+    dh+='<div class="li-row"><span class="lr-lbl">月ARPU</span><span class="lr-val">'+fmt(arpu)+'</span></div>';
+    dh+='<div class="li-row"><span class="lr-lbl">毛利率</span><span class="lr-val">'+(gm*100).toFixed(0)+'%</span></div>';
+    dh+='<div class="li-row"><span class="lr-lbl">月毛利</span><span class="lr-val">'+fmt(grossProfit)+'</span></div>';
+    dh+='<div class="li-row"><span class="lr-lbl">月流失率</span><span class="lr-val">'+(churn*100).toFixed(1)+'%</span></div>';
+    dh+='<div class="li-row"><span class="lr-lbl">客户生命周期</span><span class="lr-val">'+customerLife.toFixed(1)+'个月</span></div>';
+    dh+='<div class="li-row"><span class="lr-lbl">获客成本CAC</span><span class="lr-val">'+fmt(cac)+'</span></div>';
+    dh+='<div class="li-row"><span class="lr-lbl">回本周期</span><span class="lr-val">'+paybackMonths.toFixed(1)+'个月</span></div></div>';
+    dh+='<div class="ratio-box '+ratioCls+'"><div class="rb-val" style="color:'+ratioColor+'">'+ratio.toFixed(2)+'</div><div class="rb-label">LTV / CAC 比值</div><div class="rb-status" style="color:'+ratioColor+'">'+ratioStatus+'</div></div>';
+    document.getElementById('ltvDisplay').innerHTML=dh;
+    // Formula
+    var fh='<div class="formula-line">简单LTV = ARPU x 毛利率 / 月流失率</div>';
+    fh+='<div class="formula-line">简单LTV = '+fmt(arpu)+' x '+(gm*100).toFixed(0)+'% / '+(churn*100).toFixed(1)+'% = <strong>'+fmt(simpleLTV)+'</strong></div>';
+    fh+='<div class="formula-line">折现LTV = sum( 月毛利 x 留存率^n / (1+折现率)^n )</div>';
+    fh+='<div class="formula-line">折现LTV ('+months+'个月) = <strong>'+fmt(discountedLTV)+'</strong></div>';
+    fh+='<div class="formula-line">LTV/CAC = '+fmt(discountedLTV)+' / '+fmt(cac)+' = <strong>'+ratio.toFixed(2)+'</strong></div>';
+    fh+='<div class="formula-line">回本月数 = CAC / 月毛利 = '+fmt(cac)+' / '+fmt(grossProfit)+' = <strong>'+paybackMonths.toFixed(1)+'个月</strong></div>';
+    document.getElementById('formulaWrap').innerHTML=fh;
+    // SVG chart
+    var svgW=720,svgH=300,padL=60,padR=20,padT=20,padB=40;
+    var chartW=svgW-padL-padR,chartH=svgH-padT-padB;
+    var maxLTV=Math.max(discountedLTV,cumSimple,cac*1.2);
+    var xStep=chartW/Math.max(months,1);
+    var svg='<svg width="'+svgW+'" height="'+svgH+'" viewBox="0 0 '+svgW+' '+svgH+'" xmlns="http://www.w3.org/2000/svg">';
+    // Grid lines
+    for(var i=0;i<=4;i++){
+      var y=padT+chartH*(i/4);
+      var val=maxLTV*(1-i/4);
+      svg+='<line x1="'+padL+'" y1="'+y+'" x2="'+(svgW-padR)+'" y2="'+y+'" stroke="#e0e7ff" stroke-width="1"/>';
+      svg+='<text x="'+(padL-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#94a3b8">$'+val.toFixed(0)+'</text>';
+    }
+    // CAC line
+    var cacY=padT+chartH*(1-cac/maxLTV);
+    svg+='<line x1="'+padL+'" y1="'+cacY+'" x2="'+(svgW-padR)+'" y2="'+cacY+'" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,4"/>';
+    svg+='<text x="'+(svgW-padR)+'" y="'+(cacY-6)+'" text-anchor="end" font-size="11" fill="#ef4444" font-weight="700">CAC: '+fmt(cac)+'</text>';
+    // Discounted LTV area
+    var pathD='';
+    cumulativeData.forEach(function(d,i){
+      var x=padL+xStep*i;
+      var y=padT+chartH*(1-d.cumDiscounted/maxLTV);
+      pathD+=(i===0?'M':'L')+x+','+y;
+    });
+    svg+='<path d="'+pathD+' L'+(padL+xStep*(cumulativeData.length-1))+','+(padT+chartH)+' L'+padL+','+(padT+chartH)+' Z" fill="rgba(79,70,229,0.15)"/>';
+    svg+='<path d="'+pathD+'" fill="none" stroke="#4f46e5" stroke-width="2.5"/>';
+    // Simple LTV line
+    var pathS='';
+    cumulativeData.forEach(function(d,i){
+      var x=padL+xStep*i;
+      var y=padT+chartH*(1-d.cumSimple/maxLTV);
+      pathS+=(i===0?'M':'L')+x+','+y;
+    });
+    svg+='<path d="'+pathS+'" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="5,3"/>';
+    // X axis labels
+    cumulativeData.forEach(function(d,i){
+      if(i%2===0||i===cumulativeData.length-1){
+        var x=padL+xStep*i;
+        svg+='<text x="'+x+'" y="'+(svgH-padB+18)+'" text-anchor="middle" font-size="10" fill="#94a3b8">M'+d.month+'</text>';
+      }
+    });
+    // Legend
+    svg+='<rect x="'+(padL+10)+'" y="'+(padT+5)+'" width="12" height="3" fill="#4f46e5"/><text x="'+(padL+28)+'" y="'+(padT+10)+'" font-size="11" fill="#4f46e5">折现LTV</text>';
+    svg+='<rect x="'+(padL+90)+'" y="'+(padT+5)+'" width="12" height="3" fill="#10b981"/><text x="'+(padL+108)+'" y="'+(padT+10)+'" font-size="11" fill="#10b981">简单LTV</text>';
+    svg+='</svg>';
+    document.getElementById('chartWrap').innerHTML=svg;
+    // Trend table
+    var th='<table class="trend-table"><thead><tr><th>月份</th><th>留存率</th><th>月毛利</th><th>累积(简单)</th><th>累积(折现)</th></tr></thead><tbody>';
+    cumulativeData.forEach(function(d){
+      th+='<tr><td>第'+d.month+'月</td><td>'+(d.retention*100).toFixed(1)+'%</td><td>'+fmt(d.monthlyGP)+'</td><td>'+fmt(d.cumSimple)+'</td><td>'+fmt(d.cumDiscounted)+'</td></tr>';
+    });
+    th+='</tbody></table>';
+    document.getElementById('trendTable').innerHTML=th;
+    // Suggestions
+    var suggestions=[
+      {title:'提升ARPU',desc:'通过交叉销售、捆绑套餐、增值服务提升单客户月收入',target:'ARPU提升10% -> LTV提升10%'},
+      {title:'降低流失率',desc:'优化产品质量、客服体验、忠诚度计划，每降低1%流失率LTV显著提升',target:'流失率降1% -> LTV提升20%+'},
+      {title:'提高毛利率',desc:'优化供应链成本、提升品牌溢价能力、减少折扣依赖',target:'毛利率升5% -> LTV提升8%'},
+      {title:'优化CAC',desc:'提升广告转化率、增加自然流量、优化获客渠道组合',target:'CAC降20% -> LTV/CAC升25%'}
+    ];
+    var sh='';
+    suggestions.forEach(function(s){
+      sh+='<div class="suggest-card"><div class="sc-title">'+s.title+'</div><div class="sc-desc">'+s.desc+'</div><div style="font-size:12px;font-weight:700;color:#10b981;margin-top:6px">'+s.target+'</div></div>';
+    });
+    document.getElementById('suggestGrid').innerHTML=sh;
+    save({arpu:arpu,gm:gm,churn:churn,cac:cac,dr:dr,months:months});
+  }
+  function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function init(){
+    try{var d=JSON.parse(localStorage.getItem(SK));if(d){
+      if(d.arpu){document.getElementById('arpu').value=d.arpu;}
+      if(d.gm){document.getElementById('grossMargin').value=d.gm*100;}
+      if(d.churn){document.getElementById('churnRate').value=d.churn*100;}
+      if(d.cac){document.getElementById('cac').value=d.cac;}
+      if(d.dr){document.getElementById('discountRate').value=d.dr*100;}
+      if(d.months){document.getElementById('months').value=d.months;}
+    }}catch(e){}
+    calc();
+  }
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',LPM.init);}else{LPM.init();}
+</script>
+</body>
+</html>

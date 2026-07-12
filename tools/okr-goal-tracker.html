@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="OKR目标追踪器(深度版)：季度目标+关键结果管理，conic-gradient进度环可视化，对齐管理，评审提醒，团队看板，localStorage持久化。">
+<meta name="keywords" content="OKR追踪,目标管理,关键结果,进度环,团队看板,季度OKR,目标对齐">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/okr-goal-tracker.html">
+<title>OKR目标追踪器 - 进度环·对齐管理·团队看板 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.okr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-top:16px}
+.okr-card{background:#fff;border:1px solid var(--rule);border-radius:16px;padding:24px;transition:all .2s;position:relative;overflow:hidden}
+.okr-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-2px)}
+.okr-card .okr-progress-ring{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;position:relative}
+.okr-card .okr-progress-ring::before{content:'';position:absolute;inset:6px;border-radius:50%;background:#fff}
+.okr-card .okr-progress-text{position:relative;z-index:1;font-size:20px;font-weight:800}
+.okr-card .okr-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:8px;color:var(--ink)}
+.okr-card .okr-owner{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px}
+.kr-item{background:var(--bg-soft);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.kr-item .kr-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.kr-item .kr-name{font-size:13px;font-weight:600}
+.kr-item .kr-score{font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px}
+.kr-bar{height:6px;border-radius:3px;background:var(--rule);overflow:hidden}
+.kr-fill{height:100%;border-radius:3px;transition:width .4s}
+.okr-add-form{background:var(--accent-bg);border:2px dashed var(--accent);border-radius:12px;padding:20px;margin-bottom:20px}
+.okr-add-form input,.okr-add-form select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:8px}
+.team-board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.team-stat{padding:20px;border-radius:12px;text-align:center;background:var(--bg-soft)}
+.team-stat .ts-val{font-size:28px;font-weight:800}
+.team-stat .ts-lbl{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.okr-grid{grid-template-columns:1fr}.team-board{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="okr_goal_tracker">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第6步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <span class="step current">OKR追踪</span>
+      <span class="arrow">→</span>
+      <a href="training-onboarding-manager.html" class="step">培训入职</a>
+      <span class="arrow">→</span>
+      <a href="performance-review-system.html" class="step">绩效考核</a>
+      <span class="arrow">→</span>
+      <a href="role-permission-manager.html" class="step">权限管理</a>
+      <span class="arrow">→</span>
+      <a href="team-workflow-automation.html" class="step">工作流自动化</a>
+      <span class="arrow">→</span>
+      <a href="recruitment-pipeline.html" class="step">招聘漏斗</a>
+      <span class="arrow">→</span>
+      <a href="competency-model-builder.html" class="step">胜任力模型</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 深度版</span>
+      <h1>OKR目标 <em>追踪器</em></h1>
+      <p class="tool-hero-desc">季度目标+关键结果管理，conic-gradient进度环可视化，对齐管理，评审提醒，团队看板，localStorage持久化存储。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="okr-add-form">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:12px">➕ 添加OKR目标</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <input type="text" id="newOkrTitle" placeholder="目标标题（如：Q3销售额增长50%）">
+          <input type="text" id="newOkrOwner" placeholder="负责人">
+          <select id="newOkrAlign"><option value="company">公司级</option><option value="team">团队级</option><option value="personal">个人级</option></select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <input type="text" id="newKr1" placeholder="关键结果1（如：月销售额达$100K）">
+          <input type="number" id="newKr1Target" placeholder="目标值" min="0" step="1">
+        </div>
+        <button class="btn-action" onclick="OKR.add()" style="margin-top:8px">➕ 添加OKR</button>
+      </div>
+      <div class="calc-results" style="grid-column:1/-1">
+        <div class="result-card" id="resultCard"></div>
+      </div>
+      <div class="tool-section-box" style="grid-column:1/-1">
+        <h3>📊 团队OKR看板</h3>
+        <div class="team-board" id="teamBoard"></div>
+      </div>
+      <div class="tool-section-box" style="grid-column:1/-1">
+        <h3>🎯 OKR目标卡片</h3>
+        <div class="okr-grid" id="okrGrid"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="org-chart.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第5步</span>组织架构 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="training-onboarding-manager.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第7步</span>培训入职 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="okr-goal-tracker.html">OKR目标</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var OKR=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var STORE_KEY='jx_okr_data';
+  var defaultOKRs=[
+    {id:1,title:'Q3跨境销售额增镸50%',owner:'张总',align:'company',krs:[{name:'月销售额达$100K',target:100,current:72,unit:'K'},{name:'新增客户500个',target:500,current:380,unit:''}]},
+    {id:2,title:'产品线扩展至5个品类',owner:'李经理',align:'team',krs:[{name:'完成新产品上架',target:5,current:3,unit:''},{name:'供应商开发达标',target:5,current:4,unit:''}]},
+    {id:3,title:'团队人效提升20%',owner:'王主管',align:'team',krs:[{name:'单人产值达$8K/月',target:8,current:6.5,unit:'K'},{name:'项目完成率85%',target:85,current:78,unit:'%'}]}
+  ];
+  function load(){try{var d=localStorage.getItem(STORE_KEY);return d?JSON.parse(d):defaultOKRs;}catch(e){return defaultOKRs;}}
+  function save(data){try{localStorage.setItem(STORE_KEY,JSON.stringify(data));}catch(e){}}
+  var okrs=load();
+  function progressOf(okr){
+    if(!okr.krs.length)return 0;
+    var sum=0;okr.krs.forEach(function(kr){sum+=kr.target>0?Math.min(100,kr.current/kr.target*100):0;});
+    return Math.round(sum/okr.krs.length);
+  }
+  function progColor(p){return p>=80?'var(--green)':(p>=50?'var(--accent)':(p>=30?'var(--gold)':'var(--red)'));}
+  function progText(p){return p>=80?'优秀':(p>=50?'正常':(p>=30?'滞后':'风险'));}
+  function render(){
+    var totalProgress=okrs.length>0?Math.round(okrs.reduce(function(s,o){return s+progressOf(o);},0)/okrs.length):0;
+    var onTrack=okrs.filter(function(o){return progressOf(o)>=50;}).length;
+    var atRisk=okrs.filter(function(o){return progressOf(o)<30;}).length;
+    var html='<h3>📊 OKR概览</h3>';
+    html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">平均完成度</div><div class="hc-value" style="color:'+progColor(totalProgress)+'">'+totalProgress+'%</div><div class="hc-sub">'+progText(totalProgress)+'</div></div>';
+    html+='<div class="highlight-card roi"><div class="hc-label">OKR数量</div><div class="hc-value">'+okrs.length+'</div><div class="hc-sub">正常'+onTrack+' · 风险'+atRisk+'</div></div></div>';
+    html+='<div class="fee-breakdown">';
+    html+='<div class="fee-row"><span class="fr-lbl">公司级OKR</span><span class="fr-val">'+okrs.filter(function(o){return o.align==='company';}).length+'</span></div>';
+    html+='<div class="fee-row"><span class="fr-lbl">团队级OKR</span><span class="fr-val">'+okrs.filter(function(o){return o.align==='team';}).length+'</span></div>';
+    html+='<div class="fee-row"><span class="fr-lbl">个人级OKR</span><span class="fr-val">'+okrs.filter(function(o){return o.align==='personal';}).length+'</span></div>';
+    html+='</div>';
+    $('resultCard').innerHTML=html;
+    var tbHtml='<div class="team-stat"><div class="ts-val" style="color:var(--accent)">'+okrs.length+'</div><div class="ts-lbl">总OKR数</div></div>';
+    tbHtml+='<div class="team-stat"><div class="ts-val" style="color:var(--green)">'+onTrack+'</div><div class="ts-lbl">正常进行</div></div>';
+    tbHtml+='<div class="team-stat"><div class="ts-val" style="color:var(--red)">'+atRisk+'</div><div class="ts-lbl">风险预警</div></div>';
+    $('teamBoard').innerHTML=tbHtml;
+    var gHtml='';
+    okrs.forEach(function(o){
+      var p=progressOf(o);var color=progColor(p);
+      gHtml+='<div class="okr-card">';
+      gHtml+='<div class="okr-progress-ring" style="background:conic-gradient('+color+' '+p*3.6+'deg, var(--rule) '+p*3.6+'deg)">';
+      gHtml+='<div class="okr-progress-text" style="color:'+color+'">'+p+'%</div></div>';
+      gHtml+='<div class="okr-title">'+o.title+'</div>';
+      gHtml+='<div class="okr-owner">负责人: '+o.owner+' · '+(o.align==='company'?'公司级':(o.align==='team'?'团队级':'个人级'))+'</div>';
+      o.krs.forEach(function(kr,i){
+        var kp=kr.target>0?Math.min(100,Math.round(kr.current/kr.target*100)):0;
+        var kc=progColor(kp);
+        gHtml+='<div class="kr-item"><div class="kr-header"><span class="kr-name">'+kr.name+'</span><span class="kr-score" style="background:'+kc+'22;color:'+kc+'">'+kp+'%</span></div>';
+        gHtml+='<div class="kr-bar"><div class="kr-fill" style="width:'+kp+'%;background:'+kc+'"></div></div>';
+        gHtml+='<div style="font-size:11px;color:var(--muted);margin-top:4px">'+kr.current+(kr.unit||'')+' / '+kr.target+(kr.unit||'')+'</div></div>';
+      });
+      gHtml+='<div style="display:flex;gap:6px;margin-top:10px"><button class="btn-action" style="flex:1;font-size:12px;padding:6px" onclick="OKR.update('+o.id+')">📉 更新进度</button>';
+      gHtml+='<button class="btn-action" style="flex:1;font-size:12px;padding:6px;background:var(--red)" onclick="OKR.remove('+o.id+')">✖ 删除</button></div>';
+      gHtml+='</div>';
+    });
+    $('okrGrid').innerHTML=gHtml;
+  }
+  return{
+    add:function(){
+      var title=$('newOkrTitle').value.trim();if(!title)return;
+      var owner=$('newOkrOwner').value.trim()||'未分配';
+      var align=$('newOkrAlign').value;
+      var kr1=$('newKr1').value.trim();var target=$('newKr1Target').value||100;
+      var newOkr={id:Date.now(),title:title,owner:owner,align:align,krs:[]};
+      if(kr1)newOkr.krs.push({name:kr1,target:parseFloat(target),current:0,unit:''});
+      okrs.push(newOkr);save(okrs);render();
+      $('newOkrTitle').value='';$('newOkrOwner').value='';$('newKr1').value='';$('newKr1Target').value='';
+    },
+    update:function(id){
+      var o=okrs.find(function(x){return x.id===id;});if(!o)return;
+      o.krs.forEach(function(kr){
+        var inc=prompt('更新: '+kr.name+'\n当前: '+kr.current+'\n输入新值:',kr.current);
+        if(inc!==null)kr.current=parseFloat(inc)||0;
+      });
+      save(okrs);render();
+    },
+    remove:function(id){okrs=okrs.filter(function(x){return x.id!==id;});save(okrs);render();},
+    init:render
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',OKR.init);}else{OKR.init();}
+</script>
+</body>
+</html>

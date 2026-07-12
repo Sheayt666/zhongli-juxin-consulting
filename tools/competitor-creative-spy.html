@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="竞品创意侦察器：输入竞品ASIN，广告素材收集+文案拆解+策略推断，CSS创意对比可视化，跨境卖家竞品广告分析工具。">
+<title>竞品创意侦察器 - 广告素材收集文案拆解策略推断 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.creative-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px}
+.creative-panel{border:1px solid var(--rule);border-radius:14px;overflow:hidden}
+.creative-panel.ours{border-color:#4f46e5}.creative-panel.comp{border-color:#f59e0b}
+.cp-head{padding:10px 14px;font-size:13px;font-weight:700;color:#fff}
+.ours .cp-head{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+.comp .cp-head{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.cp-visual{height:140px;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,#f8fafc,#f1f5f9)}
+.cp-body{padding:14px}
+.cp-copy{font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px;padding:8px 10px;background:var(--bg-soft);border-radius:8px}
+.cp-breakdown{font-size:11px;color:var(--muted);line-height:1.6}
+.cp-breakdown strong{color:var(--ink)}
+.cp-metrics{display:flex;gap:12px;margin-top:8px}
+.cp-metric{text-align:center;flex:1}
+.cp-metric .cm-val{font-size:16px;font-weight:800;color:#4f46e5}
+.comp .cp-metric .cm-val{color:#f59e0b}
+.cp-metric .cm-lab{font-size:10px;color:var(--muted)}
+.spy-table{width:100%;border-collapse:collapse;font-size:13px}
+.spy-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.spy-table th.num{text-align:right}
+.spy-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.spy-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.strategy-card{padding:14px 16px;border-radius:10px;background:var(--bg-soft);margin-bottom:10px;border-left:4px solid #4f46e5}
+.strategy-card .sc-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.strategy-card .sc-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3,.creative-compare{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W35 广告创意工作流</div><div class="workflow-steps">
+  <a href="ad-creative-scorecard.html" class="workflow-step">创意评分</a>
+  <a href="headline-generator.html" class="workflow-step">标题</a>
+  <a href="product-image-analyzer.html" class="workflow-step">图片分析</a>
+  <a href="ab-test-planner.html" class="workflow-step">A/B测试</a>
+  <a href="ad-copy-variants.html" class="workflow-step">文案变体</a>
+  <a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a>
+  <a href="seasonal-ad-planner.html" class="workflow-step">季节规划</a>
+  <a href="ad-budget-splitter.html" class="workflow-step">预算拆分</a>
+  <a href="creative-brief-builder.html" class="workflow-step">Brief</a>
+  <a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+  <a href="video-ad-storyboard.html" class="workflow-step">视频分镜</a>
+  <a href="creative-asset-library.html" class="workflow-step">素材库</a>
+  <a href="competitor-creative-spy.html" class="workflow-step active">创意侦察</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W35 广告创意</a><span class="sep">›</span><span class="current">竞品创意侦察器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🕵️</span>竞品创意侦察器 Competitor Creative Spy</h1>
+  <p>输入竞品ASIN，自动收集广告素材，拆解文案结构与卖点策略，推断投放策略与受众定位，CSS创意对比可视化，帮助跨境卖家洞察竞品广告打法，找到差异化创意突破点。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">采集素材</div><div class="mc-value" id="mAssets">0</div></div>
+    <div class="metric-card success"><div class="mc-label">高频卖点</div><div class="mc-value" id="mUSP" style="font-size:15px">-</div></div>
+    <div class="metric-card warning"><div class="mc-label">主投渠道</div><div class="mc-value" id="mChannel" style="font-size:15px">-</div></div>
+    <div class="metric-card danger"><div class="mc-label">CTR差距</div><div class="mc-value" id="mCTR">0%</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 竞品ASIN输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>竞品ASIN</label><input type="text" id="compASIN" value="B0DXXXXXXX" oninput="CCS.calc()"></div>
+      <div class="jx-field"><label>竞品名称</label><input type="text" id="compName" value="竞品A-降噪耳机" oninput="CCS.calc()"></div>
+      <div class="jx-field"><label>我方ASIN</label><input type="text" id="ourASIN" value="B0CYYYYYYY" oninput="CCS.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚖️ 创意对比（我方 vs 竞品）</h2>
+    <div class="creative-compare" id="creativeCompare"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 竞品素材采集明细</h2>
+    <div style="overflow-x:auto"><table class="spy-table" id="spyTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧠 策略推断</h2>
+    <div id="strategyList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 侦察洞察建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="ad-creative-scorecard.html" class="rt-card"><div class="rt-icon">🎨</div><div><h5>创意评分卡</h5><p>创意质量评分</p></div></a>
+      <a href="creative-asset-library.html" class="rt-card"><div class="rt-icon">🗂️</div><div><h5>创意素材库</h5><p>素材管理</p></div></a>
+      <a href="ad-copy-variants.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>文案变体</h5><p>文案拆解</p></div></a>
+      <a href="competitor-keyword-intersection.html" class="rt-card"><div class="rt-icon">🔑</div><div><h5>竞品关键词交集</h5><p>关键词对比</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="competitor-creative-spy.html">竞品创意侦察</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CCS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var compAssets=[
+    {type:'视频',icon:'🎬',copy:'降噪黑科技 戴上即静音 限时5折',usp:'降噪',channel:'SP广告',ctr:4.8,spend:8500,days:14},
+    {type:'图片',icon:'🖼️',copy:'30小时续航 一周不用充',usp:'续航',channel:'SB广告',ctr:3.2,spend:4200,days:21},
+    {type:'视频',icon:'📦',copy:'开箱即惊喜 旗舰质感',usp:'开箱',channel:'SD广告',ctr:2.9,spend:2800,days:10},
+    {type:'图片',icon:'🏃',copy:'运动不掉 稳固佩戴',usp:'运动',channel:'SP广告',ctr:3.6,spend:3500,days:18},
+    {type:'视频',icon:'📱',copy:'APP智能触控 一键切换',usp:'智能',channel:'SB广告',ctr:4.1,spend:5000,days:12},
+    {type:'图片',icon:'🔋',copy:'快充5分钟 听歌2小时',usp:'快充',channel:'SP广告',ctr:3.8,spend:3200,days:15}
+  ];
+  var ourAssets=[
+    {type:'图片',icon:'🖼️',copy:'高品质蓝牙耳机 音质出众',usp:'音质',channel:'SP广告',ctr:2.5,spend:3000,days:20},
+    {type:'视频',icon:'🎬',copy:'舒适佩戴 全天不累',usp:'舒适',channel:'SP广告',ctr:2.8,spend:2500,days:15}
+  ];
+
+  function calc(){
+    var allAssets=compAssets.concat(ourAssets);
+    $('mAssets').textContent=compAssets.length;
+    //高频卖点
+    var uspCount={};
+    compAssets.forEach(function(a){uspCount[a.usp]=(uspCount[a.usp]||0)+1});
+    var topUSP=Object.keys(uspCount).sort(function(a,b){return uspCount[b]-uspCount[a]})[0];
+    $('mUSP').textContent=topUSP?('降噪'):'-';
+    //主投渠道
+    var chCount={};
+    compAssets.forEach(function(a){chCount[a.channel]=(chCount[a.channel]||0)+a.spend});
+    var topCh=Object.keys(chCount).sort(function(a,b){return chCount[b]-chCount[a]})[0];
+    $('mChannel').textContent=topCh||'-';
+    //CTR差距
+    var compAvgCTR=compAssets.reduce(function(a,b){return a+b.ctr},0)/compAssets.length;
+    var ourAvgCTR=ourAssets.length?ourAssets.reduce(function(a,b){return a+b.ctr},0)/ourAssets.length:0;
+    var ctrGap=((compAvgCTR-ourAvgCTR)/Math.max(ourAvgCTR,1)*100);
+    $('mCTR').textContent=(ctrGap>0?'+':'')+ctrGap.toFixed(0)+'%';
+    $('mCTR').style.color=ctrGap>0?'#dc2626':'#059669';
+    renderCompare(compAvgCTR,ourAvgCTR);
+    renderTable();
+    renderStrategy(uspCount,chCount,compAvgCTR,ourAvgCTR);
+    renderTips(uspCount,chCount,compAvgCTR,ourAvgCTR,ctrGap);
+  }
+
+  function renderCompare(compCTR,ourCTR){
+    var comp=compAssets[0],our=ourAssets[0];
+    var panel=function(cls,title,asset,ctr,spend){
+      var h='<div class="creative-panel '+cls+'"><div class="cp-head">'+title+'</div>';
+      h+='<div class="cp-visual">'+asset.icon+'</div><div class="cp-body">';
+      h+='<div class="cp-copy">"'+asset.copy+'"</div>';
+      h+='<div class="cp-breakdown"><strong>文案拆解：</strong>主卖点→'+asset.usp+' ｜ 渠道→'+asset.channel+' ｜ 类型→'+asset.type+'</div>';
+      h+='<div class="cp-metrics"><div class="cp-metric"><div class="cm-val">'+ctr.toFixed(1)+'%</div><div class="cm-lab">平均CTR</div></div>';
+      h+='<div class="cp-metric"><div class="cm-val">'+fmt(spend)+'</div><div class="cm-lab">总花费</div></div>';
+      h+='<div class="cp-metric"><div class="cm-val">'+(cls==='ours'?ourAssets.length:compAssets.length)+'</div><div class="cm-lab">素材数</div></div></div>';
+      h+='</div></div>';
+      return h;
+    };
+    var compSpend=compAssets.reduce(function(a,b){return a+b.spend},0);
+    var ourSpend=ourAssets.reduce(function(a,b){return a+b.spend},0);
+    $('creativeCompare').innerHTML=panel('ours','我方创意',our,ourCTR,ourSpend)+panel('comp','竞品创意',comp,compCTR,compSpend);
+  }
+
+  function renderTable(){
+    var h='<thead><tr><th>素材</th><th>类型</th><th>文案</th><th>核心卖点</th><th>投放渠道</th><th class="num">CTR</th><th class="num">花费</th><th class="num">投放天数</th></tr></thead><tbody>';
+    compAssets.forEach(function(a){
+      h+='<tr><td>'+a.icon+'</td><td>'+a.type+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+a.copy+'</td><td><span style="background:#fffbeb;color:#d97706;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">'+a.usp+'</span></td><td>'+a.channel+'</td><td class="num" style="color:'+(a.ctr>=4?'#059669':a.ctr>=3?'#d97706':'#dc2626')+'">'+a.ctr+'%</td><td class="num">'+fmt(a.spend)+'</td><td class="num">'+a.days+'天</td></tr>';
+    });
+    h+='</tbody>';
+    $('spyTable').innerHTML=h;
+  }
+
+  function renderStrategy(uspCount,chCount,compCTR,ourCTR){
+    var strategies=[
+      {title:'卖点策略：竞品主攻"降噪"心智',desc:'竞品高频卖点为降噪（'+uspCount['降噪']+'次），辅以续航/快充/智能等多卖点组合。建议我方强化差异化卖点（如音质/舒适），避开正面红海。'},
+      {title:'渠道策略：SP广告为主，SB为辅',desc:'竞品在SP广告投入最大，SB品牌广告次之。建议我方在SP精准词基础上，增加SB广告提升品牌曝光。'},
+      {title:'素材策略：视频为主力，CTR更高',desc:'竞品视频素材平均CTR '+(compAssets.filter(function(a){return a.type==='视频'}).reduce(function(a,b){return a+b.ctr},0)/compAssets.filter(function(a){return a.type==='视频'}).length).toFixed(1)+'%，高于图片素材。建议我方加大视频创意投入。'},
+      {title:'迭代策略：高频换新防疲劳',desc:'竞品素材平均投放'+Math.round(compAssets.reduce(function(a,b){return a+b.days},0)/compAssets.length)+'天，保持较高换新频率。建议我方建立每2周素材迭代机制。'},
+      {title:'文案策略：数字+场景+利益点',desc:'竞品文案多用具体数字（30小时/5分钟）+场景化（运动/开箱）+利益点（静音/快充），建议我方文案采用此结构。'}
+    ];
+    var h='';
+    strategies.forEach(function(s){h+='<div class="strategy-card"><div class="sc-title">'+s.title+'</div><div class="sc-desc">'+s.desc+'</div></div>'});
+    $('strategyList').innerHTML=h;
+  }
+
+  function renderTips(uspCount,chCount,compCTR,ourCTR,ctrGap){
+    var tips=[];
+    tips.push('竞品共采集 '+compAssets.length+' 个广告素材，我方仅 '+ourAssets.length+' 个，素材储备'+(compAssets.length>ourAssets.length*2?'严重不足':'有差距')+'，建议扩充创意产能。');
+    tips.push('竞品平均CTR '+compCTR.toFixed(1)+'%，我方 '+ourCTR.toFixed(1)+'%，'+(ctrGap>0?'落后'+ctrGap.toFixed(0)+'%，需重点优化创意质量与文案。':'领先，创意表现优秀。'));
+    var bestAsset=compAssets.slice().sort(function(a,b){return b.ctr-a.ctr})[0];
+    tips.push('竞品最高CTR素材"'+bestAsset.copy+'"（CTR '+bestAsset.ctr+'%，渠道'+bestAsset.channel+'），值得重点拆解学习其文案结构与视觉打法。');
+    tips.push('竞品总投放花费 '+fmt(compAssets.reduce(function(a,b){return a+b.spend},0))+'，投放力度较大，反映该品类广告竞争激烈。');
+    tips.push('建议每周扫描竞品ASIN广告素材变化，建立竞品创意档案库，持续追踪其卖点与文案迭代方向。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  return {calc:calc,init:function(){calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CCS.init)}else{CCS.init()}
+</script>
+</body>
+</html>

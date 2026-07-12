@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="数据导出中心：支持CSV/Excel/JSON三种格式，20+字段选择（订单/产品/客户/广告/库存/财务），实时预览导出数据，定时任务配置。">
+<meta name="keywords" content="数据导出,CSV导出,Excel导出,JSON导出,字段选择,定时任务,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="数据导出中心 - 多格式导出·字段选择·定时任务 | 众力聚鑫咨询">
+<meta property="og:description" content="数据导出中心：支持CSV/Excel/JSON三种格式，20+字段选择（订单/产品/客户/广告/库存/财务），实时预览导出数据，定时任务配置。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/data-export-center.html">
+<title>数据导出中心 - 多格式导出·字段选择·定时任务 | 众力聚鑫咨询 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"数据导出中心","description":"数据导出中心：支持CSV/Excel/JSON三种格式，20+字段选择（订单/产品/客户/广告/库存/财务），实时预览导出数据，定时任务配置。","url":"https://juxin-consulting.help/tools/data-export-center.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"数据导出中心","item":"https://juxin-consulting.help/tools/data-export-center.html"}]}
+</script>
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.wf-steps-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.rpt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.rpt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+
+
+.export-config{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.field-selector{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:20px}
+.field-selector h4{font-size:14px;font-weight:700;margin-bottom:12px}
+.field-list{list-style:none;padding:0;margin:0;max-height:280px;overflow-y:auto}
+.field-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;margin-bottom:4px;background:#fff;border:1px solid var(--rule-light);cursor:pointer;transition:all .2s}
+.field-item:hover{border-color:var(--accent);background:var(--accent-bg)}
+.field-item.checked{background:var(--accent-bg);border-color:var(--accent)}
+.field-item input{width:18px;height:18px;accent-color:var(--accent)}
+.field-item label{font-size:13px;cursor:pointer;flex:1}
+.format-selector{display:flex;gap:8px;margin-bottom:16px}
+.format-btn{padding:12px 20px;border-radius:10px;border:2px solid var(--rule);background:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.format-btn.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.preview-box{background:#1e293b;color:#e2e8f0;border-radius:12px;padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;overflow-x:auto;max-height:400px;overflow-y:auto}
+.preview-box .pv-header{color:#94a3b8;font-weight:700;margin-bottom:8px}
+.preview-box table{width:100%;border-collapse:collapse}
+.preview-box th,.preview-box td{padding:4px 8px;text-align:left;border-bottom:1px solid #334155}
+.preview-box th{color:#818cf8;font-weight:700}
+.task-list{list-style:none;padding:0;margin:0}
+.task-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:8px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.task-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;background:#fff;border:1px solid var(--rule)}
+.task-name{flex:1;font-size:13px;font-weight:600;color:var(--ink)}
+.task-meta{font-size:11px;color:var(--muted)}
+.task-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.task-status.active{background:var(--green-bg);color:var(--green)}
+.task-status.paused{background:var(--rule);color:var(--muted)}
+.btn-export{padding:12px 28px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-export:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+@media(max-width:768px){.export-config{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body class="tool-page" data-tool="data_export_center">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner"><a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a><ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></ul><a href="../index.html" class="tool-nav-back">← 返回首页</a></div></nav>
+<main id="main-content">
+<div class="workflow-nav"><div class="workflow-nav-header"><span class="workflow-icon">📊</span><span class="workflow-name">数据报表工作流</span><span class="workflow-step">第10步 / 共12步</span></div><div class="wf-steps-scroll"><div class="workflow-nav-steps"><a href="daily-report.html" class="step">日报</a><span class="arrow">→</span><a href="weekly-report.html" class="step">周报</a><span class="arrow">→</span><a href="monthly-report.html" class="step">月报</a><span class="arrow">→</span><a href="custom-dashboard.html" class="step">自定义看板</a><span class="arrow">→</span><a href="kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span><a href="real-time-dashboard.html" class="step">实时看板</a><span class="arrow">→</span><a href="executive-summary-report.html" class="step">管理摘要</a><span class="arrow">→</span><a href="automated-report-scheduler.html" class="step">报表调度</a><span class="arrow">→</span><a href="benchmark-report-generator.html" class="step">基准报告</a><span class="arrow">→</span><span class="step current">数据导出</span><span class="arrow">→</span><a href="alert-notification-system.html" class="step">预警通知</a><span class="arrow">→</span><a href="report-template-library.html" class="step">模板库</a></div></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📊 数据报表工作流 · 标准版</span><h1>数据导出 <em>中心</em></h1><p class="tool-hero-desc">支持CSV/Excel/JSON三种导出格式，20+个字段可选（订单/产品/客户/广告/库存/财务6大维度），实时预览导出数据格式，定时任务自动导出配置，一键生成所需报表。</p></div></header>
+<section class="tool-section"><div class="container">
+
+<div class="rpt-section" style="margin-top:0">
+<h3>⚙️ 导出配置</h3>
+<div class="export-config">
+<div>
+<h4 style="font-size:14px;font-weight:700;margin-bottom:12px">选择数据维度</h4>
+<div class="format-selector">
+<button class="format-btn active" onclick="DEC.setFormat('csv')">CSV</button>
+<button class="format-btn" onclick="DEC.setFormat('excel')">Excel</button>
+<button class="format-btn" onclick="DEC.setFormat('json')">JSON</button>
+</div>
+<div class="field-selector">
+<h4>选择导出字段</h4>
+<ul class="field-list" id="fieldList"></ul>
+</div>
+<div style="margin-top:12px;display:flex;gap:8px">
+<button class="btn-export" onclick="DEC.generate()">📊 生成预览</button>
+<button style="padding:12px 20px;background:#fff;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer" onclick="DEC.selectAll()">全选</button>
+<button style="padding:12px 20px;background:#fff;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer" onclick="DEC.clearAll()">清空</button>
+</div>
+</div>
+<div>
+<h4 style="font-size:14px;font-weight:700;margin-bottom:12px">导出预览</h4>
+<div class="preview-box" id="previewBox"><div class="pv-header">// 选择字段后点击"生成预览"查看数据格式</div></div>
+</div>
+</div>
+</div>
+<div class="rpt-section">
+<h3>📋 定时导出任务</h3>
+<ul class="task-list" id="taskList"></ul>
+</div>
+<div class="rpt-section">
+<h3>📖 导出说明</h3>
+<div class="fee-rule-box">
+<h4>📋 支持的导出格式</h4>
+<ul>
+<li><b>CSV</b>：逗号分隔，适用于Excel/WPS打开，兼容性最强</li>
+<li><b>Excel</b>：制表符分隔，可直接粘贴到Excel保持格式</li>
+<li><b>JSON</b>：结构化数据格式，适用于API对接和程序处理</li>
+<li>支持选择20+个字段：订单/产品/客户/广告/库存/财务等维度</li>
+<li>定时任务可配置每日/每周/每月自动导出</li>
+</ul>
+</div>
+</div>
+
+<div class="wf-foot-nav"><a href="benchmark-report-generator.html" class="prev"><span class="fn-label">上一步 · 第9步</span><span class="fn-name">← 基准报告</span></a><a href="alert-notification-system.html" class="next"><span class="fn-label">下一步 · 第11步</span><span class="fn-name">预警通知 →</span></a></div>
+</div></section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="real-time-dashboard.html">实时看板</a></li><li><a href="report-template-library.html">报表模板库</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script src="../assets/js/engagement.js"></script>
+<script>
+
+var DEC=(function(){
+'use strict';
+function $(id){return document.getElementById(id);}
+var fields=[
+{group:'订单',items:['订单ID','下单时间','订单状态','支付方式','物流方式','追踪号','发货时间','签收时间']},
+{group:'产品',items:['SKU','ASIN','产品名称','类目','品牌','售价','数量','重量']},
+{group:'客户',items:['客户ID','客户姓名','邮箱','国家','地区','首次购买','累计订单','累计金额']},
+{group:'广告',items:['广告活动','广告组','关键词','展示量','点击量','CTR','CPC','花费','ACoS']},
+{group:'库存',items:['仓库','FBA库存','在途库存','可售天数','补货建议','滞销库存','库存价值','周转率']},
+{group:'财务',items:['销售额','退款金额','平台费用','广告费用','物流费用','采购成本','毛利率','净利润']}
+];
+var selected={};
+fields.forEach(function(g){g.items.forEach(function(f){selected[f]=true;});});
+var format='csv';
+var mockData=[
+{'订单ID':'AMZ-001','SKU':'PROD-A1','产品名称':'无线蓝牙耳机','售价':'29.99','数量':'2','销售额':'59.98','广告费用':'8.50','净利润':'18.20'},
+{'订单ID':'AMZ-002','SKU':'PROD-B2','产品名称':'硅胶手机壳','售价':'12.99','数量':'5','销售额':'64.95','广告费用':'5.20','净利润':'28.30'},
+{'订单ID':'AMZ-003','SKU':'PROD-C3','产品名称':'LED台灯','售价':'39.99','数量':'1','销售额':'39.99','广告费用':'6.80','净利润':'12.50'},
+{'订单ID':'AMZ-004','SKU':'PROD-A1','产品名称':'无线蓝牙耳机','售价':'29.99','数量':'3','销售额':'89.97','广告费用':'12.30','净利润':'27.80'},
+{'订单ID':'AMZ-005','SKU':'PROD-D4','产品名称':'瑜伽垫','售价':'24.99','数量':'2','销售额':'49.98','广告费用':'4.50','净利润':'18.60'}
+];
+function renderFields(){
+var html='';
+fields.forEach(function(g){
+html+='<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;text-transform:uppercase">'+g.group+'</div>';
+g.items.forEach(function(f){
+html+='<div class="field-item'+(selected[f]?' checked':'')+'"><input type="checkbox" '+(selected[f]?'checked':'')+' onchange="DEC.toggle(''+f+'')"><label>'+f+'</label></div>';
+});
+html+='</div>';
+});
+$('fieldList').innerHTML=html;
+}
+function toggle(f){selected[f]=!selected[f];renderFields();}
+function selectAll(){fields.forEach(function(g){g.items.forEach(function(f){selected[f]=true;});});renderFields();}
+function clearAll(){fields.forEach(function(g){g.items.forEach(function(f){selected[f]=false;});});renderFields();}
+function setFormat(f){
+format=f;
+document.querySelectorAll('.format-btn').forEach(function(b){b.classList.remove('active');});
+event.target.classList.add('active');
+}
+function getSelectedFields(){
+var arr=[];
+fields.forEach(function(g){g.items.forEach(function(f){if(selected[f])arr.push(f);});});
+return arr;
+}
+function generate(){
+var selFields=getSelectedFields();
+if(selFields.length===0){alert('请至少选择一个字段');return;}
+var dataKeys=Object.keys(mockData[0]);
+var availableFields=selFields.filter(function(f){return dataKeys.indexOf(f)>=0;});
+if(availableFields.length===0){availableFields=dataKeys.slice(0,5);}
+var html='';
+if(format==='csv'){
+html='<div class="pv-header">// CSV格式 - '+availableFields.length+'个字段, '+mockData.length+'条记录</div>';
+html+='<table><tr>';
+availableFields.forEach(function(f){html+='<th>'+f+'</th>';});
+html+='</tr>';
+mockData.forEach(function(row){
+html+='<tr>';
+availableFields.forEach(function(f){html+='<td>'+row[f]+'</td>';});
+html+='</tr>';
+});
+html+='</table>';
+}else if(format==='excel'){
+html='<div class="pv-header">// Excel格式(制表符分隔) - '+availableFields.length+'个字段</div>';
+html+='<table><tr>';
+availableFields.forEach(function(f){html+='<th>'+f+'</th>';});
+html+='</tr>';
+mockData.forEach(function(row){
+html+='<tr>';
+availableFields.forEach(function(f){html+='<td>'+row[f]+'</td>';});
+html+='</tr>';
+});
+html+='</table>';
+}else{
+html='<div class="pv-header">// JSON格式 - '+availableFields.length+'个字段</div>';
+var jsonData=mockData.map(function(row){
+var obj={};
+availableFields.forEach(function(f){obj[f]=row[f];});
+return obj;
+});
+html+='<pre>'+JSON.stringify(jsonData,null,2)+'</pre>';
+}
+$('previewBox').innerHTML=html;
+renderTasks(availableFields.length);
+}
+function renderTasks(fieldCount){
+var tasks=[
+{icon:'📊',name:'每日销售数据导出',meta:'CSV · '+(fieldCount||8)+'字段 · 每日 09:00',status:'active'},
+{icon:'📈',name:'周度广告报表导出',meta:'Excel · 广告维度 · 每周一 08:00',status:'active'},
+{icon:'📦',name:'月度库存盘点导出',meta:'CSV · 库存维度 · 每月1日 10:00',status:'active'},
+{icon:'💰',name:'季度财务汇总导出',meta:'JSON · 全字段 · 每季度首日',status:'paused'}
+];
+$('taskList').innerHTML=tasks.map(function(t){
+return '<li class="task-item"><div class="task-icon">'+t.icon+'</div><div class="task-name">'+t.name+'</div><div class="task-meta">'+t.meta+'</div><span class="task-status '+t.status+'">'+(t.status==='active'?'运行中':'已暂停')+'</span></li>';
+}).join('');
+}
+return{toggle:toggle,selectAll:selectAll,clearAll:clearAll,setFormat:setFormat,generate:generate,init:function(){renderFields();renderTasks(8);}};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',DEC.init);}else{DEC.init();}
+
+</script>
+</body>
+</html>

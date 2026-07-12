@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="联盟流量追踪器：追踪亚马逊联盟、外链、红人链接的流量与转化，ROI对比分析，CSS来源追踪表与ROI柱状图。免费跨境卖家流量全链路工具。">
+<meta name="keywords" content="联盟流量追踪,affiliate tracking,亚马逊联盟,红人链接,外链追踪,ROI对比,流量来源分析">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/affiliate-traffic-tracker.html">
+<title>联盟流量追踪器 - 来源追踪·ROI对比·转化分析 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-val.pos{color:#10b981}
+.rsb-card .rsb-val.neg{color:#ef4444}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.aff-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.aff-table th{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:12px;text-align:left;font-weight:600;white-space:nowrap}
+.aff-table th:first-child{border-radius:10px 0 0 0}
+.aff-table th:last-child{border-radius:0 10px 0 0}
+.aff-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.aff-table tr:hover td{background:var(--bg-soft)}
+.aff-table .src-name{font-weight:600;color:var(--ink)}
+.aff-table .src-type{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:500}
+.src-amazon{background:#fef3c7;color:#92400e}
+.src-influencer{background:#fce7f3;color:#9d174d}
+.src-external{background:#dbeafe;color:#1e40af}
+.src-blog{background:#d1fae5;color:#065f46}
+.src-social{background:#e0e7ff;color:#3730a3}
+.aff-table .roi-pos{color:#10b981;font-weight:700}
+.aff-table .roi-neg{color:#ef4444;font-weight:700}
+.aff-table .del-btn{padding:4px 10px;border-radius:6px;border:1px solid #ef4444;background:#fff;color:#ef4444;font-size:11px;cursor:pointer}
+.roi-chart-wrap{margin-top:20px}
+.roi-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.roi-bar-label{width:140px;font-size:13px;font-weight:600;color:var(--ink-soft);flex-shrink:0;text-align:right}
+.roi-bar-track{flex:1;height:28px;background:var(--bg-soft);border-radius:8px;overflow:hidden;position:relative}
+.roi-bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:10px;color:#fff;font-size:12px;font-weight:700;transition:width .5s}
+.roi-bar-fill.pos{background:linear-gradient(90deg,#10b981,#34d399)}
+.roi-bar-fill.neg{background:linear-gradient(90deg,#ef4444,#f87171)}
+.roi-bar-val{width:80px;font-size:13px;font-weight:700;flex-shrink:0}
+.roi-bar-val.pos{color:#10b981}
+.roi-bar-val.neg{color:#ef4444}
+.conv-funnel{margin-top:20px}
+.funnel-stage{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.funnel-stage .fs-label{width:100px;font-size:13px;font-weight:600;text-align:right;flex-shrink:0}
+.funnel-stage .fs-bar{flex:1;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;transition:width .5s}
+.funnel-stage .fs-val{width:80px;font-size:13px;font-weight:600;flex-shrink:0}
+.funnel-stage .fs-rate{font-size:11px;color:var(--muted);width:50px;flex-shrink:0}
+.add-source-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:16px;align-items:end}
+.add-source-row .calc-field{margin-bottom:0}
+.add-source-row .calc-field label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+.add-source-row input,.add-source-row select{width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px}
+.btn-add{padding:8px 16px;border-radius:8px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.insight-card{padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);margin-bottom:10px}
+.insight-card .ic-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700;font-size:14px}
+.insight-card .ic-body{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px}
+.related-tools a{display:block;padding:14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:600;transition:all .2s}
+.related-tools a:hover{border-color:#4f46e5;color:#4f46e5;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.related-tools a .rt-icon{margin-right:6px}
+.hidden{display:none!important}
+@media(max-width:900px){
+  .add-source-row{grid-template-columns:1fr 1fr;gap:8px}
+  .aff-table{font-size:11px}
+  .aff-table th,.aff-table td{padding:6px 8px}
+  .roi-bar-label{width:80px;font-size:11px}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"联盟流量追踪器","description":"追踪亚马逊联盟、外链、红人链接的流量与转化，ROI对比分析，CSS来源追踪表与ROI柱状图。","url":"https://juxin-consulting.help/tools/affiliate-traffic-tracker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"联盟流量追踪器","item":"https://juxin-consulting.help/tools/affiliate-traffic-tracker.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="affiliate_traffic_tracker">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🌊</span><span class="workflow-name">流量全链路工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="traffic-source-audit.html" class="step">流量审计</a><span class="arrow">→</span>
+      <a href="traffic-quality-scorer.html" class="step">流量质量</a><span class="arrow">→</span>
+      <a href="keyword-traffic-estimator.html" class="step">关键词流量</a><span class="arrow">→</span>
+      <a href="organic-vs-paid.html" class="step">自然vs付费</a><span class="arrow">→</span>
+      <a href="traffic-attack-defense.html" class="step">流量攻防</a><span class="arrow">→</span>
+      <a href="click-through-optimizer.html" class="step">点击优化</a><span class="arrow">→</span>
+      <a href="cross-channel-attribution.html" class="step">跨渠道归因</a><span class="arrow">→</span>
+      <a href="traffic-trend-analyzer.html" class="step">趋势分析</a><span class="arrow">→</span>
+      <a href="brand-search-estimator.html" class="step">品牌搜索</a><span class="arrow">→</span>
+      <a href="traffic-forecast.html" class="step">流量预测</a><span class="arrow">→</span>
+      <a href="traffic-anomaly-detector.html" class="step">异常检测</a><span class="arrow">→</span>
+      <a href="affiliate-traffic-tracker.html" class="step current">联盟追踪</a><span class="arrow">→</span>
+      <a href="search-funnel-analyzer.html" class="step">搜索漏斗</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌊 流量全链路工具 · 标准版</span>
+      <h1>联盟流量<em>追踪器</em></h1>
+      <p class="tool-hero-desc">追踪亚马逊联盟、红人专属链接、外部博客外链、社交媒体链接的流量与转化数据，自动计算各来源ROI与CPC，CSS柱状图直观对比，识别最优流量来源。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="calculator-form">
+          <h2>📋 添加流量来源</h2>
+          <p class="calc-form-subtitle">添加各联盟/外链来源的流量与转化数据，系统自动计算ROI</p>
+          <div class="add-source-row">
+            <div class="calc-field"><label>来源名称</label><input type="text" id="srcName" placeholder="如 Beauty Blog #1"></div>
+            <div class="calc-field"><label>类型</label><select id="srcType"><option value="amazon">亚马逊联盟</option><option value="influencer">红人链接</option><option value="external">外部外链</option><option value="blog">博客外链</option><option value="social">社交媒体</option></select></div>
+            <div class="calc-field"><label>点击量</label><input type="number" id="srcClicks" placeholder="3500" min="0"></div>
+            <div class="calc-field"><label>转化数</label><input type="number" id="srcConv" placeholder="85" min="0"></div>
+            <div class="calc-field"><label>收入($)</label><input type="number" id="srcRev" placeholder="4200" min="0" step="0.01"></div>
+            <div class="calc-field"><label>成本($)</label><input type="number" id="srcCost" placeholder="500" min="0" step="0.01"></div>
+            <button class="btn-add" onclick="ATT.addSource()">+ 添加</button>
+          </div>
+          <div class="calc-actions">
+            <button class="btn-share" onclick="ATT.loadSample()" style="background:var(--bg-soft);color:#4f46e5;border:1px solid var(--rule);padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">加载示例</button>
+            <button class="btn-reset" onclick="ATT.clearAll()" style="padding:10px 20px;border-radius:10px;font-size:14px;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft)">清空全部</button>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px">
+            <h4>📐 计算说明</h4>
+            <ul>
+              <li>转化率 = 转化数 / 点击量 × 100%</li>
+              <li>CPA（单次获客成本）= 成本 / 转化数</li>
+              <li>RPC（单次点击收入）= 收入 / 点击量</li>
+              <li>ROI = (收入 - 成本) / 成本 × 100%</li>
+              <li>利润 = 收入 - 成本</li>
+              <li>数据保存在浏览器本地 (jx_affiliate_sources)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block hidden" id="summarySection">
+        <h3>📊 总览</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block hidden" id="tableSection">
+        <h3>📋 来源追踪表</h3>
+        <div style="overflow-x:auto">
+          <table class="aff-table" id="affTable">
+            <thead><tr><th>来源</th><th>类型</th><th>点击</th><th>转化</th><th>转化率</th><th>收入($)</th><th>成本($)</th><th>利润($)</th><th>ROI</th><th>CPA($)</th><th></th></tr></thead>
+            <tbody id="affTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-block hidden" id="roiSection">
+        <h3>📈 ROI对比图</h3>
+        <div class="roi-chart-wrap" id="roiChart"></div>
+      </div>
+
+      <div class="section-block hidden" id="funnelSection">
+        <h3>🔄 转化漏斗（全部来源汇总）</h3>
+        <div class="conv-funnel" id="convFunnel"></div>
+      </div>
+
+      <div class="section-block hidden" id="insightSection">
+        <h3>💡 分析洞察</h3>
+        <div id="insightList"></div>
+      </div>
+
+      <div class="section-block">
+        <h3>🔗 相关工具</h3>
+        <div class="related-tools">
+          <a href="traffic-source-audit.html"><span class="rt-icon">🔍</span>流量审计器</a>
+          <a href="traffic-anomaly-detector.html"><span class="rt-icon">📊</span>异常检测器</a>
+          <a href="cross-channel-attribution.html"><span class="rt-icon">🔀</span>跨渠道归因</a>
+          <a href="search-funnel-analyzer.html"><span class="rt-icon">🔍</span>搜索漏斗分析</a>
+          <a href="traffic-quality-scorer.html"><span class="rt-icon">⭐</span>流量质量评分</a>
+          <a href="traffic-forecast.html"><span class="rt-icon">🔮</span>流量预测器</a>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="traffic-anomaly-detector.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 异常检测</span></a>
+        <a href="search-funnel-analyzer.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">搜索漏斗分析 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="affiliate-traffic-tracker.html">联盟追踪</a></li><li><a href="traffic-anomaly-detector.html">异常检测</a></li><li><a href="search-funnel-analyzer.html">搜索漏斗</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<style>
+.back-to-top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 6px 16px rgba(79,70,229,.3);opacity:0;pointer-events:none;transition:all .3s;z-index:999}
+.back-to-top.visible{opacity:1;pointer-events:auto}
+</style>
+<script>
+var ATT=(function(){
+  'use strict';
+  var KEY='jx_affiliate_sources';
+  var sources=[];
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+  function show(id){var e=$(id);if(e)e.classList.remove('hidden');}
+  function hide(id){var e=$(id);if(e)e.classList.add('hidden');}
+  var typeLabels={amazon:'亚马逊联盟',influencer:'红人链接',external:'外部外链',blog:'博客外链',social:'社交媒体'};
+  var typeIcons={amazon:'🛒',influencer:'🎤',external:'🔗',blog:'📝',social:'📱'};
+
+  function load(){try{var s=localStorage.getItem(KEY);if(s)sources=JSON.parse(s)||[];}catch(e){sources=[];}if(!sources.length){loadSample();}}
+
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(sources));}catch(e){}}
+
+  function addSource(){
+    var name=v('srcName').trim();if(!name){alert('请输入来源名称');return;}
+    var clicks=parseInt(v('srcClicks'))||0;
+    var conv=parseInt(v('srcConv'))||0;
+    var rev=parseFloat(v('srcRev'))||0;
+    var cost=parseFloat(v('srcCost'))||0;
+    sources.push({name:name,type:v('srcType'),clicks:clicks,conv:conv,rev:rev,cost:cost});
+    save();render();
+    ['srcName','srcClicks','srcConv','srcRev','srcCost'].forEach(function(id){$(id).value='';});
+  }
+
+  function del(i){sources.splice(i,1);save();render();}
+
+  function render(){
+    if(!sources.length){hide('summarySection');hide('tableSection');hide('roiSection');hide('funnelSection');hide('insightSection');return;}
+    var tClicks=0,tConv=0,tRev=0,tCost=0;
+    sources.forEach(function(s){tClicks+=s.clicks;tConv+=s.conv;tRev+=s.rev;tCost+=s.cost;});
+    var tProfit=tRev-tCost;
+    var tCR=tClicks>0?(tConv/tClicks*100).toFixed(2):0;
+    var tROI=tCost>0?((tProfit/tCost)*100).toFixed(1):'N/A';
+
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val">'+sources.length+'</div><div class="rsb-lbl">来源数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+tClicks.toLocaleString()+'</div><div class="rsb-lbl">总点击</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+tConv.toLocaleString()+'</div><div class="rsb-lbl">总转化</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+tCR+'%</div><div class="rsb-lbl">总转化率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">$'+tRev.toFixed(0)+'</div><div class="rsb-lbl">总收入</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">$'+tCost.toFixed(0)+'</div><div class="rsb-lbl">总成本</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val '+(tProfit>=0?'pos':'neg')+'">$'+tProfit.toFixed(0)+'</div><div class="rsb-lbl">总利润</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val '+(tProfit>=0?'pos':'neg')+'">'+tROI+'%</div><div class="rsb-lbl">总ROI</div></div>';
+    show('summarySection');
+
+    // Table
+    $('affTableBody').innerHTML=sources.map(function(s,i){
+      var profit=s.rev-s.cost;
+      var roi=s.cost>0?((profit/s.cost)*100).toFixed(1):'N/A';
+      var cr=s.clicks>0?(s.conv/s.clicks*100).toFixed(2):0;
+      var cpa=s.conv>0?(s.cost/s.conv).toFixed(2):'N/A';
+      var roiClass=profit>=0?'roi-pos':'roi-neg';
+      return '<tr><td class="src-name">'+typeIcons[s.type]+' '+s.name+'</td><td><span class="src-type src-'+s.type+'">'+typeLabels[s.type]+'</span></td><td>'+s.clicks.toLocaleString()+'</td><td>'+s.conv.toLocaleString()+'</td><td>'+cr+'%</td><td>$'+s.rev.toFixed(0)+'</td><td>$'+s.cost.toFixed(0)+'</td><td style="font-weight:700;color:'+(profit>=0?'#10b981':'#ef4444')+'">$'+profit.toFixed(0)+'</td><td class="'+roiClass+'">'+roi+'%</td><td>'+(cpa==='N/A'?'N/A':'$'+cpa)+'</td><td><button class="del-btn" onclick="ATT.del('+i+')">删除</button></td></tr>';
+    }).join('');
+    show('tableSection');
+
+    // ROI Chart
+    var maxAbsROI=1;
+    sources.forEach(function(s){var p=s.cost>0?Math.abs((s.rev-s.cost)/s.cost*100):0;if(p>maxAbsROI)maxAbsROI=p;});
+    $('roiChart').innerHTML=sources.map(function(s){
+      var profit=s.rev-s.cost;
+      var roi=s.cost>0?((profit/s.cost)*100):0;
+      var w=Math.abs(roi)/maxAbsROI*100;
+      if(w>100)w=100;
+      var cls=profit>=0?'pos':'neg';
+      return '<div class="roi-bar-row"><div class="roi-bar-label">'+typeIcons[s.type]+' '+s.name.substring(0,12)+'</div><div class="roi-bar-track"><div class="roi-bar-fill '+cls+'" style="width:'+w+'%">'+(w>15?Math.abs(roi).toFixed(0)+'%':'')+'</div></div><div class="roi-bar-val '+cls+'">'+roi.toFixed(1)+'%</div></div>';
+    }).join('');
+    show('roiSection');
+
+    // Funnel
+    var stages=[
+      {label:'点击量',val:tClicks,color:'#4f46e5',pct:100},
+      {label:'转化数',val:tConv,color:'#6366f1',pct:tClicks>0?tConv/tClicks*100:0},
+      {label:'收入($)',val:'$'+tRev.toFixed(0),color:'#10b981',pct:100}
+    ];
+    var maxClicks=tClicks;
+    $('convFunnel').innerHTML=stages.map(function(st,i){
+      var w=i===0?100:(i===1?(tClicks>0?tConv/tClicks*100:0):100);
+      var rate=i>0?'< '+(stages[i-1].val>0&&typeof st.val==='number'?(st.val/stages[i-1].val*100).toFixed(1):'0')+'%':'';
+      return '<div class="funnel-stage"><div class="fs-label">'+st.label+'</div><div class="fs-bar" style="background:linear-gradient(90deg,'+st.color+','+st.color+'cc);width:'+w+'%">'+st.val+'</div><div class="fs-val">'+st.val+'</div><div class="fs-rate">'+rate+'</div></div>';
+    }).join('');
+    show('funnelSection');
+
+    // Insights
+    var insights=[];
+    // Best ROI
+    var bestROI=null,bestROIVal=-Infinity;
+    sources.forEach(function(s){if(s.cost>0){var roi=(s.rev-s.cost)/s.cost*100;if(roi>bestROIVal){bestROIVal=roi;bestROI=s;}}});
+    if(bestROI)insights.push({icon:'🏆',title:'最佳ROI来源',body:'<strong>'+bestROI.name+'</strong> 的ROI为 '+bestROIVal.toFixed(1)+'%，是最值得加大投入的流量来源。建议增加该来源的预算分配。'});
+
+    // Worst ROI
+    var worstROI=null,worstROIVal=Infinity;
+    sources.forEach(function(s){if(s.cost>0){var roi=(s.rev-s.cost)/s.cost*100;if(roi<worstROIVal){worstROIVal=roi;worstROI=s;}}});
+    if(worstROI&&worstROIVal<0)insights.push({icon:'⚠️',title:'亏损来源预警',body:'<strong>'+worstROI.name+'</strong> 的ROI为 '+worstROIVal.toFixed(1)+'%，正在亏损。建议优化转化率或降低成本，必要时暂停该来源。'});
+
+    // Best conversion rate
+    var bestCR=null,bestCRVal=0;
+    sources.forEach(function(s){if(s.clicks>0){var cr=s.conv/s.clicks*100;if(cr>bestCRVal){bestCRVal=cr;bestCR=s;}}});
+    if(bestCR)insights.push({icon:'🎯',title:'最高转化率来源',body:'<strong>'+bestCR.name+'</strong> 的转化率为 '+bestCRVal.toFixed(2)+'%，流量质量最高。建议分析其流量特征，复制到其他来源。'});
+
+    // Cost efficiency
+    if(tCost>0&&tRev>0){
+      var ratio=tRev/tCost;
+      insights.push({icon:'📊',title:'整体投入产出比',body:'总收入/总成本 = '+ratio.toFixed(2)+'x，'+(ratio>=2?'投入产出比优秀，盈利能力强':ratio>=1.5?'投入产出比良好，有优化空间':ratio>=1?'勉强盈利，需优化成本结构':'亏损状态，需紧急调整策略')+'。'});
+    }
+
+    $('insightList').innerHTML=insights.map(function(ins){
+      return '<div class="insight-card"><div class="ic-head">'+ins.icon+' '+ins.title+'</div><div class="ic-body">'+ins.body+'</div></div>';
+    }).join('');
+    show('insightSection');
+  }
+
+  function loadSample(){
+    sources=[
+      {name:'Beauty Blog Review',type:'blog',clicks:5200,conv:156,rev:7800,cost:600},
+      {name:'TikTok Influencer #3',type:'influencer',clicks:8800,conv:264,rev:13200,cost:2000},
+      {name:'Amazon Associates',type:'amazon',clicks:3500,conv:85,rev:4250,cost:250},
+      {name:'YouTube Channel Link',type:'external',clicks:2100,conv:42,rev:2100,cost:800},
+      {name:'Instagram Bio Link',type:'social',clicks:4300,conv:51,rev:2550,cost:300}
+    ];
+    save();render();
+  }
+
+  function clearAll(){
+    if(!confirm('确定清空所有来源数据？'))return;
+    sources=[];save();render();
+  }
+
+  return{addSource:addSource,del:del,render:render,loadSample:loadSample,clearAll:clearAll};
+})();
+
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

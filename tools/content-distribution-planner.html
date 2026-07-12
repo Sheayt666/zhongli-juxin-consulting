@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="内容分发规划器：跨平台适配+发布节奏+渠道优先级+协同策略，CSS分发矩阵可视化，跨境卖家内容分发工具。">
+<title>内容分发规划器 - 跨平台适配发布节奏渠道优先级 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.dist-matrix{width:100%;border-collapse:collapse;font-size:12px}
+.dist-matrix th{padding:10px 8px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:11px}
+.dist-matrix th:first-child{text-align:left;padding-left:14px;min-width:100px}
+.dist-matrix td{padding:8px;text-align:center;border-bottom:1px solid var(--rule-light)}
+.dist-matrix td:first-child{text-align:left;padding-left:14px;font-weight:600;color:var(--ink-soft)}
+.dist-cell{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;font-size:13px;font-weight:700}
+.dist-primary{background:#4f46e5;color:#fff}
+.dist-secondary{background:#eef2ff;color:#4f46e5}
+.dist-optional{background:#f1f5f9;color:#94a3b8}
+.dist-none{background:#fef2f2;color:#fca5a5}
+.channel-priority{display:flex;align-items:center;gap:14px;padding:14px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px}
+.channel-priority:hover{background:var(--bg-soft)}
+.cp-rank{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+.cp-body{flex:1}.cp-body h4{font-size:14px;font-weight:700;margin:0 0 2px}.cp-body p{font-size:12px;color:var(--muted);margin:0}
+.cp-metric{text-align:right}.cp-metric .cp-val{font-size:18px;font-weight:800;color:#4f46e5}.cp-metric .cp-lbl{font-size:10px;color:var(--muted)}
+.rhythm-timeline{display:flex;align-items:flex-end;gap:4px;height:180px;padding:16px 0;border-bottom:2px solid var(--rule);overflow-x:auto}
+.rhythm-col{display:flex;flex-direction:column;align-items:center;min-width:50px;flex:1}
+.rhythm-bar{width:100%;border-radius:6px 6px 0 0;transition:height .3s;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:10px;font-weight:700;color:#fff;min-height:15px}
+.rhythm-label{font-size:10px;color:var(--muted);margin-top:6px;text-align:center}
+.adapt-card{padding:16px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px}
+.adapt-card h4{font-size:14px;font-weight:700;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.adapt-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px}
+.adapt-row .ar-label{font-weight:600;color:var(--ink-soft);min-width:80px}
+.adapt-row .ar-value{color:var(--muted)}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.dist-matrix{font-size:10px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W39 内容营销工作流</div><div class="workflow-steps">
+  <a href="content-calendar-planner.html" class="workflow-step">日历规划</a><a href="social-post-scheduler.html" class="workflow-step">发布排期</a><a href="content-pillar-builder.html" class="workflow-step">内容支柱</a><a href="video-script-optimizer.html" class="workflow-step">视频脚本</a><a href="hashtag-research-tool.html" class="workflow-step">标签研究</a><a href="content-repurpose-planner.html" class="workflow-step">内容复用</a><a href="engagement-rate-predictor.html" class="workflow-step">互动预测</a><a href="content-audit-checklist.html" class="workflow-step">内容审计</a><a href="brand-voice-guide-generator.html" class="workflow-step">品牌语音</a><a href="content-roi-tracker.html" class="workflow-step">ROI追踪</a><a href="blog-seo-optimizer.html" class="workflow-step">博客SEO</a><a href="ugc-content-manager.html" class="workflow-step">UGC管理</a><a href="content-distribution-planner.html" class="workflow-step active">内容分发</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W39 内容营销</a><span class="sep">›</span><span class="current">内容分发规划器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">📡</span>内容分发规划器 Content Distribution Planner</h1>
+  <p>跨平台内容分发策略规划，渠道适配指南，发布节奏优化，渠道优先级排序，多渠道协同策略，CSS分发矩阵可视化各内容类型在各平台的投放策略。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">分发渠道</div><div class="mc-value" id="mChannels">0</div></div>
+    <div class="metric-card success"><div class="mc-label">主投渠道</div><div class="mc-value" id="mPrimary">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">周发布量</div><div class="mc-value" id="mWeekly">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">预估触达</div><div class="mc-value" id="mReach">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 分发参数</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>内容产出频率 <span class="hint">（篇/周）</span></label><input type="number" id="contentFreq" value="5" oninput="CDP.calc()"></div>
+      <div class="jx-field"><label>主要内容类型</label><select id="contentType" onchange="CDP.calc()"><option value="blog">博客文章</option><option value="video">视频内容</option><option value="social">社交媒体</option><option value="mixed">混合内容</option></select></div>
+      <div class="jx-field"><label>目标受众规模</label><input type="number" id="audienceSize" value="50000" step="1000" oninput="CDP.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 内容分发矩阵</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">各内容类型在各平台的投放策略：主投/辅投/可选/不投</p>
+    <div style="overflow-x:auto"><table class="dist-matrix" id="distMatrix"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏅 渠道优先级排名</h2>
+    <div id="priorityList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📅 发布节奏时间线</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">一周内容发布节奏，按渠道分配</p>
+    <div class="rhythm-timeline" id="rhythmTimeline"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>适配 跨平台适配指南</h2>
+    <div id="adaptList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 分发策略建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="social-post-scheduler.html" class="rt-card"><div class="rt-icon">📅</div><div><h5>发布排期</h5><p>社媒排期</p></div></a>
+      <a href="content-calendar-planner.html" class="rt-card"><div class="rt-icon">🗓️</div><div><h5>日历规划</h5><p>内容日历</p></div></a>
+      <a href="content-repurpose-planner.html" class="rt-card"><div class="rt-icon">🔄</div><div><h5>内容复用</h5><p>内容再利用</p></div></a>
+      <a href="engagement-rate-predictor.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>互动预测</h5><p>互动率预估</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="content-distribution-planner.html">内容分发</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CDP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var CONTENT_TYPES=['博客文章','长视频','短视频','图文帖','产品评测','行业报告'];
+  var PLATFORMS=['品牌博客','Instagram','TikTok','YouTube','LinkedIn','Twitter/X','Facebook','Email EDM','Amazon Post','Pinterest'];
+  //分发策略矩阵: 2=主投, 1=辅投, 0=可选, -1=不投
+  var MATRIX=[
+    [ 2, 1, 0, 1, 1, 1, 1, 2, 0, 1], // 博客文章
+    [ 0, 0, 0, 2, 0,-1, 0, 0,-1, 0], // 长视频
+    [ 0, 2, 2, 1, 0, 1, 1, 0, 0, 1], // 短视频
+    [ 0, 2, 1, 0, 2, 2, 2, 1, 1, 2], // 图文帖
+    [ 1, 1, 1, 2, 0, 0, 1, 1, 2, 0], // 产品评测
+    [ 2, 0,-1, 1, 2, 1, 0, 2,-1, 0]  // 行业报告
+  ];
+
+  var CHANNELS=[
+    {name:'品牌博客',icon:'🌐',color:'#4f46e5',reach:8000,engagement:3.5,cost:'低',latency:'长期'},
+    {name:'Instagram',icon:'📷',color:'#8b5cf6',reach:12000,engagement:4.2,cost:'中',latency:'即时'},
+    {name:'TikTok',icon:'🎵',color:'#06b6d4',reach:18000,engagement:5.8,cost:'低',latency:'病毒式'},
+    {name:'YouTube',icon:'📺',color:'#ef4444',reach:15000,engagement:4.5,cost:'高',latency:'长期'},
+    {name:'LinkedIn',icon:'💼',color:'#0ea5e9',reach:6000,engagement:3.2,cost:'中',latency:'中期'},
+    {name:'Email EDM',icon:'📧',color:'#10b981',reach:10000,engagement:6.5,cost:'低',latency:'即时'},
+    {name:'Facebook',icon:'👥',color:'#3b82f6',reach:9000,engagement:2.8,cost:'中',latency:'即时'},
+    {name:'Pinterest',icon:'📌',color:'#dc2626',reach:7000,engagement:3.8,cost:'低',latency:'长期'}
+  ];
+
+  var ADAPT=[
+    {platform:'品牌博客',icon:'🌐',specs:[['标题','60字符以内，含关键词'],['正文','1500-3000词，分段小标题'],['图片','1200×630px，Alt标签'],['内链','3-10个相关文章链接']]},
+    {platform:'Instagram',icon:'📷',specs:[['图片','1080×1080px(方)/1080×1350px(竖)'],['文案','2200字符以内，前125字符关键'],['标签','15-30个相关Hashtag'],['Stories','1080×1920px，24小时消失']]},
+    {platform:'TikTok',icon:'🎵',specs:[['视频','9:16竖屏，15-60秒'],['字幕','必须添加字幕，前3秒抓眼球'],['音乐','使用热门BGM提升曝光'],['标签','3-5个 trending hashtag']]},
+    {platform:'YouTube',icon:'📺',specs:[['视频','16:9横屏，8-15分钟'],['缩略图','1280×720px，高对比'],['标题','70字符以内，含搜索词'],['描述','前157字符显示在搜索结果']]},
+    {platform:'LinkedIn',icon:'💼',specs:[['文案','1300字符以内，专业语气'],['图片','1200×627px链接预览'],['标签','3-5个行业标签'],['发布时间','周二至周四上午8-10点']]},
+    {platform:'Email EDM',icon:'📧',specs:[['主题行','40-50字符，A/B测试'],['预览文本','35-90字符补充主题'],['正文','单栏，600px宽，移动优先'],['CTA','醒目按钮，1个主要行动号召']]}
+  ];
+
+  function calc(){
+    var freq=num('contentFreq'),audience=num('audienceSize');
+    var channels=CHANNELS.length;
+    var primaryCount=0;
+    var totalReach=0;
+    CHANNELS.forEach(function(c){
+      if(c.reach>10000)primaryCount++;
+      totalReach+=c.reach;
+    });
+    var weeklyPosts=freq*channels/3;
+    var estReach=Math.round(totalReach*0.15);
+
+    $('mChannels').textContent=channels;
+    $('mPrimary').textContent=primaryCount;
+    $('mWeekly').textContent=Math.round(weeklyPosts);
+    $('mReach').textContent=estReach.toLocaleString();
+
+    renderMatrix();
+    renderPriority();
+    renderRhythm(freq);
+    renderAdapt();
+    renderTips(freq,weeklyPosts,estReach,audience);
+    save();
+  }
+
+  function renderMatrix(){
+    var h='<thead><tr><th>内容类型</th>';
+    PLATFORMS.forEach(function(p){h+='<th>'+p+'</th>'});
+    h+='</tr></thead><tbody>';
+    CONTENT_TYPES.forEach(function(ct,i){
+      h+='<tr><td><strong>'+ct+'</strong></td>';
+      MATRIX[i].forEach(function(v){
+        var cls,txt;
+        if(v===2){cls='dist-primary';txt='主'}
+        else if(v===1){cls='dist-secondary';txt='辅'}
+        else if(v===0){cls='dist-optional';txt='选'}
+        else{cls='dist-none';txt='—'}
+        h+='<td><span class="dist-cell '+cls+'">'+txt+'</span></td>';
+      });
+      h+='</tr>';
+    });
+    h+='</tbody>';
+    $('distMatrix').innerHTML=h;
+  }
+
+  function renderPriority(){
+    var sorted=CHANNELS.slice().sort(function(a,b){return b.reach-a.reach});
+    var h='';
+    sorted.forEach(function(c,i){
+      var rankColor=i<3?'#4f46e5':i<5?'#10b981':i<7?'#f59e0b':'#64748b';
+      h+='<div class="channel-priority"><div class="cp-rank" style="background:'+rankColor+'">'+(i+1)+'</div><div class="cp-body"><h4>'+c.icon+' '+c.name+'</h4><p>互动率 '+c.engagement+'% · 成本'+c.cost+' · '+c.latency+'效应</p></div><div class="cp-metric"><div class="cp-val">'+(c.reach/1000).toFixed(1)+'K</div><div class="cp-lbl">预估触达</div></div></div>';
+    });
+    $('priorityList').innerHTML=h;
+  }
+
+  function renderRhythm(freq){
+    var days=['周一','周二','周三','周四','周五','周六','周日'];
+    var colors=['#4f46e5','#8b5cf6','#06b6d4','#10b981','#f59e0b','#ef4444','#3b82f6'];
+    var plan=[
+      [{ch:'博客',c:'#4f46e5'},{ch:'IG',c:'#8b5cf6'}],
+      [{ch:'TikTok',c:'#06b6d4'}],
+      [{ch:'YouTube',c:'#ef4444'},{ch:'EDM',c:'#10b981'}],
+      [{ch:'博客',c:'#4f46e5'},{ch:'IG',c:'#8b5cf6'}],
+      [{ch:'TikTok',c:'#06b6d4'},{ch:'LinkedIn',c:'#0ea5e9'}],
+      [{ch:'Pinterest',c:'#dc2626'}],
+      [{ch:'FB',c:'#3b82f6'}]
+    ];
+    var maxItems=2;
+    var h='';
+    days.forEach(function(d,i){
+      var items=plan[i];
+      var height=items.length/maxItems*150;
+      h+='<div class="rhythm-col">';
+      items.forEach(function(it,idx){
+        var barH=(height/items.length)-8;
+        h+='<div class="rhythm-bar" style="height:'+barH+'px;background:'+it.c+';margin-bottom:3px;width:80%">'+it.ch+'</div>';
+      });
+      h+='<div class="rhythm-label">'+d+'</div></div>';
+    });
+    $('rhythmTimeline').innerHTML=h;
+  }
+
+  function renderAdapt(){
+    var h='';
+    ADAPT.forEach(function(a){
+      h+='<div class="adapt-card"><h4>'+a.icon+' '+a.platform+'</h4>';
+      a.specs.forEach(function(s){
+        h+='<div class="adapt-row"><span class="ar-label">'+s[0]+'</span><span class="ar-value">'+s[1]+'</span></div>';
+      });
+      h+='</div>';
+    });
+    $('adaptList').innerHTML=h;
+  }
+
+  function renderTips(freq,weekly,reach,audience){
+    var tips=[];
+    tips.push('每周产出 '+freq+' 篇内容，分发至 '+CHANNELS.length+' 个渠道，周发布量约 '+Math.round(weekly)+' 条，预估触达 '+reach.toLocaleString()+' 人。');
+    tips.push('分发优先级：品牌博客（SEO长期流量）> TikTok（病毒式传播）> Email EDM（高转化）> Instagram（品牌形象）> YouTube（深度内容）。');
+    tips.push('跨平台适配策略：一篇博客可拆解为5条社媒内容（1条IG图文+1条TikTok短视频+1条LinkedIn摘要+1条Twitter要点+1封EDM摘要），实现1:5内容杠杆。');
+    tips.push('发布节奏建议：周一/四发博客+IG，周二/五发TikTok短视频，周三发YouTube+EDM，周末发轻量社媒内容，保持每日活跃。');
+    tips.push('协同策略：博客引用社媒UGC，社媒导流博客深度文章，EDM整合本周所有内容，YouTube视频描述链接博客，形成内容闭环。');
+    tips.push('平台算法适配：TikTok重完播率（前3秒留人），YouTube重点击率（缩略图+标题），Instagram重保存率（价值密度），LinkedIn重专业度（行业洞察）。');
+    tips.push('效果衡量：各渠道跟踪UTM参数，每周复盘各渠道触达/互动/转化数据，淘汰低效渠道，加码高效渠道。');
+    tips.push('内容复用日历：原始内容发布后24h内拆解为社媒片段，7天内制作视频版本，30天内汇总为月度报告，90天后更新重发。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_cdp_data',JSON.stringify({contentFreq:num('contentFreq'),contentType:$('contentType').value,audienceSize:num('audienceSize')}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_cdp_data'));if(d){['contentType'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});['contentFreq','audienceSize'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CDP.init)}else{CDP.init()}
+</script>
+</body>
+</html>

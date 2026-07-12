@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="环保合规检查器：EPR/包装法/WEEE/电池指令+各国注册要求+申报流程，CSS合规矩阵可视化，跨境卖家环保合规工具。">
+<title>环保合规检查器 - EPR包装法WEEE电池指令 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.env-matrix{width:100%;border-collapse:collapse;font-size:12px}
+.env-matrix th{padding:10px 8px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:11px}
+.env-matrix th:first-child{text-align:left;padding-left:14px;min-width:120px}
+.env-matrix td{padding:8px;text-align:center;border-bottom:1px solid var(--rule-light)}
+.env-matrix td:first-child{text-align:left;padding-left:14px;font-weight:600;color:var(--ink-soft)}
+.req-badge{display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.req-mandatory{background:#fef2f2;color:#dc2626}
+.req-conditional{background:#fffbeb;color:#d97706}
+.req-optional{background:#ecfdf5;color:#059669}
+.req-na{background:#f1f5f9;color:#94a3b8}
+.reg-item{padding:16px;border-radius:12px;border:1px solid var(--rule);margin-bottom:12px}
+.reg-item h4{font-size:15px;font-weight:700;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.reg-item p{font-size:13px;color:var(--muted);margin:0 0 8px;line-height:1.5}
+.reg-steps{font-size:12px;padding-left:16px;margin:0;color:var(--ink-soft)}
+.reg-steps li{margin-bottom:4px}
+.reg-deadline{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:700}
+.fee-table{width:100%;border-collapse:collapse;font-size:13px}
+.fee-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.fee-table th.num{text-align:right}
+.fee-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.fee-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.env-matrix{font-size:10px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+  <a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a><a href="restricted-keyword-scanner.html" class="workflow-step">违禁词扫描</a><a href="children-product-certification.html" class="workflow-step">儿童认证</a><a href="environmental-compliance-checker.html" class="workflow-step active">环保合规</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W41 合规深度</a><span class="sep">›</span><span class="current">环保合规检查器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🌱</span>环保合规检查器 Environmental Compliance Checker</h1>
+  <p>EPR生产者责任延伸/包装法/WEEE电子废弃物/电池指令合规检查，各国注册要求与申报流程指南，费用预估，CSS合规矩阵可视化各市场环保法规要求。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">适用法规</div><div class="mc-value" id="mRegs">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">必须注册</div><div class="mc-value" id="mMust">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">条件适用</div><div class="mc-value" id="mCond">0</div></div>
+    <div class="metric-card success"><div class="mc-label">年预估费用</div><div class="mc-value" id="mCost">$0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📦 产品与市场信息</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>产品类别</label><select id="productCat" onchange="ECC.calc()"><option value="general">普通商品</option><option value="electronic">电子产品</option><option value="battery">含电池产品</option><option value="packaging">包装材料</option><option value="textile">纺织品</option></select></div>
+      <div class="jx-field"><label>目标市场</label><select id="targetMarket" onchange="ECC.calc()"><option value="de">德国</option><option value="fr">法国</option><option value="uk">英国</option><option value="us">美国</option><option value="eu">欧盟全境</option></select></div>
+      <div class="jx-field"><label>年销售量 <span class="hint">（件）</span></label><input type="number" id="annualVol" value="10000" step="500" oninput="ECC.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>包装重量 <span class="hint">（克/件）</span></label><input type="number" id="pkgWeight" value="200" oninput="ECC.calc()"></div>
+      <div class="jx-field"><label>含电子元件</label><select id="hasElectronic" onchange="ECC.calc()"><option value="no">否</option><option value="yes">是</option></select></div>
+      <div class="jx-field"><label>含电池</label><select id="hasBattery" onchange="ECC.calc()"><option value="no">不含</option><option value="builtin">内置电池</option><option value="separate">独立电池</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 环保法规合规矩阵</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">各法规在不同市场的适用性：必须/条件/可选/不适用</p>
+    <div style="overflow-x:auto"><table class="env-matrix" id="envMatrix"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 注册要求与申报流程</h2>
+    <div id="regList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💰 合规费用预估</h2>
+    <div style="overflow-x:auto"><table class="fee-table" id="feeTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 环保合规建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="packaging-compliance-checker.html" class="rt-card"><div class="rt-icon">📦</div><div><h5>包装合规</h5><p>包装法规</p></div></a>
+      <a href="import-regulation-lookup.html" class="rt-card"><div class="rt-icon">🚢</div><div><h5>进口法规</h5><p>进口合规</p></div></a>
+      <a href="product-compliance-matrix.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>合规矩阵</h5><p>多市场合规</p></div></a>
+      <a href="compliance-audit-scorecard.html" class="rt-card"><div class="rt-icon">📋</div><div><h5>审计评分</h5><p>合规审计</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="environmental-compliance-checker.html">环保合规</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var ECC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var REGS=[
+    {id:'epr',name:'EPR生产者责任延伸',icon:'♻️',color:'#10b981'},
+    {id:'packaging',name:'包装法(VerpackG)',icon:'📦',color:'#4f46e5'},
+    {id:'weee',name:'WEEE电子废弃物',icon:'🔌',color:'#f59e0b'},
+    {id:'battery',name:'电池指令(BattG)',icon:'🔋',color:'#ef4444'},
+    {id:'textile',name:'纺织品法',icon:'👕',color:'#8b5cf6'}
+  ];
+
+  //适用矩阵: [法规][市场] 2=必须 1=条件 0=可选 -1=不适用
+  var MATRIX={
+    de:{epr:2,packaging:2,weee:1,battery:1,textile:-1},
+    fr:{epr:2,packaging:2,weee:1,battery:1,textile:2},
+    uk:{epr:1,packaging:2,weee:1,battery:2,textile:-1},
+    us:{epr:0,packaging:0,weee:0,battery:0,textile:-1},
+    eu:{epr:2,packaging:2,weee:2,battery:2,textile:1}
+  };
+
+  var REG_DETAILS=[
+    {id:'epr',title:'EPR生产者责任延伸注册',icon:'♻️',color:'#10b981',desc:'生产者对产品全生命周期负责，包括回收、处理和处置',steps:['确定产品类别（包装/电子/电池等）','在目标国EPR系统注册获得EPR编号','与授权代表(PRO)签订服务协议','按季度/年度申报销售量和回收量','缴纳回收费（按重量计算）'],deadline:'上架前必须完成注册',deadlineColor:'#dc2626'},
+    {id:'packaging',title:'德国包装法(VerpackG)',icon:'📦',color:'#4f46e5',desc:'所有向德国终端消费者销售包装商品的生产者必须注册',steps:['在ZSVR中央包装登记处注册','获得LUCID注册号','选择双系统(Duales System)参与','在LUCID中申报包装类型和重量','在Amazon后台输入LUCID注册号'],deadline:'2022年7月1日起强制执行',deadlineColor:'#dc2626'},
+    {id:'weee',title:'WEEE电子废弃物指令',icon:'🔌',color:'#f59e0b',desc:'电子电气设备生产者必须注册并承担回收责任',steps:['确定产品WEEE类别（共6大类）','在目标国WEEE登记处注册','指定授权代表（非欧盟卖家）','建立回收体系或加入PRO','定期申报销售量和回收数据'],deadline:'电子产品上架前必须完成',deadlineColor:'#dc2626'},
+    {id:'battery',title:'电池指令(BattG)',icon:'🔋',color:'#ef4444',desc:'含电池产品生产者必须注册并承担电池回收责任',steps:['确认电池类型（内置/独立）','在目标国电池登记处注册','指定授权代表（非欧盟卖家）','设计电池回收标识和说明','申报电池销售量和回收量'],deadline:'含电池产品上架前必须完成',deadlineColor:'#dc2626'}
+  ];
+
+  function calc(){
+    var cat=$('productCat').value,mkt=$('targetMarket').value;
+    var vol=num('annualVol'),pkgW=num('pkgWeight');
+    var hasElec=$('hasElectronic').value,hasBat=$('hasBattery').value;
+
+    var matrix=MATRIX[mkt];
+    var applicableRegs=REGS.filter(function(r){
+      var v=matrix[r.id];
+      if(r.id==='weee'&&hasElec==='no')return false;
+      if(r.id==='battery'&&hasBat==='no')return false;
+      if(r.id==='textile'&&cat!=='textile')return false;
+      return v>=1;
+    });
+    var mustCount=applicableRegs.filter(function(r){return matrix[r.id]===2}).length;
+    var condCount=applicableRegs.filter(function(r){return matrix[r.id]===1}).length;
+
+    //费用预估
+    var totalCost=0;
+    if(matrix.epr>=1){totalCost+=200+vol*pkgW/1000000*500}
+    if(matrix.packaging>=1){totalCost+=150+vol*pkgW/1000000*300}
+    if(matrix.weee>=1&&hasElec==='yes'){totalCost+=300+vol*0.15}
+    if(matrix.battery>=1&&hasBat!=='no'){totalCost+=250+vol*0.20}
+
+    $('mRegs').textContent=applicableRegs.length;
+    $('mMust').textContent=mustCount;
+    $('mCond').textContent=condCount;
+    $('mCost').textContent='$'+Math.round(totalCost).toLocaleString();
+
+    renderMatrix(mkt,cat,hasElec,hasBat);
+    renderRegDetails(mkt,cat,hasElec,hasBat);
+    renderFees(vol,pkgW,hasElec,hasBat);
+    renderTips(mkt,cat,vol,pkgW,hasElec,hasBat,applicableRegs,totalCost);
+    save();
+  }
+
+  function renderMatrix(mkt,cat,hasElec,hasBat){
+    var markets=['de','fr','uk','us','eu'];
+    var marketLabels={de:'德国',fr:'法国',uk:'英国',us:'美国',eu:'欧盟'};
+    var h='<thead><tr><th>法规</th>';
+    markets.forEach(function(m){h+='<th>'+marketLabels[m]+'</th>'});
+    h+='</tr></thead><tbody>';
+    REGS.forEach(function(r){
+      //跳过不适用的
+      if(r.id==='weee'&&hasElec==='no')return;
+      if(r.id==='battery'&&hasBat==='no')return;
+      if(r.id==='textile'&&cat!=='textile')return;
+      h+='<tr><td><strong>'+r.icon+' '+r.name+'</strong></td>';
+      markets.forEach(function(m){
+        var v=MATRIX[m][r.id];
+        var badge,txt;
+        if(v===2){badge='req-mandatory';txt='必须'}
+        else if(v===1){badge='req-conditional';txt='条件'}
+        else if(v===0){badge='req-optional';txt='可选'}
+        else{badge='req-na';txt='—'}
+        h+='<td><span class="req-badge '+badge+'">'+txt+'</span></td>';
+      });
+      h+='</tr>';
+    });
+    h+='</tbody>';
+    $('envMatrix').innerHTML=h;
+  }
+
+  function renderRegDetails(mkt,cat,hasElec,hasBat){
+    var matrix=MATRIX[mkt];
+    var h='';
+    REG_DETAILS.forEach(function(r){
+      var v=matrix[r.id];
+      if(r.id==='weee'&&hasElec==='no')return;
+      if(r.id==='battery'&&hasBat==='no')return;
+      if(v<1)return;
+      h+='<div class="reg-item"><h4 style="color:'+r.color+'">'+r.icon+' '+r.title+'</h4><p>'+r.desc+'</p><ol class="reg-steps">';
+      r.steps.forEach(function(s){h+='<li>'+s+'</li>'});
+      h+='</ol><span class="reg-deadline" style="background:'+r.deadlineColor+'15;color:'+r.deadlineColor+'">⏰ '+r.deadline+'</span></div>';
+    });
+    $('regList').innerHTML=h;
+  }
+
+  function renderFees(vol,pkgW,hasElec,hasBat){
+    var fees=[];
+    fees.push({item:'EPR注册费',oneTime:'$200',annual:'$0',note:'一次性注册'});
+    fees.push({item:'EPR回收费',oneTime:'-',annual:'$'+Math.round(vol*pkgW/1000000*500).toLocaleString(),note:'按包装重量计'});
+    fees.push({item:'包装法LUCID注册',oneTime:'$0',annual:'$0',note:'免费注册'});
+    fees.push({item:'双系统参与费',oneTime:'-',annual:'$'+Math.round(vol*pkgW/1000000*300).toLocaleString(),note:'按包装重量计'});
+    if(hasElec==='yes'){
+      fees.push({item:'WEEE注册费',oneTime:'$300',annual:'$0',note:'一次性'});
+      fees.push({item:'WEEE回收费',oneTime:'-',annual:'$'+Math.round(vol*0.15).toLocaleString(),note:'按销售量计'});
+    }
+    if(hasBat!=='no'){
+      fees.push({item:'电池法注册费',oneTime:'$250',annual:'$0',note:'一次性'});
+      fees.push({item:'电池回收费',oneTime:'-',annual:'$'+Math.round(vol*0.20).toLocaleString(),note:'按销售量计'});
+    }
+    var totalOne=fees.reduce(function(a,f){return a+(f.oneTime==='-'?0:parseInt(f.oneTime.replace(/[^\d]/g,''))||0)},0);
+    var totalAnn=fees.reduce(function(a,f){return a+(f.annual==='-'?0:parseInt(f.annual.replace(/[^\d]/g,''))||0)},0);
+
+    var h='<thead><tr><th>费用项目</th><th class="num">一次性</th><th class="num">年度</th><th>说明</th></tr></thead><tbody>';
+    fees.forEach(function(f){
+      h+='<tr><td>'+f.item+'</td><td class="num">'+f.oneTime+'</td><td class="num">'+f.annual+'</td><td style="font-size:12px;color:var(--muted)">'+f.note+'</td></tr>';
+    });
+    h+='<tr style="background:#eef2ff;font-weight:800"><td>合计</td><td class="num" style="color:#4f46e5">$'+totalOne.toLocaleString()+'</td><td class="num" style="color:#4f46e5">$'+totalAnn.toLocaleString()+'/年</td><td></td></tr>';
+    h+='</tbody>';
+    $('feeTable').innerHTML=h;
+  }
+
+  function renderTips(mkt,cat,vol,pkgW,hasElec,hasBat,regs,cost){
+    var marketLabel={de:'德国',fr:'法国',uk:'英国',us:'美国',eu:'欧盟全境'}[mkt];
+    var tips=[];
+    tips.push('产品类别「'+cat+'」，目标市场「'+marketLabel+'」，年销量 '+vol.toLocaleString()+' 件，包装重量 '+pkgW+'g/件，适用 '+regs.length+' 项环保法规，年预估合规费用 $'+Math.round(cost).toLocaleString()+'。');
+    if(mkt==='de'||mkt==='eu')tips.push('德国包装法(VerpackG)是最严格的：必须在LUCID注册+加入双系统，Amazon已强制要求提供LUCID注册号，否则Listing将被下架。');
+    if(mkt==='fr'||mkt==='eu')tips.push('法国EPR要求最全面：涵盖包装/电子/电池/纺织品/家具等多个品类，需通过PRO（如CITEO）注册并定期申报。');
+    if(hasElec==='yes')tips.push('含电子元件产品需WEEE注册：在目标国WEEE登记处注册，指定授权代表（非欧盟卖家必须），按类别申报销售量。');
+    if(hasBat!=='no')tips.push('含电池产品需电池法注册：内置电池和独立电池要求不同，需设计电池回收标识，申报电池类型和销售量。');
+    tips.push('EPR注册编号必须在Amazon后台填写：Seller Central → Settings → Account Info → EPR Registration，未填写将导致Listing被限制。');
+    tips.push('申报频率：德国包装法按年申报（数据可在年中更新），法国EPR按季度申报，WEEE和电池法通常按年申报。');
+    tips.push('授权代表：非欧盟卖家必须指定欧盟境内的授权代表（AR），负责EPR/WEEE/电池法的注册和申报，年费约$200-500/法规。');
+    tips.push('减费策略：优化包装设计减少重量和体积，使用可回收材料，加入PRO获得批量回收费优惠，小体积卖家可适用简易申报。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_ecc_data',JSON.stringify({productCat:$('productCat').value,targetMarket:$('targetMarket').value,annualVol:num('annualVol'),pkgWeight:num('pkgWeight'),hasElectronic:$('hasElectronic').value,hasBattery:$('hasBattery').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_ecc_data'));if(d){['productCat','targetMarket','hasElectronic','hasBattery'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});['annualVol','pkgWeight'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ECC.init)}else{ECC.init()}
+</script>
+</body>
+</html>

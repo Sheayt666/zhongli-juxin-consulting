@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="批量操作中心：批量调价/调预算/暂停/启用+Excel导入导出，CSS批量操作界面，变更日志。免费广告自动化工具。">
+<meta name="keywords" content="批量操作,批量调价,批量调预算,Excel导入导出,变更日志,广告管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/bulk-operation-center.html">
+<title>批量操作中心 - 批量调价·调预算·变更日志 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.bulk-toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.bulk-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+.bulk-btn:hover{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.bulk-btn.primary{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none}
+.bulk-btn.danger{border-color:#ef4444;color:#ef4444}
+.bulk-btn.danger:hover{background:#ef4444;color:#fff}
+.bulk-btn.success{border-color:#10b981;color:#10b981}
+.bulk-btn.success:hover{background:#10b981;color:#fff}
+.campaign-table{width:100%;border-collapse:collapse;font-size:13px}
+.campaign-table th{background:#4f46e5;color:#fff;padding:10px;text-align:left;font-weight:600;position:sticky;top:0}
+.campaign-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.campaign-table tr:hover td{background:var(--bg-soft)}
+.campaign-table input[type=checkbox]{width:16px;height:16px;accent-color:#4f46e5}
+.campaign-table input[type=number]{width:70px;padding:4px 6px;border:1px solid var(--rule);border-radius:4px;font-size:12px}
+.campaign-status{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.cs-active{background:#d1fae5;color:#059669}
+.cs-paused{background:#fef3c7;color:#d97706}
+.change-log{max-height:300px;overflow-y:auto;margin-top:12px}
+.log-entry{display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid var(--rule-light);font-size:12px}
+.log-time{color:var(--muted);white-space:nowrap;min-width:120px}
+.log-action{flex:1}
+.log-action strong{color:#4f46e5}
+.log-type{padding:1px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.lt-price{background:#dbeafe;color:#2563eb}
+.lt-budget{background:#fef3c7;color:#d97706}
+.lt-status{background:#d1fae5;color:#059669}
+.lt-delete{background:#fee2e2;color:#dc2626}
+.bulk-input-row{display:flex;gap:8px;align-items:center;padding:12px;background:var(--bg-soft);border-radius:10px;margin-bottom:12px;flex-wrap:wrap}
+.bulk-input-row label{font-size:13px;font-weight:600;color:var(--ink-soft);white-space:nowrap}
+.bulk-input-row input,.bulk-input-row select{padding:6px 10px;border:1px solid var(--rule);border-radius:6px;font-size:13px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"批量操作中心","description":"批量调价/调预算/暂停/启用+Excel导入导出，变更日志。","url":"https://juxin-consulting.help/tools/bulk-operation-center.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="bulk_operation_center">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🤖</span><span class="workflow-name">广告自动化工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="auto-bidding-rules.html" class="step">自动出价</a><span class="arrow">→</span>
+      <a href="auto-budget-adjuster.html" class="step">预算调整</a><span class="arrow">→</span>
+      <a href="ad-placement-optimizer.html" class="step">广告位优化</a><span class="arrow">→</span>
+      <a href="auto-keyword-expansion.html" class="step">关键词扩展</a><span class="arrow">→</span>
+      <a href="auto-negative-keywords.html" class="step">否定关键词</a><span class="arrow">→</span>
+      <a href="ad-schedule-optimizer.html" class="step">排期优化</a><span class="arrow">→</span>
+      <a href="sp-campaign-builder.html" class="step">SP搭建</a><span class="arrow">→</span>
+      <a href="sb-ad-planner.html" class="step">SB规划</a><span class="arrow">→</span>
+      <a href="sd-audience-targeter.html" class="step">SD受众</a><span class="arrow">→</span>
+      <a href="ad-25-metrics.html" class="step">25项指标</a><span class="arrow">→</span>
+      <a href="dayparting-automation.html" class="step">分时段自动化</a><span class="arrow">→</span>
+      <a href="campaign-performance-alert.html" class="step">效果预警</a><span class="arrow">→</span>
+      <span class="step current">批量操作</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🤖 广告自动化工具 · 标准版</span>
+      <h1>批量操作<em>中心</em></h1>
+      <p class="tool-hero-desc">批量调整广告出价、预算、状态（暂停/启用），支持Excel导入导出，变更日志全程记录，localStorage持久化(jx_bulk_campaigns)。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="bulk-toolbar">
+          <button class="bulk-btn primary" onclick="BOC.selectAll()">全选</button>
+          <button class="bulk-btn" onclick="BOC.deselectAll()">取消全选</button>
+          <button class="bulk-btn success" onclick="BOC.bulkStatus('active')">批量启用</button>
+          <button class="bulk-btn danger" onclick="BOC.bulkStatus('paused')">批量暂停</button>
+          <button class="bulk-btn" onclick="BOC.exportCSV()">导出CSV</button>
+        </div>
+
+        <div class="bulk-input-row">
+          <label>批量调价：</label>
+          <select id="bidMode"><option value="set">设置为</option><option value="increase">增加%</option><option value="decrease">减少%</option></select>
+          <input type="number" id="bidValue" value="0.80" step="0.05" style="width:80px">
+          <button class="bulk-btn primary" onclick="BOC.bulkBid()">应用</button>
+          <label style="margin-left:16px">批量调预算：</label>
+          <select id="budgetMode"><option value="set">设置为</option><option value="increase">增加%</option><option value="decrease">减少%</option></select>
+          <input type="number" id="budgetValue" value="50" style="width:80px">
+          <button class="bulk-btn primary" onclick="BOC.bulkBudget()">应用</button>
+        </div>
+
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <table class="campaign-table" id="campaignTable"></table>
+      </div>
+
+      <div class="section-block" id="logSection">
+        <h3>📋 变更日志</h3>
+        <div class="change-log" id="changeLog"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="campaign-performance-alert.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 效果预警</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="bulk-operation-center.html">批量操作</a></li><li><a href="dayparting-automation.html">分时段自动化</a></li><li><a href="campaign-performance-alert.html">效果预警</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var BOC=(function(){
+  'use strict';
+  var KEY='jx_bulk_campaigns';
+  var LOG_KEY='jx_bulk_changelog';
+  var campaigns=[];
+  var changelog=[];
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function load(){
+    try{var s=localStorage.getItem(KEY);if(s)campaigns=JSON.parse(s)||[];}catch(e){campaigns=[];}
+    try{var l=localStorage.getItem(LOG_KEY);if(l)changelog=JSON.parse(l)||[];}catch(e){changelog=[];}
+    if(!campaigns.length){
+      campaigns=[
+        {id:1,name:'SP-蓝牙耳机-精准',bid:0.85,budget:50,status:'active',acos:22,spend:35},
+        {id:2,name:'SP-蓝牙耳机-广泛',bid:0.45,budget:30,status:'active',acos:35,spend:18},
+        {id:3,name:'SP-充电宝-精准',bid:0.60,budget:40,status:'active',acos:18,spend:28},
+        {id:4,name:'SP-充电宝-词组',bid:0.50,budget:25,status:'paused',acos:45,spend:15},
+        {id:5,name:'SB-品牌词',bid:1.20,budget:20,status:'active',acos:12,spend:12},
+        {id:6,name:'SD-再营销',bid:0.90,budget:35,status:'active',acos:28,spend:22},
+        {id:7,name:'SP-手机壳-广泛',bid:0.30,budget:20,status:'paused',acos:55,spend:8},
+        {id:8,name:'SP-数据线-精准',bid:0.70,budget:45,status:'active',acos:20,spend:30}
+      ];
+      save();
+    }
+    if(!changelog.length){
+      changelog=[
+        {time:'2026-07-12 10:30',type:'price',action:'SP-蓝牙耳机-精准 出价从 $0.75 调整为 $0.85'},
+        {time:'2026-07-12 09:15',type:'budget',action:'SP-充电宝-精准 预算从 $30 调整为 $40'},
+        {time:'2026-07-11 18:00',type:'status',action:'SP-手机壳-广泛 状态变更为 暂停'},
+        {time:'2026-07-11 14:20',type:'price',action:'SB-品牌词 出价从 $1.00 调整为 $1.20'}
+      ];
+      saveLog();
+    }
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(campaigns));}catch(e){}}
+  function saveLog(){try{localStorage.setItem(LOG_KEY,JSON.stringify(changelog));}catch(e){}}
+  function now(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+  function getSelected(){return campaigns.filter(function(c){var cb=document.getElementById('cb_'+c.id);return cb&&cb.checked;});}
+  function render(){
+    var active=campaigns.filter(function(c){return c.status==='active';}).length;
+    var paused=campaigns.length-active;
+    var totalBudget=campaigns.reduce(function(s,c){return s+c.budget;},0);
+    var totalSpend=campaigns.reduce(function(s,c){return s+c.spend;},0);
+    var avgAcos=campaigns.length?(campaigns.reduce(function(s,c){return s+c.acos;},0)/campaigns.length):0;
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+campaigns.length+'</div><div class="rsb-lbl">广告活动数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+active+'</div><div class="rsb-lbl">投放中</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+paused+'</div><div class="rsb-lbl">已暂停</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">$'+totalBudget+'</div><div class="rsb-lbl">总预算</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+ (avgAcos>30?'#ef4444':'#10b981')+'">'+avgAcos.toFixed(0)+'%</div><div class="rsb-lbl">平均ACOS</div></div>';
+    $('campaignTable').innerHTML=
+      '<tr><th><input type="checkbox" onchange="BOC.toggleAll(this.checked)"></th><th>广告活动</th><th>出价($)</th><th>日预算($)</th><th>状态</th><th>ACOS</th><th>今日花费</th></tr>'+
+      campaigns.map(function(c){
+        return '<tr><td><input type="checkbox" id="cb_'+c.id+'"></td><td><strong>'+c.name+'</strong></td>'+
+          '<td>$'+c.bid.toFixed(2)+'</td><td>$'+c.budget+'</td>'+
+          '<td><span class="campaign-status cs-'+c.status+'">'+(c.status==='active'?'投放中':'已暂停')+'</span></td>'+
+          '<td style="color:'+(c.acos>30?'#ef4444':'#10b981')+'">'+c.acos+'%</td>'+
+          '<td>$'+c.spend+'</td></tr>';
+      }).join('');
+    $('changeLog').innerHTML=changelog.slice().reverse().map(function(l){
+      var typeLabel={price:'出价',budget:'预算',status:'状态',delete:'删除'}[l.type]||l.type;
+      return '<div class="log-entry"><span class="log-time">'+l.time+'</span><span class="log-type lt-'+l.type+'">'+typeLabel+'</span><span class="log-action">'+l.action+'</span></div>';
+    }).join('');
+  }
+  function selectAll(){campaigns.forEach(function(c){var cb=document.getElementById('cb_'+c.id);if(cb)cb.checked=true;});}
+  function deselectAll(){campaigns.forEach(function(c){var cb=document.getElementById('cb_'+c.id);if(cb)cb.checked=false;});}
+  function toggleAll(checked){campaigns.forEach(function(c){var cb=document.getElementById('cb_'+c.id);if(cb)cb.checked=checked;});}
+  function bulkStatus(status){
+    var selected=getSelected();if(!selected.length){alert('请先选择广告活动');return;}
+    var statusLabel=status==='active'?'启用':'暂停';
+    selected.forEach(function(c){
+      var oldStatus=c.status;c.status=status;
+      changelog.push({time:now(),type:'status',action:c.name+' 状态从 '+ (oldStatus==='active'?'投放中':'已暂停') +' 变更为 '+statusLabel});
+    });
+    save();saveLog();render();
+  }
+  function bulkBid(){
+    var selected=getSelected();if(!selected.length){alert('请先选择广告活动');return;}
+    var mode=$('bidMode').value,val=v('bidValue');
+    selected.forEach(function(c){
+      var oldBid=c.bid;
+      if(mode==='set')c.bid=val;
+      else if(mode==='increase')c.bid=oldBid*(1+val/100);
+      else c.bid=oldBid*(1-val/100);
+      c.bid=Math.round(c.bid*100)/100;
+      changelog.push({time:now(),type:'price',action:c.name+' 出价从 $'+oldBid.toFixed(2)+' 调整为 $'+c.bid.toFixed(2)});
+    });
+    save();saveLog();render();
+  }
+  function bulkBudget(){
+    var selected=getSelected();if(!selected.length){alert('请先选择广告活动');return;}
+    var mode=$('budgetMode').value,val=v('budgetValue');
+    selected.forEach(function(c){
+      var oldBudget=c.budget;
+      if(mode==='set')c.budget=val;
+      else if(mode==='increase')c.budget=Math.round(oldBudget*(1+val/100));
+      else c.budget=Math.round(oldBudget*(1-val/100));
+      changelog.push({time:now(),type:'budget',action:c.name+' 预算从 $'+oldBudget+' 调整为 $'+c.budget});
+    });
+    save();saveLog();render();
+  }
+  function exportCSV(){
+    var csv='广告活动,出价,日预算,状态,ACOS,今日花费\n';
+    campaigns.forEach(function(c){
+      csv+=c.name+','+c.bid.toFixed(2)+','+c.budget+','+c.status+','+c.acos+'%,$'+c.spend+'\n';
+    });
+    var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='campaigns_export.csv';a.click();
+    changelog.push({time:now(),type:'status',action:'导出 '+campaigns.length+' 个广告活动为CSV'});
+    saveLog();render();
+  }
+  load();
+  return{selectAll:selectAll,deselectAll:deselectAll,toggleAll:toggleAll,bulkStatus:bulkStatus,bulkBid:bulkBid,bulkBudget:bulkBudget,exportCSV:exportCSV,render:render};
+})();
+BOC.render();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

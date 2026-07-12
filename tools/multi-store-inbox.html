@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="多店铺统一收件箱（深度版）：跨账号站内信聚合，统一回复，标签管理，SLA追踪，CSS收件箱界面，localStorage持久化。免费客服管理工具。">
+<meta name="keywords" content="多店铺收件箱,站内信聚合,统一回复,标签管理,SLA追踪,客服管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/multi-store-inbox.html">
+<title>多店铺统一收件箱 - 跨账号聚合·统一回复·SLA追踪·深度版 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.inbox-layout{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-top:16px}
+.message-list{max-height:500px;overflow-y:auto;border:1px solid var(--rule);border-radius:12px}
+.message-item{padding:14px;border-bottom:1px solid var(--rule-light);cursor:pointer;transition:all .2s;display:flex;gap:10px}
+.message-item:hover{background:var(--bg-soft)}
+.message-item.selected{background:#e0e7ff;border-left:3px solid #4f46e5}
+.message-item.unread{font-weight:600}
+.mi-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.mi-content{flex:1;min-width:0}
+.mi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.mi-sender{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-time{font-size:11px;color:var(--muted);white-space:nowrap}
+.mi-subject{font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-store{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-top:2px}
+.store-us{background:#dbeafe;color:#2563eb}
+.store-uk{background:#d1fae5;color:#059669}
+.store-jp{background:#fef3c7;color:#d97706}
+.store-de{background:#fce7f3;color:#be185d}
+.mi-priority{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px}
+.p-high{background:#ef4444}
+.p-medium{background:#f59e0b}
+.p-low{background:#10b981}
+.message-detail{border:1px solid var(--rule);border-radius:12px;padding:20px;max-height:500px;overflow-y:auto}
+.md-header{border-bottom:1px solid var(--rule-light);padding-bottom:12px;margin-bottom:12px}
+.md-subject{font-size:16px;font-weight:700;margin-bottom:4px}
+.md-meta{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.md-body{font-size:14px;line-height:1.8;color:var(--ink-soft);margin-bottom:16px;padding:12px;background:var(--bg-soft);border-radius:8px}
+.md-reply{margin-top:16px}
+.md-reply textarea{width:100%;padding:12px;border:1px solid var(--rule);border-radius:8px;font-size:13px;min-height:80px;resize:vertical}
+.reply-btn{padding:10px 20px;border-radius:8px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+.tag-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px}
+.tag-refund{background:#fee2e2;color:#dc2626}
+.tag-product{background:#dbeafe;color:#2563eb}
+.tag-shipping{background:#fef3c7;color:#d97706}
+.tag-review{background:#d1fae5;color:#059669}
+.sla-indicator{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.sla-ok{background:#d1fae5;color:#059669}
+.sla-warning{background:#fef3c7;color:#d97706}
+.sla-overdue{background:#fee2e2;color:#dc2626}
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+.filter-btn.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+@media(max-width:768px){.inbox-layout{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"多店铺统一收件箱","description":"跨账号站内信聚合，统一回复，标签管理，SLA追踪。","url":"https://juxin-consulting.help/tools/multi-store-inbox.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="multi_store_inbox">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="back-to-top">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎧</span><span class="workflow-name">客服管理工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="email-template-generator.html" class="step">邮件模板</a><span class="arrow">→</span>
+      <a href="review-statistics.html" class="step">评价统计</a><span class="arrow">→</span>
+      <a href="rma-tracker.html" class="step">退货追踪</a><span class="arrow">→</span>
+      <a href="customer-ticket-manager.html" class="step">工单管理</a><span class="arrow">→</span>
+      <a href="refund-report-generator.html" class="step">退款报告</a><span class="arrow">→</span>
+      <a href="voc-analysis.html" class="step">VOC分析</a><span class="arrow">→</span>
+      <a href="cs-sla-calc.html" class="step">SLA计算</a><span class="arrow">→</span>
+      <a href="faq-generator.html" class="step">FAQ生成</a><span class="arrow">→</span>
+      <a href="negative-review-recovery.html" class="step">差评挽回</a><span class="arrow">→</span>
+      <a href="cs-kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span>
+      <span class="step current">多店铺收件箱</span><span class="arrow">→</span>
+      <a href="auto-response-router.html" class="step">自动路由</a><span class="arrow">→</span>
+      <a href="customer-satisfaction-survey.html" class="step">满意度调查</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎧 客服管理工具 · 深度版</span>
+      <h1>多店铺<em>统一收件箱</em></h1>
+      <p class="tool-hero-desc">跨账号站内信聚合管理，统一回复界面，标签分类与优先级排序，SLA倒计时追踪，localStorage持久化(jx_inbox_messages)。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <div class="filter-bar">
+          <div class="filter-btn active" onclick="MSI.filter('all',this)">全部</div>
+          <div class="filter-btn" onclick="MSI.filter('unread',this)">未读</div>
+          <div class="filter-btn" onclick="MSI.filter('refund',this)">退款</div>
+          <div class="filter-btn" onclick="MSI.filter('product',this)">产品</div>
+          <div class="filter-btn" onclick="MSI.filter('shipping',this)">物流</div>
+          <div class="filter-btn" onclick="MSI.filter('review',this)">评价</div>
+          <div class="filter-btn" onclick="MSI.filter('overdue',this)" style="color:#ef4444;border-color:#fca5a5">SLA超时</div>
+        </div>
+        <div class="inbox-layout">
+          <div class="message-list" id="messageList"></div>
+          <div class="message-detail" id="messageDetail">
+            <p style="text-align:center;color:var(--muted);padding:40px">选择左侧消息查看详情</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="cs-kpi-dashboard.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← KPI看板</span></a>
+        <a href="auto-response-router.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">自动路由 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="multi-store-inbox.html">多店铺收件箱</a></li><li><a href="auto-response-router.html">自动路由</a></li><li><a href="customer-satisfaction-survey.html">满意度调查</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var MSI=(function(){
+  'use strict';
+  var KEY='jx_inbox_messages';
+  var messages=[];
+  var currentFilter='all';
+  var selectedId=null;
+  function $(id){return document.getElementById(id);}
+  function load(){
+    try{var s=localStorage.getItem(KEY);if(s)messages=JSON.parse(s)||[];}catch(e){messages=[];}
+    if(!messages.length){
+      messages=[
+        {id:1,sender:'John Smith',store:'us',subject:'退款请求 - 订单#12345',body:'你好，我收到的产品有损坏，希望申请退款。产品包装在运输过程中被压坏了。',time:'2小时前',read:false,priority:'high',tag:'refund',sla:4,slaTotal:24},
+        {id:2,sender:'田中太郎',store:'jp',subject:'商品尺寸咨询',body:'请问这款产品的尺寸是多少？页面上没有详细标注。我想确认是否适合我的使用场景。',time:'3小时前',read:false,priority:'medium',tag:'product',sla:8,slaTotal:24},
+        {id:3,sender:'Emma Wilson',store:'uk',subject:'物流追踪 - 未收到货',body:'我的订单已经过了预计送达日期5天了，但物流信息显示还在转运中。请问能帮忙查一下吗？',time:'5小时前',read:true,priority:'high',tag:'shipping',sla:20,slaTotal:24},
+        {id:4,sender:'Hans Mueller',store:'de',subject:'产品使用问题',body:'我按照说明书操作但产品无法正常启动，请问是否有详细的使用视频教程？',time:'8小时前',read:false,priority:'medium',tag:'product',sla:12,slaTotal:24},
+        {id:5,sender:'Sarah Chen',store:'us',subject:'评价 - 5星好评',body:'非常满意！产品质量很好，物流也很快。已经推荐给朋友了。',time:'1天前',read:true,priority:'low',tag:'review',sla:30,slaTotal:24},
+        {id:6,sender:'James Brown',store:'uk',subject:'换货请求 - 尺码不对',body:'我收到的产品尺码不对，想要换一件M码的。请问换货流程是怎样的？',time:'1天前',read:false,priority:'high',tag:'refund',sla:26,slaTotal:24},
+        {id:7,sender:'山田花子',store:'jp',subject:'优惠券使用问题',body:'我有一张优惠券但结算时无法使用，请问是什么原因？优惠券还没有过期。',time:'2天前',read:true,priority:'low',tag:'product',sla:48,slaTotal:24},
+        {id:8,sender:'Lisa Anderson',store:'us',subject:'差评 - 产品质量差',body:'产品用了一周就坏了，非常失望。希望你们能给我一个合理的解决方案。',time:'2天前',read:false,priority:'high',tag:'review',sla:52,slaTotal:24}
+      ];
+      save();
+    }
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(messages));}catch(e){}}
+  function storeLabel(s){return{us:'US',uk:'UK',jp:'JP',de:'DE'}[s]||s;}
+  function tagLabel(t){return{refund:'退款',product:'产品',shipping:'物流',review:'评价'}[t]||t;}
+  function slaStatus(msg){
+    var pct=msg.sla/msg.slaTotal*100;
+    if(pct>100)return{cls:'sla-overdue',label:'超时',icon:'🔴'};
+    if(pct>80)return{cls:'sla-warning',label:'紧急',icon:'🟡'};
+    return{cls:'sla-ok',label:'正常',icon:'🟢'};
+  }
+  function getFiltered(){
+    if(currentFilter==='all')return messages;
+    if(currentFilter==='unread')return messages.filter(function(m){return !m.read;});
+    if(currentFilter==='overdue')return messages.filter(function(m){return m.sla>m.slaTotal;});
+    return messages.filter(function(m){return m.tag===currentFilter;});
+  }
+  function render(){
+    var unread=messages.filter(function(m){return !m.read;}).length;
+    var overdue=messages.filter(function(m){return m.sla>m.slaTotal;}).length;
+    var highPriority=messages.filter(function(m){return m.priority==='high';}).length;
+    var stores={};
+    messages.forEach(function(m){stores[m.store]=(stores[m.store]||0)+1;});
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+messages.length+'</div><div class="rsb-lbl">总消息</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+unread+'</div><div class="rsb-lbl">未读</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+highPriority+'</div><div class="rsb-lbl">高优先级</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+overdue+'</div><div class="rsb-lbl">SLA超时</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+Object.keys(stores).length+'</div><div class="rsb-lbl">店铺数</div></div>';
+    var filtered=getFiltered();
+    $('messageList').innerHTML=filtered.length?filtered.map(function(m){
+      var sla=slaStatus(m);
+      var initials=m.sender.split(' ').map(function(w){return w.charAt(0);}).join('').substring(0,2).toUpperCase();
+      return '<div class="message-item'+(m.read?'':' unread')+(m.id===selectedId?' selected':'')+'" onclick="MSI.select('+m.id+')">'+
+        '<div class="mi-avatar">'+initials+'</div>'+
+        '<div class="mi-content">'+
+          '<div class="mi-header"><span class="mi-sender">'+m.sender+'<span class="mi-priority p-'+m.priority+'"></span></span><span class="mi-time">'+m.time+'</span></div>'+
+          '<div class="mi-subject">'+m.subject+'</div>'+
+          '<span class="mi-store store-'+m.store+'">'+storeLabel(m.store)+'</span> '+
+          '<span class="tag-badge tag-'+m.tag+'">'+tagLabel(m.tag)+'</span> '+
+          '<span class="sla-indicator '+sla.cls+'">'+sla.icon+' '+sla.label+'</span>'+
+        '</div>'+
+      '</div>';
+    }).join(''):'<p style="text-align:center;color:var(--muted);padding:40px">无匹配消息</p>';
+    if(selectedId){
+      var msg=messages.filter(function(m){return m.id===selectedId;})[0];
+      if(msg){
+        var sla=slaStatus(msg);
+        $('messageDetail').innerHTML=
+          '<div class="md-header"><div class="md-subject">'+msg.subject+'</div><div class="md-meta">'+
+          '<span>发件人：'+msg.sender+'</span><span>店铺：<span class="mi-store store-'+msg.store+'">'+storeLabel(msg.store)+'</span></span>'+
+          '<span>时间：'+msg.time+'</span><span class="tag-badge tag-'+msg.tag+'">'+tagLabel(msg.tag)+'</span>'+
+          '<span class="sla-indicator '+sla.cls+'">SLA: '+msg.sla+'/'+msg.slaTotal+'h '+sla.label+'</span></div></div>'+
+          '<div class="md-body">'+msg.body+'</div>'+
+          '<div class="md-reply"><textarea id="replyText" placeholder="输入回复内容..."></textarea><button class="reply-btn" onclick="MSI.reply()">发送回复</button></div>';
+      }
+    }
+  }
+  function select(id){
+    selectedId=id;
+    var msg=messages.filter(function(m){return m.id===id;})[0];
+    if(msg&&!msg.read){msg.read=true;save();}
+    render();
+  }
+  function reply(){
+    var text=$('replyText').value;
+    if(!text){alert('请输入回复内容');return;}
+    var msg=messages.filter(function(m){return m.id===selectedId;})[0];
+    if(msg){
+      msg.replied=true;
+      msg.sla=0;
+      save();
+      alert('回复已发送给 '+msg.sender);
+      $('replyText').value='';
+      render();
+    }
+  }
+  function filter(f,btn){
+    currentFilter=f;
+    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    render();
+  }
+  load();
+  return{select:select,reply:reply,filter:filter,render:render};
+})();
+MSI.render();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

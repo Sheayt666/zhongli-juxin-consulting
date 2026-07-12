@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="搜索漏斗分析器：搜索词到点击到加购到购买全路径分析，CSS全路径漏斗图，流失点定位与优化建议。免费跨境卖家流量全链路工具。">
+<meta name="keywords" content="搜索漏斗,转化漏斗,搜索词分析,点击转化,加购转化,购买转化,流失点分析,搜索路径">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/search-funnel-analyzer.html">
+<title>搜索漏斗分析器 - 全路径漏斗·流失点定位·优化建议 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-val.danger{color:#ef4444}
+.rsb-card .rsb-val.warn{color:#f59e0b}
+.rsb-card .rsb-val.ok{color:#10b981}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.funnel-container{margin-top:20px}
+.funnel-stage{display:flex;flex-direction:column;align-items:center;margin-bottom:0;position:relative}
+.funnel-bar{width:100%;border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:18px 24px;color:#fff;font-weight:700;font-size:15px;transition:all .5s;position:relative;overflow:hidden}
+.funnel-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:4px;background:rgba(255,255,255,.2)}
+.funnel-bar .fb-label{display:flex;align-items:center;gap:8px}
+.funnel-bar .fb-icon{font-size:20px}
+.funnel-bar .fb-val{font-size:18px}
+.funnel-bar .fb-rate{font-size:13px;opacity:.85;font-weight:500}
+.funnel-stage-1 .funnel-bar{background:linear-gradient(135deg,#4f46e5,#6366f1);width:100%}
+.funnel-stage-2 .funnel-bar{background:linear-gradient(135deg,#6366f1,#818cf8);width:72%;margin:0 auto}
+.funnel-stage-3 .funnel-bar{background:linear-gradient(135deg,#818cf8,#a5b4fc);width:48%;margin:0 auto}
+.funnel-stage-4 .funnel-bar{background:linear-gradient(135deg,#a5b4fc,#c7d2fe);width:28%;margin:0 auto;color:#3730a3}
+.funnel-stage-5 .funnel-bar{background:linear-gradient(135deg,#10b981,#34d399);width:18%;margin:0 auto}
+.funnel-arrow{width:2px;height:24px;background:linear-gradient(180deg,#c7d2fe,#e0e7ff);margin:0 auto;position:relative}
+.funnel-arrow::after{content:'▼';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);color:#c7d2fe;font-size:12px}
+.funnel-dropoff{display:flex;align-items:center;gap:8px;padding:8px 16px;margin:4px auto;font-size:12px;color:var(--muted);background:var(--bg-soft);border-radius:8px;width:fit-content}
+.funnel-dropoff .fd-icon{font-size:14px}
+.funnel-dropoff .fd-val{font-weight:700;color:#ef4444}
+.dropoff-analysis{margin-top:24px}
+.dropoff-card{padding:16px;border-radius:12px;margin-bottom:12px;border-left:4px solid;transition:all .2s}
+.dropoff-card:hover{transform:translateX(4px)}
+.dropoff-card.critical{background:#fef2f2;border-color:#ef4444}
+.dropoff-card.warning{background:#fffbeb;border-color:#f59e0b}
+.dropoff-card.normal{background:#f0fdf4;border-color:#10b981}
+.dropoff-card .dc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700;font-size:14px}
+.dropoff-card .dc-body{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.dropoff-card .dc-suggestion{margin-top:8px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:8px;font-size:12px}
+.dropoff-card .dc-suggestion strong{color:var(--ink)}
+.keyword-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.keyword-table th{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:10px;text-align:left;font-weight:600;white-space:nowrap}
+.keyword-table th:first-child{border-radius:10px 0 0 0}
+.keyword-table th:last-child{border-radius:0 10px 0 0}
+.keyword-table td{padding:8px 10px;border-bottom:1px solid var(--rule-light)}
+.keyword-table tr:hover td{background:var(--bg-soft)}
+.keyword-table .kw-name{font-weight:600;color:var(--ink)}
+.keyword-table .cr-good{color:#10b981;font-weight:700}
+.keyword-table .cr-warn{color:#f59e0b;font-weight:700}
+.keyword-table .cr-bad{color:#ef4444;font-weight:700}
+.benchmark-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.benchmark-bar .bm-label{width:120px;font-size:12px;font-weight:600;text-align:right;flex-shrink:0}
+.benchmark-bar .bm-track{flex:1;height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden}
+.benchmark-bar .bm-fill{height:100%;border-radius:4px;transition:width .5s}
+.benchmark-bar .bm-val{width:60px;font-size:12px;font-weight:600;flex-shrink:0}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px}
+.related-tools a{display:block;padding:14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:600;transition:all .2s}
+.related-tools a:hover{border-color:#4f46e5;color:#4f46e5;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.related-tools a .rt-icon{margin-right:6px}
+.calc-field label{font-size:13px;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:6px}
+.calc-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px}
+.hidden{display:none!important}
+@media(max-width:768px){
+  .funnel-stage-2 .funnel-bar{width:85%}
+  .funnel-stage-3 .funnel-bar{width:65%}
+  .funnel-stage-4 .funnel-bar{width:45%}
+  .funnel-stage-5 .funnel-bar{width:35%}
+  .keyword-table{font-size:11px}
+  .keyword-table th,.keyword-table td{padding:6px}
+  .benchmark-bar .bm-label{width:80px;font-size:11px}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"搜索漏斗分析器","description":"搜索词到点击到加购到购买全路径分析，CSS全路径漏斗图，流失点定位与优化建议。","url":"https://juxin-consulting.help/tools/search-funnel-analyzer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"搜索漏斗分析器","item":"https://juxin-consulting.help/tools/search-funnel-analyzer.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="search_funnel_analyzer">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🌊</span><span class="workflow-name">流量全链路工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="traffic-source-audit.html" class="step">流量审计</a><span class="arrow">→</span>
+      <a href="traffic-quality-scorer.html" class="step">流量质量</a><span class="arrow">→</span>
+      <a href="keyword-traffic-estimator.html" class="step">关键词流量</a><span class="arrow">→</span>
+      <a href="organic-vs-paid.html" class="step">自然vs付费</a><span class="arrow">→</span>
+      <a href="traffic-attack-defense.html" class="step">流量攻防</a><span class="arrow">→</span>
+      <a href="click-through-optimizer.html" class="step">点击优化</a><span class="arrow">→</span>
+      <a href="cross-channel-attribution.html" class="step">跨渠道归因</a><span class="arrow">→</span>
+      <a href="traffic-trend-analyzer.html" class="step">趋势分析</a><span class="arrow">→</span>
+      <a href="brand-search-estimator.html" class="step">品牌搜索</a><span class="arrow">→</span>
+      <a href="traffic-forecast.html" class="step">流量预测</a><span class="arrow">→</span>
+      <a href="traffic-anomaly-detector.html" class="step">异常检测</a><span class="arrow">→</span>
+      <a href="affiliate-traffic-tracker.html" class="step">联盟追踪</a><span class="arrow">→</span>
+      <a href="search-funnel-analyzer.html" class="step current">搜索漏斗</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌊 流量全链路工具 · 标准版</span>
+      <h1>搜索漏斗<em>分析器</em></h1>
+      <p class="tool-hero-desc">分析搜索词到展示、点击、加购、购买的全路径转化漏斗，精确定位流失最严重的环节，对比行业基准，生成针对性优化建议，CSS全路径漏斗图直观呈现。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap" style="display:block">
+        <div class="calculator-form">
+          <h2>📋 输入漏斗数据</h2>
+          <p class="calc-form-subtitle">输入搜索漏斗各阶段的数据量，系统将自动计算转化率、流失率并定位关键流失点</p>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>搜索展示量（Impressions）</label>
+              <input type="number" id="impressions" placeholder="如 50000" value="50000" min="0" oninput="SFA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>搜索点击量（Clicks）</label>
+              <input type="number" id="clicks" placeholder="如 2500" value="2500" min="0" oninput="SFA.calc()">
+            </div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>加购数量（Add to Cart）</label>
+              <input type="number" id="addToCart" placeholder="如 450" value="450" min="0" oninput="SFA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>购买订单数（Orders）</label>
+              <input type="number" id="orders" placeholder="如 180" value="180" min="0" oninput="SFA.calc()">
+            </div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>客单价 AOV ($)</label>
+              <input type="number" id="aov" placeholder="如 35" value="35" min="0" step="0.01" oninput="SFA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>广告花费 ($)</label>
+              <input type="number" id="adSpend" placeholder="如 800" value="800" min="0" step="0.01" oninput="SFA.calc()">
+            </div>
+          </div>
+          <div class="calc-actions">
+            <button class="btn-share" onclick="SFA.loadSample()" style="background:var(--bg-soft);color:#4f46e5;border:1px solid var(--rule);padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">加载示例</button>
+            <button class="btn-reset" onclick="SFA.clearAll()" style="padding:10px 20px;border-radius:10px;font-size:14px;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft)">清空</button>
+          </div>
+          <div class="fee-rule-box" style="margin-top:20px">
+            <h4>📐 漏斗阶段说明</h4>
+            <ul>
+              <li><strong>搜索展示→点击</strong>：CTR点击率，反映标题/主图/价格吸引力</li>
+              <li><strong>点击→加购</strong>：详情页转化率，反映Listing质量/价格竞争力</li>
+              <li><strong>加购→购买</strong>：结账转化率，反映购买意愿/价格阻碍/竞品比价</li>
+              <li><strong>整体转化率</strong> = 订单数 / 展示量，端到端效率</li>
+              <li><strong>流失率</strong> = 1 - 阶段转化率，流失最大的环节为关键优化点</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block hidden" id="summarySection">
+        <h3>📊 漏斗总览</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block hidden" id="funnelSection">
+        <h3>🔄 搜索转化漏斗</h3>
+        <div class="funnel-container" id="funnelContainer"></div>
+      </div>
+
+      <div class="section-block hidden" id="dropoffSection">
+        <h3>🎯 流失点分析</h3>
+        <div class="dropoff-analysis" id="dropoffAnalysis"></div>
+      </div>
+
+      <div class="section-block hidden" id="benchmarkSection">
+        <h3>📏 行业基准对比</h3>
+        <div id="benchmarkList"></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">注：行业基准为亚马逊平台平均值参考，实际因品类而异。绿色=优于基准，黄色=接近基准，红色=低于基准。</p>
+      </div>
+
+      <div class="section-block hidden" id="keywordSection">
+        <h3>🔍 关键词漏斗明细</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:8px">各关键词的漏斗表现，按整体转化率排序</p>
+        <div style="overflow-x:auto">
+          <table class="keyword-table" id="keywordTable">
+            <thead><tr><th>关键词</th><th>展示</th><th>点击</th><th>CTR</th><th>加购</th><th>加购率</th><th>订单</th><th>转化率</th><th>评估</th></tr></thead>
+            <tbody id="keywordTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <h3>🔗 相关工具</h3>
+        <div class="related-tools">
+          <a href="traffic-source-audit.html"><span class="rt-icon">🔍</span>流量审计器</a>
+          <a href="click-through-optimizer.html"><span class="rt-icon">👆</span>点击率优化器</a>
+          <a href="conversion-rate-optimizer.html"><span class="rt-icon">📈</span>转化率优化器</a>
+          <a href="affiliate-traffic-tracker.html"><span class="rt-icon">🔗</span>联盟流量追踪</a>
+          <a href="traffic-anomaly-detector.html"><span class="rt-icon">📊</span>异常检测器</a>
+          <a href="keyword-traffic-estimator.html"><span class="rt-icon">🔑</span>关键词流量估算</a>
+        </div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="affiliate-traffic-tracker.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 联盟追踪</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="search-funnel-analyzer.html">搜索漏斗</a></li><li><a href="affiliate-traffic-tracker.html">联盟追踪</a></li><li><a href="traffic-anomaly-detector.html">异常检测</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<style>
+.back-to-top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 6px 16px rgba(79,70,229,.3);opacity:0;pointer-events:none;transition:all .3s;z-index:999}
+.back-to-top.visible{opacity:1;pointer-events:auto}
+</style>
+<script>
+var SFA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseInt($(id).value)||0;}
+  function f(id){return parseFloat($(id).value)||0;}
+  function show(id){var e=$(id);if(e)e.classList.remove('hidden');}
+  function hide(id){var e=$(id);if(e)e.classList.add('hidden');}
+
+  // Industry benchmarks (Amazon averages)
+  var benchmarks={
+    ctr:{value:5,label:'CTR点击率',desc:'展示→点击'},
+    addRate:{value:18,label:'加购率',desc:'点击→加购'},
+    checkoutRate:{value:40,label:'结账转化率',desc:'加购→购买'},
+    overallCR:{value:0.5,label:'整体转化率',desc:'展示→购买'}
+  };
+
+  var sampleKeywords=[
+    {kw:'wireless earbuds',imp:12000,click:480,cart:72,orders:22},
+    {kw:'bluetooth headphones',imp:8500,click:510,cart:102,orders:38},
+    {kw:'noise cancelling earbuds',imp:6000,click:180,cart:36,orders:15},
+    {kw:'earbuds for running',imp:4200,click:210,cart:48,orders:20},
+    {kw:'cheap wireless earbuds',imp:9500,click:850,cart:51,orders:12},
+    {kw:'premium earbuds',imp:2800,click:84,cart:25,orders:14}
+  ];
+
+  function calc(){
+    var imp=n('impressions'),clicks=n('clicks'),cart=n('addToCart'),orders=n('orders');
+    var aov=f('aov'),adSpend=f('adSpend');
+    if(imp<1){hide('summarySection');hide('funnelSection');hide('dropoffSection');hide('benchmarkSection');hide('keywordSection');return;}
+
+    var ctr=clicks/imp*100;
+    var addRate=clicks>0?cart/clicks*100:0;
+    var checkoutRate=cart>0?orders/cart*100:0;
+    var overallCR=imp>0?orders/imp*100:0;
+    var revenue=orders*aov;
+    var cpc=clicks>0?adSpend/clicks:0;
+    var cpa=orders>0?adSpend/orders:0;
+    var acos=revenue>0?adSpend/revenue*100:0;
+    var roas=adSpend>0?revenue/adSpend:0;
+
+    // Drop-off
+    var drop1=imp-clicks; // impression to click
+    var drop2=clicks-cart; // click to add to cart
+    var drop3=cart-orders; // cart to purchase
+
+    // Summary
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val">'+imp.toLocaleString()+'</div><div class="rsb-lbl">搜索展示</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+clicks.toLocaleString()+'</div><div class="rsb-lbl">点击量</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+ctr.toFixed(2)+'%</div><div class="rsb-lbl">CTR点击率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+cart.toLocaleString()+'</div><div class="rsb-lbl">加购数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+orders.toLocaleString()+'</div><div class="rsb-lbl">订单数</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val '+overallCR>=benchmarks.overallCR.value?'ok':'warn'+'">'+overallCR.toFixed(3)+'%</div><div class="rsb-lbl">整体转化率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val ok">$'+revenue.toFixed(0)+'</div><div class="rsb-lbl">总收入</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val '+(roas>=3?'ok':roas>=1.5?'warn':'danger')+'">'+roas.toFixed(2)+'x</div><div class="rsb-lbl">ROAS</div></div>';
+    show('summarySection');
+
+    // Funnel
+    var stages=[
+      {icon:'🔍',label:'搜索展示',val:imp,rate:'100%',stage:1},
+      {icon:'👆',label:'点击',val:clicks,rate:ctr.toFixed(2)+'%',stage:2,drop:drop1,dropLabel:'展示未点击'},
+      {icon:'🛒',label:'加购',val:cart,rate:addRate.toFixed(1)+'%',stage:3,drop:drop2,dropLabel:'点击未加购'},
+      {icon:'📦',label:'购买',val:orders,rate:checkoutRate.toFixed(1)+'%',stage:4,drop:drop3,dropLabel:'加购未购买'}
+    ];
+    var html='';
+    stages.forEach(function(st,i){
+      if(i>0&&st.drop!==undefined){
+        var dropPct=stages[i-1].val>0?(st.drop/stages[i-1].val*100).toFixed(1):0;
+        html+='<div class="funnel-arrow"></div>';
+        html+='<div class="funnel-dropoff"><span class="fd-icon">⚠️</span><span>'+st.dropLabel+'：'+st.drop.toLocaleString()+'人 ('+dropPct+'%流失)</span></div>';
+      }
+      html+='<div class="funnel-stage funnel-stage-'+st.stage+'"><div class="funnel-bar"><div class="fb-label"><span class="fb-icon">'+st.icon+'</span> '+st.label+'</div><div><span class="fb-val">'+st.val.toLocaleString()+'</span> <span class="fb-rate">('+st.rate+')</span></div></div></div>';
+    });
+    $('funnelContainer').innerHTML=html;
+    show('funnelSection');
+
+    // Drop-off analysis
+    var dropoffs=[];
+    // Stage 1: CTR
+    var ctrStatus=ctr>=benchmarks.ctr.value*1.2?'normal':ctr>=benchmarks.ctr.value*0.8?'warning':'critical';
+    var ctrSuggestion=ctr>=benchmarks.ctr.value?'CTR表现良好，继续保持当前标题和主图策略。':
+      '优化建议：1) 优化主图，使用高分辨率白底图 2) 标题前60字符包含核心关键词 3) 价格显示在搜索结果中有竞争力 4) 添加Coupon/Prime标识提升点击吸引力 5) 评分≥4.0且评论数>50';
+    dropoffs.push({stage:'展示→点击',rate:(100-ctr).toFixed(1)+'',lost:drop1,status:ctrStatus,
+      title:'点击阶段流失：'+drop1.toLocaleString()+'人未点击 ('+(100-ctr).toFixed(1)+'%流失)',
+      desc:'当前CTR为'+ctr.toFixed(2)+'%，行业基准约'+benchmarks.ctr.value+'%。'+(ctr<benchmarks.ctr.value?'CTR低于行业基准，Listing在搜索结果中的吸引力不足。':'CTR达到/超过行业基准，表现良好。'),
+      suggestion:ctrSuggestion
+    });
+
+    // Stage 2: Add to cart
+    var addStatus=addRate>=benchmarks.addRate.value*1.2?'normal':addRate>=benchmarks.addRate.value*0.8?'warning':'critical';
+    var addSuggestion=addRate>=benchmarks.addRate.value?'加购率表现良好，详情页质量优秀。':
+      '优化建议：1) 优化Listing图片，添加场景图和尺寸对比图 2) 完善A+页面内容 3) 优化价格策略 4) 突出产品差异化卖点 5) 添加视频展示 6) 优化五点描述，突出核心卖点';
+    dropoffs.push({stage:'点击→加购',rate:(100-addRate).toFixed(1)+'',lost:drop2,status:addStatus,
+      title:'加购阶段流失：'+drop2.toLocaleString()+'人未加购 ('+(100-addRate).toFixed(1)+'%流失)',
+      desc:'当前加购率为'+addRate.toFixed(1)+'%，行业基准约'+benchmarks.addRate.value+'%。'+(addRate<benchmarks.addRate.value?'加购率低于行业基准，详情页转化能力不足。':'加购率达到/超过行业基准。'),
+      suggestion:addSuggestion
+    });
+
+    // Stage 3: Checkout
+    var coStatus=checkoutRate>=benchmarks.checkoutRate.value*1.2?'normal':checkoutRate>=benchmarks.checkoutRate.value*0.8?'warning':'critical';
+    var coSuggestion=checkoutRate>=benchmarks.checkoutRate.value?'结账转化率表现良好。':
+      '优化建议：1) 提供优惠券或限时折扣促进下单 2) 优化价格竞争力 3) 检查是否有竞品低价截流 4) 优化运费策略（FBA/Prime） 5) 添加催购邮件/广告再营销 6) 检查购物车 abandonment 原因';
+    dropoffs.push({stage:'加购→购买',rate:(100-checkoutRate).toFixed(1)+'',lost:drop3,status:coStatus,
+      title:'结账阶段流失：'+drop3.toLocaleString()+'人未购买 ('+(100-checkoutRate).toFixed(1)+'%流失)',
+      desc:'当前结账转化率为'+checkoutRate.toFixed(1)+'%，行业基准约'+benchmarks.checkoutRate.value+'%。'+(checkoutRate<benchmarks.checkoutRate.value?'结账转化率低于行业基准，购买意愿不足。':'结账转化率达到/超过行业基准。'),
+      suggestion:coSuggestion
+    });
+
+    // Sort by severity (critical first)
+    var statusOrder={critical:0,warning:1,normal:2};
+    dropoffs.sort(function(a,b){return statusOrder[a.status]-statusOrder[b.status];});
+
+    $('dropoffAnalysis').innerHTML=dropoffs.map(function(d){
+      return '<div class="dropoff-card '+d.status+'"><div class="dc-head">'+(d.status==='critical'?'🔴':d.status==='warning'?'🟡':'🟢')+' '+d.title+'</div><div class="dc-body">'+d.desc+'</div><div class="dc-suggestion"><strong>优化建议：</strong>'+d.suggestion+'</div></div>';
+    }).join('');
+    show('dropoffSection');
+
+    // Benchmark comparison
+    var bms=[
+      {label:'CTR点击率',val:ctr,bench:benchmarks.ctr.value,unit:'%'},
+      {label:'加购率',val:addRate,bench:benchmarks.addRate.value,unit:'%'},
+      {label:'结账转化率',val:checkoutRate,bench:benchmarks.checkoutRate.value,unit:'%'},
+      {label:'整体转化率',val:overallCR,bench:benchmarks.overallCR.value,unit:'%'}
+    ];
+    $('benchmarkList').innerHTML=bms.map(function(bm){
+      var maxVal=Math.max(bm.val,bm.bench)*1.3;
+      var valW=bm.val/maxVal*100;
+      var benchW=bm.bench/maxVal*100;
+      var status=bm.val>=bm.bench*1.1?'good':bm.val>=bm.bench*0.8?'warn':'bad';
+      var color=status==='good'?'#10b981':status==='warn'?'#f59e0b':'#ef4444';
+      var statusText=status==='good'?'优于基准':status==='warn'?'接近基准':'低于基准';
+      return '<div class="benchmark-bar"><div class="bm-label">'+bm.label+'</div><div class="bm-track"><div class="bm-fill" style="width:'+valW+'%;background:'+color+'"></div></div><div class="bm-val '+status+'" style="color:'+color+'">'+bm.val.toFixed(2)+bm.unit+'</div></div>'+
+        '<div class="benchmark-bar" style="margin-top:-4px;margin-bottom:12px"><div class="bm-label" style="color:var(--muted);font-weight:400">行业基准</div><div class="bm-track"><div class="bm-fill" style="width:'+benchW+'%;background:#cbd5e1"></div></div><div class="bm-val" style="color:var(--muted)">'+bm.bench+bm.unit+'</div></div>';
+    }).join('');
+    show('benchmarkSection');
+
+    // Keyword table
+    $('keywordTableBody').innerHTML=sampleKeywords.map(function(k){
+      var ctr=k.click/k.imp*100;
+      var ar=k.click>0?k.cart/k.click*100:0;
+      var cr=k.imp>0?k.orders/k.imp*100:0;
+      var status=cr>=0.5?'good':cr>=0.2?'warn':'bad';
+      var cls=cr>=0.5?'cr-good':cr>=0.2?'cr-warn':'cr-bad';
+      var evalText=cr>=0.5?'优秀':cr>=0.2?'待优化':'差';
+      return '<tr><td class="kw-name">'+k.kw+'</td><td>'+k.imp.toLocaleString()+'</td><td>'+k.click.toLocaleString()+'</td><td>'+ctr.toFixed(2)+'%</td><td>'+k.cart.toLocaleString()+'</td><td>'+ar.toFixed(1)+'%</td><td>'+k.orders.toLocaleString()+'</td><td class="'+cls+'">'+cr.toFixed(3)+'%</td><td class="'+cls+'">'+evalText+'</td></tr>';
+    }).join('');
+    show('keywordSection');
+  }
+
+  function loadSample(){
+    $('impressions').value='50000';
+    $('clicks').value='2500';
+    $('addToCart').value='450';
+    $('orders').value='180';
+    $('aov').value='35';
+    $('adSpend').value='800';
+    calc();
+  }
+
+  function clearAll(){
+    ['impressions','clicks','addToCart','orders','aov','adSpend'].forEach(function(id){$(id).value='';});
+    hide('summarySection');hide('funnelSection');hide('dropoffSection');hide('benchmarkSection');hide('keywordSection');
+  }
+
+  return{calc:calc,loadSample:loadSample,clearAll:clearAll};
+})();
+
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

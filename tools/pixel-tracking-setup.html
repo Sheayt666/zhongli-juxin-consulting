@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="像素追踪配置器：Facebook/Google/TikTok Pixel+事件追踪+转化API，CSS配置清单，事件映射表。免费独立站增长工具。">
+<meta name="keywords" content="像素追踪,Facebook Pixel,Google Ads,TikTok Pixel,转化API,CAPI,事件追踪,独立站">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/pixel-tracking-setup.html">
+<title>像素追踪配置器 - FB/Google/TikTok Pixel·事件映射·CAPI | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:110px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.platform-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.ptab{padding:10px 18px;border-radius:10px;border:2px solid var(--rule);background:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.ptab.active{border-color:#4f46e5;background:#eef2ff;color:#4f46e5}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:10px;background:var(--bg-soft);cursor:pointer;transition:all .2s;font-size:13px;color:var(--ink-soft);line-height:1.5}
+.check-item:hover{background:#eef2ff}
+.ci-box{width:20px;height:20px;border:2px solid var(--rule);border-radius:6px;flex-shrink:0;transition:all .2s;margin-top:1px}
+.check-item.checked .ci-box{background:#10b981;border-color:#10b981;content:'✓';position:relative}
+.check-item.checked .ci-box::after{content:'✓';position:absolute;color:#fff;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.check-item.checked{color:var(--muted)}
+.event-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.event-table th{background:var(--bg-soft);padding:10px 8px;text-align:left;border-bottom:2px solid var(--rule);font-weight:600}
+.event-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light);vertical-align:top}
+.code-block{background:#1e293b;color:#a5b4fc;padding:14px 18px;border-radius:10px;font-family:monospace;font-size:12px;line-height:1.7;margin:8px 0;overflow-x:auto;white-space:pre}
+.code-block .cmt{color:#64748b}
+.code-block .str{color:#86efac}
+.code-block .kw{color:#f0abfc}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"像素追踪配置器","description":"Facebook/Google/TikTok Pixel+事件追踪+转化API配置清单与事件映射。","url":"https://juxin-consulting.help/tools/pixel-tracking-setup.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="pixel_tracking_setup">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📈</span><span class="workflow-name">独立站增长工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="roas-calculator.html" class="step">ROAS</a><span class="arrow">›</span>
+      <a href="cac-calculator.html" class="step">CAC</a><span class="arrow">›</span>
+      <a href="ltv-cac-ratio.html" class="step">LTV/CAC</a><span class="arrow">›</span>
+      <a href="aov-optimizer.html" class="step">AOV优化</a><span class="arrow">›</span>
+      <a href="repurchase-rate.html" class="step">复购率</a><span class="arrow">›</span>
+      <a href="growth-model.html" class="step">增长模型</a><span class="arrow">›</span>
+      <a href="traffic-source-analyzer.html" class="step">流量分析</a><span class="arrow">›</span>
+      <a href="conversion-rate-optimizer.html" class="step">CRO</a><span class="arrow">›</span>
+      <a href="multi-channel-attribution.html" class="step">归因</a><span class="arrow">›</span>
+      <a href="dtc-profit-calc.html" class="step">DTC利润</a><span class="arrow">›</span>
+      <a href="subscription-model-builder.html" class="step">订阅模型</a><span class="arrow">›</span>
+      <a href="referral-program-designer.html" class="step">推荐计划</a><span class="arrow">›</span>
+      <span class="step current">像素追踪</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 独立站增长工具</span>
+      <h1>像素追踪<em>配置器</em></h1>
+      <p class="tool-hero-desc">配置Facebook/Google/TikTok三大像素与转化API(CAPI)，事件映射表对齐关键转化事件，交互式检查清单确保追踪无遗漏，生成可复制代码片段。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 平台与配置</h2>
+          <p class="calc-form-subtitle">选择平台并填写Pixel ID，生成配置清单与代码</p>
+          <div class="platform-tabs">
+            <div class="ptab active" onclick="PIX.tab('facebook')"><span>📘</span> Facebook</div>
+            <div class="ptab" onclick="PIX.tab('google')"><span>🔴</span> Google Ads</div>
+            <div class="ptab" onclick="PIX.tab('tiktok')"><span>🎵</span> TikTok</div>
+          </div>
+          <div id="platformConfig"></div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>⚙️ 高级配置</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>是否启用转化API(CAPI)</label><select id="capi" onchange="PIX.render()"><option value="yes">启用(推荐)</option><option value="no">不启用</option></select></div>
+            <div class="calc-field"><label>同意模式(Consent)</label><select id="consent" onchange="PIX.render()"><option value="v2">GDPR Consent v2</option><option value="none">无</option></select></div>
+          </div>
+          <div class="calc-field"><label>追踪事件范围</label><select id="eventScope" onchange="PIX.render()"><option value="full">全漏斗(浏览/加购/结账/购买)</option><option value="conversion">仅转化事件</option></select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="checkSection">
+        <h3>✅ 配置检查清单 <span style="font-size:13px;color:var(--muted);font-weight:400">(点击勾选)</span></h3>
+        <div class="check-grid" id="checkGrid"></div>
+      </div>
+      <div class="section-block" id="eventSection">
+        <h3>🗺️ 事件映射表</h3>
+        <div style="overflow-x:auto"><table class="event-table" id="eventTable"></table></div>
+      </div>
+      <div class="section-block" id="codeSection">
+        <h3>💻 代码片段</h3>
+        <div id="codeBlock"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="referral-program-designer.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 推荐计划</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="pixel-tracking-setup.html">像素追踪配置器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var PIX=(function(){
+  'use strict';
+  var KEY='jx_pixel_check';
+  var cur='facebook';var checked={};
+  var CFG={facebook:{name:'Facebook Pixel',idLabel:'Pixel ID',idPh:'123456789012345',def:'987654321012345',events:[{u:'PageView',f:'PageView'},{u:'ViewContent',f:'ViewContent'},{u:'AddToCart',f:'AddToCart'},{u:'InitiateCheckout',f:'InitiateCheckout'},{u:'Purchase',f:'Purchase'}]},google:{name:'Google Ads Tag',idLabel:'Conversion ID',idPh:'AW-123456789',def:'AW-112233445',events:[{u:'page_view',f:'page_view'},{u:'view_item',f:'view_item'},{u:'add_to_cart',f:'add_to_cart'},{u:'begin_checkout',f:'begin_checkout'},{u:'purchase',f:'purchase'}]},tiktok:{name:'TikTok Pixel',idLabel:'Pixel Code',idPh:'C4XXXXXXXXXXXXXXXX',def:'C9ABCDEFGH123456',events:[{u:'Pageview',f:'Pageview'},{u:'ViewContent',f:'ViewContent'},{u:'AddToCart',f:'AddToCart'},{u:'InitiateCheckout',f:'InitiateCheckout'},{u:'CompletePayment',f:'CompletePayment'}]}};
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value;}
+  function tab(p){cur=p;document.querySelectorAll('.ptab').forEach(function(t){t.classList.remove('active');});event.target?event.target.closest('.ptab').classList.add('active'):null;renderConfig();render();}
+  function renderConfig(){
+    var c=CFG[cur];
+    $('platformConfig').innerHTML='<div class="calc-row-2"><div class="calc-field"><label>'+c.idLabel+'</label><input type="text" id="pixelId" value="'+c.def+'" oninput="PIX.render()"></div><div class="calc-field"><label>API Token(CAPI)</label><input type="text" id="apiToken" value="EAAB'+cur.substring(0,3).toUpperCase()+'XYZ123" oninput="PIX.render()"></div></div>';
+  }
+  function render(){
+    var c=CFG[cur];var id=v('pixelId')||c.def;var capi=v('capi'),consent=v('consent'),scope=v('eventScope');
+    var checks=getChecks(cur,capi,consent);
+    var done=checks.filter(function(ch,i){return checked[cur+'_'+i];}).length;
+    var pct=Math.round(done/checks.length*100);
+    renderResult(c.name,id,pct,done,checks.length,capi);
+    renderChecks(checks);
+    renderEvents(c,scope);
+    renderCode(c,id,capi,consent);
+  }
+  function getChecks(p,capi,consent){
+    var base=['创建'+CFG[p].name+'账号与像素','获取并填写'+CFG[p].idLabel,'基础代码已植入网站<head>','PageView/页面浏览事件已触发','浏览器像素验证(Test Events)','购买事件带value与currency参数'];
+    if(capi==='yes')base.push('转化API(CAPI)已配置服务端','CAPI事件与浏览器事件对齐(事件ID匹配)','CAPI hash用户数据(邮箱/电话)');
+    if(consent==='v2')base.push('同意模式(Consent Mode v2)已部署','Cookie同意横幅已上线');
+    base.push('去重机制(事件ID)已部署','IOS14+聚合事件测量(AEM)配置','Pixel Helper/Tag Assistant验证通过');
+    return base;
+  }
+  function renderResult(name,id,pct,done,total,capi){
+    var col=pct>=80?'#10b981':pct>=50?'#f59e0b':'#ef4444';
+    $('resultCard').innerHTML='<h3>📊 配置概览</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+name.split(' ')[0]+'</div><div class="rsb-lbl">当前平台</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">'+pct+'%</div><div class="rsb-lbl">完成度</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+done+'/'+total+'</div><div class="rsb-lbl">已完成项</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 '+(capi==='yes'?'已启用转化API，可绕过浏览器拦截提升数据匹配，推荐':'未启用CAPI，建议启用以应对IOS隐私限制')+'。Pixel ID: <code>'+id+'</code></div>';
+  }
+  function renderChecks(checks){
+    $('checkGrid').innerHTML=checks.map(function(ch,i){
+      var k=cur+'_'+i;var ck=checked[k]?'checked':'';
+      return '<div class="check-item '+ck+'" onclick="PIX.toggle('+i+',this)"><div class="ci-box"></div><span>'+ch+'</span></div>';
+    }).join('');
+  }
+  function toggle(i,el){
+    var k=cur+'_'+i;checked[k]=!checked[k];el.classList.toggle('checked');save();render();
+  }
+  function renderEvents(c,scope){
+    var evs=scope==='conversion'?c.events.filter(function(e){return ['Purchase','purchase','CompletePayment','AddToCart','add_to_cart'].indexOf(e.f)>=0;}):c.events;
+    $('eventTable').innerHTML='<thead><tr><th>用户行为</th><th>网站事件</th><th>'+c.name+'事件</th><th>触发时机</th><th>关键参数</th><th>优先级</th></tr></thead><tbody>'+
+      evs.map(function(e,i){
+        var timing=['页面加载','商品详情页','点击加购','进入结账页','下单成功'][i%5];
+        var params=i===evs.length-1?'value,currency,order_id,contents':i===2?'content_ids,content_type,value':'content_id,content_type';
+        var pri=i>=evs.length-2?'<span style="color:#ef4444;font-weight:600">必须</span>':i>=evs.length-3?'<span style="color:#f59e0b;font-weight:600">重要</span>':'<span style="color:#10b981;font-weight:600">建议</span>';
+        return '<tr><td>'+e.u+'</td><td><code>'+e.u.toLowerCase()+'</code></td><td><strong style="color:#4f46e5">'+e.f+'</strong></td><td>'+timing+'</td><td><code style="font-size:11px">'+params+'</code></td><td>'+pri+'</td></tr>';
+      }).join('')+'</tbody>';
+  }
+  function renderCode(c,id,capi,consent){
+    var code='';
+    if(cur==='facebook'){
+      code='<span class="cmt">&lt;!-- Facebook Pixel Code --&gt;</span>\n&lt;script&gt;\n<span class="kw">!function</span>(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=<span class="kw">function</span>(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window,document,\'script\',\n\'https://connect.facebook.net/en_US/fbevents.js\');\n<span class="kw">fbq</span>(\'init\', \'<span class="str">'+id+'</span>\');\n'+(consent==='v2'?'fbq(\'consent\', \'revoke\'); // GDPR\n':'')+'fbq(\'track\', \'PageView\');\n<span class="cmt">// 购买事件示例</span>\n<span class="kw">fbq</span>(\'track\', \'Purchase\', {\n  value: 49.90, currency: \'USD\',\n  content_ids: [\'SKU123\'], order_id: \'ORD-001\'\n});\n&lt;/script&gt;';
+      if(capi==='yes')code+='\n\n<span class="cmt">// 转化API (服务端 Node.js示例)</span>\n<span class="kw">const</span> event = {\n  data: [{ event_name: \'Purchase\',\n    event_time: Math.floor(Date.now()/1000),\n    event_id: \'ORD-001\', <span class="cmt">// 去重ID</span>\n    user_data: { em: hash(email), ph: hash(phone) },\n    custom_data: { value: 49.90, currency: \'USD\' } }]\n};\n<span class="kw">await</span> fetch(\'https://graph.facebook.com/v18.0/<span class="str">'+id+'</span>/events\',{method:\'POST\',body:JSON.stringify(event)})';
+    }else if(cur==='google'){
+      code='<span class="cmt">&lt;!-- Google Ads Tag --&gt;</span>\n&lt;script async src="https://www.googletagmanager.com/gtag/js?id=<span class="str">'+id+'</span>"&gt;&lt;/script&gt;\n&lt;script&gt;\nwindow.dataLayer=window.dataLayer||[];\n<span class="kw">function</span> gtag(){dataLayer.push(arguments);}\ngtag(\'js\', new Date());\ngtag(\'config\', \'<span class="str">'+id+'</span>\');\n<span class="cmt">// 转化事件</span>\n<span class="kw">gtag</span>(\'event\', \'purchase\', {\n  transaction_id: \'ORD-001\',\n  value: 49.90, currency: \'USD\',\n  items: [{id:\'SKU123\',quantity:1,price:49.90}]\n});\n&lt;/script&gt;';
+    }else{
+      code='<span class="cmt">&lt;!-- TikTok Pixel Code --&gt;</span>\n&lt;script&gt;\n<span class="kw">!function</span> (w, d, t) {\n  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];\n  ttq.methods=[\'page\',\'track\',\'identify\',\'instances\',\n    \'debug\',\'on\',\'off\',\'once\',\'ready\',\'alias\',\'group\',\'enableCookie\',\'disableCookie\'];\n  ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};\n  for(var i=0;i&lt;ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);\n  ttq.load=function(e){var n=\'https://analytics.tiktok.com/i18n/pixel/events.js\';ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=n,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]={};var o=d.createElement(\'script\');o.type=\'text/javascript\',o.async=!0,o.src=n+\'?sdkid=\'+e+\'&lib=\'+t;var a=d.getElementsByTagName(\'script\')[0];a.parentNode.insertBefore(o,a)};\n  ttq.load(\'<span class="str">'+id+'</span>\');\n  ttq.page();\n}(window, document, \'ttq\');\n<span class="cmt">// 购买事件</span>\n<span class="kw">ttq</span>.track(\'CompletePayment\',{\n  value:49.90, currency:\'USD\',\n  content_id:\'SKU123\', order_id:\'ORD-001\'\n});\n&lt;/script&gt;';
+    }
+    $('codeBlock').innerHTML='<div class="code-block">'+code+'</div><div style="font-size:12px;color:var(--muted);margin-top:8px">💡 复制代码至网站相应位置。购买事件务必携带 order_id 实现浏览器与服务端去重。</div>';
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(checked));}catch(e){}}
+  function load(){try{var s=localStorage.getItem(KEY);if(s)checked=JSON.parse(s)||{};}catch(e){}}
+  function init(){load();renderConfig();render();}
+  return{tab:tab,render:render,toggle:toggle,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PIX.init);}else{PIX.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

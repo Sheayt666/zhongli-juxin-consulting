@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HS编码查询器：输入商品名称或关键词，获取HS编码建议列表、关税税率、进出口监管条件等信息卡片，助力跨境电商合规分类。">
+<title>HS编码查询器 - 跨境电商商品编码查询工具</title>
+<style>
+:root{--bg:#ffffff;--bg-soft:#f8fafc;--surface:#ffffff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--muted-light:#94a3b8;--rule:#e2e8f0;--rule-light:#f1f5f9;--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.07),0 2px 4px -2px rgba(0,0,0,0.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.08),0 8px 10px -6px rgba(0,0,0,0.04);--radius-sm:8px;--radius-md:12px;--radius-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:14px 0}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between}
+.top-nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--ink)}
+.top-nav-logo .logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.top-nav-links{display:flex;gap:28px;list-style:none}
+.top-nav-links a{color:var(--ink-soft);font-size:14px;font-weight:500}
+.top-nav-links a:hover{color:var(--accent)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:var(--accent)}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:var(--accent);text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:var(--accent);color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.breadcrumb{padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}
+.breadcrumb .current{color:var(--ink);font-weight:500}
+.tool-hero{background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fffbeb 100%);padding:48px 0 40px;text-align:center}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,255,255,.9);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:20px}
+.tool-hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px;color:var(--ink)}
+.tool-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-hero-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto}
+.tool-section{padding:40px 0 60px}
+.input-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-bottom:24px}
+.input-card h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.result-area{margin-top:24px}
+.hs-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-md);margin-bottom:16px;transition:all .2s}
+.hs-card:hover{box-shadow:var(--shadow-lg);border-color:var(--accent)}
+.hs-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--rule-light)}
+.hs-code{font-size:28px;font-weight:800;color:var(--accent);font-family:'SF Mono',Monaco,monospace;letter-spacing:1px}
+.hs-desc{font-size:14px;color:var(--muted);margin-top:4px}
+.hs-tag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.hs-tag.normal{background:var(--green-bg);color:var(--green)}
+.hs-tag.restricted{background:var(--gold-bg);color:var(--gold)}
+.hs-tag.prohibited{background:var(--red-bg);color:var(--red)}
+.hs-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hs-detail-item{padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-align:center}
+.hs-detail-item .label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.hs-detail-item .value{font-size:18px;font-weight:700;color:var(--ink)}
+.hs-detail-item .value.rate{color:var(--accent)}
+.hs-regulations{margin-top:16px;padding-top:14px;border-top:1px solid var(--rule-light)}
+.hs-regulations h4{font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:8px}
+.hs-regulations ul{list-style:none;padding:0}
+.hs-regulations li{padding:6px 0;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+.hs-regulations li::before{content:'✓';color:var(--green);font-weight:700}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state .icon{font-size:48px;margin-bottom:12px}
+.related-tools{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;margin-top:32px}
+.related-tools h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{display:flex;gap:10px;padding:14px;background:var(--bg-soft);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.related-card:hover{background:var(--accent-bg);transform:translateX(4px)}
+.related-card .ricon{font-size:20px;flex-shrink:0}
+.related-card .rtext{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.back-link{text-align:center;margin-top:32px}
+.back-link a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.back-link a:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+footer{background:#0f172a;color:rgba(255,255,255,.5);padding:32px 0;text-align:center;font-size:13px;margin-top:40px}
+@media(max-width:768px){.form-row{grid-template-columns:1fr}.hs-detail-grid{grid-template-columns:1fr}.top-nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+<div class="container top-nav-inner">
+<a href="../index.html" class="top-nav-logo"><div class="logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="top-nav-links">
+<li><a href="../index.html">首页</a></li>
+<li><a href="index.html">工具中心</a></li>
+<li><a href="../blog.html">深度文章</a></li>
+<li><a href="../contact.html">联系我们</a></li>
+</ul>
+</div>
+</nav>
+
+<div class="breadcrumb container">
+<a href="../index.html">首页</a><span class="sep">/</span>
+<a href="index.html">工具中心</a><span class="sep">/</span>
+<span class="current">HS编码查询器</span>
+</div>
+
+<header class="tool-hero">
+<div class="container">
+<span class="tool-hero-badge">🔍 物流合规工具</span>
+<h1>HS编码<em>查询器</em></h1>
+<p class="tool-hero-desc">输入商品名称或关键词，智能匹配HS编码建议列表，查看关税税率、进出口监管条件及合规要求</p>
+</div>
+</header>
+
+<div class="workflow-nav container">
+<div class="workflow-nav-header">
+<span class="workflow-icon">🚚</span>
+<span class="workflow-name">物流合规工作流</span>
+</div>
+<div class="workflow-nav-steps">
+<a href="first-mile-shipping.html" class="step">头程运费</a><span class="arrow">→</span>
+<a href="supplier-comparison.html" class="step">供应商比价</a><span class="arrow">→</span>
+<a href="vat-calculator.html" class="step">VAT关税</a><span class="arrow">→</span>
+<a href="tax-profit-calculator.html" class="step">税务利润</a><span class="arrow">→</span>
+<a href="payment-fee.html" class="step">收款费率</a><span class="arrow">→</span>
+<a href="currency-converter.html" class="step">汇率转换</a><span class="arrow">→</span>
+<a href="hs-code-lookup.html" class="step current">HS编码</a><span class="arrow">→</span>
+<a href="customs-duty-calculator.html" class="step">关税计算</a><span class="arrow">→</span>
+<a href="shipping-route-optimizer.html" class="step">路线优化</a><span class="arrow">→</span>
+<a href="fba-label-batch-generator.html" class="step">FBA标签</a><span class="arrow">→</span>
+<a href="dangerous-goods-checker.html" class="step">危险品检查</a><span class="arrow">→</span>
+<a href="import-export-compliance-guide.html" class="step">进出口合规</a>
+</div>
+</div>
+
+<main class="tool-section">
+<div class="container">
+
+<div class="input-card">
+<h2>📋 输入商品信息</h2>
+<div class="form-group">
+<label>商品名称 / 关键词</label>
+<input type="text" id="keyword" placeholder="如：蓝牙耳机、手机壳、LED灯、棉质T恤" oninput="searchHS()">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>目的国/地区</label>
+<select id="country" onchange="searchHS()">
+<option value="US">美国 (US)</option>
+<option value="EU">欧盟 (EU)</option>
+<option value="UK">英国 (UK)</option>
+<option value="JP">日本 (JP)</option>
+<option value="AU">澳洲 (AU)</option>
+<option value="CA">加拿大 (CA)</option>
+</select>
+</div>
+<div class="form-group">
+<label>商品类别</label>
+<select id="category" onchange="searchHS()">
+<option value="">全部类别</option>
+<option value="electronics">电子电器</option>
+<option value="textile">纺织服装</option>
+<option value="home">家居用品</option>
+<option value="beauty">美妆个护</option>
+<option value="food">食品饮料</option>
+<option value="toys">玩具运动</option>
+<option value="tools">工具五金</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="result-area" id="resultArea">
+<div class="empty-state">
+<div class="icon">🔍</div>
+<p>输入商品名称或关键词<br>查看HS编码建议与监管条件</p>
+</div>
+</div>
+
+<div class="related-tools">
+<h3>🔗 相关工具</h3>
+<div class="related-grid">
+<a href="customs-duty-calculator.html" class="related-card"><span class="ricon">💰</span><span class="rtext">关税计算器</span></a>
+<a href="import-export-compliance-guide.html" class="related-card"><span class="ricon">📋</span><span class="rtext">进出口合规指南</span></a>
+<a href="dangerous-goods-checker.html" class="related-card"><span class="ricon">⚠️</span><span class="rtext">危险品检查器</span></a>
+<a href="vat-calculator.html" class="related-card"><span class="ricon">🧾</span><span class="rtext">VAT关税计算器</span></a>
+</div>
+</div>
+
+<div class="back-link">
+<a href="index.html">← 返回工具中心</a>
+</div>
+
+</div>
+</main>
+
+<footer>
+<div class="container">© 2026 众力聚鑫咨询 — 跨境卖家工具站</div>
+</footer>
+
+<script>
+var HS_DATABASE = [
+{kw:['蓝牙','耳机','音箱','wireless','bluetooth','earphone','headphone'],code:'8518.30',desc:'无线蓝牙耳机/音箱',cat:'electronics',dutyUS:0,dutyEU:0.04,dutyUK:0,dutyJP:0,dutyAU:0,reg:['FCC认证(美国)','CE认证(欧盟)','蓝牙BQB认证','RoHS合规'],status:'normal'},
+{kw:['手机壳','phone case','保护套','手机保护'],code:'3926.90',desc:'塑料手机壳/保护套',cat:'electronics',dutyUS:0.056,dutyEU:0.065,dutyUK:0.056,dutyJP:0.048,dutyAU:0.05,reg:['材质声明','邻苯二甲酸盐检测'],status:'normal'},
+{kw:['手机壳','皮革','leather case'],code:'4202.22',desc:'皮革手机壳',cat:'electronics',dutyUS:0.085,dutyEU:0.04,dutyUK:0.085,dutyJP:0.06,dutyAU:0.05,reg:['REACH合规','皮革材质声明'],status:'normal'},
+{kw:['LED','灯','灯泡','灯具','light','lamp','LED bulb'],code:'9405.42',desc:'LED照明灯具',cat:'electronics',dutyUS:0.039,dutyEU:0.044,dutyUK:0.039,dutyJP:0.032,dutyAU:0.05,reg:['能效标签(欧盟ERP)','FCC认证(美国)','UL安全认证','光生物安全检测'],status:'normal'},
+{kw:['充电器','电源适配器','charger','power adapter','充电线'],code:'8504.40',desc:'电源适配器/充电器',cat:'electronics',dutyUS:0,dutyEU:0,dutyUK:0,dutyJP:0,dutyAU:0,reg:['FCC认证','CE认证','UL/ETL认证','能效VI级标准','RoHS合规'],status:'normal'},
+{kw:['电池','battery','锂电池','lithium'],code:'8507.60',desc:'锂电池',cat:'electronics',dutyUS:0.034,dutyEU:0.027,dutyUK:0.034,dutyJP:0.029,dutyAU:0.05,reg:['UN38.3测试报告','MSDS安全数据表','危险品运输声明','航空运输条件鉴定'],status:'restricted'},
+{kw:['T恤','t-shirt','棉质','cotton','汗衫'],code:'6109.10',desc:'棉制T恤/汗衫',cat:'textile',dutyUS:0.163,dutyEU:0.12,dutyUK:0.12,dutyJP:0.091,dutyAU:0.05,reg:['原产地标签','纤维成分标签','OEKO-TEX认证(建议)','尺寸标签'],status:'normal'},
+{kw:['外套','夹克','jacket','coat','风衣'],code:'6201.92',desc:'棉制外套/夹克',cat:'textile',dutyUS:0.163,dutyEU:0.12,dutyUK:0.12,dutyJP:0.091,dutyAU:0.05,reg:['原产地标签','纤维成分标签','防水测试报告(如适用)'],status:'normal'},
+{kw:['连衣裙','dress','裙子','skirt'],code:'6204.42',desc:'棉制连衣裙',cat:'textile',dutyUS:0.113,dutyEU:0.12,dutyUK:0.12,dutyJP:0.091,dutyAU:0.05,reg:['原产地标签','纤维成分标签'],status:'normal'},
+{kw:['抱枕','枕头','pillow','靠垫','cushion'],code:'9404.90',desc:'枕头/靠垫',cat:'home',dutyUS:0.058,dutyEU:0.056,dutyUK:0.058,dutyJP:0.048,dutyAU:0.05,reg:['填充物材质声明','阻燃测试(美国加州TB117)'],status:'normal'},
+{kw:['水杯','杯子','bottle','水壶','保温杯'],code:'9617.00',desc:'保温瓶/真空杯',cat:'home',dutyUS:0.056,dutyEU:0.056,dutyUK:0.056,dutyJP:0.048,dutyAU:0.05,reg:['食品接触材料检测(FDA/LFGB)','不锈钢材质声明'],status:'normal'},
+{kw:['化妆品','面霜','精华','skincare','cream','lotion','护肤'],code:'3304.99',desc:'护肤化妆品',cat:'beauty',dutyUS:0,dutyEU:0,dutyUK:0,dutyJP:0,dutyAU:0,reg:['FDA注册(美国)','CPNP通报(欧盟)','成分标签INCI','防腐剂挑战测试','重金属检测'],status:'restricted'},
+{kw:['口红','lipstick','唇膏'],code:'3304.10',desc:'唇部化妆品',cat:'beauty',dutyUS:0,dutyEU:0,dutyUK:0,dutyJP:0,dutyAU:0,reg:['FDA注册','CPNP通报','铅含量检测','成分标签INCI'],status:'restricted'},
+{kw:['食品','零食','food','饼干','巧克力','糖果'],code:'1806.32',desc:'巧克力/糖果食品',cat:'food',dutyUS:0.065,dutyEU:0.073,dutyUK:0.065,dutyJP:0.214,dutyAU:0.05,reg:['FDA食品注册(美国)','输华食品备案','营养成分标签','过敏原声明','原产地标签'],status:'restricted'},
+{kw:['玩具','toy','积木','拼图','puzzle','娃娃'],code:'9503.00',desc:'玩具/益智玩具',cat:'toys',dutyUS:0,dutyEU:0.047,dutyUK:0.047,dutyJP:0,dutyAU:0.05,reg:['ASTM F963(美国)','EN71(欧盟)','CCC认证(中国)','邻苯二甲酸盐检测','年龄分级标签'],status:'normal'},
+{kw:['工具','tool','扳手','螺丝刀','wrench','screwdriver'],code:'8204.12',desc:'手动工具',cat:'tools',dutyUS:0.09,dutyEU:0.027,dutyUK:0.09,dutyJP:0.048,dutyAU:0.05,reg:['材质声明','防锈处理说明'],status:'normal'},
+{kw:['手表','watch','腕表','钟表'],code:'9102.12',desc:'手表/腕表',cat:'electronics',dutyUS:0.039,dutyEU:0.044,dutyUK:0.039,dutyJP:0.053,dutyAU:0.05,reg:['电池UN38.3(如含锂电池)','防水等级声明','材质声明'],status:'normal'},
+{kw:['背包','书包','backpack','双肩包'],code:'4202.92',desc:'背包/双肩包',cat:'textile',dutyUS:0.179,dutyEU:0.056,dutyUK:0.179,dutyJP:0.061,dutyAU:0.05,reg:['材质声明','拉链强度测试(建议)','REACH合规'],status:'normal'},
+{kw:['地毯','rug','地垫','floor mat'],code:'5703.30',desc:'化纤地毯/地垫',cat:'home',dutyUS:0.034,dutyEU:0.056,dutyUK:0.034,dutyJP:0.048,dutyAU:0.05,reg:['阻燃测试(美国)','纤维成分标签','REACH合规'],status:'normal'},
+{kw:['宠物','pet','狗粮','猫粮','宠物用品'],code:'2309.10',desc:'宠物食品',cat:'food',dutyUS:0.018,dutyEU:0.075,dutyUK:0.018,dutyJP:0.072,dutyAU:0.05,reg:['FDA注册(美国)','饲料许可证','成分标签','原产地声明'],status:'restricted'}
+];
+
+var COUNTRY_NAMES={US:'美国',EU:'欧盟',UK:'英国',JP:'日本',AU:'澳洲',CA:'加拿大'};
+var STATUS_NAMES={normal:'一般贸易',restricted:'受限/需资质',prohibited:'禁止进出口'};
+
+function searchHS(){
+var kw=document.getElementById('keyword').value.trim().toLowerCase();
+var country=document.getElementById('country').value;
+var cat=document.getElementById('category').value;
+var results=[];
+if(!kw&&!cat){
+document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">🔍</div><p>输入商品名称或关键词<br>查看HS编码建议与监管条件</p></div>';
+return;
+}
+HS_DATABASE.forEach(function(item){
+var match=false;
+if(kw){
+item.kw.forEach(function(k){
+if(kw.indexOf(k)>-1||k.indexOf(kw)>-1)match=true;
+});
+}
+if(cat&&item.cat===cat)match=match||!kw;
+if(match)results.push(item);
+});
+if(results.length===0){
+document.getElementById('resultArea').innerHTML='<div class="empty-state"><div class="icon">📭</div><p>未找到匹配结果<br>请尝试其他关键词或更换类别</p></div>';
+return;
+}
+var html='<div style="font-size:14px;color:var(--muted);margin-bottom:16px">找到 <strong style="color:var(--accent)">'+results.length+'</strong> 个匹配结果</div>';
+results.forEach(function(item){
+var dutyVal=country==='US'?item.dutyUS:country==='EU'?item.dutyEU:country==='UK'?item.dutyUK:country==='JP'?item.dutyJP:country==='AU'?item.dutyAU:0;
+html+='<div class="hs-card">'+
+'<div class="hs-card-header">'+
+'<div><div class="hs-code">'+item.code+'</div><div class="hs-desc">'+item.desc+' · '+COUNTRY_NAMES[country]+'</div></div>'+
+'<span class="hs-tag '+item.status+'">'+STATUS_NAMES[item.status]+'</span>'+
+'</div>'+
+'<div class="hs-detail-grid">'+
+'<div class="hs-detail-item"><div class="label">关税税率</div><div class="value rate">'+(dutyVal*100).toFixed(1)+'%</div></div>'+
+'<div class="hs-detail-item"><div class="label">增值税/VAT</div><div class="value">'+(country==='EU'||country==='UK'?'20%':country==='JP'?'10%':country==='AU'?'10%':'各州不同')+'</div></div>'+
+'<div class="hs-detail-item"><div class="label">商品类别</div><div class="value" style="font-size:14px">'+item.cat+'</div></div>'+
+'</div>'+
+'<div class="hs-regulations"><h4>📋 进出口监管条件</h4><ul>'+
+item.reg.map(function(r){return '<li>'+r+'</li>';}).join('')+
+'</ul></div>'+
+'</div>';
+});
+document.getElementById('resultArea').innerHTML=html;
+var history=JSON.parse(localStorage.getItem('jx_hs_history')||'[]');
+if(kw){
+history.unshift({kw:kw,country:country,time:Date.now()});
+if(history.length>10)history=history.slice(0,10);
+localStorage.setItem('jx_hs_history',JSON.stringify(history));
+}
+}
+searchHS();
+</script>
+</body>
+</html>

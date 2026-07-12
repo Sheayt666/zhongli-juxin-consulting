@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="税务计提计算器：应纳税所得额+各国所得税率，所得税+递延税+VAT应付+关税应计自动计算，有效税率分析，CSS税务汇总图可视化。">
+<title>税务计提计算器 - 所得税递延税VAT关税应计·有效税率分析 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.tax-table{width:100%;border-collapse:collapse;font-size:13px}
+.tax-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.tax-table th.num{text-align:right}
+.tax-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.tax-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.tax-table tr.total td{background:linear-gradient(90deg,#fffbeb,#fef3c7);font-weight:800;color:#d97706;font-size:14px}
+.tax-bar{display:flex;align-items:flex-end;gap:12px;height:240px;padding:20px 8px 0;border-bottom:2px solid var(--rule);overflow-x:auto}
+.tax-col{display:flex;flex-direction:column;align-items:center;min-width:100px;flex:1;height:100%;justify-content:flex-end}
+.tax-bar-bar{width:70%;border-radius:6px 6px 0 0;transition:height .4s;display:flex;align-items:flex-start;justify-content:center;min-height:2px;position:relative}
+.tax-bar-val{position:absolute;top:-22px;font-size:12px;font-weight:700;white-space:nowrap;color:var(--ink)}
+.tax-bar-label{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;max-width:100px;line-height:1.3}
+.tax-row-input{display:grid;grid-template-columns:80px 1fr 90px 90px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule-light)}
+.tax-row-input label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.tax-row-input input{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px}
+.tax-row-input .tri-result{font-size:13px;font-weight:700;text-align:right;color:#d97706}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.tax-table{font-size:11px}.tax-row-input{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+  <a href="balance-sheet-builder.html" class="workflow-step">资产负债表</a>
+  <a href="cash-flow-statement-builder.html" class="workflow-step">现金流量表</a>
+  <a href="tax-provision-calculator.html" class="workflow-step active">税务计提</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">税务计提计算器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🧾</span>税务计提计算器 Tax Provision Calculator</h1>
+  <p>输入各国应纳税所得额与税率，自动计算当期所得税+递延所得税+VAT应付+关税应计，有效税率ETR分析，CSS税务汇总图展示各税种构成，支持多国多站点税务计提与汇总。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">税前利润 Pre-Tax</div><div class="mc-value" id="mPreTax">$0</div></div>
+    <div class="metric-card warning"><div class="mc-label">所得税计提</div><div class="mc-value" id="mIncomeTax">$0</div></div>
+    <div class="metric-card danger"><div class="mc-label">税务总应计</div><div class="mc-value" id="mTotal">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">有效税率 ETR</div><div class="mc-value" id="mETR">0%</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🌍 各国所得税计提</h2>
+    <div class="tax-row-input" style="font-size:11px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--rule)">
+      <div>国家/站点</div><div>应纳税所得额 ($)</div><div style="text-align:right">税率%</div><div style="text-align:right">所得税</div>
+    </div>
+    <div id="countryRows"></div>
+    <button onclick="TPC.addCountry()" style="margin-top:12px;padding:8px 16px;border:1px dashed #4f46e5;background:#f5f3ff;color:#4f46e5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">+ 添加国家/站点</button>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔄 递延所得税</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>递延税资产变动 DTA <span class="hint">($,增加为-)</span></label><input type="number" id="dta" value="-3000" step="500" oninput="TPC.calc()"></div>
+      <div class="jx-field"><label>递延税负债变动 DTL <span class="hint">($,增加为+)</span></label><input type="number" id="dtl" value="5000" step="500" oninput="TPC.calc()"></div>
+      <div class="jx-field"><label>递延税调整其他 <span class="hint">($)</span></label><input type="number" id="dtOther" value="0" step="500" oninput="TPC.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📦 VAT应付与关税应计</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>销项VAT Output VAT <span class="hint">($)</span></label><input type="number" id="outputVat" value="18000" step="500" oninput="TPC.calc()"></div>
+      <div class="jx-field"><label>进项VAT Input VAT <span class="hint">($)</span></label><input type="number" id="inputVat" value="12000" step="500" oninput="TPC.calc()"></div>
+      <div class="jx-field"><label>VAT净应付 <span class="hint">(自动)</span></label><input type="text" id="netVat" value="$6,000" readonly style="background:#f8fafc;font-weight:700;color:#d97706"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>进口货值 Customs Value <span class="hint">($)</span></label><input type="number" id="customsVal" value="80000" step="1000" oninput="TPC.calc()"></div>
+      <div class="jx-field"><label>关税税率 <span class="hint">(%)</span></label><input type="number" id="customsRate" value="5" step="0.5" oninput="TPC.calc()"></div>
+      <div class="jx-field"><label>关税应计 <span class="hint">(自动)</span></label><input type="text" id="customsDue" value="$4,000" readonly style="background:#f8fafc;font-weight:700;color:#d97706"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 税务汇总图</h2>
+    <div class="tax-bar" id="taxBar"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 税务计提明细表</h2>
+    <div style="overflow-x:auto"><table class="tax-table" id="taxTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 税务分析</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="vat-oss-calculator.html" class="rt-card"><div class="rt-icon">🌍</div><div><h5>VAT/OSS计算器</h5><p>欧盟VAT计算</p></div></a>
+      <a href="customs-duty-calculator.html" class="rt-card"><div class="rt-icon">📦</div><div><h5>关税计算器</h5><p>进口关税估算</p></div></a>
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>损益编制</p></div></a>
+      <a href="amazon-fee-deep-dive.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>Amazon费用拆解</h5><p>15+费用项</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="tax-provision-calculator.html">税务计提</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var TPC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var countries=[
+    {name:'美国 US',income:120000,rate:21},
+    {name:'英国 UK',income:45000,rate:19},
+    {name:'德国 DE',income:38000,rate:30},
+    {name:'日本 JP',income:30000,rate:30}
+  ];
+
+  function renderRows(){
+    var h='';
+    countries.forEach(function(c,i){
+      h+='<div class="tax-row-input"><input type="text" value="'+c.name+'" oninput="TPC.updateName('+i+',this.value)" style="font-weight:600"><input type="number" value="'+c.income+'" step="1000" oninput="TPC.update('+i+',{income:parseFloat(this.value)||0})"><input type="number" value="'+c.rate+'" step="0.5" oninput="TPC.update('+i+',{rate:parseFloat(this.value)||0})"><div class="tri-result">'+fmt(c.income*c.rate/100)+'</div></div>';
+    });
+    $('countryRows').innerHTML=h;
+  }
+
+  function updateName(i,v){countries[i].name=v;calc()}
+  function update(i,obj){Object.assign(countries[i],obj);calc()}
+  function addCountry(){countries.push({name:'新站点',income:0,rate:25});renderRows();calc()}
+
+  function calc(){
+    var totalIncome=0,currentTax=0;
+    var countryData=countries.map(function(c){var t=c.income*c.rate/100;totalIncome+=c.income;currentTax+=t;return{name:c.name,income:c.income,rate:c.rate,tax:t}});
+    var dta=num('dta'),dtl=num('dtl'),dtOther=num('dtOther');
+    var deferredTax=dtl+dta+dtOther;
+    var incomeTax=currentTax+deferredTax;
+    var outputVat=num('outputVat'),inputVat=num('inputVat');
+    var netVat=outputVat-inputVat;
+    var customsVal=num('customsVal'),customsRate=num('customsRate');
+    var customsDue=customsVal*customsRate/100;
+    var totalTax=incomeTax+netVat+customsDue;
+    var preTax=totalIncome;
+    var etr=preTax>0?incomeTax/preTax*100:0;
+
+    $('mPreTax').textContent=fmt(preTax);
+    $('mIncomeTax').textContent=fmt(incomeTax);
+    $('mTotal').textContent=fmt(totalTax);
+    $('mETR').textContent=etr.toFixed(1)+'%';
+    $('mETR').style.color=etr>30?'#dc2626':(etr>20?'#d97706':'#059669');
+    $('netVat').value=fmt(netVat);
+    $('customsDue').value=fmt(customsDue);
+
+    renderBar(currentTax,deferredTax,netVat,customsDue,totalTax);
+    renderTable(countryData,currentTax,deferredTax,incomeTax,netVat,customsDue,totalTax,preTax,etr,customsVal);
+    renderTips(countryData,currentTax,deferredTax,incomeTax,netVat,customsDue,totalTax,preTax,etr);
+    save();
+  }
+
+  function renderBar(ct,dt,nv,cd,total){
+    var max=Math.max(ct,Math.abs(dt),Math.abs(nv),cd,1);
+    var col=function(label,val,color){
+      var h=Math.abs(val)/max*100;
+      return '<div class="tax-col"><div class="tax-bar-bar" style="height:'+Math.max(2,h)+'%;background:'+color+'"><span class="tax-bar-val">'+fmt(val)+'</span></div><div class="tax-bar-label">'+label+'</div></div>';
+    };
+    $('taxBar').innerHTML=col('当期所得税',ct,'#4f46e5')+col('递延所得税',dt,'#8b5cf6')+col('VAT净应付',nv,'#f59e0b')+col('关税应计',cd,'#ef4444')+col('税务总应计',total,'#10b981');
+  }
+
+  function renderTable(cd,ct,dt,it,nv,custDue,total,preTax,etr,custVal){
+    var h='<thead><tr><th>税种/国家</th><th class="num">计税基础</th><th class="num">税率</th><th class="num">应计金额</th></tr></thead><tbody>';
+    h+='<tr><td colspan="4" style="background:#f0f4ff;font-weight:700;color:#4f46e5;font-size:12px">一、当期所得税 Current Tax</td></tr>';
+    cd.forEach(function(c){h+='<tr><td>　'+c.name+'</td><td class="num">'+fmt(c.income)+'</td><td class="num">'+c.rate+'%</td><td class="num">'+fmt(c.tax)+'</td></tr>'});
+    h+='<tr class="total"><td>当期所得税小计</td><td class="num">'+fmt(cd.reduce(function(a,b){return a+b.income},0))+'</td><td class="num">-</td><td class="num">'+fmt(ct)+'</td></tr>';
+    h+='<tr><td colspan="4" style="background:#f0f4ff;font-weight:700;color:#4f46e5;font-size:12px">二、递延所得税 Deferred Tax</td></tr>';
+    h+='<tr><td>　递延税资产变动</td><td class="num">-</td><td class="num">-</td><td class="num">'+fmt(num('dta'))+'</td></tr>';
+    h+='<tr><td>　递延税负债变动</td><td class="num">-</td><td class="num">-</td><td class="num">'+fmt(num('dtl'))+'</td></tr>';
+    h+='<tr><td>　其他递延调整</td><td class="num">-</td><td class="num">-</td><td class="num">'+fmt(num('dtOther'))+'</td></tr>';
+    h+='<tr class="total"><td>递延所得税小计</td><td class="num">-</td><td class="num">-</td><td class="num">'+fmt(dt)+'</td></tr>';
+    h+='<tr class="total"><td>所得税合计 Income Tax</td><td class="num">'+fmt(preTax)+'</td><td class="num">'+etr.toFixed(1)+'%</td><td class="num">'+fmt(it)+'</td></tr>';
+    h+='<tr><td colspan="4" style="background:#f0f4ff;font-weight:700;color:#4f46e5;font-size:12px">三、流转税与关税</td></tr>';
+    h+='<tr><td>　VAT净应付</td><td class="num">'+fmt(num('outputVat'))+'-'+fmt(num('inputVat'))+'</td><td class="num">-</td><td class="num">'+fmt(nv)+'</td></tr>';
+    h+='<tr><td>　关税应计</td><td class="num">'+fmt(custVal)+'</td><td class="num">'+num('customsRate')+'%</td><td class="num">'+fmt(custDue)+'</td></tr>';
+    h+='<tr class="total"><td>税务总应计 Total Provision</td><td class="num">-</td><td class="num">-</td><td class="num">'+fmt(total)+'</td></tr>';
+    h+='</tbody>';
+    $('taxTable').innerHTML=h;
+  }
+
+  function renderTips(cd,ct,dt,it,nv,cd,total,preTax,etr){
+    var tips=[];
+    tips.push('税前利润 '+fmt(preTax)+'，所得税计提 '+fmt(it)+'，有效税率 '+etr.toFixed(1)+'%。');
+    if(etr>30)tips.push('有效税率 '+etr.toFixed(1)+'% 偏高，建议评估各国利润分配与税务架构优化空间。');
+    else if(etr<15)tips.push('有效税率 '+etr.toFixed(1)+'% 较低，需确保税务安排合规，留存转移定价文档备查。');
+    else tips.push('有效税率 '+etr.toFixed(1)+'% 处于合理区间，税务负担可控。');
+    var topCountry=cd.slice().sort(function(a,b){return b.tax-a.tax})[0];
+    if(topCountry&&topCountry.tax>0)tips.push('税负最重站点为「'+topCountry.name+'」（'+fmt(topCountry.tax)+'，税率'+topCountry.rate+'%），是税务筹划重点。');
+    if(dt>0)tips.push('递延所得税 '+fmt(dt)+' 为正（递延税负债增加），未来有缴税义务，关注暂时性差异转回。');
+    else if(dt<0)tips.push('递延所得税 '+fmt(dt)+' 为负（递延税资产增加），未来可抵扣，注意可变现性评估。');
+    if(nv>0)tips.push('VAT净应付 '+fmt(nv)+'，需按时申报缴纳，避免滞纳金。销项'+fmt(num('outputVat'))+'-进项'+fmt(num('inputVat'))+'。');
+    if(cd>0)tips.push('关税应计 '+fmt(cd)+'，货值'+fmt(num('customsVal'))+'×'+num('customsRate')+'%，关注HS编码归类准确性。');
+    tips.push('税务总应计 '+fmt(total)+'，其中所得税占'+(total>0?it/total*100:0).toFixed(0)+'%，流转税及关税占'+(total>0?(nv+cd)/total*100:0).toFixed(0)+'%。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function num(id){return parseFloat($(id).value)||0}
+  function save(){var d={dta:num('dta'),dtl:num('dtl'),dtOther:num('dtOther'),outputVat:num('outputVat'),inputVat:num('inputVat'),customsVal:num('customsVal'),customsRate:num('customsRate'),countries:countries};try{localStorage.setItem('jx_tpc_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_tpc_data'));if(d){countries=d.countries||countries;['dta','dtl','dtOther','outputVat','inputVat','customsVal','customsRate'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,update:update,updateName:updateName,addCountry:addCountry,init:function(){load();renderRows();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TPC.init)}else{TPC.init()}
+</script>
+</body>
+</html>

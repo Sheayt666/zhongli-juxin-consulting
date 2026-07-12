@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="政策变更追踪器：记录亚马逊平台政策更新，CSS时间线可视化，影响评估等级，应对建议引擎，按政策类型分类管理。免费在线跨境电商政策追踪工具。">
+<meta name="keywords" content="政策变更追踪,亚马逊政策,政策影响评估,政策应对,风险管理,合规">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/policy-update-tracker.html">
+<title>政策变更追踪器 - 时间线·影响评估·应对建议 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.put-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.put-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.filter-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);transition:all .2s}
+.chip.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.timeline{position:relative;padding-left:32px;margin-top:12px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#4f46e5,#c7d2fe)}
+.tl-item{position:relative;margin-bottom:18px;padding:18px 20px;background:var(--bg-soft);border-radius:12px;border-left:4px solid #4f46e5;border:1px solid var(--rule-light)}
+.tl-item.high{border-left-color:#ef4444}.tl-item.mid{border-left-color:#f59e0b}.tl-item.low{border-left-color:#10b981}
+.tl-item::before{content:'';position:absolute;left:-28px;top:22px;width:12px;height:12px;border-radius:50%;background:#4f46e5;border:2px solid #fff;box-shadow:0 0 0 2px #4f46e5}
+.tl-item.high::before{background:#ef4444;box-shadow:0 0 0 2px #ef4444}
+.tl-item.mid::before{background:#f59e0b;box-shadow:0 0 0 2px #f59e0b}
+.tl-item.low::before{background:#10b981;box-shadow:0 0 0 2px #10b981}
+.tl-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.tl-title{font-size:15px;font-weight:700;color:var(--ink)}
+.tl-date{font-size:12px;color:var(--muted)}
+.tl-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700}
+.tl-badge.high{background:#fee2e2;color:#dc2626}.tl-badge.mid{background:#fef3c7;color:#d97706}.tl-badge.low{background:#d1fae5;color:#059669}
+.tl-body{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:8px}
+.tl-suggest{font-size:12px;color:var(--ink);background:#eef2ff;padding:8px 12px;border-radius:8px;margin-top:8px}
+.tl-suggest strong{color:#4f46e5}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.stat-card{flex:1;min-width:120px;padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.stat-card .sv{font-size:24px;font-weight:800;color:var(--ink)}
+.stat-card .sl{font-size:11px;color:var(--muted);margin-top:2px}
+.btn-add{padding:10px 22px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"政策变更追踪器","description":"记录亚马逊平台政策更新，CSS时间线可视化，影响评估等级，应对建议引擎。","url":"https://juxin-consulting.help/tools/policy-update-tracker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"政策变更追踪器","item":"https://juxin-consulting.help/tools/policy-update-tracker.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="policy_update_tracker">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📜 风险管理工作流</span>
+      <h1>政策变更 <em>追踪器</em></h1>
+      <p class="tool-hero-desc">记录亚马逊平台政策更新动态，CSS时间线可视化呈现变更历程，按高/中/低三级评估业务影响，智能生成应对建议，按政策类型筛选管理，数据本地持久化。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第7步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a><span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a><span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a><span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a><span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a><span class="arrow">→</span>
+      <a href="appeal-letter-generator.html" class="step">申诉信生成</a><span class="arrow">→</span>
+      <span class="step current">政策追踪</span><span class="arrow">→</span>
+      <a href="listing-suppression-checker.html" class="step">Listing下架</a><span class="arrow">→</span>
+      <a href="account-suspension-recovery.html" class="step">封号恢复</a><span class="arrow">→</span>
+      <a href="performance-metric-monitor.html" class="step">绩效监控</a><span class="arrow">→</span>
+      <a href="ip-infringement-scanner.html" class="step">侵权扫描</a><span class="arrow">→</span>
+      <a href="risk-heatmap-generator.html" class="step">风险热力图</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="put-section">
+        <h3>➕ 添加政策变更记录</h3>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>政策类型</label><select id="ptype">
+            <option value="费用政策">费用政策</option>
+            <option value="Listing政策">Listing政策</option>
+            <option value="广告政策">广告政策</option>
+            <option value="知识产权">知识产权</option>
+            <option value="物流政策">物流政策</option>
+            <option value="评价政策">评价政策</option>
+            <option value="账号政策">账号政策</option>
+          </select></div>
+          <div class="calc-field"><label>更新日期</label><input type="date" id="pdate"></div>
+        </div>
+        <div class="calc-field"><label>政策标题</label><input type="text" id="ptitle" placeholder="如 FBA配送费率调整"></div>
+        <div class="calc-field"><label>变更描述</label><textarea id="pdesc" rows="2" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" placeholder="简要描述政策变更内容"></textarea></div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>影响等级</label><select id="pimpact"><option value="high">高 - 直接影响利润/合规</option><option value="mid" selected>中 - 需调整运营</option><option value="low">低 - 知悉即可</option></select></div>
+          <div class="calc-field"><label>应对建议</label><input type="text" id="psuggest" placeholder="如 重新核算FBA成本结构"></div>
+        </div>
+        <button class="btn-add" onclick="PUT.add()">＋ 添加记录</button>
+      </div>
+
+      <div class="put-section">
+        <h3>📊 影响概览</h3>
+        <div class="stat-row" id="statRow"></div>
+        <div class="filter-chips" id="filterChips"></div>
+      </div>
+
+      <div class="put-section">
+        <h3>📅 政策变更时间线</h3>
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+      <div class="put-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="compliance-check.html" class="related-card"><span class="related-card-icon">✅</span><div class="related-card-content"><h5>合规检查器</h5><p>多维度合规检查</p></div></a>
+          <a href="listing-suppression-checker.html" class="related-card"><span class="related-card-icon">📉</span><div class="related-card-content"><h5>Listing下架检查</h5><p>违规词扫描</p></div></a>
+          <a href="account-health.html" class="related-card"><span class="related-card-icon">🏥</span><div class="related-card-content"><h5>账号健康监控</h5><p>8维度检查</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="appeal-letter-generator.html" class="wbn-btn prev">← 上一步：申诉信生成</a>
+        <a href="listing-suppression-checker.html" class="wbn-btn next">下一步：Listing下架 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="policy-update-tracker.html">政策变更追踪</a></li><li><a href="risk-heatmap-generator.html">风险热力图</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PUT=(function(){
+  'use strict';
+  var SK='jx_policy_tracker';
+  var records=[];
+  var filter='all';
+  var SEED=[
+    {type:'费用政策',date:'2026-06-15',title:'FBA配送费率上调',desc:'标准尺寸商品配送费平均上调5.2%，大件商品上调3.8%。',impact:'high',suggest:'重新核算各SKU FBA成本，调整售价或转海外仓'},
+    {type:'Listing政策',date:'2026-05-28',title:'Listing标题字符限制收紧',desc:'部分类目标题字符上限由200收紧至150，超长将被抑制。',impact:'mid',suggest:'批量检查并精简超长标题'},
+    {type:'评价政策',date:'2026-05-10',title:'Vine计划费用调整',desc:'每个ASIN注册Vine费用由200美元调整为，第2件起75美元。',impact:'low',suggest:'新品Vine策略优化，合并注册降低成本'},
+    {type:'广告政策',date:'2026-04-22',title:'品牌视频广告素材新规',desc:'视频广告前3秒须包含品牌标识，禁用误导性过渡。',impact:'mid',suggest:'更新视频素材模板，补充品牌片头'}
+  ];
+  function load(){try{var d=localStorage.getItem(SK);if(d)records=JSON.parse(d);else{records=SEED.slice();save();}}catch(e){records=SEED.slice();}}
+  function save(){try{localStorage.setItem(SK,JSON.stringify(records));}catch(e){}}
+  function add(){
+    var r={type:v('ptype'),date:v('pdate')||new Date().toISOString().slice(0,10),title:v('ptitle'),desc:v('pdesc'),impact:v('pimpact'),suggest:v('psuggest')};
+    if(!r.title){alert('请填写政策标题');return;}
+    records.push(r);records.sort(function(a,b){return a.date<b.date?1:-1;});save();render();
+    document.getElementById('ptitle').value='';document.getElementById('pdesc').value='';document.getElementById('psuggest').value='';
+  }
+  function v(id){return document.getElementById(id).value||'';}
+  function renderStats(){
+    var h=records.length,mid=records.filter(function(r){return r.impact==='mid';}).length,hi=records.filter(function(r){return r.impact==='high';}).length;
+    var types={};records.forEach(function(r){types[r.type]=(types[r.type]||0)+1;});
+    document.getElementById('statRow').innerHTML=
+      '<div class="stat-card"><div class="sv">'+h+'</div><div class="sl">政策总数</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#ef4444">'+hi+'</div><div class="sl">高影响</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#f59e0b">'+mid+'</div><div class="sl">中影响</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#4f46e5">'+Object.keys(types).length+'</div><div class="sl">涉及类目</div></div>';
+    var chips='<div class="chip '+(filter==='all'?'active':'')+'" onclick="PUT.setFilter(\'all\')">全部 ('+h+')</div>';
+    Object.keys(types).forEach(function(t){chips+='<div class="chip '+(filter===t?'active':'')+'" onclick="PUT.setFilter(\''+t+'\')">'+t+' ('+types[t]+')</div>';});
+    document.getElementById('filterChips').innerHTML=chips;
+  }
+  function setFilter(f){filter=f;render();}
+  function renderTimeline(){
+    var list=records.filter(function(r){return filter==='all'||r.type===filter;});
+    if(!list.length){document.getElementById('timeline').innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">暂无政策记录</div>';return;}
+    var h='';
+    list.forEach(function(r){
+      var imap={high:'高影响',mid:'中影响',low:'低影响'};
+      h+='<div class="tl-item '+r.impact+'">';
+      h+='<div class="tl-head"><div class="tl-title">'+r.title+'</div><div><span style="font-size:11px;color:var(--muted);margin-right:8px">'+r.date+'</span><span class="tl-badge '+r.impact+'">'+imap[r.impact]+'</span></div></div>';
+      h+='<div class="tl-body"><strong>['+r.type+']</strong> '+r.desc+'</div>';
+      if(r.suggest)h+='<div class="tl-suggest"><strong>应对建议：</strong>'+r.suggest+'</div>';
+      h+='</div>';
+    });
+    document.getElementById('timeline').innerHTML=h;
+  }
+  function render(){renderStats();renderTimeline();}
+  function init(){
+    document.getElementById('pdate').value=new Date().toISOString().slice(0,10);
+    load();render();
+  }
+  return {add:add,setFilter:setFilter,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PUT.init);}else{PUT.init();}
+</script>
+</body>
+</html>

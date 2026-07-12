@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="自动调价引擎：根据当前价格、竞品价格、最低价、目标Buy Box赢得率配置调价规则，价格建议，CSS调价模拟。免费在线跨境电商自动调价工具。">
+<meta name="keywords" content="自动调价,调价引擎,Buy Box,竞品价格,调价规则,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/repricing-rules-engine.html">
+<title>自动调价引擎 - 调价规则·Buy Box赢得率·CSS模拟 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.rre-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.rre-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.rule-card{padding:18px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);margin-bottom:12px}
+.rule-card .rc-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.rule-card .rc-icon{font-size:20px}
+.rule-card .rc-name{font-size:14px;font-weight:700;color:var(--ink)}
+.rule-card .rc-desc{font-size:12px;color:var(--muted);margin-bottom:8px}
+.rule-card .rc-formula{font-size:12px;font-family:'Courier New',monospace;background:#fff;padding:8px 12px;border-radius:6px;border:1px solid var(--rule);color:var(--ink-soft)}
+.sim-table{width:100%;border-collapse:collapse;font-size:13px}
+.sim-table th{background:var(--bg-soft);padding:10px;text-align:center;font-weight:600;border-bottom:2px solid var(--rule)}
+.sim-table td{padding:10px;text-align:center;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.sim-table td.suggest{font-weight:700;color:#4f46e5}
+.sim-table tr:hover{background:var(--bg-soft)}
+.price-change{font-size:12px;font-weight:700}
+.price-change.up{color:#ef4444}.price-change.down{color:#10b981}.price-change.same{color:var(--muted)}
+.bb-gauge{display:inline-flex;align-items:center;gap:8px}
+.bb-bar{width:60px;height:8px;border-radius:4px;background:var(--rule-light);overflow:hidden}
+.bb-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#4f46e5,#10b981)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"自动调价引擎","description":"根据当前价格、竞品价格、最低价、目标Buy Box赢得率配置调价规则，价格建议，CSS调价模拟。","url":"https://juxin-consulting.help/tools/repricing-rules-engine.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"自动调价引擎","item":"https://juxin-consulting.help/tools/repricing-rules-engine.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="repricing_rules_engine">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚙️ 定价策略工作流</span>
+      <h1>自动调价 <em>引擎</em></h1>
+      <p class="tool-hero-desc">配置多场景调价规则（Beat/Match/Floor），结合竞品价格、最低价底线与目标Buy Box赢得率，模拟输出建议价格与预期Buy Box胜率，智能平衡利润与销量。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第7步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <a href="price-elasticity-tester.html" class="step">价格弹性</a><span class="arrow">→</span>
+      <span class="step current">自动调价</span><span class="arrow">→</span>
+      <a href="psychological-pricing-analyzer.html" class="step">心理定价</a><span class="arrow">→</span>
+      <a href="price-war-simulator.html" class="step">价格战模拟</a><span class="arrow">→</span>
+      <a href="coupon-deal-optimizer.html" class="step">Coupon优化</a><span class="arrow">→</span>
+      <a href="multi-variant-pricing-strategy.html" class="step">多变体定价</a><span class="arrow">→</span>
+      <a href="price-history-analyzer.html" class="step">价格历史</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>⚙️ 调价参数</h2>
+          <p class="calc-form-subtitle">填写当前价格、竞品价格与底线</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>当前价格 <span class="hint">($)</span></label><input type="number" id="curPrice" value="24.99" step="0.01" oninput="RRE.calc()"></div>
+            <div class="calc-field"><label>最低竞品价 <span class="hint">($)</span></label><input type="number" id="compPrice" value="23.49" step="0.01" oninput="RRE.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>价格底线 <span class="hint">($，含成本+最低利润)</span></label><input type="number" id="floor" value="18.00" step="0.01" oninput="RRE.calc()"></div>
+            <div class="calc-field"><label>目标Buy Box赢得率 <span class="hint">(%)</span></label><input type="number" id="targetBB" value="75" oninput="RRE.calc()"></div>
+          </div>
+          <div class="calc-field"><label>调价步长 <span class="hint">($)</span></label><input type="number" id="step" value="0.20" step="0.05" oninput="RRE.calc()"></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="rre-section">
+        <h3>📐 调价规则配置</h3>
+        <div class="rule-card"><div class="rc-head"><span class="rc-icon">🎯</span><span class="rc-name">Match规则 - 匹配最低价</span></div><div class="rc-desc">将价格调整至与最低竞品价一致，平衡利润与Buy Box胜率</div><div class="rc-formula">建议价 = 最低竞品价</div></div>
+        <div class="rule-card"><div class="rc-head"><span class="rc-icon">⬇️</span><span class="rc-name">Beat规则 - 击败最低价</span></div><div class="rc-desc">在最低竞品价基础上下调一个步长，最大化Buy Box胜率</div><div class="rc-formula">建议价 = 最低竞品价 - 调价步长</div></div>
+        <div class="rule-card"><div class="rc-head"><span class="rc-icon">🛡️</span><span class="rc-name">Floor规则 - 底线保护</span></div><div class="rc-desc">任何调价不低于价格底线，保障最低利润</div><div class="rc-formula">建议价 = MAX(计算价, 价格底线)</div></div>
+      </div>
+
+      <div class="rre-section">
+        <h3>🎲 调价模拟对比</h3>
+        <table class="sim-table">
+          <thead><tr><th>策略</th><th>建议价格</th><th>价格变动</th><th>预期Buy Box胜率</th><th>预估月利润</th></tr></thead>
+          <tbody id="simTable"></tbody>
+        </table>
+      </div>
+
+      <div class="rre-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="dynamic-pricing.html" class="related-card"><span class="related-card-icon">⚡</span><div class="related-card-content"><h5>动态定价</h5><p>实时调价</p></div></a>
+          <a href="competitor-pricing.html" class="related-card"><span class="related-card-icon">🏁</span><div class="related-card-content"><h5>竞品定价</h5><p>竞品比价</p></div></a>
+          <a href="price-war-simulator.html" class="related-card"><span class="related-card-icon">⚔️</span><div class="related-card-content"><h5>价格战模拟</h5><p>降价推演</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="price-elasticity-tester.html" class="wbn-btn prev">← 上一步：价格弹性</a>
+        <a href="psychological-pricing-analyzer.html" class="wbn-btn next">下一步：心理定价 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="repricing-rules-engine.html">自动调价引擎</a></li><li><a href="dynamic-pricing.html">动态定价</a></li><li><a href="price-history-analyzer.html">价格历史</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var RRE=(function(){
+  'use strict';
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function bbWinRate(myPrice,compPrice,curPrice){
+    // 简化模型：价格越低于竞品胜率越高
+    if(myPrice<compPrice)return 85+Math.min(14,(compPrice-myPrice)/compPrice*100);
+    if(myPrice===compPrice)return 70;
+    if(myPrice<=curPrice)return 55-(myPrice-compPrice)/compPrice*100*2;
+    return Math.max(20,40-(myPrice-compPrice)/compPrice*100*2);
+  }
+  function calc(){
+    var cur=v('curPrice'),comp=v('compPrice'),floor=v('floor'),target=v('targetBB'),step=v('step');
+    var cost=floor*0.7; // 假设成本
+    var monthlyVol=2000;
+    var strategies=[
+      {name:'维持当前',icon:'➡️',price:cur},
+      {name:'Match匹配',icon:'🎯',price:Math.max(comp,floor)},
+      {name:'Beat击败',icon:'⬇️',price:Math.max(comp-step,floor)},
+      {name:'Floor底线',icon:'🛡️',price:floor}
+    ];
+    var sh='';
+    strategies.forEach(function(s){
+      var bb=Math.round(Math.min(95,Math.max(15,bbWinRate(s.price,comp,cur))));
+      var vol=Math.round(monthlyVol*bb/70); // 胜率影响销量
+      var profit=(s.price-cost)*vol;
+      var diff=s.price-cur;
+      var cls=diff>0?'up':(diff<0?'down':'same');
+      var diffStr=diff===0?'持平':(diff>0?'+':'')+'$'+diff.toFixed(2);
+      sh+='<tr><td>'+s.icon+' '+s.name+'</td><td class="suggest">$'+s.price.toFixed(2)+'</td><td><span class="price-change '+cls+'">'+diffStr+'</span></td><td><div class="bb-gauge">'+bb+'%<div class="bb-bar"><div class="bb-fill" style="width:'+bb+'%"></div></div></div></td><td>$'+profit.toLocaleString('en-US',{maximumFractionDigits:0})+'</td></tr>';
+    });
+    document.getElementById('simTable').innerHTML=sh;
+    // 推荐策略：达到目标BB胜率且利润最高
+    var recommend=strategies.filter(function(s){return bbWinRate(s.price,comp,cur)>=target;}).sort(function(a,b){return (b.price-cost)*monthlyVol*bbWinRate(b.price,comp,cur)/70-(a.price-cost)*monthlyVol*bbWinRate(a.price,comp,cur)/70;})[0]||strategies[2];
+    var recBB=Math.round(bbWinRate(recommend.price,comp,cur));
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🎯 调价建议</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">推荐策略</div><div class="ri-value" style="color:#4f46e5">'+recommend.name+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">建议价格</div><div class="ri-value" style="color:#10b981">$'+recommend.price.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">预期胜率</div><div class="ri-value" style="color:'+(recBB>=target?'#10b981':'#f59e0b')+'">'+recBB+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">目标胜率</div><div class="ri-value">'+target+'%</div></div>'+
+      '</div><div class="result-note">💡 '+(recommend.price<cur?'降价':'提价')+'至$'+recommend.price.toFixed(2)+'可在达到'+target+'% Buy Box目标的同时保障利润。' +(recommend.price<=floor?'注意：已达价格底线，继续降价将侵蚀利润':'')+'</div>';
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RRE.init);}else{RRE.init();}
+</script>
+</body>
+</html>

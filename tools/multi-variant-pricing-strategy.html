@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="多变体定价策略器：价格梯度建议、锚点设定、组合优化、CSS变体价格矩阵。免费在线跨境电商多变体定价工具。">
+<meta name="keywords" content="多变体定价,价格梯度,锚点设定,组合优化,变体矩阵,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/multi-variant-pricing-strategy.html">
+<title>多变体定价策略器 - 价格梯度·锚点设定·变体矩阵 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.mps-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.mps-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.variant-table{width:100%;border-collapse:collapse;font-size:13px}
+.variant-table th{background:var(--bg-soft);padding:12px;text-align:left;font-weight:600;border-bottom:2px solid var(--rule)}
+.variant-table td{padding:12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.variant-table tr.anchor{background:#fffbeb}
+.variant-table tr.main{background:#eef2ff}
+.variant-table tr.entry{background:#ecfdf5}
+.role-badge{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:700}
+.role-badge.anchor{background:#fef3c7;color:#d97706}
+.role-badge.main{background:#eef2ff;color:#4f46e5}
+.role-badge.entry{background:#d1fae5;color:#059669}
+.gradient-bar{display:flex;height:50px;border-radius:10px;overflow:hidden;margin:16px 0}
+.gradient-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.matrix-box{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.matrix-cell{padding:14px 10px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center;font-size:12px}
+.matrix-cell .mc-price{font-size:16px;font-weight:800;color:var(--ink)}
+.matrix-cell .mc-margin{font-size:11px;color:var(--muted);margin-top:2px}
+.strategy-list{list-style:none;padding:0;margin:0}
+.strategy-list li{padding:12px 0 12px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.6}
+.strategy-list li:last-child{border-bottom:none}
+.strategy-list li::before{content:'🔀';position:absolute;left:0;top:12px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"多变体定价策略器","description":"价格梯度建议、锚点设定、组合优化、CSS变体价格矩阵。","url":"https://juxin-consulting.help/tools/multi-variant-pricing-strategy.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"多变体定价策略器","item":"https://juxin-consulting.help/tools/multi-variant-pricing-strategy.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="multi_variant_pricing_strategy">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔀 定价策略工作流</span>
+      <h1>多变体定价 <em>策略器</em></h1>
+      <p class="tool-hero-desc">为产品变体（如容量/颜色/配置）设计价格梯度，设定引流款/主推款/锚定款角色，CSS变体价格矩阵直观呈现，利用妥协效应与锚定效应优化组合利润。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <a href="price-elasticity-tester.html" class="step">价格弹性</a><span class="arrow">→</span>
+      <a href="repricing-rules-engine.html" class="step">自动调价</a><span class="arrow">→</span>
+      <a href="psychological-pricing-analyzer.html" class="step">心理定价</a><span class="arrow">→</span>
+      <a href="price-war-simulator.html" class="step">价格战模拟</a><span class="arrow">→</span>
+      <a href="coupon-deal-optimizer.html" class="step">Coupon优化</a><span class="arrow">→</span>
+      <span class="step current">多变体定价</span><span class="arrow">→</span>
+      <a href="price-history-analyzer.html" class="step">价格历史</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 变体参数</h2>
+          <p class="calc-form-subtitle">输入主推变体价格与成本</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>主推款价格 <span class="hint">($)</span></label><input type="number" id="mainPrice" value="24.99" step="0.01" oninput="MPS.calc()"></div>
+            <div class="calc-field"><label>主推款成本 <span class="hint">($)</span></label><input type="number" id="mainCost" value="9.00" step="0.01" oninput="MPS.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>变体数量</label><select id="variantCount" onchange="MPS.calc()"><option value="3">3个变体</option><option value="4" selected>4个变体</option><option value="5">5个变体</option></select></div>
+            <div class="calc-field"><label>梯度间距 <span class="hint">($)</span></label><input type="number" id="gap" value="6.00" step="0.5" oninput="MPS.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="mps-section">
+        <h3>🔀 变体价格矩阵</h3>
+        <div class="gradient-bar" id="gradientBar"></div>
+        <table class="variant-table">
+          <thead><tr><th>变体</th><th>角色</th><th>建议价格</th><th>成本</th><th>毛利率</th><th>预期销量占比</th></tr></thead>
+          <tbody id="variantTable"></tbody>
+        </table>
+      </div>
+
+      <div class="mps-section">
+        <h3>🎯 组合优化策略</h3>
+        <ul class="strategy-list" id="strategyList"></ul>
+      </div>
+
+      <div class="mps-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="bundle-pricing.html" class="related-card"><span class="related-card-icon">📦</span><div class="related-card-content"><h5>套餐定价</h5><p>组合优惠</p></div></a>
+          <a href="psychological-pricing-analyzer.html" class="related-card"><span class="related-card-icon">🧠</span><div class="related-card-content"><h5>心理定价</h5><p>锚定效应</p></div></a>
+          <a href="price-elasticity-tester.html" class="related-card"><span class="related-card-icon">📈</span><div class="related-card-content"><h5>价格弹性</h5><p>弹性分析</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="coupon-deal-optimizer.html" class="wbn-btn prev">← 上一步：Coupon优化</a>
+        <a href="price-history-analyzer.html" class="wbn-btn next">下一步：价格历史 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="multi-variant-pricing-strategy.html">多变体定价</a></li><li><a href="bundle-pricing.html">套餐定价</a></li><li><a href="price-history-analyzer.html">价格历史</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var MPS=(function(){
+  'use strict';
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function n(id){return parseFloat(document.getElementById(id).value)||0;}
+  function charm(p){return Math.floor(p)-0.01;}
+  function calc(){
+    var mp=n('mainPrice'),mc=n('mainCost'),cnt=parseInt(v('variantCount')),gap=n('gap');
+    var variants=[];
+    // 引流款（最低）
+    variants.push({name:'基础款',role:'entry',roleName:'引流款',price:charm(mp-gap),cost:mc*0.85,share:20});
+    // 主推款
+    variants.push({name:'标准款',role:'main',roleName:'主推款',price:charm(mp),cost:mc,share:50});
+    // 进阶款
+    if(cnt>=4)variants.push({name:'升级款',role:'mid',roleName:'进阶款',price:charm(mp+gap),cost:mc*1.2,share:20});
+    // 锚定款（最高）
+    variants.push({name:'旗舰款',role:'anchor',roleName:'锚定款',price:charm(mp+gap*2),cost:mc*1.4,share:10});
+    // gradient bar
+    var colors=['#10b981','#4f46e5','#6366f1','#f59e0b'];
+    var gh='<div class="gradient-bar">';
+    variants.forEach(function(vr,i){gh+='<div class="gradient-seg" style="flex:'+vr.share+';background:'+colors[i]+'">'+vr.roleName+'<br>$'+vr.price.toFixed(2)+'</div>';});
+    gh+='</div>';
+    document.getElementById('gradientBar').innerHTML=gh;
+    // table
+    var th='';
+    variants.forEach(function(vr){
+      var margin=((vr.price-vr.cost)/vr.price*100).toFixed(0);
+      th+='<tr class="'+vr.role+'"><td><strong>'+vr.name+'</strong></td><td><span class="role-badge '+vr.role+'">'+vr.roleName+'</span></td><td style="font-weight:700;color:#4f46e5">$'+vr.price.toFixed(2)+'</td><td>$'+vr.cost.toFixed(2)+'</td><td style="color:'+(margin>=40?'#10b981':'#f59e0b')+';font-weight:700">'+margin+'%</td><td>'+vr.share+'%</td></tr>';
+    });
+    document.getElementById('variantTable').innerHTML=th;
+    // strategy
+    var strategies=[
+      '引流款定价低于竞品入门价，承担引流功能，毛利率可适当降低（目标30%+），用低价吸引点击进入变体页',
+      '主推款为利润核心，定价采用.99尾数，毛利率保持45%+，预期承担50%销量，是变体页默认展示款',
+      '锚定款定价显著高于主推款，提升主推款的性价比感知（妥协效应），多数客户选择"中间偏下"的主推款',
+      '变体间价格梯度建议$5-$10或15%-30%，梯度过小失去区分度，过大导致客户流失到低价款',
+      '高配变体可搭配增值服务（延长保修/配件）提升客单价，而非单纯提价',
+      '定期A/B测试各变体价格配比，监控各款销量分布与整体利润，动态优化梯度'
+    ];
+    var sh='';strategies.forEach(function(s){sh+='<li>'+s+'</li>';});
+    document.getElementById('strategyList').innerHTML=sh;
+    // result
+    var totalShare=variants.reduce(function(s,v){return s+v.share;},0);
+    var avgMargin=(variants.reduce(function(s,v){return s+((v.price-v.cost)/v.price*100)*v.share;},0)/totalShare).toFixed(0);
+    var avgPrice=(variants.reduce(function(s,v){return s+v.price*v.share;},0)/totalShare).toFixed(2);
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🔀 变体组合概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">变体数量</div><div class="ri-value">'+variants.length+'款</div></div>'+
+      '<div class="result-item"><div class="ri-label">价格区间</div><div class="ri-value" style="font-size:16px">$'+variants[0].price.toFixed(0)+'~'+variants[variants.length-1].price.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">加权均价</div><div class="ri-value" style="color:#4f46e5">$'+avgPrice+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">加权毛利率</div><div class="ri-value positive">'+avgMargin+'%</div></div>'+
+      '</div><div class="result-note">💡 通过引流款引流+主推款盈利+锚定款衬托的3层定价结构，利用妥协效应引导客户选择主推款，整体利润优于单一定价</div>';
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MPS.init);}else{MPS.init();}
+</script>
+</body>
+</html>

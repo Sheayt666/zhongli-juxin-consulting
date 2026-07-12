@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="供应商协同门户：订单共享+交付确认+对账管理+文档管理，CSS门户界面可视化，跨境卖家与供应商协同管理工具。">
+<title>供应商协同门户 - 订单交付对账文档协同 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.jx-row-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.portal-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.portal-tab{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--muted);transition:all .2s}
+.portal-tab.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.portal-tab:hover:not(.active){border-color:#c7d2fe;color:#4f46e5}
+.portal-table{width:100%;border-collapse:collapse;font-size:13px}
+.portal-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.portal-table th.num{text-align:right}
+.portal-table td{padding:10px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.portal-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.status-confirmed{background:#ecfdf5;color:#059669}
+.status-pending{background:#fffbeb;color:#d97706}
+.status-disputed{background:#fef2f2;color:#dc2626}
+.status-shipped{background:#f0f4ff;color:#4f46e5}
+.status-delivered{background:#ecfdf5;color:#059669}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.doc-card{padding:14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center;cursor:pointer;transition:all .2s}
+.doc-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateY(-2px)}
+.doc-card .dc-icon{font-size:28px;margin-bottom:6px}
+.doc-card .dc-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.doc-card .dc-meta{font-size:10px;color:var(--muted)}
+.recon-bar{height:24px;border-radius:12px;overflow:hidden;display:flex;margin-top:6px}
+.recon-bar-match{background:#10b981;height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.recon-bar-diff{background:#ef4444;height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3,.jx-row-4{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.portal-table{font-size:11px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+  <a href="supply-chain-resilience-assessor.html" class="workflow-step">韧性评估</a>
+  <a href="supplier-collaboration-portal.html" class="workflow-step active">协同门户</a>
+  <a href="tco-calculator.html" class="workflow-step">TCO</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">供应商协同门户</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🤝</span>供应商协同门户 Supplier Collaboration Portal</h1>
+  <p>订单共享、交付确认、对账管理、文档管理四大协同模块，CSS门户界面可视化，实时同步采购订单与交付状态，自动对账匹配，文档统一归档，跨境卖家与供应商高效协同。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">在途订单</div><div class="mc-value" id="mOrders">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">待交付</div><div class="mc-value" id="mPending">0</div></div>
+    <div class="metric-card success"><div class="mc-label">已交付</div><div class="mc-value" id="mDelivered">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">对账差异</div><div class="mc-value" id="mDiff">$0</div></div>
+    <div class="metric-card"><div class="mc-label">协同文档</div><div class="mc-value" id="mDocs">0</div></div>
+  </div>
+
+  <div class="portal-tabs">
+    <div class="portal-tab active" onclick="SCP.tab('orders')">📦 订单共享</div>
+    <div class="portal-tab" onclick="SCP.tab('delivery')">🚚 交付确认</div>
+    <div class="portal-tab" onclick="SCP.tab('recon')">💰 对账管理</div>
+    <div class="portal-tab" onclick="SCP.tab('docs')">📄 文档管理</div>
+  </div>
+
+  <div class="jx-card" id="panelOrders">
+    <h2>📦 采购订单共享</h2>
+    <div style="overflow-x:auto"><table class="portal-table" id="ordersTable"></table></div>
+  </div>
+
+  <div class="jx-card" id="panelDelivery" style="display:none">
+    <h2>🚚 交付确认追踪</h2>
+    <div style="overflow-x:auto"><table class="portal-table" id="deliveryTable"></table></div>
+  </div>
+
+  <div class="jx-card" id="panelRecon" style="display:none">
+    <h2>💰 对账管理</h2>
+    <div style="overflow-x:auto"><table class="portal-table" id="reconTable"></table></div>
+  </div>
+
+  <div class="jx-card" id="panelDocs" style="display:none">
+    <h2>📄 协同文档管理</h2>
+    <div class="doc-grid" id="docGrid"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 协同优化建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📋</div><div><h5>采购订单构建</h5><p>PO生成管理</p></div></a>
+      <a href="delivery-performance-tracker.html" class="rt-card"><div class="rt-icon">🚚</div><div><h5>交付绩效</h5><p>交付追踪</p></div></a>
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">⭐</div><div><h5>供应商评分</h5><p>绩效评分</p></div></a>
+      <a href="tco-calculator.html" class="rt-card"><div class="rt-icon">💸</div><div><h5>TCO计算器</h5><p>总拥有成本</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-collaboration-portal.html">协同门户</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var SCP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var orders=[
+    {po:'PO-2026-001',supplier:'深圳科创电子',item:'蓝牙耳机V2',qty:2000,price:12.5,amount:25000,status:'已确认',eta:'2026-07-20'},
+    {po:'PO-2026-002',supplier:'义乌包装厂',item:'彩盒包装',qty:5000,price:0.8,amount:4000,status:'生产中',eta:'2026-07-15'},
+    {po:'PO-2026-003',supplier:'广州塑胶模具',item:'硅胶保护壳',qty:3000,price:2.2,amount:6600,status:'已发货',eta:'2026-07-18'},
+    {po:'PO-2026-004',supplier:'深圳科创电子',item:'充电模块',qty:1500,price:8.0,amount:12000,status:'待确认',eta:'2026-07-25'},
+    {po:'PO-2026-005',supplier:'宁波物流',item:'海运FBA',qty:1,price:3200,amount:3200,status:'已交付',eta:'2026-07-10'}
+  ];
+  var recons=[
+    {po:'PO-2026-001',supplier:'深圳科创电子',poAmt:25000,invAmt:25000,diff:0},
+    {po:'PO-2026-002',supplier:'义乌包装厂',poAmt:4000,invAmt:4200,diff:200},
+    {po:'PO-2026-003',supplier:'广州塑胶模具',poAmt:6600,invAmt:6600,diff:0},
+    {po:'PO-2026-005',supplier:'宁波物流',poAmt:3200,invAmt:3500,diff:300}
+  ];
+  var docs=[
+    {icon:'📋',name:'采购合同',meta:'12份·已签'},
+    {icon:'质检报告',name:'QC报告',meta:'8份·已上传'},
+    {icon:'发票',name:'发票凭证',meta:'15份·已归档'},
+    {icon:'装箱单',name:'装箱清单',meta:'10份·已确认'},
+    {icon:'提单',name:'海运提单',meta:'5份·在途'},
+    {icon:'证书',name:'合规证书',meta:'7份·有效'},
+    {icon:'对账',name:'对账单',meta:'6份·待确认'},
+    {icon:'规格',name:'产品规格书',meta:'9份·最新'}
+  ];
+
+  function tab(name){
+    ['orders','delivery','recon','docs'].forEach(function(t){
+      $('panel'+t.charAt(0).toUpperCase()+t.slice(1)).style.display=t===name?'block':'none';
+      var tabs=document.querySelectorAll('.portal-tab');
+      tabs.forEach(function(tb,i){tb.classList.toggle('active',['orders','delivery','recon','docs'][i]===name)});
+    });
+  }
+
+  function calc(){
+    var pending=orders.filter(function(o){return o.status==='待确认'||o.status==='生产中'}).length;
+    var delivered=orders.filter(function(o){return o.status==='已交付'}).length;
+    var totalDiff=recons.reduce(function(a,b){return a+Math.abs(b.diff)},0);
+    $('mOrders').textContent=orders.length;
+    $('mPending').textContent=pending;
+    $('mDelivered').textContent=delivered;
+    $('mDiff').textContent=fmt(totalDiff);
+    $('mDocs').textContent=docs.length;
+    renderOrders();renderDelivery();renderRecon();renderDocs();renderTips(pending,delivered,totalDiff);
+  }
+
+  function renderOrders(){
+    var h='<thead><tr><th>PO编号</th><th>供应商</th><th>商品</th><th class="num">数量</th><th class="num">单价</th><th class="num">总额</th><th>状态</th><th>预计到货</th></tr></thead><tbody>';
+    orders.forEach(function(o){
+      var sc=o.status==='已确认'?'status-confirmed':o.status==='待确认'?'status-pending':o.status==='已发货'?'status-shipped':o.status==='已交付'?'status-delivered':'status-pending';
+      h+='<tr><td><strong>'+o.po+'</strong></td><td>'+o.supplier+'</td><td>'+o.item+'</td><td class="num">'+o.qty.toLocaleString()+'</td><td class="num">$'+o.price.toFixed(2)+'</td><td class="num">'+fmt(o.amount)+'</td><td><span class="status-badge '+sc+'">'+o.status+'</span></td><td>'+o.eta+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('ordersTable').innerHTML=h;
+  }
+
+  function renderDelivery(){
+    var h='<thead><tr><th>PO编号</th><th>供应商</th><th>物流方式</th><th>跟踪号</th><th>状态</th><th>预计到货</th><th>进度</th></tr></thead><tbody>';
+    var deliveryMap={已发货:{track:'SF1234567890',mode:'快递',pct:70},生产中:{track:'-',mode:'待发货',pct:30},已确认:{track:'-',mode:'待生产',pct:10},待确认:{track:'-',mode:'待确认',pct:0},已交付:{track:'DEL20260710',mode:'海运',pct:100}};
+    orders.forEach(function(o){
+      var d=deliveryMap[o.status]||{track:'-',mode:'-',pct:0};
+      var sc=o.status==='已发货'?'status-shipped':o.status==='已交付'?'status-delivered':'status-pending';
+      h+='<tr><td><strong>'+o.po+'</strong></td><td>'+o.supplier+'</td><td>'+d.mode+'</td><td style="font-family:monospace;font-size:12px">'+d.track+'</td><td><span class="status-badge '+sc+'">'+o.status+'</span></td><td>'+o.eta+'</td><td><div style="background:var(--rule-light);border-radius:6px;height:8px;overflow:hidden"><div style="height:100%;width:'+d.pct+'%;background:linear-gradient(90deg,#4f46e5,#6366f1);border-radius:6px"></div></div></td></tr>';
+    });
+    h+='</tbody>';
+    $('deliveryTable').innerHTML=h;
+  }
+
+  function renderRecon(){
+    var h='<thead><tr><th>PO编号</th><th>供应商</th><th class="num">PO金额</th><th class="num">发票金额</th><th class="num">差异</th><th>状态</th><th>匹配度</th></tr></thead><tbody>';
+    recons.forEach(function(r){
+      var status=r.diff===0?'已对平':r.diff<500?'小幅差异':'需核对';
+      var sc=r.diff===0?'status-confirmed':'status-disputed';
+      var matchPct=r.poAmt>0?Math.round((1-Math.abs(r.diff)/r.poAmt)*100):100;
+      var barW=Math.min(matchPct,100);
+      h+='<tr><td><strong>'+r.po+'</strong></td><td>'+r.supplier+'</td><td class="num">'+fmt(r.poAmt)+'</td><td class="num">'+fmt(r.invAmt)+'</td><td class="num" style="color:'+(r.diff===0?'#059669':'#dc2626')+'">'+(r.diff===0?'-':(r.diff>0?'+':'')+fmt(r.diff))+'</td><td><span class="status-badge '+sc+'">'+status+'</span></td><td><div class="recon-bar"><div class="recon-bar-match" style="width:'+barW+'%">'+matchPct+'%</div>'+(matchPct<100?'<div class="recon-bar-diff" style="width:'+(100-barW)+'%"></div>':'')+'</div></td></tr>';
+    });
+    h+='</tbody>';
+    $('reconTable').innerHTML=h;
+  }
+
+  function renderDocs(){
+    var h='';
+    docs.forEach(function(d){
+      h+='<div class="doc-card"><div class="dc-icon">'+d.icon+'</div><div class="dc-name">'+d.name+'</div><div class="dc-meta">'+d.meta+'</div></div>';
+    });
+    $('docGrid').innerHTML=h;
+  }
+
+  function renderTips(pending,delivered,totalDiff){
+    var tips=[];
+    tips.push('当前在途订单 '+orders.length+' 个，其中待交付 '+pending+' 个、已交付 '+delivered+' 个，订单流转'+(pending>2?'较繁忙':'正常')+'。');
+    if(totalDiff>0)tips.push('对账差异总额 '+fmt(totalDiff)+'，涉及 '+recons.filter(function(r){return r.diff!==0}).length+' 笔订单，建议优先核对差异超$200的订单。');
+    else tips.push('对账全部匹配，无差异，财务对账流程健康。');
+    var lateOrders=orders.filter(function(o){return o.status==='待确认'});
+    if(lateOrders.length)tips.push('有 '+lateOrders.length+' 个订单待供应商确认，建议跟进催办，避免影响后续排产。');
+    tips.push('协同文档共 '+docs.length+' 类，建议建立文档版本控制与权限分级，确保双方信息一致。');
+    tips.push('建议将订单、交付、对账、文档四模块数据打通，实现"下单→生产→发货→对账→归档"全链路可追溯。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  return {tab:tab,calc:calc,init:function(){calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SCP.init)}else{SCP.init()}
+</script>
+</body>
+</html>

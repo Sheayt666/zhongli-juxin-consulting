@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="实时销售仪表盘：实时销售额/订单量/ACOS显示，今日vs昨日/本周vs上周对比，自动刷新模拟，CSS迷你折线图。">
+<title>实时销售仪表盘 - 多维度对比·迷你折线图·异常高亮 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;justify-content:space-between}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 1.5s infinite;margin-right:6px}@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.dash-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}.dash-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}.dash-card.sales::before{background:linear-gradient(90deg,#4f46e5,#6366f1)}.dash-card.orders::before{background:linear-gradient(90deg,#10b981,#34d399)}.dash-card.acos::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}.dash-card.cvr::before{background:linear-gradient(90deg,#ec4899,#f472b6)}.dash-label{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:8px}.dash-val{font-size:32px;font-weight:800;color:var(--ink);line-height:1}.dash-change{display:flex;align-items:center;gap:4px;font-size:13px;margin-top:8px;font-weight:600}.dash-change.up{color:var(--success)}.dash-change.down{color:var(--danger)}.mini-chart{margin-top:12px;display:flex;align-items:flex-end;gap:2px;height:40px}.mini-bar{flex:1;border-radius:2px 2px 0 0;min-height:2px;transition:height .3s}
+.compare-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.compare-card{background:var(--bg);border-radius:var(--radius);padding:20px}.compare-card h3{font-size:15px;font-weight:700;margin-bottom:12px}.compare-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule-light);font-size:13px}.compare-row:last-child{border-bottom:none}.compare-row .cr-label{color:var(--muted)}.compare-row .cr-today{font-weight:700;color:var(--primary)}.compare-row .cr-yesterday{color:var(--ink-soft)}.compare-row .cr-diff{font-weight:700;width:60px;text-align:right}
+.alert-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius);margin-bottom:8px}.alert-row.danger{background:var(--danger-bg);border:1px solid #fecaca}.alert-row.success{background:var(--success-bg);border:1px solid #a7f3d0}.alert-row.warning{background:var(--warning-bg);border:1px solid #fde68a}.alert-icon{font-size:20px;flex-shrink:0}.alert-text{flex:1;font-size:13px}.alert-text strong{font-weight:700}
+.hour-chart{display:flex;align-items:flex-end;gap:4px;height:180px;padding:16px 0;border-bottom:2px solid var(--rule);position:relative}.hour-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}.hour-bar-fill{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s,opacity .2s}.hour-bar:hover .hour-bar-fill{opacity:.8}.hour-bar-label{font-size:10px;color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.dash-grid{grid-template-columns:repeat(2,1fr)}.compare-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W6 运营数据工作流</div><div class="workflow-steps">
+<a href="sales-estimator.html" class="workflow-step">销量估算</a><a href="bsr-tracker.html" class="workflow-step">BSR追踪</a><a href="conversion-funnel.html" class="workflow-step">转化漏斗</a><a href="review-analyzer.html" class="workflow-step">评论分析</a><a href="profit-calendar.html" class="workflow-step">利润日历</a><a href="real-time-sales-dashboard.html" class="workflow-step active">实时仪表盘</a><a href="product-performance-integrator.html" class="workflow-step">表现整合</a><a href="session-page-analyzer.html" class="workflow-step">会话分析</a><a href="ad-attribution-analyzer.html" class="workflow-step">广告归因</a><a href="buy-box-win-rate-monitor.html" class="workflow-step">购物车监控</a><a href="traffic-source-breakdown.html" class="workflow-step">流量拆解</a><a href="daily-ops-report-generator.html" class="workflow-step">日报生成</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W6 运营数据</a><span>/</span>实时销售仪表盘</div>
+<div class="tool-header"><span class="tool-badge">W6 运营数据工作流 · 深度版</span><h1>实时<em>销售仪表盘</em></h1><p>实时销售额/订单量/ACOS/转化率显示，今日vs昨日、本周vs上周多维度对比，自动刷新模拟实时数据，异常高亮预警，CSS迷你折线图。</p></div>
+
+<div class="card"><h2><span><span class="live-dot"></span>实时数据模拟控制</span><span style="font-size:13px;font-weight:400;color:var(--muted)" id="currentTime">--:--:--</span></h2>
+<div class="form-grid">
+<div class="form-field"><label>基础日销售额 ($)</label><input type="number" id="baseSales" value="3500" step="100" min="0" oninput="Dash.reset()"></div>
+<div class="form-field"><label>基础日订单量</label><input type="number" id="baseOrders" value="120" step="1" min="0" oninput="Dash.reset()"></div>
+<div class="form-field"><label>ACOS (%)</label><input type="number" id="baseAcos" value="18.5" step="0.1" min="0" oninput="Dash.reset()"></div>
+</div>
+<div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-primary" id="toggleBtn" onclick="Dash.toggle()">启动实时模拟</button><button class="btn btn-secondary" onclick="Dash.reset()">重置数据</button></div>
+</div>
+
+<div class="dash-grid">
+<div class="dash-card sales"><div class="dash-label">今日销售额</div><div class="dash-val" id="dSales">$0</div><div class="dash-change" id="dSalesChange"></div><div class="mini-chart" id="dSalesChart"></div></div>
+<div class="dash-card orders"><div class="dash-label">今日订单量</div><div class="dash-val" id="dOrders">0</div><div class="dash-change" id="dOrdersChange"></div><div class="mini-chart" id="dOrdersChart"></div></div>
+<div class="dash-card acos"><div class="dash-label">ACOS</div><div class="dash-val" id="dAcos">0%</div><div class="dash-change" id="dAcosChange"></div><div class="mini-chart" id="dAcosChart"></div></div>
+<div class="dash-card cvr"><div class="dash-label">转化率 (CVR)</div><div class="dash-val" id="dCvr">0%</div><div class="dash-change" id="dCvrChange"></div><div class="mini-chart" id="dCvrChart"></div></div>
+</div>
+
+<div class="card"><h2>今日 vs 昨日 对比</h2><div class="compare-grid">
+<div class="compare-card"><h3>核心指标对比</h3><div id="dayCompare"></div></div>
+<div class="compare-card"><h3>本周 vs 上周</h3><div id="weekCompare"></div></div>
+</div></div>
+
+<div class="card"><h2>24小时销售趋势</h2><div class="hour-chart" id="hourChart"></div></div>
+
+<div class="card"><h2>异常预警</h2><div id="alertWrap"></div></div>
+
+<div class="related-grid">
+<a href="product-performance-integrator.html" class="related-card"><span class="rc-icon">📊</span><div><h4>产品表现整合</h4><p>多维度整合评分</p></div></a>
+<a href="traffic-source-breakdown.html" class="related-card"><span class="rc-icon">🌐</span><div><h4>流量来源拆解</h4><p>各来源占比分析</p></div></a>
+<a href="daily-ops-report-generator.html" class="related-card"><span class="rc-icon">📝</span><div><h4>日报生成器</h4><p>每日运营报告</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Dash = {
+  running:false,timer:null,tick:0,
+  todaySales:0,todayOrders:0,acos:0,cvr:0,
+  yesterdaySales:0,yesterdayOrders:0,yesterdayAcos:0,yesterdayCvr:0,
+  weekSales:0,lastWeekSales:0,
+  hourData:[],salesHistory:[],ordersHistory:[],acosHistory:[],cvrHistory:[],
+  init(){ this.reset(); },
+  reset(){
+    this.tick=0;
+    const base=parseFloat(document.getElementById('baseSales').value)||3500;
+    const baseOrd=parseFloat(document.getElementById('baseOrders').value)||120;
+    const baseAcos=parseFloat(document.getElementById('baseAcos').value)||18.5;
+    this.todaySales=base*0.3;this.todayOrders=Math.round(baseOrd*0.3);
+    this.acos=baseAcos;this.cvr=12.5;
+    this.yesterdaySales=base*0.95;this.yesterdayOrders=Math.round(baseOrd*0.95);
+    this.yesterdayAcos=baseAcos*1.1;this.yesterdayCvr=11.8;
+    this.weekSales=base*6.2;this.lastWeekSales=base*5.8;
+    this.hourData=Array.from({length:24},(_,h)=>{
+      const factor=h<6?0.3:h<9?0.5:h<12?0.8:h<14?0.9:h<18?0.7:h<21?1.0:h<23?0.8:0.5;
+      return Math.round(base/24*factor*2+Math.random()*50);
+    });
+    this.salesHistory=Array.from({length:20},()=>Math.random()*100);
+    this.ordersHistory=Array.from({length:20},()=>Math.random()*100);
+    this.acosHistory=Array.from({length:20},()=>Math.random()*100);
+    this.cvrHistory=Array.from({length:20},()=>Math.random()*100);
+    this.render();
+  },
+  toggle(){
+    this.running=!this.running;
+    const btn=document.getElementById('toggleBtn');
+    if(this.running){
+      btn.textContent='停止实时模拟';
+      btn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';
+      this.timer=setInterval(()=>this.update(),2000);
+    }else{
+      btn.textContent='启动实时模拟';
+      btn.style.background='';
+      clearInterval(this.timer);
+    }
+  },
+  update(){
+    this.tick++;
+    const base=parseFloat(document.getElementById('baseSales').value)||3500;
+    const baseOrd=parseFloat(document.getElementById('baseOrders').value)||120;
+    this.todaySales+=base/200*(0.8+Math.random()*0.4);
+    this.todayOrders+=Math.round(baseOrd/200*(0.8+Math.random()*0.4));
+    this.acos=parseFloat(document.getElementById('baseAcos').value)||18.5;
+    this.acos+=(Math.random()-0.5)*0.5;
+    this.cvr=12.5+(Math.random()-0.5)*2;
+    this.salesHistory.shift();this.salesHistory.push(Math.random()*100);
+    this.ordersHistory.shift();this.ordersHistory.push(Math.random()*100);
+    this.acosHistory.shift();this.acosHistory.push(Math.random()*100);
+    this.cvrHistory.shift();this.cvrHistory.push(Math.random()*100);
+    this.render();
+  },
+  render(){
+    document.getElementById('currentTime').textContent=new Date().toLocaleTimeString('zh-CN');
+    document.getElementById('dSales').textContent='$'+this.todaySales.toFixed(0);
+    document.getElementById('dOrders').textContent=this.todayOrders;
+    document.getElementById('dAcos').textContent=this.acos.toFixed(1)+'%';
+    document.getElementById('dCvr').textContent=this.cvr.toFixed(1)+'%';
+    this.setChange('dSalesChange',this.todaySales,this.yesterdaySales);
+    this.setChange('dOrdersChange',this.todayOrders,this.yesterdayOrders,true);
+    this.setChange('dAcosChange',this.acos,this.yesterdayAcos,false,true);
+    this.setChange('dCvrChange',this.cvr,this.yesterdayCvr);
+    this.renderMini('dSalesChart',this.salesHistory,'#4f46e5');
+    this.renderMini('dOrdersChart',this.ordersHistory,'#10b981');
+    this.renderMini('dAcosChart',this.acosHistory,'#f59e0b');
+    this.renderMini('dCvrChart',this.cvrHistory,'#ec4899');
+    this.renderDayCompare();
+    this.renderWeekCompare();
+    this.renderHourChart();
+    this.renderAlerts();
+  },
+  setChange(id,today,yest,isInt,invert){
+    const diff=yest>0?((today-yest)/yest*100):0;
+    const el=document.getElementById(id);
+    const isUp=diff>=0;
+    const good=invert?!isUp:isUp;
+    el.className='dash-change '+(good?'up':'down');
+    el.innerHTML=(isUp?'↑':'↓')+' '+Math.abs(diff).toFixed(1)+'% vs 昨日';
+  },
+  renderMini(id,data,color){
+    document.getElementById(id).innerHTML=data.map(v=>`<div class="mini-bar" style="height:${v}%;background:${color};opacity:${0.4+v/200}"></div>`).join('');
+  },
+  renderDayCompare(){
+    const items=[
+      {label:'销售额',today:'$'+this.todaySales.toFixed(0),yest:'$'+this.yesterdaySales.toFixed(0),diff:((this.todaySales-this.yesterdaySales)/this.yesterdaySales*100)},
+      {label:'订单量',today:this.todayOrders,yest:this.yesterdayOrders,diff:((this.todayOrders-this.yesterdayOrders)/this.yesterdayOrders*100)},
+      {label:'客单价',today:'$'+(this.todaySales/this.todayOrders).toFixed(2),yest:'$'+(this.yesterdaySales/this.yesterdayOrders).toFixed(2),diff:((this.todaySales/this.todayOrders)/(this.yesterdaySales/this.yesterdayOrders)-1)*100},
+      {label:'ACOS',today:this.acos.toFixed(1)+'%',yest:this.yesterdayAcos.toFixed(1)+'%',diff:((this.acos-this.yesterdayAcos)/this.yesterdayAcos*100),invert:true},
+      {label:'转化率',today:this.cvr.toFixed(1)+'%',yest:this.yesterdayCvr.toFixed(1)+'%',diff:((this.cvr-this.yesterdayCvr)/this.yesterdayCvr*100)},
+    ];
+    document.getElementById('dayCompare').innerHTML=items.map(i=>{
+      const good=i.invert?i.diff<0:i.diff>=0;
+      return `<div class="compare-row"><span class="cr-label">${i.label}</span><span class="cr-today">${i.today}</span><span class="cr-yesterday">${i.yest}</span><span class="cr-diff" style="color:${good?'var(--success)':'var(--danger)'}">${i.diff>=0?'+':''}${i.diff.toFixed(1)}%</span></div>`;
+    }).join('');
+  },
+  renderWeekCompare(){
+    const items=[
+      {label:'本周销售额',today:'$'+this.weekSales.toFixed(0),yest:'$'+this.lastWeekSales.toFixed(0),diff:((this.weekSales-this.lastWeekSales)/this.lastWeekSales*100)},
+      {label:'日均订单',today:Math.round(this.todayOrders*7),yest:Math.round(this.yesterdayOrders*7),diff:((this.todayOrders-this.yesterdayOrders)/this.yesterdayOrders*100)},
+      {label:'广告花费',today:'$'+(this.weekSales*this.acos/100).toFixed(0),yest:'$'+(this.lastWeekSales*this.yesterdayAcos/100).toFixed(0),diff:((this.weekSales*this.acos-this.lastWeekSales*this.yesterdayAcos)/(this.lastWeekSales*this.yesterdayAcos)*100)},
+    ];
+    document.getElementById('weekCompare').innerHTML=items.map(i=>{
+      return `<div class="compare-row"><span class="cr-label">${i.label}</span><span class="cr-today">${i.today}</span><span class="cr-yesterday">${i.yest}</span><span class="cr-diff" style="color:${i.diff>=0?'var(--success)':'var(--danger)'}">${i.diff>=0?'+':''}${i.diff.toFixed(1)}%</span></div>`;
+    }).join('');
+  },
+  renderHourChart(){
+    const max=Math.max(...this.hourData,1);
+    const currentHour=new Date().getHours();
+    document.getElementById('hourChart').innerHTML=this.hourData.map((v,h)=>{
+      const hgt=v/max*100;
+      const color=h===currentHour?'#4f46e5':h<currentHour?'#6366f1':'#cbd5e1';
+      return `<div class="hour-bar"><div class="hour-bar-fill" style="height:${hgt}%;background:${color}" title="${h}:00 - $${v}"></div><div class="hour-bar-label">${h}</div></div>`;
+    }).join('');
+  },
+  renderAlerts(){
+    let alerts=[];
+    if(this.acos>25)alerts.push({type:'danger',icon:'🚨',text:`<strong>ACOS过高警告</strong> — 当前ACOS ${this.acos.toFixed(1)}%，超过25%阈值，建议立即优化广告`});
+    if(this.cvr<8)alerts.push({type:'warning',icon:'⚠️',text:`<strong>转化率偏低</strong> — 当前CVR ${this.cvr.toFixed(1)}%，低于行业均值，检查Listing质量`});
+    if(this.todaySales>this.yesterdaySales*1.3)alerts.push({type:'success',icon:'🚀',text:`<strong>销售激增</strong> — 今日销售额较昨日增长${((this.todaySales/this.yesterdaySales-1)*100).toFixed(0)}%，可能存在爆款机会`});
+    if(this.todayOrders<this.yesterdayOrders*0.7)alerts.push({type:'danger',icon:'📉',text:`<strong>订单量下滑</strong> — 今日订单较昨日下降${((1-this.todayOrders/this.yesterdayOrders)*100).toFixed(0)}%，检查是否有断货或被跟卖`});
+    if(alerts.length===0)alerts.push({type:'success',icon:'✅',text:'<strong>各项指标正常</strong> — 所有核心指标在健康范围内'});
+    document.getElementById('alertWrap').innerHTML=alerts.map(a=>`<div class="alert-row ${a.type}"><div class="alert-icon">${a.icon}</div><div class="alert-text">${a.text}</div></div>`).join('');
+  }
+};
+Dash.init();
+setInterval(()=>{if(Dash.running)document.getElementById('currentTime').textContent=new Date().toLocaleTimeString('zh-CN');},1000);
+</script>
+</body>
+</html>

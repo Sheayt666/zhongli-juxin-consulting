@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="角色权限管理器：输入角色和功能模块，输出权限矩阵、数据隔离规则、操作审计清单，CSS权限矩阵展示。">
+<meta name="keywords" content="角色权限,权限矩阵,数据隔离,操作审计,RBAC,权限管理,系统安全">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/role-permission-manager.html">
+<title>角色权限管理器 - 权限矩阵·数据隔离·审计清单 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.perm-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.perm-table th{padding:12px;text-align:center;font-weight:700;background:var(--accent-bg);color:var(--accent);border:1px solid var(--rule)}
+.perm-table th:first-child{text-align:left}
+.perm-table td{padding:10px;text-align:center;border:1px solid var(--rule-light)}
+.perm-table td:first-child{text-align:left;font-weight:600}
+.perm-yes{background:var(--green-bg);color:var(--green);font-weight:700}
+.perm-no{background:var(--red-bg);color:var(--red)}
+.perm-cond{background:var(--gold-bg);color:var(--gold);font-weight:600}
+.audit-item{display:flex;align-items:start;gap:10px;padding:12px;border-radius:8px;margin-bottom:8px;background:var(--bg-soft)}
+.audit-item .ai-icon{font-size:18px;flex-shrink:0}
+.audit-item .ai-content{flex:1}
+.audit-item .ai-title{font-size:14px;font-weight:600}
+.audit-item .ai-desc{font-size:12px;color:var(--muted);margin-top:2px}
+</style>
+</head>
+<body class="tool-page" data-tool="role_permission_manager">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第9步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <a href="okr-goal-tracker.html" class="step">OKR追踪</a>
+      <span class="arrow">→</span>
+      <a href="training-onboarding-manager.html" class="step">培训入职</a>
+      <span class="arrow">→</span>
+      <a href="performance-review-system.html" class="step">绩效考核</a>
+      <span class="arrow">→</span>
+      <span class="step current">权限管理</span>
+      <span class="arrow">→</span>
+      <a href="team-workflow-automation.html" class="step">工作流自动化</a>
+      <span class="arrow">→</span>
+      <a href="recruitment-pipeline.html" class="step">招聘漏斗</a>
+      <span class="arrow">→</span>
+      <a href="competency-model-builder.html" class="step">胜任力模型</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 标准版</span>
+      <h1>角色权限 <em>管理器</em></h1>
+      <p class="tool-hero-desc">输入角色和功能模块，输出权限矩阵、数据隔离规则、操作审计清单，CSS权限矩阵展示，帮你系统化管理团队角色与权限。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🔒 角色权限配置</h2>
+          <p class="calc-form-subtitle">选择角色和功能模块，生成权限矩阵</p>
+          <div class="calc-field"><label>系统类型</label><select id="sysType" onchange="RPM.gen()">
+            <option value="erp" selected>ERP管理系统</option>
+            <option value="crm">CRM客户管理</option>
+            <option value="wms">WMS仓储管理</option>
+            <option value="ads">广告管理平台</option>
+          </select></div>
+          <div class="calc-field"><label>团队规模</label><select id="teamSize" onchange="RPM.gen()">
+            <option value="small" selected>小型 (1-10人)</option>
+            <option value="medium">中型 (11-50人)</option>
+            <option value="large">大型 (50+人)</option>
+          </select></div>
+          <div class="calc-field"><label>数据敏感度</label><select id="sensitivity" onchange="RPM.gen()">
+            <option value="low">低 (公开数据)</option>
+            <option value="medium" selected>中 (业务数据)</option>
+            <option value="high">高 (财务/客户数据)</option>
+          </select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🗓️ 权限矩阵</h3>
+        <div style="overflow-x:auto"><table class="perm-table" id="permTable"></table></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🛡️ 数据隔离规则</h3>
+        <div id="isolationRules"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🔍 操作审计清单</h3>
+        <div id="auditList"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="performance-review-system.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第8步</span>绩效考核 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="team-workflow-automation.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第10步</span>工作流自动化 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="role-permission-manager.html">角色权限</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var RPM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var ROLES=[
+    {name:'管理员',code:'admin'},
+    {name:'运营主管',code:'ops_mgr'},
+    {name:'运营专员',code:'ops_staff'},
+    {name:'财务',code:'finance'},
+    {name:'客服',code:'cs'},
+    {name:'查看者',code:'viewer'}
+  ];
+  var MODULES={
+    erp:['订单管理','产品管理','库存管理','财务报表','客户管理','系统设置'],
+    crm:['客户列表','订单记录','跟进任务','合同管理','数据分析','系统设置'],
+    wms:['入库管理','出库管理','库存查询','调拨管理','盘点管理','系统设置'],
+    ads:['广告创建','广告投放','数据报表','预算管理','关键词','系统设置']
+  };
+  function perm(role,module){
+    if(role==='admin')return 'full';
+    if(role==='viewer')return module==='系统设置'?'none':'view';
+    if(role==='ops_mgr'){
+      if(module==='财务报表'||module==='系统设置')return 'view';
+      return 'full';
+    }
+    if(role==='ops_staff'){
+      if(module==='系统设置'||module==='财务报表')return 'none';
+      return 'edit';
+    }
+    if(role==='finance'){
+      if(module==='财务报表'||module==='订单管理')return 'full';
+      return 'view';
+    }
+    if(role==='cs'){
+      if(module==='客户管理'||module==='订单管理'||module==='客户列表'||module==='订单记录'||module==='跟进任务')return 'edit';
+      if(module==='系统设置')return 'none';
+      return 'view';
+    }
+    return 'none';
+  }
+  function permText(p){return p==='full'?'✓ 全权':(p==='edit'?'✓ 编辑':(p==='view'?'○ 只读':'✕ 无'));}
+  function permClass(p){return p==='full'||p==='edit'?'perm-yes':(p==='view'?'perm-cond':'perm-no');}
+  return{
+    gen:function(){
+      var sys=$('sysType').value,sens=$('sensitivity').value;
+      var mods=MODULES[sys]||MODULES.erp;
+      var fullCount=0,viewCount=0,noCount=0;
+      ROLES.forEach(function(r){mods.forEach(function(m){var p=perm(r.code,m);if(p==='full')fullCount++;else if(p==='view')viewCount++;else if(p==='none')noCount++;});});
+      var html='<h3>🔒 权限概览</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">角色数</div><div class="hc-value">'+ROLES.length+'</div><div class="hc-sub">功能模块 '+mods.length+'</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">权限总数</div><div class="hc-value">'+(ROLES.length*mods.length)+'</div><div class="hc-sub">全权'+fullCount+' · 无权'+noCount+'</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">系统类型</span><span class="fr-val">'+({erp:'ERP管理',crm:'CRM客户',wms:'WMS仓储',ads:'广告管理'}[sys])+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">数据敏感度</span><span class="fr-val">'+({low:'低',medium:'中',high:'高'}[sens])+'</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var tHtml='<thead><tr><th>角色\模块</th>';
+      mods.forEach(function(m){tHtml+='<th>'+m+'</th>';});
+      tHtml+='</tr></thead><tbody>';
+      ROLES.forEach(function(r){
+        tHtml+='<tr><td>'+r.name+'</td>';
+        mods.forEach(function(m){
+          var p=perm(r.code,m);
+          tHtml+='<td class="'+permClass(p)+'">'+permText(p)+'</td>';
+        });
+        tHtml+='</tr>';
+      });
+      tHtml+='</tbody></table>';
+      $('permTable').innerHTML=tHtml;
+      var isoHtml='<div style="font-size:14px;line-height:2">';
+      isoHtml+='<div class="audit-item"><div class="ai-icon">🌐</div><div class="ai-content"><div class="ai-title">数据范围隔离</div><div class="ai-desc">运营专员仅可查看自己负责的平台数据，跨平台数据需主管审批</div></div></div>';
+      if(sens==='high'){
+        isoHtml+='<div class="audit-item"><div class="ai-icon">🔒</div><div class="ai-content"><div class="ai-title">财务数据隔离</div><div class="ai-desc">财务报表仅财务人员可查看，其他角色需特别授权</div></div></div>';
+      }
+      isoHtml+='<div class="audit-item"><div class="ai-icon">👥</div><div class="ai-content"><div class="ai-title">客户数据隔离</div><div class="ai-desc">客服仅可查看自己服务的客户，全量客户数据需主管权限</div></div></div>';
+      isoHtml+='<div class="audit-item"><div class="ai-icon">📦</div><div class="ai-content"><div class="ai-title">库存数据隔离</div><div class="ai-desc">库存查看权限按仓库分配，跨仓调拨需主管审批</div></div></div>';
+      isoHtml+='</div>';
+      $('isolationRules').innerHTML=isoHtml;
+      var aHtml='';
+      var audits=[
+        {icon:'📝',title:'登录审计',desc:'记录所有用户登录时间、IP、设备信息'},
+        {icon:'✏️',title:'数据修改审计',desc:'记录关键数据的增删改操作，包含操作人、时间、原值、新值'},
+        {icon:'📄',title:'权限变更审计',desc:'记录角色权限分配变更，包含操作人、变更内容、审批人'},
+        {icon:'👥',title:'敏感数据访问审计',desc:'财务、客户等敏感数据的查看和导出操作审计'},
+        {icon:'🔁',title:'数据导出审计',desc:'记录所有数据导出操作，包含导出人、数据范围、时间'}
+      ];
+      audits.forEach(function(a){
+        aHtml+='<div class="audit-item"><div class="ai-icon">'+a.icon+'</div><div class="ai-content"><div class="ai-title">'+a.title+'</div><div class="ai-desc">'+a.desc+'</div></div></div>';
+      });
+      $('auditList').innerHTML=aHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RPM.gen);}else{RPM.gen();}
+</script>
+</body>
+</html>

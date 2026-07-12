@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Listing下架检查器：违规词扫描、图片合规检查、类目准入验证、杀虫剂词预警，CSS检查报告实时输出。免费在线跨境电商Listing合规检查工具。">
+<meta name="keywords" content="Listing下架检查,违规词扫描,杀虫剂词,图片合规,类目准入,Listing合规">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/listing-suppression-checker.html">
+<title>Listing下架检查器 - 违规词扫描·杀虫剂词预警·图片合规 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.lsc-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.lsc-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.report-bar{display:flex;align-items:center;gap:20px;padding:20px;border-radius:14px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);margin-bottom:20px;flex-wrap:wrap}
+.report-score{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0}
+.report-score .rs-val{font-size:30px;font-weight:800;color:#fff}
+.report-score .rs-lbl{font-size:11px;color:rgba(255,255,255,.9)}
+.report-meta{flex:1;min-width:200px}
+.report-meta .rm-level{font-size:22px;font-weight:800;margin-bottom:6px}
+.report-meta .rm-desc{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.check-item{padding:14px 16px;border-radius:10px;margin-bottom:10px;border:1px solid var(--rule-light);display:flex;align-items:flex-start;gap:12px}
+.check-item.pass{background:#ecfdf5;border-left:4px solid #10b981}
+.check-item.warn{background:#fffbeb;border-left:4px solid #f59e0b}
+.check-item.fail{background:#fef2f2;border-left:4px solid #ef4444}
+.check-icon{font-size:20px;flex-shrink:0}
+.check-body{flex:1}
+.check-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.check-detail{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin:2px;background:#fff;border:1px solid var(--rule)}
+.tag.danger{background:#fee2e2;color:#dc2626;border-color:#fecaca}
+.tag.warn{background:#fef3c7;color:#d97706;border-color:#fde68a}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Listing下架检查器","description":"违规词扫描、图片合规检查、类目准入验证、杀虫剂词预警，CSS检查报告实时输出。","url":"https://juxin-consulting.help/tools/listing-suppression-checker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"Listing下架检查器","item":"https://juxin-consulting.help/tools/listing-suppression-checker.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="listing_suppression_checker">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📉 风险管理工作流</span>
+      <h1>Listing下架 <em>检查器</em></h1>
+      <p class="tool-hero-desc">粘贴Listing标题/五点/描述，实时扫描违规词与杀虫剂词，校验图片张数与主图白底合规，验证类目准入要求，输出CSS检查报告与修复建议，降低Listing被抑制风险。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第8步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a><span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a><span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a><span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a><span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a><span class="arrow">→</span>
+      <a href="appeal-letter-generator.html" class="step">申诉信生成</a><span class="arrow">→</span>
+      <a href="policy-update-tracker.html" class="step">政策追踪</a><span class="arrow">→</span>
+      <span class="step current">Listing下架</span><span class="arrow">→</span>
+      <a href="account-suspension-recovery.html" class="step">封号恢复</a><span class="arrow">→</span>
+      <a href="performance-metric-monitor.html" class="step">绩效监控</a><span class="arrow">→</span>
+      <a href="ip-infringement-scanner.html" class="step">侵权扫描</a><span class="arrow">→</span>
+      <a href="risk-heatmap-generator.html" class="step">风险热力图</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入Listing内容</h2>
+          <p class="calc-form-subtitle">粘贴Listing信息，选择类目与图片数量</p>
+          <div class="calc-field"><label>Listing标题</label><input type="text" id="title" value="Best Anti-Bacterial Wireless Earbuds - 100% Guaranteed Cure All Pain Relief" oninput="LSC.check()"></div>
+          <div class="calc-field"><label>五点描述 / 描述</label><textarea id="desc" rows="4" style="width:100%;padding:11px 14px;border:1px solid var(--rule);border-radius:6px;font-size:14px;font-family:inherit" oninput="LSC.check()">1. Kills 99% of bacteria and virus
+2. FDA approved medical device for treatment
+3. Cures headache and pain instantly
+4. #1 selling cure-all product
+5. Cheapest price guaranteed</textarea></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品类目</label><select id="category" onchange="LSC.check()">
+              <option value="general">普通类目</option>
+              <option value="health">健康个护</option>
+              <option value="baby">母婴用品</option>
+              <option value="food">食品饮料</option>
+              <option value="pesticide">杀虫剂类目</option>
+            </select></div>
+            <div class="calc-field"><label>图片数量</label><input type="number" id="imgCount" value="6" min="0" oninput="LSC.check()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>主图是否白底</label><select id="mainImg" onchange="LSC.check()"><option value="yes">是</option><option value="no">否</option></select></div>
+            <div class="calc-field"><label>标题字符数</label><input type="number" id="titleLen" value="78" oninput="LSC.check()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="lsc-section">
+        <h3>📊 检查报告</h3>
+        <div id="reportWrap"></div>
+      </div>
+
+      <div class="lsc-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="compliance-check.html" class="related-card"><span class="related-card-icon">✅</span><div class="related-card-content"><h5>合规检查器</h5><p>多维度合规</p></div></a>
+          <a href="ip-infringement-scanner.html" class="related-card"><span class="related-card-icon">🔍</span><div class="related-card-content"><h5>侵权扫描器</h5><p>商标专利扫描</p></div></a>
+          <a href="appeal-letter-generator.html" class="related-card"><span class="related-card-icon">✉️</span><div class="related-card-content"><h5>申诉信生成</h5><p>POA结构</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="policy-update-tracker.html" class="wbn-btn prev">← 上一步：政策追踪</a>
+        <a href="account-suspension-recovery.html" class="wbn-btn next">下一步：封号恢复 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="listing-suppression-checker.html">Listing下架检查</a></li><li><a href="compliance-check.html">合规检查</a></li><li><a href="risk-heatmap-generator.html">风险热力图</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var LSC=(function(){
+  'use strict';
+  var PESTICIDE=['anti-bacterial','antibacterial','kills','kill','virus','bacteria','germ','repel','repellent','pest','insect','mold','mildew','fungus','fungal','sanitize','sanitizer','disinfect','antimicrobial','microbial'];
+  var MEDICAL=['cure','cures','treat','treats','treatment','heal','heals','remedy','therapy','therapeutic','prescription','medical','clinical','disease','symptom','diagnose'];
+  var ABSOLUTE=['100%','guaranteed','best','cheapest','#1','number one','top rated','lowest','fastest','miracle'];
+  var PROMO=['sale','discount','free shipping','limited time','deal','coupon','wholesale'];
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function scan(text,words){var found=[];var lower=text.toLowerCase();words.forEach(function(w){if(lower.indexOf(w)!==-1)found.push(w);});return found;}
+  function check(){
+    var title=v('title'),desc=v('desc'),cat=v('category'),img=parseInt(v('imgCount'))||0,main=v('mainImg'),tlen=parseInt(v('titleLen'))||0;
+    var allText=title+' '+desc;
+    var pest=scan(allText,PESTICIDE),med=scan(allText,MEDICAL),abs=scan(allText,ABSOLUTE),promo=scan(allText,PROMO);
+    var items=[];
+    var failCnt=0,warnCnt=0;
+    function add(status,title,detail,tags){items.push({status:status,title:title,detail:detail,tags:tags||[]});if(status==='fail')failCnt++;else if(status==='warn')warnCnt++;}
+    if(pest.length)add('fail','杀虫剂/抗菌词预警','检测到杀虫剂/抗菌声明词，非杀虫剂类目使用将触发EPA合规审查并可能直接下架：',pest);
+    else add('pass','杀虫剂/抗菌词检查','未检测到杀虫剂/抗菌声明词');
+    if(med.length)add('fail','医疗声明词违规','检测到医疗/治疗声明词，普通产品不得声称治疗/治愈疾病：',med);
+    else add('pass','医疗声明词检查','未检测到医疗/治疗声明词');
+    if(abs.length)add('warn','绝对化用语预警','检测到绝对化/保证性词汇，可能违反广告法与平台政策：',abs);
+    else add('pass','绝对化用语检查','未检测到绝对化用语');
+    if(cat==='health'&&med.length)add('fail','健康类目准入','健康个护类目对医疗声明审核极严，当前文案存在治疗声明，需提供FDA认证或修改文案');
+    else if(cat==='pesticide'&&!pest.length)add('warn','杀虫剂类目提示','已选杀虫剂类目但未声明功效，确认是否需要EPA注册号');
+    else add('pass','类目准入检查','当前类目准入要求满足');
+    if(img<1)add('fail','图片数量不足','主图为必填项，至少需要1张主图');
+    else if(img<6)add('warn','图片数量偏少','建议提供6-7张图片（主图+场景+细节+尺寸+对比+包装）以提升转化');
+    else add('pass','图片数量检查','图片数量充足（'+img+'张）');
+    if(main==='no')add('fail','主图白底违规','主图必须为纯白背景(RGB 255,255,255)，无水印无文字');
+    else add('pass','主图白底检查','主图符合白底要求');
+    if(tlen>200)add('fail','标题超长','标题超过200字符上限，将被截断或抑制');
+    else if(tlen>150)add('warn','标题偏长','标题超过150字符，部分类目可能被抑制，建议精简');
+    else if(tlen<50)add('warn','标题偏短','标题过短不利于SEO，建议50-150字符');
+    else add('pass','标题长度检查','标题长度适中（'+tlen+'字符）');
+    if(promo.length)add('warn','促销词提示','描述中出现促销词，注意是否符合当前促销政策：',promo);
+
+    var total=items.length,passCnt=total-failCnt-warnCnt;
+    var score=Math.round((passCnt/total)*100-(failCnt*15)-(warnCnt*5));
+    score=Math.max(0,Math.min(100,score));
+    var level,color;
+    if(failCnt>0){level='高风险 - 立即修复';color='#ef4444';}
+    else if(warnCnt>0){level='中风险 - 建议优化';color='#f59e0b';}
+    else{level='低风险 - 合规良好';color='#10b981';}
+    document.getElementById('resultCard').innerHTML=
+      '<h3>📉 检查概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">合规分</div><div class="ri-value" style="color:'+color+'">'+score+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">风险等级</div><div class="ri-value" style="color:'+color+'">'+level+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">通过项</div><div class="ri-value positive">'+passCnt+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">警告/违规</div><div class="ri-value '+(warnCnt+failCnt>0?'negative':'positive')+'">'+warnCnt+'/'+failCnt+'</div></div>'+
+      '</div><div class="result-note">💡 '+(failCnt>0?'发现'+failCnt+'项违规，需立即修复以防Listing被抑制':(warnCnt>0?'发现'+warnCnt+'项预警，建议优化提升合规度':'Listing合规状态良好，继续保持'))+'</div>';
+
+    var rh='<div class="report-bar"><div class="report-score" style="background:conic-gradient('+color+' 0deg '+(score/100*360)+'deg,#e2e8f0 '+(score/100*360)+'deg 360deg)"><div style="width:84px;height:84px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center"><div class="rs-val" style="color:'+color+'">'+score+'</div><div class="rs-lbl" style="color:var(--muted)">合规分</div></div></div><div class="report-meta"><div class="rm-level" style="color:'+color+'">'+level+'</div><div class="rm-desc">共 '+total+' 项检查 | 通过 '+passCnt+' · 警告 '+warnCnt+' · 违规 '+failCnt+'</div></div></div>';
+    items.forEach(function(it){
+      rh+='<div class="check-item '+it.status+'"><div class="check-icon">'+(it.status==='pass'?'✅':it.status==='warn'?'⚠️':'❌')+'</div><div class="check-body"><div class="check-title">'+it.title+'</div><div class="check-detail">'+it.detail;
+      if(it.tags.length){rh+='<div style="margin-top:6px">';it.tags.forEach(function(t){rh+='<span class="tag '+(it.status==='fail'?'danger':'warn')+'">'+t+'</span>';});rh+='</div>';}
+      rh+='</div></div></div>';
+    });
+    document.getElementById('reportWrap').innerHTML=rh;
+  }
+  function init(){check();}
+  return {check:check,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',LSC.init);}else{LSC.init();}
+</script>
+</body>
+</html>

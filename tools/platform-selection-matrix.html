@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="平台选择矩阵：输入产品特性（价格/重量/类目/目标市场），输出各平台匹配度评分、CSS矩阵展示、进入难度与增长潜力分析。">
+<meta name="keywords" content="平台选择矩阵,平台匹配度,进入难度,增长潜力,Amazon eBay Walmart Shopify TikTok对比,选品工具">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/platform-selection-matrix.html">
+<title>平台选择矩阵 - 匹配度评分·进入难度·增长潜力 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.fee-row.total .fr-val{color:var(--red)}
+.fee-row.profit .fr-val{color:var(--green)}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.matrix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.matrix-cell{padding:16px;border-radius:10px;text-align:center;border:1px solid var(--rule);background:#fff;transition:all .3s}
+.matrix-cell .mc-icon{font-size:24px;margin-bottom:6px}
+.matrix-cell .mc-score{font-size:22px;font-weight:800;margin:4px 0}
+.matrix-cell .mc-label{font-size:12px;color:var(--muted)}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.sel-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:16px}
+.sel-card{padding:20px;border-radius:14px;border:2px solid var(--rule);background:#fff;transition:all .3s;text-align:center}
+.sel-card.best{border-color:var(--green);background:var(--green-bg);transform:scale(1.03)}
+.sel-card .sel-name{font-size:16px;font-weight:700;margin-bottom:8px}
+.sel-card .sel-score{font-size:36px;font-weight:800;margin:8px 0}
+.sel-card .sel-rating{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:10px}
+.sel-card .sel-detail{font-size:12px;color:var(--muted);line-height:1.6}
+.diff-bar{height:8px;border-radius:4px;background:var(--bg-soft);overflow:hidden;margin:4px 0}
+.diff-fill{height:100%;border-radius:4px}
+</style>
+</head>
+<body class="tool-page" data-tool="platform_selection_matrix">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🌐</span><span class="workflow-name">多平台运营工作流</span><span class="workflow-step">第11步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="ebay-fees.html" class="step">eBay费用</a>
+      <span class="arrow">→</span>
+      <a href="walmart-fees.html" class="step">Walmart费用</a>
+      <span class="arrow">→</span>
+      <a href="shopify-costs.html" class="step">Shopify成本</a>
+      <span class="arrow">→</span>
+      <a href="tiktok-shop-calc.html" class="step">TikTok利润</a>
+      <span class="arrow">→</span>
+      <a href="temu-pricing.html" class="step">Temu定价</a>
+      <span class="arrow">→</span>
+      <a href="platform-profit-comparison.html" class="step">平台利润对比</a>
+      <span class="arrow">→</span>
+      <a href="cross-platform-listing-sync.html" class="step">Listing同步</a>
+      <span class="arrow">→</span>
+      <a href="aliexpress-fees-calc.html" class="step">速卖通费用</a>
+      <span class="arrow">→</span>
+      <a href="etsy-fees-calc.html" class="step">Etsy费用</a>
+      <span class="arrow">→</span>
+      <a href="multichannel-inventory-allocator.html" class="step">库存分配</a>
+      <span class="arrow">→</span>
+      <span class="step current">平台选择</span>
+      <span class="arrow">→</span>
+      <a href="regional-market-comparator.html" class="step">区域对比</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌐 多平台运营工作流 · 标准版</span>
+      <h1>平台选择 <em>矩阵</em></h1>
+      <p class="tool-hero-desc">输入产品特性（价格/重量/类目/目标市场），输出各平台匹配度评分、CSS矩阵展示、进入难度与增长潜力分析，帮你选择最优平台。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🎯 平台选择矩阵</h2>
+          <p class="calc-form-subtitle">输入产品特性，系统自动评分匹配最优平台</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品售价 ($)</label><input type="number" id="price" value="29.99" min="0" step="0.01" oninput="PSM.calc()"></div>
+            <div class="calc-field"><label>产品重量 (g)</label><input type="number" id="weight" value="300" min="0" step="10" oninput="PSM.calc()"></div>
+          </div>
+          <div class="calc-field"><label>产品类目</label><select id="category" onchange="PSM.calc()">
+            <option value="electronics" selected>3C电子</option>
+            <option value="apparel">服装鞋帽</option>
+            <option value="home">家居园艺</option>
+            <option value="beauty">美妆个护</option>
+            <option value="jewelry">珠宝手表</option>
+            <option value="sports">运动户外</option>
+            <option value="toys">玩具母婴</option>
+          </select></div>
+          <div class="calc-field"><label>目标市场</label><select id="market" onchange="PSM.calc()">
+            <option value="us" selected>北美市场</option>
+            <option value="eu">欧洲市场</option>
+            <option value="sea">东南亚市场</option>
+            <option value="global">全球市场</option>
+          </select></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>品牌化程度 (1-10)</label><input type="number" id="brandLevel" value="6" min="1" max="10" step="1" oninput="PSM.calc()"></div>
+            <div class="calc-field"><label>月预算 ($) </label><input type="number" id="budget" value="5000" min="0" step="500" oninput="PSM.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 平台匹配度评分矩阵</h3>
+        <div class="sel-matrix" id="selMatrix"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📈 进入难度与增长潜力</h3>
+        <table class="data-table" id="diffTable"></table>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="multichannel-inventory-allocator.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第10步</span>库存分配 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="regional-market-comparator.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第12步</span>区域对比 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li>
+<li><a href="platform-selection-matrix.html">平台选择</a></li>
+<li><a href="platform-profit-comparison.html">平台利润对比</a></li>
+<li><a href="regional-market-comparator.html">区域对比</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var PSM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var PLATFORMS={
+    Amazon:{name:'Amazon',color:'#ff9900',commission:0.15,difficulty:7,growth:8,entry:'中等',fee:'15%+$FBA'},
+    eBay:{name:'eBay',color:'#e53238',commission:0.13,difficulty:4,growth:5,entry:'低',fee:'13%+$0.30'},
+    Walmart:{name:'Walmart',color:'#0071dc',commission:0.15,difficulty:8,growth:9,entry:'高',fee:'15%+$WFS'},
+    Shopify:{name:'Shopify',color:'#95bf47',commission:0.029,difficulty:6,growth:7,entry:'中低',fee:'月费+2.9%'},
+    TikTok:{name:'TikTok',color:'#000000',commission:0.08,difficulty:5,growth:10,entry:'中低',fee:'8%+补贴'}
+  };
+  function scorePlatform(price,weight,cat,market,brandLevel,budget,pKey){
+    var p=PLATFORMS[pKey];var score=50;
+    if(price>=15&&price<=50)score+=10;else if(price>50)score+=5;
+    if(weight<500)score+=8;else if(weight>2000)score-=5;
+    if(pKey==='Amazon'&&(cat==='electronics'||cat==='home'))score+=10;
+    if(pKey==='eBay'&&(cat==='apparel'||cat==='jewelry'))score+=8;
+    if(pKey==='Shopify'&&brandLevel>=7)score+=12;
+    if(pKey==='TikTok'&&(cat==='beauty'||cat==='apparel'))score+=12;
+    if(pKey==='Walmart'&&cat==='home')score+=8;
+    if(market==='us'&&(pKey==='Amazon'||pKey==='Walmart'))score+=5;
+    if(market==='global'&&pKey==='eBay')score+=5;
+    if(market==='sea'&&pKey==='TikTok')score+=8;
+    if(budget<3000&&(pKey==='eBay'||pKey==='TikTok'))score+=5;
+    if(budget>10000&&pKey==='Amazon')score+=5;
+    return Math.max(0,Math.min(100,Math.round(score)));
+  }
+  function sc(s){return s>=75?'score-high':(s>=50?'score-mid':'score-low');}
+  function ratingText(s){return s>=75?'强烈推荐':(s>=60?'推荐':(s>=45?'可考虑':'不推荐'));}
+  function ratingColor(s){return s>=75?'var(--green)':(s>=60?'var(--accent)':(s>=45?'var(--gold)':'var(--red)'));}
+  return{
+    calc:function(){
+      var price=v('price'),weight=v('weight'),brandLevel=v('brandLevel'),budget=v('budget');
+      var cat=$('category').value,market=$('market').value;
+      var scores={};
+      for(var k in PLATFORMS)scores[k]=scorePlatform(price,weight,cat,market,brandLevel,budget,k);
+      var best=Object.keys(scores).reduce(function(a,b){return scores[a]>scores[b]?a:b;});
+      var html='<h3>🎯 推荐结果</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">最优平台</div><div class="hc-value">'+PLATFORMS[best].name+'</div><div class="hc-sub">匹配度 '+scores[best]+'分</div></div>';
+      var avgScore=Object.keys(scores).reduce(function(s,k){return s+scores[k];},0)/Object.keys(scores).length;
+      html+='<div class="highlight-card roi"><div class="hc-label">平均匹配度</div><div class="hc-value">'+avgScore.toFixed(0)+'</div><div class="hc-sub">'+ratingText(avgScore)+'</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      var sorted=Object.keys(scores).sort(function(a,b){return scores[b]-scores[a];});
+      sorted.forEach(function(k){html+='<div class="fee-row"><span class="fr-lbl" style="color:'+PLATFORMS[k].color+'">● '+PLATFORMS[k].name+'</span><span class="fr-val">'+scores[k]+'分 · '+ratingText(scores[k])+'</span></div>';});
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var matrixHtml='';
+      sorted.forEach(function(k){
+        var s=scores[k];var isBest=k===best;
+        matrixHtml+='<div class="sel-card'+(isBest?' best':'')+'">';
+        matrixHtml+='<div class="sel-name" style="color:'+PLATFORMS[k].color+'">'+PLATFORMS[k].name+(isBest?' ⭐':'')+'</div>';
+        matrixHtml+='<div class="sel-rating" style="background:'+ratingColor(s)+';color:#fff">'+ratingText(s)+'</div>';
+        matrixHtml+='<div class="sel-score '+sc(s)+'">'+s+'</div>';
+        matrixHtml+='<div class="sel-detail">佣金: '+(PLATFORMS[k].commission*100).toFixed(1)+'%<br>进入难度: '+PLATFORMS[k].entry+'<br>增长潜力: '+PLATFORMS[k].growth+'/10</div>';
+        matrixHtml+='</div>';
+      });
+      $('selMatrix').innerHTML=matrixHtml;
+      var dtHtml='<thead><tr><th>平台</th><th>进入难度</th><th>增长潜力</th><th>佣金费率</th><th>总评分</th><th>建议</th></tr></thead><tbody>';
+      sorted.forEach(function(k){
+        var s=scores[k];var p=PLATFORMS[k];
+        dtHtml+='<tr><td style="color:'+p.color+';font-weight:700">● '+p.name+'</td>';
+        dtHtml+='<td><div class="diff-bar"><div class="diff-fill" style="width:'+p.difficulty*10+'%;background:'+(p.difficulty>=7?'var(--red)':(p.difficulty>=5?'var(--gold)':'var(--green)'))+'"></div></div>'+p.difficulty+'/10</td>';
+        dtHtml+='<td><div class="diff-bar"><div class="diff-fill" style="width:'+p.growth*10+'%;background:var(--accent)"></div></td>'+p.growth+'/10</td>';
+        dtHtml+='<td>'+(p.commission*100).toFixed(1)+'%</td>';
+        dtHtml+='<td class="'+sc(s)+'">'+s+'</td>';
+        dtHtml+='<td class="'+(s>=60?'pass':'warn')+'">'+ratingText(s)+'</td></tr>';
+      });
+      dtHtml+='</tbody></table>';
+      $('diffTable').innerHTML=dtHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PSM.calc);}else{PSM.calc();}
+</script>
+</body>
+</html>

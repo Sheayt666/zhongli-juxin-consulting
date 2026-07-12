@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="成本优化顾问：降本机会识别，优化优先级排序，节省预估，CSS帕累托图。">
+<title>成本优化顾问 - 帕累托图·降本优先级·节省预估 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px}.cost-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px}.cost-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}.cost-table input{width:80px;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;font-size:13px;font-family:inherit}.cost-table input:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid #fecaca}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.pareto-wrap{margin-top:16px}.pareto-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:8px;position:relative}.pareto-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}.pareto-bar-fill{width:100%;border-radius:6px 6px 0 0;transition:height .6s;min-height:4px;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:11px;font-weight:700;color:#fff}.pareto-bar-label{font-size:11px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}.pareto-line-point{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--danger);border:2px solid #fff;box-shadow:0 0 0 1px var(--danger);z-index:2}
+.opp-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px}.opp-card.p1{border-left:4px solid var(--danger)}.opp-card.p2{border-left:4px solid var(--warning)}.opp-card.p3{border-left:4px solid var(--primary)}.opp-icon{font-size:24px;flex-shrink:0}.opp-info{flex:1}.opp-info h4{font-size:14px;font-weight:700;margin-bottom:4px}.opp-info p{font-size:13px;color:var(--muted)}.opp-save{text-align:right;flex-shrink:0}.opp-save .os-val{font-size:20px;font-weight:800;color:var(--success)}.opp-save .os-pct{font-size:12px;color:var(--muted)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W5 财务利润工作流</div><div class="workflow-steps">
+<a href="fba-calculator.html" class="workflow-step">FBA利润</a><a href="margin-markup.html" class="workflow-step">利润率</a><a href="roi-payback.html" class="workflow-step">ROI回本</a><a href="break-even-volume.html" class="workflow-step">盈亏平衡</a><a href="cash-flow-forecast.html" class="workflow-step">现金流预测</a><a href="fba-refund-claim-tracker.html" class="workflow-step">索赔追踪</a><a href="fee-breakdown-decomposer.html" class="workflow-step">费用拆解</a><a href="sku-profit-analyzer.html" class="workflow-step">SKU分析</a><a href="multi-country-vat-calculator.html" class="workflow-step">VAT计算</a><a href="reimbursement-finder.html" class="workflow-step">赔偿查找</a><a href="profit-trend-analyzer.html" class="workflow-step">利润趋势</a><a href="cost-optimization-advisor.html" class="workflow-step active">成本优化</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W5 财务利润</a><span>/</span>成本优化顾问</div>
+<div class="tool-header"><span class="tool-badge">W5 财务利润工作流</span><h1>成本<em>优化顾问</em></h1><p>输入各成本项金额和占比，自动识别降本机会，按帕累托法则排序优化优先级，预估可节省金额，CSS帕累托图可视化。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotalCost">$0</div><div class="stat-lbl">总成本</div></div>
+<div class="stat-card"><div class="stat-val success" id="sSaveable">$0</div><div class="stat-lbl">可节省金额</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sSaveRate">0%</div><div class="stat-lbl">降本空间</div></div>
+<div class="stat-card"><div class="stat-val danger" id="sTopItems">0</div><div class="stat-lbl">关键少数 (80%)</div></div>
+</div>
+
+<div class="card"><h2>成本项输入</h2>
+<div style="overflow-x:auto"><table class="cost-table"><thead><tr><th>成本项</th><th>当前金额($)</th><th>可优化比例(%)</th><th>预估节省($)</th><th>操作</th></tr></thead><tbody id="costBody"></tbody></table></div>
+<div style="margin-top:12px"><button class="btn btn-secondary" onclick="Cost.add()">+ 添加成本项</button> <button class="btn btn-secondary" onclick="Cost.loadSample()">载入示例</button></div>
+</div>
+
+<div class="card"><h2>帕累托图 (Pareto Chart)</h2><div class="pareto-wrap" id="paretoWrap"></div></div>
+<div class="card"><h2>降本机会优先级</h2><div id="oppWrap"></div></div>
+
+<div class="related-grid">
+<a href="fee-breakdown-decomposer.html" class="related-card"><span class="rc-icon">💰</span><div><h4>费用拆解器</h4><p>费用明细可视化</p></div></a>
+<a href="profit-trend-analyzer.html" class="related-card"><span class="rc-icon">📈</span><div><h4>利润趋势分析器</h4><p>12月利润趋势</p></div></a>
+<a href="sku-profit-analyzer.html" class="related-card"><span class="rc-icon">📊</span><div><h4>SKU利润分析器</h4><p>多SKU利润对比</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Cost = {
+  data:[],
+  presets:[
+    {name:'采购成本',amount:8000,optRate:8},
+    {name:'FBA配送费',amount:3500,optRate:5},
+    {name:'头程物流费',amount:2500,optRate:12},
+    {name:'广告费',amount:3000,optRate:15},
+    {name:'仓储费',amount:800,optRate:10},
+    {name:'退货损耗',amount:600,optRate:20},
+    {name:'包装费',amount:400,optRate:8},
+  ],
+  init(){ this.loadSample(); },
+  loadSample(){ this.data=this.presets.map((p,i)=>({...p,id:Date.now()+i})); this.render(); },
+  add(){ this.data.push({id:Date.now()+Math.random(),name:'新成本项',amount:0,optRate:0}); this.render(); },
+  update(i,f,v){ this.data[i][f]=f==='name'?v:(parseFloat(v)||0); this.render(); },
+  del(i){ this.data.splice(i,1); this.render(); },
+  render(){
+    document.getElementById('costBody').innerHTML=this.data.map((r,i)=>{
+      const save=r.amount*r.optRate/100;
+      return `<tr><td><input type="text" value="${r.name}" style="width:120px" oninput="Cost.update(${i},'name',this.value)"></td><td><input type="number" value="${r.amount}" step="100" min="0" oninput="Cost.update(${i},'amount',this.value)"></td><td><input type="number" value="${r.optRate}" step="1" min="0" max="100" oninput="Cost.update(${i},'optRate',this.value)"></td><td style="font-weight:700;color:var(--success)">$${save.toFixed(0)}</td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="Cost.del(${i})">删除</button></td></tr>`;
+    }).join('');
+    this.calc();
+  },
+  calc(){
+    const total=this.data.reduce((s,r)=>s+r.amount,0);
+    const totalSave=this.data.reduce((s,r)=>s+r.amount*r.optRate/100,0);
+    const saveRate=total>0?(totalSave/total*100):0;
+    const sorted=[...this.data].sort((a,b)=>b.amount-a.amount);
+    let cum=0,topCount=0;
+    for(const r of sorted){cum+=r.amount;topCount++;if(cum>=total*0.8)break;}
+    document.getElementById('sTotalCost').textContent='$'+total.toLocaleString();
+    document.getElementById('sSaveable').textContent='$'+totalSave.toFixed(0);
+    document.getElementById('sSaveRate').textContent=saveRate.toFixed(1)+'%';
+    document.getElementById('sTopItems').textContent=topCount;
+    this.renderPareto(sorted,total);
+    this.renderOpp(sorted);
+  },
+  renderPareto(sorted,total){
+    const maxVal=Math.max(...sorted.map(r=>r.amount),1);
+    const maxH=200;
+    let cum=0;
+    let bars=sorted.map((r,i)=>{
+      const h=r.amount/maxVal*maxH;
+      cum+=r.amount;
+      const cumPct=total>0?(cum/total*100):0;
+      return `<div class="pareto-bar"><div class="pareto-bar-fill" style="height:${h}px;background:linear-gradient(180deg,#4f46e5,#6366f1)">$${r.amount}</div><div class="pareto-bar-label">${r.name}</div><div style="font-size:10px;color:var(--danger);font-weight:600">${cumPct.toFixed(0)}%</div></div>`;
+    }).join('');
+    document.getElementById('paretoWrap').innerHTML=`<div style="display:flex;align-items:flex-end;gap:8px;height:260px;padding-bottom:40px;border-bottom:2px solid var(--rule);position:relative">${bars}</div><div style="margin-top:8px;font-size:12px;color:var(--muted);text-align:center">柱状图=金额 | 百分比=累计占比 | 红色累计80%的项为"关键少数"需优先优化</div>`;
+  },
+  renderOpp(sorted){
+    const opps=sorted.map(r=>({
+      ...r,
+      save:r.amount*r.optRate/100,
+      priority:r.amount*r.optRate/100>500?'p1':r.amount*r.optRate/100>100?'p2':'p3'
+    })).sort((a,b)=>b.save-a.save);
+    document.getElementById('oppWrap').innerHTML=opps.map(o=>{
+      const icon=o.priority==='p1'?'🔴':o.priority==='p2'?'🟡':'🔵';
+      const label=o.priority==='p1'?'高优先级':o.priority==='p2'?'中优先级':'低优先级';
+      const tip=o.name.includes('广告')?'优化ACOS，否词降噪，调整竞价':o.name.includes('物流')?'比价多家货代，优化包装体积':o.name.includes('采购')?'谈判批量折扣，寻找替代供应商':o.name.includes('FBA')?'优化包装尺寸，降级size tier':'优化运营流程减少损耗';
+      return `<div class="opp-card ${o.priority}"><div class="opp-icon">${icon}</div><div class="opp-info"><h4>${o.name} <span style="font-size:12px;font-weight:400;color:var(--muted)">(${label})</span></h4><p>当前: $${o.amount} · 可优化 ${o.optRate}% · 建议: ${tip}</p></div><div class="opp-save"><div class="os-val">$${o.save.toFixed(0)}</div><div class="os-pct">预估节省</div></div></div>`;
+    }).join('');
+  }
+};
+Cost.init();
+</script>
+</body>
+</html>

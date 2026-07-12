@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="客户满意度调查器：NPS/CSAT自动发送+结果分析+趋势监控，CSS NPS仪表盘与趋势图。免费客服管理工具。">
+<meta name="keywords" content="NPS,CSAT,客户满意度,满意度调查,趋势监控,客服管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/customer-satisfaction-survey.html">
+<title>客户满意度调查器 - NPS·CSAT·趋势监控 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.nps-dashboard{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+.nps-gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.nps-gauge{width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:all .5s}
+.nps-gauge-inner{width:140px;height:140px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.nps-gauge-num{font-size:42px;font-weight:800}
+.nps-gauge-lbl{font-size:12px;color:var(--muted)}
+.nps-breakdown{display:flex;flex-direction:column;gap:12px}
+.nps-segment{padding:14px;border-radius:10px;display:flex;align-items:center;gap:12px}
+.nps-seg-promoter{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border:1px solid #6ee7b7}
+.nps-seg-passive{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fcd34d}
+.nps-seg-detractor{background:linear-gradient(135deg,#fee2e2,#fecaca);border:1px solid #fca5a5}
+.nps-seg-icon{font-size:24px}
+.nps-seg-info{flex:1}
+.nps-seg-label{font-size:13px;font-weight:700}
+.nps-seg-count{font-size:11px;color:var(--muted)}
+.nps-seg-pct{font-size:20px;font-weight:800}
+.trend-chart{display:flex;align-items:flex-end;gap:12px;height:180px;padding:16px 0;margin-top:16px;border-bottom:2px solid var(--rule)}
+.trend-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.trend-bar{width:60%;border-radius:6px 6px 0 0;transition:height .5s;position:relative}
+.trend-bar.nps-good{background:linear-gradient(180deg,#34d399,#10b981)}
+.trend-bar.nps-mid{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.trend-bar.nps-bad{background:linear-gradient(180deg,#f87171,#ef4444)}
+.trend-bar-value{font-size:11px;font-weight:700;color:var(--ink)}
+.trend-bar-label{font-size:11px;color:var(--muted)}
+.csat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}
+.csat-card{padding:16px;border-radius:12px;text-align:center;border:2px solid;transition:all .2s}
+.csat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.csat-card.very-bad{border-color:#ef4444;background:#fef2f2}
+.csat-card.bad{border-color:#f59e0b;background:#fffbeb}
+.csat-card.ok{border-color:#eab308;background:#fefce8}
+.csat-card.good{border-color:#84cc16;background:#f7fee7}
+.csat-card.very-good{border-color:#10b981;background:#f0fdf4}
+.csat-emoji{font-size:28px;margin-bottom:4px}
+.csat-count{font-size:20px;font-weight:800}
+.csat-label{font-size:11px;color:var(--muted)}
+.csat-pct{font-size:12px;font-weight:600;margin-top:4px}
+.survey-config{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.sc-item{padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.sc-item .sc-label{font-size:12px;color:var(--muted);margin-bottom:4px}
+.sc-item .sc-value{font-size:16px;font-weight:700;color:#4f46e5}
+@media(max-width:768px){.nps-dashboard{grid-template-columns:1fr}.csat-grid{grid-template-columns:repeat(3,1fr)}.survey-config{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"客户满意度调查器","description":"NPS/CSAT自动发送+结果分析+趋势监控。","url":"https://juxin-consulting.help/tools/customer-satisfaction-survey.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="customer_satisfaction_survey">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎧</span><span class="workflow-name">客服管理工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="email-template-generator.html" class="step">邮件模板</a><span class="arrow">→</span>
+      <a href="review-statistics.html" class="step">评价统计</a><span class="arrow">→</span>
+      <a href="rma-tracker.html" class="step">退货追踪</a><span class="arrow">→</span>
+      <a href="customer-ticket-manager.html" class="step">工单管理</a><span class="arrow">→</span>
+      <a href="refund-report-generator.html" class="step">退款报告</a><span class="arrow">→</span>
+      <a href="voc-analysis.html" class="step">VOC分析</a><span class="arrow">→</span>
+      <a href="cs-sla-calc.html" class="step">SLA计算</a><span class="arrow">→</span>
+      <a href="faq-generator.html" class="step">FAQ生成</a><span class="arrow">→</span>
+      <a href="negative-review-recovery.html" class="step">差评挽回</a><span class="arrow">→</span>
+      <a href="cs-kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span>
+      <a href="multi-store-inbox.html" class="step">多店铺收件箱</a><span class="arrow">→</span>
+      <a href="auto-response-router.html" class="step">自动路由</a><span class="arrow">→</span>
+      <span class="step current">满意度调查</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎧 客服管理工具 · 标准版</span>
+      <h1>客户满意度<em>调查器</em></h1>
+      <p class="tool-hero-desc">NPS净推荐值与CSAT客户满意度评分管理，自动发送调查问卷，结果分析与趋势监控，CSS NPS仪表盘与趋势图可视化。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 调查参数</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>总调查发送数</label><input type="number" id="totalSent" value="500" oninput="CSS.calc()"></div>
+            <div class="calc-field"><label>回收问卷数</label><input type="number" id="totalReceived" value="185" oninput="CSS.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>推荐者（9-10分）</label><input type="number" id="promoters" value="105" oninput="CSS.calc()"></div>
+            <div class="calc-field"><label>中立者（7-8分）</label><input type="number" id="passives" value="55" oninput="CSS.calc()"></div>
+          </div>
+          <div class="calc-field"><label>贬损者（0-6分）</label><input type="number" id="detractors" value="25" oninput="CSS.calc()"></div>
+
+          <div class="fee-rule-box" style="margin-top:20px"><h4>😊 CSAT满意度分布</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>非常满意（5分）</label><input type="number" id="csat5" value="80" oninput="CSS.calc()"></div>
+            <div class="calc-field"><label>满意（4分）</label><input type="number" id="csat4" value="60" oninput="CSS.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>一般（3分）</label><input type="number" id="csat3" value="25" oninput="CSS.calc()"></div>
+            <div class="calc-field"><label>不满意（2分）</label><input type="number" id="csat2" value="12" oninput="CSS.calc()"></div>
+          </div>
+          <div class="calc-field"><label>非常不满意（1分）</label><input type="number" id="csat1" value="8" oninput="CSS.calc()"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="npsSection">
+        <h3>📊 NPS仪表盘</h3>
+        <div class="nps-dashboard">
+          <div class="nps-gauge-wrap" id="npsGaugeWrap"></div>
+          <div class="nps-breakdown" id="npsBreakdown"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 满意度汇总</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block" id="csatSection">
+        <h3>😊 CSAT满意度分布</h3>
+        <div class="csat-grid" id="csatGrid"></div>
+      </div>
+
+      <div class="section-block" id="trendSection">
+        <h3>📈 NPS趋势图（近6个月）</h3>
+        <div class="trend-chart" id="trendChart"></div>
+      </div>
+
+      <div class="section-block" id="configSection">
+        <h3>⚙️ 调查配置</h3>
+        <div class="survey-config" id="surveyConfig"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="auto-response-router.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 自动路由</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="customer-satisfaction-survey.html">满意度调查</a></li><li><a href="auto-response-router.html">自动路由</a></li><li><a href="multi-store-inbox.html">多店铺收件箱</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var CSSV=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var sent=v('totalSent'),received=v('totalReceived');
+    var pro=v('promoters'),pas=v('passives'),det=v('detractors');
+    var total=pro+pas+det;
+    var nps=total>0?Math.round((pro-det)/total*100):0;
+    var responseRate=sent>0?Math.round(received/sent*100):0;
+    var npsColor=nps>=50?'#10b981':nps>=0?'#f59e0b':'#ef4444';
+    var npsLevel=nps>=50?'优秀':nps>=20?'良好':nps>=0?'一般':'需改善';
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">NPS得分</div><div class="rh-value" style="color:'+npsColor+'">'+nps+'</div></div>'+
+      '<div class="result-detail"><span>NPS等级</span><strong style="color:'+npsColor+'">'+npsLevel+'</strong></div>'+
+      '<div class="result-detail"><span>问卷回收率</span><strong>'+responseRate+'%</strong></div>'+
+      '<div class="result-detail"><span>推荐者占比</span><strong style="color:#10b981">'+(total>0?Math.round(pro/total*100):0)+'%</strong></div>'+
+      '<div class="result-detail"><span>贬损者占比</span><strong style="color:#ef4444">'+(total>0?Math.round(det/total*100):0)+'%</strong></div>';
+    $('npsGaugeWrap').innerHTML=
+      '<div class="nps-gauge" style="background:conic-gradient('+npsColor+' '+Math.abs(nps)*1.8+'deg,#e0e7ff '+Math.abs(nps)*1.8+'deg)">'+
+        '<div class="nps-gauge-inner"><div class="nps-gauge-num" style="color:'+npsColor+'">'+nps+'</div><div class="nps-gauge-lbl">NPS得分</div></div>'+
+      '</div>'+
+      '<div style="font-size:14px;font-weight:700;color:'+npsColor+'">'+npsLevel+'</div>';
+    var proPct=total>0?Math.round(pro/total*100):0;
+    var pasPct=total>0?Math.round(pas/total*100):0;
+    var detPct=total>0?Math.round(det/total*100):0;
+    $('npsBreakdown').innerHTML=
+      '<div class="nps-segment nps-seg-promoter"><div class="nps-seg-icon">😊</div><div class="nps-seg-info"><div class="nps-seg-label">推荐者 (9-10分)</div><div class="nps-seg-count">'+pro+'人</div></div><div class="nps-seg-pct" style="color:#059669">'+proPct+'%</div></div>'+
+      '<div class="nps-segment nps-seg-passive"><div class="nps-seg-icon">😐</div><div class="nps-seg-info"><div class="nps-seg-label">中立者 (7-8分)</div><div class="nps-seg-count">'+pas+'人</div></div><div class="nps-seg-pct" style="color:#d97706">'+pasPct+'%</div></div>'+
+      '<div class="nps-segment nps-seg-detractor"><div class="nps-seg-icon">😞</div><div class="nps-seg-info"><div class="nps-seg-label">贬损者 (0-6分)</div><div class="nps-seg-count">'+det+'人</div></div><div class="nps-seg-pct" style="color:#dc2626">'+detPct+'%</div></div>';
+    var csat5=v('csat5'),csat4=v('csat4'),csat3=v('csat3'),csat2=v('csat2'),csat1=v('csat1');
+    var csatTotal=csat5+csat4+csat3+csat2+csat1;
+    var csatScore=csatTotal>0?((csat5*5+csat4*4+csat3*3+csat2*2+csat1*1)/csatTotal):0;
+    var csatPercent=csatTotal>0?Math.round((csat5+csat4)/csatTotal*100):0;
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+npsColor+'">'+nps+'</div><div class="rsb-lbl">NPS得分</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+csatScore.toFixed(1)+'</div><div class="rsb-lbl">CSAT平均分</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+csatPercent+'%</div><div class="rsb-lbl">满意度率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+responseRate+'%</div><div class="rsb-lbl">回收率</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+received+'</div><div class="rsb-lbl">回收问卷</div></div>';
+    var csatData=[
+      {emoji:'😡',count:csat1,label:'非常不满意',cls:'very-bad',color:'#ef4444'},
+      {emoji:'🙁',count:csat2,label:'不满意',cls:'bad',color:'#f59e0b'},
+      {emoji:'😐',count:csat3,label:'一般',cls:'ok',color:'#eab308'},
+      {emoji:'😊',count:csat4,label:'满意',cls:'good',color:'#84cc16'},
+      {emoji:'😍',count:csat5,label:'非常满意',cls:'very-good',color:'#10b981'}
+    ];
+    $('csatGrid').innerHTML=csatData.map(function(c){
+      var pct=csatTotal>0?Math.round(c.count/csatTotal*100):0;
+      return '<div class="csat-card '+c.cls+'"><div class="csat-emoji">'+c.emoji+'</div><div class="csat-count">'+c.count+'</div><div class="csat-label">'+c.label+'</div><div class="csat-pct" style="color:'+c.color+'">'+pct+'%</div></div>';
+    }).join('');
+    var trendData=[
+      {month:'2月',nps:15},
+      {month:'3月',nps:22},
+      {month:'4月',nps:28},
+      {month:'5月',nps:35},
+      {month:'6月',nps:40},
+      {month:'7月',nps:nps}
+    ];
+    var maxNps=100;
+    $('trendChart').innerHTML=trendData.map(function(t){
+      var h=Math.abs(t.nps)/maxNps*140;
+      var cls=t.nps>=50?'nps-good':t.nps>=0?'nps-mid':'nps-bad';
+      var color=t.nps>=50?'#10b981':t.nps>=0?'#f59e0b':'#ef4444';
+      return '<div class="trend-bar-wrap"><div class="trend-bar-value" style="color:'+color+'">'+t.nps+'</div><div class="trend-bar '+cls+'" style="height:'+h+'px"></div><div class="trend-bar-label">'+t.month+'</div></div>';
+    }).join('');
+    $('surveyConfig').innerHTML=
+      '<div class="sc-item"><div class="sc-label">发送频率</div><div class="sc-value">订单完成后7天</div></div>'+
+      '<div class="sc-item"><div class="sc-label">发送渠道</div><div class="sc-value">邮件 + 站内信</div></div>'+
+      '<div class="sc-item"><div class="sc-label">提醒频率</div><div class="sc-value">3天后未回复提醒1次</div></div>'+
+      '<div class="sc-item"><div class="sc-label">激励方式</div><div class="sc-value">优惠券$2</div></div>';
+  }
+  return{calc:calc};
+})();
+CSSV.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

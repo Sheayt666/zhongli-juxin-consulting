@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="品牌监控预警器：全网监控+侵权通知+自动化巡查，CSS监控看板可视化，跨境卖家品牌保护工具。">
+<title>品牌监控预警器 - 全网监控侵权通知自动化巡查 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.alert-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--rule);margin-bottom:10px}
+.alert-item.danger{border-color:#fecaca;background:#fef2f2}
+.alert-item.warn{border-color:#fde68a;background:#fffbeb}
+.alert-item.info{border-color:#c7d2fe;background:#eef2ff}
+.alert-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.alert-body{flex:1}.alert-body h4{font-size:14px;font-weight:700;margin:0 0 4px}.alert-body p{font-size:12px;color:var(--muted);margin:0 0 4px;line-height:1.5}
+.alert-time{font-size:11px;color:var(--muted)}
+.alert-action{font-size:12px;font-weight:700;padding:3px 10px;border-radius:8px}
+.monitor-table{width:100%;border-collapse:collapse;font-size:13px}
+.monitor-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.monitor-table th.num{text-align:right}
+.monitor-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.monitor-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.platform-card{padding:16px;border-radius:12px;border:1px solid var(--rule);text-align:center;background:#fff}
+.platform-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.platform-card .pl-icon{font-size:28px;margin-bottom:8px}
+.platform-card h5{font-size:13px;font-weight:700;margin:0 0 4px}.platform-card .pl-status{font-size:11px;font-weight:700;padding:2px 10px;border-radius:6px}
+.pl-active{background:#ecfdf5;color:#059669}
+.pl-pending{background:#fffbeb;color:#d97706}
+.pl-inactive{background:#fef2f2;color:#dc2626}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护工作流</div><div class="workflow-steps">
+  <a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a><a href="hijack-auto-defense.html" class="workflow-step">跟卖防御</a><a href="brand-monitoring-alert.html" class="workflow-step active">品牌预警</a><a href="anti-counterfeit-action-planner.html" class="workflow-step">防伪行动</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W42 品牌保护</a><span class="sep">›</span><span class="current">品牌监控预警器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔔</span>品牌监控预警器 Brand Monitoring Alert</h1>
+  <p>品牌词/商标/产品图片全网监控，多平台侵权自动检测，实时预警通知推送，自动化巡查排程，CSS监控看板可视化侵权事件和处理状态。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">监控平台</div><div class="mc-value" id="mPlatforms">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">侵权告警</div><div class="mc-value" id="mAlerts">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">待处理</div><div class="mc-value" id="mPending">0</div></div>
+    <div class="metric-card success"><div class="mc-label">已处理</div><div class="mc-value" id="mResolved">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 监控配置</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>品牌名称</label><input type="text" id="brandName" value="众力聚鑫 / Juxin" oninput="BMA.calc()"></div>
+      <div class="jx-field"><label>注册商标</label><input type="text" id="trademark" value="Juxin (US/EU)" oninput="BMA.calc()"></div>
+      <div class="jx-field"><label>巡查频率</label><select id="patrolFreq" onchange="BMA.calc()"><option value="daily">每日</option><option value="6h">每6小时</option><option value="weekly">每周</option></select></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>监控关键词数</label><input type="number" id="kwCount" value="35" oninput="BMA.calc()"></div>
+      <div class="jx-field"><label>产品图片数</label><input type="number" id="imgCount" value="120" oninput="BMA.calc()"></div>
+      <div class="jx-field"><label>告警通知方式</label><select id="notifyMethod" onchange="BMA.calc()"><option value="email">邮件</option><option value="email_sms">邮件+短信</option><option value="email_app">邮件+APP推送</option><option value="all">全部渠道</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🚨 侵权预警看板</h2>
+    <div id="alertList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🌐 监控平台覆盖</h2>
+    <div class="platform-grid" id="platformGrid"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 侵权事件追踪表</h2>
+    <div style="overflow-x:auto"><table class="monitor-table" id="monitorTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 监控策略建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="trademark-monitoring-setup.html" class="rt-card"><div class="rt-icon">trademark</div><div><h5>商标监控</h5><p>商标设置</p></div></a>
+      <a href="hijack-auto-defense.html" class="rt-card"><div class="rt-icon">🛡️</div><div><h5>跟卖防御</h5><p>跟卖检测</p></div></a>
+      <a href="ip-complaint-builder.html" class="rt-card"><div class="rt-icon">⚖️</div><div><h5>IP投诉</h5><p>侵权投诉</p></div></a>
+      <a href="counterfeit-detection-guide.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>假货检测</h5><p>假货识别</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="brand-monitoring-alert.html">品牌预警</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var BMA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var ALERTS=[
+    {level:'danger',icon:'⛔',title:'假货Listing发现 — Amazon US',desc:'ASIN B08XYZ999 使用品牌商标"Juxin"销售仿冒品，价格低于正品40%',time:'2小时前',action:'action-danger',actionText:'紧急处理'},
+    {level:'danger',icon:'📸',title:'产品图片被盗用 — AliExpress',desc:'3个产品主图被AliExpress卖家盗用，Listing使用相同图片但不同品牌名',time:'5小时前',action:'action-danger',actionText:'提交投诉'},
+    {level:'warn',icon:'⚠️',title:'品牌词被竞价 — Google Ads',desc:'竞争对手在Google Ads中使用"Juxin"作为关键词投放广告',time:'8小时前',action:'action-warning',actionText:'评估影响'},
+    {level:'warn',icon:'🌐',title:'仿冒网站出现 — 独立站',desc:'发现juxin-store.com使用品牌Logo和产品图片，疑似钓鱼网站',time:'1天前',action:'action-warning',actionText:'域名投诉'},
+    {level:'info',icon:'📊',title:'品牌提及增加 — 社交媒体',desc:'Reddit和TikTok上品牌提及量周环比增长35%，多数为正面评价',time:'1天前',action:'action-success',actionText:'关注趋势'},
+    {level:'info',icon:'✅',title:'投诉已处理 — eBay',desc:'eBay已下架2个侵权Listing，品牌保护投诉成功',time:'2天前',action:'action-success',actionText:'已完成'}
+  ];
+
+  var PLATFORMS=[
+    {icon:'🛒',name:'Amazon',status:'active',findings:3},
+    {icon:'🛍️',name:'eBay',status:'active',findings:0},
+    {icon:'🟠',name:'AliExpress',status:'active',findings:5},
+    {icon:'🏪',name:'Walmart',status:'active',findings:1},
+    {icon:'🌐',name:'独立站',status:'active',findings:2},
+    {icon:'📘',name:'Facebook',status:'active',findings:1},
+    {icon:'📸',name:'Instagram',status:'pending',findings:0},
+    {icon:'🎵',name:'TikTok',status:'active',findings:0},
+    {icon:'🐦',name:'Google Ads',status:'active',findings:1},
+    {icon:'📌',name:'Pinterest',status:'pending',findings:0}
+  ];
+
+  var EVENTS=[
+    {platform:'Amazon US',type:'假货Listing',asin:'B08XYZ999',seller:'FakeStore2026',date:'2026-07-12',status:'处理中',statusColor:'#f59e0b'},
+    {platform:'AliExpress',type:'图片盗用',asin:'AE-10045678',seller:'CheapFactory',date:'2026-07-12',status:'待投诉',statusColor:'#dc2626'},
+    {platform:'Google Ads',type:'品牌词竞价',asin:'-',seller:'CompetitorBrand',date:'2026-07-12',status:'评估中',statusColor:'#f59e0b'},
+    {platform:'独立站',type:'仿冒网站',asin:'juxin-store.com',seller:'Unknown',date:'2026-07-11',status:'域名投诉',statusColor:'#4f46e5'},
+    {platform:'eBay',type:'假货Listing',asin:'EB-28765432',seller:'DiscountHub',date:'2026-07-10',status:'已下架',statusColor:'#10b981'},
+    {platform:'Walmart',type:'未授权销售',asin:'WM-56789012',seller:'ResellerCo',date:'2026-07-09',status:'已处理',statusColor:'#10b981'},
+    {platform:'Amazon UK',type:'跟卖',asin:'B08XYZ456',seller:'GlobalSellerHK',date:'2026-07-08',status:'处理中',statusColor:'#f59e0b'},
+    {platform:'Facebook',type:'仿冒广告',asin:'FB-Ad-78901',seller:'ScamAdsInc',date:'2026-07-07',status:'已举报',statusColor:'#4f46e5'}
+  ];
+
+  function calc(){
+    var brand=$('brandName').value,tm=$('trademark').value;
+    var freq=$('patrolFreq').value,kw=num('kwCount'),imgs=num('imgCount');
+    var notify=$('notifyMethod').value;
+
+    var activePlatforms=PLATFORMS.filter(function(p){return p.status==='active'}).length;
+    var alertCount=ALERTS.filter(function(a){return a.level==='danger'||a.level==='warn'}).length;
+    var pendingCount=EVENTS.filter(function(e){return e.status!=='已下架'&&e.status!=='已处理'}).length;
+    var resolvedCount=EVENTS.filter(function(e){return e.status==='已下架'||e.status==='已处理'}).length;
+
+    $('mPlatforms').textContent=activePlatforms;
+    $('mAlerts').textContent=alertCount;
+    $('mPending').textContent=pendingCount;
+    $('mResolved').textContent=resolvedCount;
+
+    renderAlerts();
+    renderPlatforms();
+    renderTable();
+    renderTips(brand,tm,freq,kw,imgs,notify,alertCount,pendingCount,activePlatforms);
+    save();
+  }
+
+  function renderAlerts(){
+    var h='';
+    ALERTS.forEach(function(a){
+      var bgCls=a.level==='danger'?'danger':a.level==='warn'?'warn':'info';
+      var iconBg=a.level==='danger'?'#fecaca':a.level==='warn'?'#fde68a':'#c7d2fe';
+      h+='<div class="alert-item '+bgCls+'"><div class="alert-icon" style="background:'+iconBg+'">'+a.icon+'</div><div class="alert-body"><h4>'+a.title+'</h4><p>'+a.desc+'</p><span class="alert-time">'+a.time+'</span></div><span class="alert-action '+a.action+'">'+a.actionText+'</span></div>';
+    });
+    $('alertList').innerHTML=h;
+  }
+
+  function renderPlatforms(){
+    var h='';
+    PLATFORMS.forEach(function(p){
+      var statusTxt=p.status==='active'?'监控中':p.status==='pending'?'待配置':'未启用';
+      var statusCls=p.status==='active'?'pl-active':p.status==='pending'?'pl-pending':'pl-inactive';
+      h+='<div class="platform-card"><div class="pl-icon">'+p.icon+'</div><h5>'+p.name+'</h5><span class="pl-status '+statusCls+'">'+statusTxt+'</span>'+(p.findings>0?'<p style="font-size:12px;color:#dc2626;font-weight:700;margin-top:6px">发现 '+p.findings+' 项</p>':'<p style="font-size:12px;color:#059669;margin-top:6px">无异常</p>')+'</div>';
+    });
+    $('platformGrid').innerHTML=h;
+  }
+
+  function renderTable(){
+    var h='<thead><tr><th>平台</th><th>侵权类型</th><th>ASIN/链接</th><th>侵权方</th><th>发现日期</th><th>状态</th></tr></thead><tbody>';
+    EVENTS.forEach(function(e){
+      h+='<tr><td><strong>'+e.platform+'</strong></td><td>'+e.type+'</td><td style="font-family:monospace;font-size:12px">'+e.asin+'</td><td>'+e.seller+'</td><td style="font-size:12px">'+e.date+'</td><td><span style="font-size:12px;font-weight:700;color:'+e.statusColor+'">'+e.status+'</span></td></tr>';
+    });
+    h+='</tbody>';
+    $('monitorTable').innerHTML=h;
+  }
+
+  function renderTips(brand,tm,freq,kw,imgs,notify,alerts,pending,platforms){
+    var freqLabel={daily:'每日','6h':'每6小时',weekly:'每周'}[freq];
+    var notifyLabel={email:'邮件','email_sms':'邮件+短信','email_app':'邮件+APP推送',all:'全部渠道'}[notify];
+    var tips=[];
+    tips.push('品牌「'+brand+'」，商标「'+tm+'」，监控 '+kw+' 个关键词和 '+imgs+' 张产品图片，覆盖 '+platforms+' 个平台，巡查频率'+freqLabel+'，通知方式：'+notifyLabel+'。');
+    tips.push('当前 '+alerts+' 项活跃告警，'+pending+' 项待处理事件。建议优先处理高危侵权（假货Listing和图片盗用），24小时内提交投诉。');
+    tips.push('Amazon品牌保护：使用Brand Registry的Report a Violation工具，自动扫描品牌商标/版权侵权，一键提交投诉。');
+    tips.push('全网监控策略：品牌名+商标+产品图三重监控。品牌名用Google Alerts，商标用USPTO TSDR，产品图用Google Image反向搜索。');
+    tips.push('关键词监控：设置品牌名/产品名/商标+cheap/fake/replica/copy等组合词，监控Amazon/eBay/AliExpress等平台搜索结果。');
+    tips.push('图片监控：使用Google Lens/TinEye反向图片搜索，定期检查产品主图是否被盗用，发现盗用立即提交DMCA投诉。');
+    tips.push('社交媒体监控：设置品牌名mention追踪，关注Facebook/Instagram/TikTok上的仿冒账号和假货广告，通过平台举报渠道处理。');
+    tips.push('自动化巡查：配置巡查脚本每日自动扫描各平台，新发现的侵权事件自动推送告警，生成侵权事件清单追踪处理进度。');
+    tips.push('处理优先级：假货Listing（高）> 图片盗用（高）> 仿冒网站（中）> 品牌词竞价（低）> 品牌提及（信息）。');
+    tips.push('投诉渠道汇总：Amazon Brand Registry / eBay VeRO / AliExpress IP Protection / Google DMCA / Facebook IP Report / 域名UDRP投诉。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_bma_data',JSON.stringify({brandName:$('brandName').value,trademark:$('trademark').value,patrolFreq:$('patrolFreq').value,kwCount:num('kwCount'),imgCount:num('imgCount'),notifyMethod:$('notifyMethod').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_bma_data'));if(d){['brandName','trademark','patrolFreq','notifyMethod'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});['kwCount','imgCount'].forEach(function(k){var el=$(k);if(el&&d[k]!==undefined)el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',BMA.init)}else{BMA.init()}
+</script>
+</body>
+</html>

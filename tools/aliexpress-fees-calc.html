@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="速卖通费用计算器：佣金+物流费+广告费+退货成本全核算，不同类目佣金率，标准/简易物流对比，利润测算，跨境卖家速卖通运营必备工具。">
+<meta name="keywords" content="速卖通费用计算,AliExpress佣金,速卖通利润,物流费,广告费,退货成本">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/aliexpress-fees-calc.html">
+<title>速卖通费用计算器 - 佣金·物流·广告·退货全核算 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.fee-row.total .fr-val{color:var(--red)}
+.fee-row.profit .fr-val{color:var(--green)}
+.shipping-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.ship-card{padding:18px;border-radius:12px;border:2px solid var(--rule);background:#fff;transition:all .2s}
+.ship-card.active{border-color:var(--accent);background:var(--accent-bg)}
+.ship-card h4{font-size:15px;font-weight:700;margin-bottom:8px}
+.ship-card .ship-cost{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.ship-card ul{list-style:none;padding:0;margin:0}
+.ship-card li{font-size:12px;color:var(--ink-soft);padding:3px 0;padding-left:16px;position:relative}
+.ship-card li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+@media(max-width:768px){.shipping-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="aliexpress_fees_calc">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🌐</span><span class="workflow-name">多平台运营工作流</span><span class="workflow-step">第8步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="ebay-fees.html" class="step">eBay费用</a><span class="arrow">→</span>
+      <a href="walmart-fees.html" class="step">Walmart费用</a><span class="arrow">→</span>
+      <a href="shopify-costs.html" class="step">Shopify成本</a><span class="arrow">→</span>
+      <a href="tiktok-shop-calc.html" class="step">TikTok利润</a><span class="arrow">→</span>
+      <a href="temu-pricing.html" class="step">Temu定价</a><span class="arrow">→</span>
+      <a href="platform-profit-comparison.html" class="step">平台利润对比</a><span class="arrow">→</span>
+      <a href="cross-platform-listing-sync.html" class="step">Listing同步</a><span class="arrow">→</span>
+      <span class="step current">速卖通费用</span><span class="arrow">→</span>
+      <a href="etsy-fees-calc.html" class="step">Etsy费用</a><span class="arrow">→</span>
+      <a href="multichannel-inventory-allocator.html" class="step">库存分配</a><span class="arrow">→</span>
+      <a href="platform-selection-matrix.html" class="step">平台选择</a><span class="arrow">→</span>
+      <a href="regional-market-comparator.html" class="step">区域对比</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌐 多平台运营工作流 · 标准版</span>
+      <h1>速卖通 <em>费用计算器</em></h1>
+      <p class="tool-hero-desc">速卖通佣金+物流费+广告费+退货成本全核算，不同类目佣金率，标准物流/简易物流对比，利润测算，帮你精准核算速卖通运营成本。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>💰 速卖通费用计算</h2>
+          <p class="calc-form-subtitle">输入售价、成本、物流方式，实时计算各项费用与利润</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>售价 ($)</label><input type="number" id="price" value="25.99" min="0" step="0.01" oninput="AE.calc()"></div>
+            <div class="calc-field"><label>产品成本 ($)</label><input type="number" id="cost" value="8" min="0" step="0.01" oninput="AE.calc()"></div>
+          </div>
+          <div class="calc-field"><label>商品类目</label><select id="category" onchange="AE.calc()">
+            <option value="0.08">3C电子 (8%)</option>
+            <option value="0.08" selected>服装鞋帽 (8%)</option>
+            <option value="0.05">家居园艺 (5%)</option>
+            <option value="0.08">珠宝手表 (8%)</option>
+            <option value="0.08">美妆个护 (8%)</option>
+            <option value="0.08">运动户外 (8%)</option>
+            <option value="0.08">汽车配件 (8%)</option>
+            <option value="0.05">其他类目 (5%)</option>
+          </select></div>
+          <div class="calc-field"><label>物流方式</label><select id="shipping" onchange="AE.calc()">
+            <option value="standard" selected>标准物流 (AliExpress Standard Shipping)</option>
+            <option value="economy">简易物流 (Economy Shipping)</option>
+            <option value="premium">优先物流 (Premium Shipping)</option>
+          </select></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>广告费率 (%)</label><input type="number" id="adRate" value="5" min="0" max="100" step="0.5" oninput="AE.calc()"></div>
+            <div class="calc-field"><label>退货率 (%)</label><input type="number" id="returnRate" value="8" min="0" max="100" step="0.5" oninput="AE.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>汇率 (CNY→USD)</label><input type="number" id="exchange" value="0.14" min="0" step="0.01" oninput="AE.calc()"></div>
+            <div class="calc-field"><label>月销量 (件)</label><input type="number" id="monthlyVol" value="300" min="0" step="10" oninput="AE.calc()"></div>
+          </div>
+          <div class="fee-breakdown">
+            <h4 style="font-size:14px;font-weight:700;margin-bottom:8px">📋 速卖通费用说明</h4>
+            <ul style="font-size:12px;color:var(--muted);line-height:1.8;padding-left:16px">
+              <li>佣金：按类目5%-8%收取</li>
+              <li>物流费：标准物流$3-8，简易物流$1-4</li>
+              <li>广告费：按售价百分比，建议3-8%</li>
+              <li>退货成本：退货率×售价×0.5（半损）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px">
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)">🚚 物流方式对比</h3>
+        <div class="shipping-compare" id="shipCompare"></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px">
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)">📊 费用构成比例图</h3>
+        <div class="bar-chart" id="feeChart"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="cross-platform-listing-sync.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第7步</span>Listing同步 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="etsy-fees-calc.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第9步</span>Etsy费用 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="aliexpress-fees-calc.html">速卖通费用</a></li><li><a href="etsy-fees-calc.html">Etsy费用</a></li><li><a href="platform-profit-comparison.html">平台利润对比</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">© 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var AE=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var SHIP_OPTIONS={
+    standard:{name:'标准物流',cost:5.5,days:'15-35天',note:'追踪信息完整'},
+    economy:{name:'简易物流',cost:2.5,days:'25-50天',note:'追踪信息有限'},
+    premium:{name:'优先物流',cost:8.5,days:'7-15天',note:'快速送达+全程追踪'}
+  };
+  function calcForShipping(price,cost,catRate,shipKey,adRate,returnRate){
+    var ship=SHIP_OPTIONS[shipKey];
+    var commission=price*catRate;
+    var shippingFee=ship.cost;
+    var adFee=price*(adRate/100);
+    var returnCost=price*(returnRate/100)*0.5;
+    var totalFee=commission+shippingFee+adFee+returnCost;
+    var profit=price-cost-totalFee;
+    var margin=price>0?(profit/price*100):0;
+    var roi=cost>0?(profit/cost*100):0;
+    return{ship:ship,commission:commission,shippingFee:shippingFee,adFee:adFee,returnCost:returnCost,totalFee:totalFee,profit:profit,margin:margin,roi:roi};
+  }
+  function marginColor(m){return m>=30?'var(--green)':(m>=15?'var(--gold)':'var(--red)');}
+  return{
+    calc:function(){
+      var price=v('price'),cost=v('cost'),catRate=parseFloat($('category').value);
+      var shipKey=$('shipping').value,adRate=v('adRate'),returnRate=v('returnRate');
+      var monthlyVol=v('monthlyVol');
+      var r=calcForShipping(price,cost,catRate,shipKey,adRate,returnRate);
+      var mc=marginColor(r.margin);
+      var monthlyProfit=r.profit*monthlyVol;
+      var html='<h3>💰 费用与利润</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">单件利润</div><div class="hc-value">$'+r.profit.toFixed(2)+'</div><div class="hc-sub">利润率 '+r.margin.toFixed(1)+'%</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">月利润预估</div><div class="hc-value">$'+monthlyProfit.toFixed(0)+'</div><div class="hc-sub">ROI '+r.roi.toFixed(0)+'% · '+monthlyVol+'件</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">售价</span><span class="fr-val">$'+price.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">产品成本</span><span class="fr-val">-$'+cost.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">佣金 ('+(catRate*100).toFixed(0)+'%)</span><span class="fr-val">-$'+r.commission.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">'+r.ship.name+'物流费</span><span class="fr-val">-$'+r.shippingFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">广告费 ('+adRate.toFixed(1)+'%)</span><span class="fr-val">-$'+r.adFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">退货成本 ('+returnRate.toFixed(0)+'%)</span><span class="fr-val">-$'+r.returnCost.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row total"><span class="fr-lbl">总费用</span><span class="fr-val">-$'+r.totalFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row profit" style="font-size:17px"><span class="fr-lbl">净利润</span><span class="fr-val" style="color:'+mc+'">$'+r.profit.toFixed(2)+'</span></div>';
+      html+='</div>';
+      html+='<div class="result-note">📊 利润率：<strong style="color:'+mc+'">'+r.margin.toFixed(1)+'%</strong>。'+(r.margin>=30?'利润率优秀！':(r.margin>=15?'利润率中等，可优化物流或广告。':'利润率偏低，建议降低成本或提高售价。'))+'</div>';
+      $('resultCard').innerHTML=html;
+      var keys=['economy','standard','premium'];
+      var current=$('shipping').value;
+      var shipHtml='';
+      keys.forEach(function(k){
+        var sr=calcForShipping(price,cost,catRate,k,adRate,returnRate);
+        var isActive=k===current;
+        var smc=marginColor(sr.margin);
+        shipHtml+='<div class="ship-card'+(isActive?' active':'')+'">';
+        shipHtml+='<h4>'+sr.ship.name+' <span style="font-size:11px;color:var(--muted)">'+sr.ship.days+'</span></h4>';
+        shipHtml+='<div class="ship-cost">$'+sr.ship.cost+'<span style="font-size:13px;color:var(--muted)">/单</span></div>';
+        shipHtml+='<ul>';
+        shipHtml+='<li>送达时效：'+sr.ship.days+'</li>';
+        shipHtml+='<li>追踪信息：'+sr.ship.note+'</li>';
+        shipHtml+='<li>总费用：$'+sr.totalFee.toFixed(2)+'</li>';
+        shipHtml+='<li style="color:'+smc+';font-weight:700">利润：$'+sr.profit.toFixed(2)+' ('+sr.margin.toFixed(1)+'%)</li>';
+        shipHtml+='</ul></div>';
+      });
+      $('shipCompare').innerHTML=shipHtml;
+      var maxFee=Math.max(r.commission,r.shippingFee,r.adFee,r.returnCost,cost);
+      var feeItems=[
+        {label:'佣金',val:r.commission,color:'#ff9900'},
+        {label:'物流费',val:r.shippingFee,color:'#0071dc'},
+        {label:'广告费',val:r.adFee,color:'#e53238'},
+        {label:'退货成本',val:r.returnCost,color:'#f59e0b'},
+        {label:'产品成本',val:cost,color:'#8b5cf6'}
+      ];
+      var chartHtml='';
+      feeItems.forEach(function(f){
+        var pct=maxFee>0?Math.max(2,f.val/maxFee*100):2;
+        chartHtml+='<div class="bar-item"><div class="bar-label">'+f.label+'</div>';
+        chartHtml+='<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+f.color+'"></div></div>';
+        chartHtml+='<div class="bar-value">$'+f.val.toFixed(2)+'</div></div>';
+      });
+      $('feeChart').innerHTML=chartHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',AE.calc);}else{AE.calc();}
+</script>
+</body>
+</html>

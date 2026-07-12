@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="增长驱动力拆解器（深度版）：量价拆解、新客/老客贡献分析、渠道增长归因，CSS瀑布图+贡献度图。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="增长拆解,量价拆解,新客老客,渠道归因,瀑布图,增长分析">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/growth-driver-decomposer.html">
+<title>增长驱动力拆解器 - 量价拆解·新客老客·渠道归因·CSS瀑布图 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.gdd-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.gdd-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.waterfall{display:flex;align-items:flex-end;gap:8px;height:280px;padding:20px 10px 40px;position:relative;border-bottom:2px solid var(--rule);overflow-x:auto}
+.wf-bar{display:flex;flex-direction:column;align-items:center;min-width:70px;position:relative;flex:1}
+.wf-col{width:100%;border-radius:6px 6px 0 0;transition:height .5s;position:relative;display:flex;align-items:flex-start;justify-content:center}
+.wf-col.base{background:#94a3b8}
+.wf-col.positive{background:linear-gradient(180deg,#10b981,#059669)}
+.wf-col.negative{background:linear-gradient(180deg,#ef4444,#dc2626)}
+.wf-col.total{background:linear-gradient(180deg,#4f46e5,#6366f1)}
+.wf-val{position:absolute;top:-22px;font-size:12px;font-weight:700;white-space:nowrap}
+.wf-label{position:absolute;bottom:-30px;font-size:11px;color:var(--ink-soft);text-align:center;width:100%;line-height:1.3}
+.contrib-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.contrib-card{padding:16px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.contrib-card .cc-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.contrib-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+.contrib-row .cr-name{width:80px;color:var(--ink-soft)}
+.contrib-row .cr-bar{flex:1;height:18px;border-radius:4px;background:var(--rule-light);overflow:hidden}
+.contrib-row .cr-fill{height:100%;border-radius:4px}
+.contrib-row .cr-val{width:70px;text-align:right;font-weight:700}
+.driver-rank{list-style:none;padding:0;margin:0}
+.driver-rank li{padding:12px 0 12px 36px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.6}
+.driver-rank li:last-child{border-bottom:none}
+.driver-rank li .dr-rank{position:absolute;left:0;top:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:12px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.contrib-grid{grid-template-columns:1fr}.waterfall{height:220px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"增长驱动力拆解器","description":"量价拆解、新客/老客贡献分析、渠道增长归因，CSS瀑布图+贡献度图。","url":"https://juxin-consulting.help/tools/growth-driver-decomposer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"增长驱动力拆解器","item":"https://juxin-consulting.help/tools/growth-driver-decomposer.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="growth_driver_decomposer">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📊 增长分析工作流 · 深度版</span>
+      <h1>增长驱动力 <em>拆解器</em></h1>
+      <p class="tool-hero-desc">将收入增长拆解为销量增长与价格增长（量价拆解），分析新客与老客的贡献占比，归因各渠道增长贡献，CSS瀑布图可视化增长来源，排名核心驱动力。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第6步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <span class="step current">增长拆解</span><span class="arrow">→</span>
+      <a href="funnel-conversion-analyzer.html" class="step">漏斗转化</a><span class="arrow">→</span>
+      <a href="viral-coefficient-calculator.html" class="step">病毒系数</a><span class="arrow">→</span>
+      <a href="ltv-prediction-model.html" class="step">LTV预测</a><span class="arrow">→</span>
+      <a href="growth-experiment-tracker.html" class="step">增长实验</a><span class="arrow">→</span>
+      <a href="market-share-growth-tracker.html" class="step">市场份额</a><span class="arrow">→</span>
+      <a href="unit-economics-builder.html" class="step">单位经济</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 期初与期末数据</h2>
+          <p class="calc-form-subtitle">输入两期销量、价格与新客占比</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>期初销量</label><input type="number" id="q0" value="8000" oninput="GDD.calc()"></div>
+            <div class="calc-field"><label>期初均价 <span class="hint">($)</span></label><input type="number" id="p0" value="22.00" step="0.01" oninput="GDD.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>期末销量</label><input type="number" id="q1" value="10500" oninput="GDD.calc()"></div>
+            <div class="calc-field"><label>期末均价 <span class="hint">($)</span></label><input type="number" id="p1" value="24.50" step="0.01" oninput="GDD.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>期初新客占比 <span class="hint">(%)</span></label><input type="number" id="nc0" value="45" oninput="GDD.calc()"></div>
+            <div class="calc-field"><label>期末新客占比 <span class="hint">(%)</span></label><input type="number" id="nc1" value="52" oninput="GDD.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="gdd-section">
+        <h3> waterfall 量价拆解瀑布图</h3>
+        <div class="waterfall" id="waterfall"></div>
+      </div>
+
+      <div class="gdd-section">
+        <h3>👥 新客/老客贡献分析</h3>
+        <div class="contrib-grid" id="contribGrid"></div>
+      </div>
+
+      <div class="gdd-section">
+        <h3>🏆 增长驱动力排名</h3>
+        <ul class="driver-rank" id="driverRank"></ul>
+      </div>
+
+      <div class="gdd-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="growth-rate.html" class="related-card"><span class="related-card-icon">📈</span><div class="related-card-content"><h5>增长率计算</h5><p>增长测算</p></div></a>
+          <a href="funnel-conversion-analyzer.html" class="related-card"><span class="related-card-icon">🔻</span><div class="related-card-content"><h5>漏斗转化分析</h5><p>瓶颈定位</p></div></a>
+          <a href="unit-economics-builder.html" class="related-card"><span class="related-card-icon">💲</span><div class="related-card-content"><h5>单位经济模型</h5><p>LTV/CAC</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="north-star-metric.html" class="wbn-btn prev">← 上一步：北极星指标</a>
+        <a href="funnel-conversion-analyzer.html" class="wbn-btn next">下一步：漏斗转化 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-driver-decomposer.html">增长拆解</a></li><li><a href="growth-rate.html">增长率</a></li><li><a href="unit-economics-builder.html">单位经济</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var GDD=(function(){
+  'use strict';
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function calc(){
+    var q0=v('q0'),p0=v('p0'),q1=v('q1'),p1=v('p1'),nc0=v('nc0')/100,nc1=v('nc1')/100;
+    var rev0=q0*p0,rev1=q1*p1;
+    var totalGrowth=rev1-rev0;
+    var growthPct=(totalGrowth/rev0*100);
+    // 量价拆解
+    var volEffect=(q1-q0)*p0; // 销量变化贡献（用期初价）
+    var priceEffect=q1*(p1-p0); // 价格变化贡献（用期末量）
+    var crossEffect=(q1-q0)*(p1-p0); // 交叉效应
+    // 瀑布图数据
+    var bars=[
+      {label:'期初收入',val:rev0,type:'base'},
+      {label:'销量增长',val:volEffect,type:volEffect>=0?'positive':'negative'},
+      {label:'价格提升',val:priceEffect,type:priceEffect>=0?'positive':'negative'},
+      {label:'交叉效应',val:crossEffect,type:crossEffect>=0?'positive':'negative'},
+      {label:'期末收入',val:rev1,type:'total'}
+    ];
+    var maxVal=Math.max(rev0,rev1);
+    var wh='';
+    bars.forEach(function(b){
+      var h=Math.abs(b.val)/maxVal*100;
+      wh+='<div class="wf-bar"><div class="wf-col '+b.type+'" style="height:'+h+'%">';
+      wh+='<span class="wf-val" style="color:'+(b.type==='negative'?'#ef4444':b.type==='base'?'#64748b':b.type==='total'?'#4f46e5':'#10b981')+'">'+(b.val>=0?'+':'')+'$'+(b.val/1000).toFixed(1)+'k</span>';
+      wh+='</div><div class="wf-label">'+b.label+'</div></div>';
+    });
+    document.getElementById('waterfall').innerHTML=wh;
+    // 新客老客
+    var nc0Vol=q0*nc0,oc0Vol=q0*(1-nc0);
+    var nc1Vol=q1*nc1,oc1Vol=q1*(1-nc1);
+    var ncGrowth=(nc1Vol-nc0Vol)*p1;
+    var ocGrowth=(oc1Vol-oc0Vol)*p1;
+    var contrib=[
+      {title:'新客贡献',rows:[{name:'期初新客',val:nc0Vol,color:'#94a3b8'},{name:'期末新客',val:nc1Vol,color:'#4f46e5'},{name:'增量贡献',val:nc1Vol-nc0Vol,color:'#10b981'}],unit:'pcs'},
+      {title:'老客贡献',rows:[{name:'期初老客',val:oc0Vol,color:'#94a3b8'},{name:'期末老客',val:oc1Vol,color:'#4f46e5'},{name:'增量贡献',val:oc1Vol-oc0Vol,color:'#10b981'}],unit:'pcs'}
+    ];
+    var ch='';
+    contrib.forEach(function(c){
+      var maxV=Math.max.apply(null,c.rows.map(function(r){return r.val;}));
+      ch+='<div class="contrib-card"><div class="cc-title">'+c.title+'</div>';
+      c.rows.forEach(function(r){
+        ch+='<div class="contrib-row"><div class="cr-name">'+r.name+'</div><div class="cr-bar"><div class="cr-fill" style="width:'+(r.val/maxV*100)+'%;background:'+r.color+'"></div></div><div class="cr-val">'+r.val.toLocaleString('en-US',{maximumFractionDigits:0})+'</div></div>';
+      });
+      ch+='</div>';
+    });
+    ch+='<div class="contrib-card"><div class="cc-title">新客vs老客增量贡献</div>';
+    var totalInc=ncGrowth+ocGrowth;
+    ch+='<div class="contrib-row"><div class="cr-name">新客增量</div><div class="cr-bar"><div class="cr-fill" style="width:'+Math.abs(ncGrowth/totalInc*100)+'%;background:#4f46e5"></div></div><div class="cr-val" style="color:#4f46e5">+'+(ncGrowth/totalInc*100).toFixed(0)+'%</div></div>';
+    ch+='<div class="contrib-row"><div class="cr-name">老客增量</div><div class="cr-bar"><div class="cr-fill" style="width:'+Math.abs(ocGrowth/totalInc*100)+'%;background:#10b981"></div></div><div class="cr-val" style="color:#10b981">+'+(ocGrowth/totalInc*100).toFixed(0)+'%</div></div>';
+    ch+='</div>';
+    document.getElementById('contribGrid').innerHTML=ch;
+    // driver rank
+    var drivers=[
+      {name:'销量增长',val:volEffect,pct:volEffect/totalGrowth*100},
+      {name:'价格提升',val:priceEffect,pct:priceEffect/totalGrowth*100},
+      {name:'新客获取',val:ncGrowth,pct:ncGrowth/totalGrowth*100},
+      {name:'老客复购',val:ocGrowth,pct:ocGrowth/totalGrowth*100}
+    ].sort(function(a,b){return b.val-a.val;});
+    var colors=['#4f46e5','#10b981','#f59e0b','#06b6d4'];
+    var dh='';
+    drivers.forEach(function(d,i){
+      dh+='<li><div class="dr-rank" style="background:'+colors[i]+'">'+(i+1)+'</div><strong>'+d.name+'</strong>：贡献$'+d.val.toLocaleString('en-US',{maximumFractionDigits:0})+'（占'+d.pct.toFixed(0)+'%）。'+(i===0?'是本期增长的核心驱动力，建议持续投入。':'辅助增长动力，可适度加强。')+'</li>';
+    });
+    document.getElementById('driverRank').innerHTML=dh;
+    document.getElementById('resultCard').innerHTML=
+      '<h3>📊 增长拆解概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">总收入增长</div><div class="ri-value positive">+'+growthPct.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">销量贡献</div><div class="ri-value" style="color:#10b981">'+(volEffect/totalGrowth*100).toFixed(0)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">价格贡献</div><div class="ri-value" style="color:#4f46e5">'+(priceEffect/totalGrowth*100).toFixed(0)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">核心驱动</div><div class="ri-value" style="font-size:14px">'+drivers[0].name+'</div></div>'+
+      '</div><div class="result-note">💡 本期收入增长$'+totalGrowth.toLocaleString('en-US',{maximumFractionDigits:0})+'（+'+growthPct.toFixed(1)+'%），主要由'+drivers[0].name+'驱动，新客占比从'+(nc0*100).toFixed(0)+'%升至'+(nc1*100).toFixed(0)+'%，获客能力'+(nc1>nc0?'增强':'减弱')+'</div>';
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',GDD.init);}else{GDD.init();}
+</script>
+</body>
+</html>

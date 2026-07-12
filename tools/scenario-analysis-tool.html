@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="场景分析工具：乐观/基准/悲观三场景财务建模+概率加权期望值，CSS场景对比图，决策树分析。免费投资决策工具。">
+<meta name="keywords" content="场景分析,概率加权,乐观基准悲观,决策树,财务建模,投资决策">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/scenario-analysis-tool.html">
+<title>场景分析工具 - 乐观·基准·悲观·概率加权 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.scenario-card{border-radius:14px;padding:20px;border:2px solid;transition:all .2s}
+.scenario-card.pessimistic{border-color:#fca5a5;background:linear-gradient(135deg,#fef2f2,#fff5f5)}
+.scenario-card.base{border-color:#a5b4fc;background:linear-gradient(135deg,#eff6ff,#f0f4ff)}
+.scenario-card.optimistic{border-color:#86efac;background:linear-gradient(135deg,#f0fdf4,#f0fdf4)}
+.scenario-card .sc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.scenario-card .sc-name{font-size:15px;font-weight:700}
+.scenario-card .sc-prob{font-size:12px;padding:2px 10px;border-radius:6px;font-weight:600}
+.sc-prob.pessimistic{background:#fee2e2;color:#dc2626}
+.sc-prob.base{background:#dbeafe;color:#2563eb}
+.sc-prob.optimistic{background:#d1fae5;color:#059669}
+.scenario-card .sc-metric{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px solid rgba(0,0,0,.05)}
+.scenario-card .sc-metric span{color:var(--muted)}
+.scenario-card .sc-metric strong{color:var(--ink)}
+.scenario-compare-chart{display:flex;align-items:flex-end;gap:32px;height:200px;padding:20px 0;margin-top:16px;border-bottom:2px solid var(--rule)}
+.sc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.sc-bar{width:50%;border-radius:8px 8px 0 0;transition:height .5s}
+.sc-bar.pessimistic{background:linear-gradient(180deg,#f87171,#ef4444)}
+.sc-bar.base{background:linear-gradient(180deg,#818cf8,#4f46e5)}
+.sc-bar.optimistic{background:linear-gradient(180deg,#34d399,#10b981)}
+.sc-bar.expected{background:linear-gradient(180deg,#fbbf24,#f59e0b);width:50%;border:2px dashed #92400e}
+.sc-bar-label{font-size:12px;font-weight:600;text-align:center;color:var(--ink-soft)}
+.sc-bar-value{font-size:13px;font-weight:700}
+.decision-tree{position:relative;padding:20px 0}
+.dt-node{display:inline-block;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:120px}
+.dt-root{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff}
+.dt-leaf{margin:8px;border:2px solid}
+.dt-leaf.pess{border-color:#fca5a5;background:#fef2f2;color:#dc2626}
+.dt-leaf.base{border-color:#a5b4fc;background:#eff6ff;color:#2563eb}
+.dt-leaf.opt{border-color:#86efac;background:#f0fdf4;color:#059669}
+.dt-branch{display:flex;justify-content:center;gap:40px;margin-top:20px}
+.dt-arrow{font-size:24px;color:#c7d2fe;text-align:center}
+@media(max-width:768px){.scenario-grid{grid-template-columns:1fr}.scenario-compare-chart{gap:16px}.dt-branch{flex-direction:column;gap:12px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"场景分析工具","description":"乐观/基准/悲观三场景财务建模+概率加权期望值，CSS场景对比图，决策树分析。","url":"https://juxin-consulting.help/tools/scenario-analysis-tool.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="scenario_analysis_tool">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">💰</span><span class="workflow-name">投资决策工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="payback-period-calc.html" class="step">回本周期</a><span class="arrow">→</span>
+      <a href="investment-comparison.html" class="step">投资对比</a><span class="arrow">→</span>
+      <a href="break-even-analysis.html" class="step">盈亏平衡</a><span class="arrow">→</span>
+      <a href="currency-hedging.html" class="step">汇率对冲</a><span class="arrow">→</span>
+      <a href="tax-impact-calc.html" class="step">税务影响</a><span class="arrow">→</span>
+      <a href="depreciation-calc.html" class="step">折旧计算</a><span class="arrow">→</span>
+      <a href="working-capital-calc.html" class="step">营运资金</a><span class="arrow">→</span>
+      <a href="transfer-pricing.html" class="step">转移定价</a><span class="arrow">→</span>
+      <a href="dividend-calc.html" class="step">分红计算</a><span class="arrow">→</span>
+      <a href="benchmark-comparison.html" class="step">基准对比</a><span class="arrow">→</span>
+      <a href="valuation-model-builder.html" class="step">估值模型</a><span class="arrow">→</span>
+      <span class="step current">场景分析</span><span class="arrow">→</span>
+      <a href="investment-thesis-builder.html" class="step">投资逻辑</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">💰 投资决策工具 · 标准版</span>
+      <h1>场景<em>分析工具</em></h1>
+      <p class="tool-hero-desc">乐观/基准/悲观三场景财务建模，概率加权期望值计算，CSS场景对比柱状图与决策树可视化，辅助投资决策。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 三场景参数配置</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>初始投资额（万元）</label><input type="number" id="initInvest" value="500" oninput="SAT.calc()"></div>
+            <div class="calc-field"><label>运营年限</label><input type="number" id="years" value="3" oninput="SAT.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box"><h4>🔻 悲观场景</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>年营收（万元）</label><input type="number" id="pessRev" value="300" oninput="SAT.calc()"></div>
+            <div class="calc-field"><label>净利润率（%）</label><input type="number" id="pessMargin" value="8" oninput="SAT.calc()"></div>
+          </div>
+          <div class="calc-field"><label>发生概率（%）</label><input type="number" id="pessProb" value="20" oninput="SAT.calc()"></div>
+
+          <div class="fee-rule-box"><h4>📊 基准场景</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>年营收（万元）</label><input type="number" id="baseRev" value="500" oninput="SAT.calc()"></div>
+            <div class="calc-field"><label>净利润率（%）</label><input type="number" id="baseMargin" value="15" oninput="SAT.calc()"></div>
+          </div>
+          <div class="calc-field"><label>发生概率（%）</label><input type="number" id="baseProb" value="60" oninput="SAT.calc()"></div>
+
+          <div class="fee-rule-box"><h4>🚀 乐观场景</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>年营收（万元）</label><input type="number" id="optRev" value="800" oninput="SAT.calc()"></div>
+            <div class="calc-field"><label>净利润率（%）</label><input type="number" id="optMargin" value="22" oninput="SAT.calc()"></div>
+          </div>
+          <div class="calc-field"><label>发生概率（%）</label><input type="number" id="optProb" value="20" oninput="SAT.calc()"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 概率加权期望值</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block" id="scenarioCards">
+        <h3>📋 三场景对比</h3>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </div>
+
+      <div class="section-block" id="compareSection">
+        <h3>📈 净利润对比图</h3>
+        <div class="scenario-compare-chart" id="compareChart"></div>
+      </div>
+
+      <div class="section-block" id="treeSection">
+        <h3>🌳 决策树</h3>
+        <div class="decision-tree" id="decisionTree"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="valuation-model-builder.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 估值模型</span></a>
+        <a href="investment-thesis-builder.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">投资逻辑 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="scenario-analysis-tool.html">场景分析</a></li><li><a href="valuation-model-builder.html">估值模型</a></li><li><a href="investment-thesis-builder.html">投资逻辑</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var SAT=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function fmt(n){return Math.round(n).toLocaleString('zh-CN');}
+  function scenarioNet(rev,margin,years,invest){return rev*margin/100*years-invest;}
+  function calc(){
+    var invest=v('initInvest'),years=v('years');
+    var pessRev=v('pessRev'),pessMargin=v('pessMargin'),pessProb=v('pessProb');
+    var baseRev=v('baseRev'),baseMargin=v('baseMargin'),baseProb=v('baseProb');
+    var optRev=v('optRev'),optMargin=v('optMargin'),optProb=v('optProb');
+    var totalProb=pessProb+baseProb+optProb;
+    if(totalProb===0)totalProb=100;
+    var pP=pessProb/totalProb,pB=baseProb/totalProb,pO=optProb/totalProb;
+    var pessNet=scenarioNet(pessRev,pessMargin,years,invest);
+    var baseNet=scenarioNet(baseRev,baseMargin,years,invest);
+    var optNet=scenarioNet(optRev,optMargin,years,invest);
+    var expected=pessNet*pP+baseNet*pB+optNet*pO;
+    var roi=invest>0?(expected/invest*100):0;
+    var probLoss=pessNet<0?pP:0;
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">概率加权期望净利润</div><div class="rh-value" style="color:'+(expected>=0?'#10b981':'#ef4444')+'">¥'+fmt(expected)+'万</div></div>'+
+      '<div class="result-detail"><span>期望ROI</span><strong style="color:'+(roi>=0?'#10b981':'#ef4444')+'">'+roi.toFixed(1)+'%</strong></div>'+
+      '<div class="result-detail"><span>亏损概率</span><strong style="color:'+(probLoss>0.3?'#ef4444':'#f59e0b')+'">'+(probLoss*100).toFixed(0)+'%</strong></div>'+
+      '<div class="result-detail"><span>最佳收益</span><strong style="color:#10b981">¥'+fmt(optNet)+'万</strong></div>'+
+      '<div class="result-detail"><span>最差收益</span><strong style="color:#ef4444">¥'+fmt(pessNet)+'万</strong></div>';
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+(expected>=0?'#10b981':'#ef4444')+'">¥'+fmt(expected)+'</div><div class="rsb-lbl">期望净利润（万元）</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+roi.toFixed(1)+'%</div><div class="rsb-lbl">期望ROI</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">¥'+fmt(optNet)+'</div><div class="rsb-lbl">乐观净利润</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">¥'+fmt(pessNet)+'</div><div class="rsb-lbl">悲观净利润</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+(probLoss*100).toFixed(0)+'%</div><div class="rsb-lbl">亏损概率</div></div>';
+    var cards=[
+      {name:'悲观场景',cls:'pessimistic',rev:pessRev,margin:pessMargin,net:pessNet,prob:pessProb,roi:invest>0?(pessNet/invest*100):0},
+      {name:'基准场景',cls:'base',rev:baseRev,margin:baseMargin,net:baseNet,prob:baseProb,roi:invest>0?(baseNet/invest*100):0},
+      {name:'乐观场景',cls:'optimistic',rev:optRev,margin:optMargin,net:optNet,prob:optProb,roi:invest>0?(optNet/invest*100):0}
+    ];
+    $('scenarioGrid').innerHTML=cards.map(function(c){
+      return '<div class="scenario-card '+c.cls+'">'+
+        '<div class="sc-header"><div class="sc-name">'+c.name+'</div><div class="sc-prob '+c.cls+'">'+c.prob+'%</div></div>'+
+        '<div class="sc-metric"><span>年营收</span><strong>¥'+fmt(c.rev)+'万</strong></div>'+
+        '<div class="sc-metric"><span>净利润率</span><strong>'+c.margin+'%</strong></div>'+
+        '<div class="sc-metric"><span>'+years+'年总利润</span><strong style="color:'+(c.net>=0?'#10b981':'#ef4444')+'">¥'+fmt(c.net)+'万</strong></div>'+
+        '<div class="sc-metric"><span>ROI</span><strong>'+c.roi.toFixed(1)+'%</strong></div>'+
+      '</div>';
+    }).join('');
+    var maxVal=Math.max(Math.abs(pessNet),Math.abs(baseNet),Math.abs(optNet),Math.abs(expected),1);
+    var barH=function(val){return Math.abs(val)/maxVal*140;};
+    $('compareChart').innerHTML=
+      '<div class="sc-bar-wrap"><div class="sc-bar-value" style="color:#ef4444">¥'+fmt(pessNet)+'</div><div class="sc-bar pessimistic" style="height:'+barH(pessNet)+'px"></div><div class="sc-bar-label">悲观<br>'+pessProb+'%</div></div>'+
+      '<div class="sc-bar-wrap"><div class="sc-bar-value" style="color:#4f46e5">¥'+fmt(baseNet)+'</div><div class="sc-bar base" style="height:'+barH(baseNet)+'px"></div><div class="sc-bar-label">基准<br>'+baseProb+'%</div></div>'+
+      '<div class="sc-bar-wrap"><div class="sc-bar-value" style="color:#10b981">¥'+fmt(optNet)+'</div><div class="sc-bar optimistic" style="height:'+barH(optNet)+'px"></div><div class="sc-bar-label">乐观<br>'+optProb+'%</div></div>'+
+      '<div class="sc-bar-wrap"><div class="sc-bar-value" style="color:#f59e0b">¥'+fmt(expected)+'</div><div class="sc-bar expected" style="height:'+barH(expected)+'px"></div><div class="sc-bar-label" style="color:#f59e0b">期望值</div></div>';
+    $('decisionTree').innerHTML=
+      '<div style="text-align:center"><div class="dt-node dt-root">投资决策<br>初始投资 ¥'+fmt(invest)+'万</div></div>'+
+      '<div class="dt-arrow">↓</div>'+
+      '<div class="dt-branch">'+
+        '<div><div class="dt-node dt-leaf pess">悲观 '+pessProb+'%<br>¥'+fmt(pessNet)+'万</div></div>'+
+        '<div><div class="dt-node dt-leaf base">基准 '+baseProb+'%<br>¥'+fmt(baseNet)+'万</div></div>'+
+        '<div><div class="dt-node dt-leaf opt">乐观 '+optProb+'%<br>¥'+fmt(optNet)+'万</div></div>'+
+      '</div>'+
+      '<div class="dt-arrow">↓</div>'+
+      '<div style="text-align:center"><div class="dt-node" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff">期望值<br>¥'+fmt(expected)+'万 (ROI '+roi.toFixed(1)+'%)</div></div>';
+  }
+  return{calc:calc};
+})();
+SAT.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

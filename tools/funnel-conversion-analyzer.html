@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="漏斗转化分析器：输入曝光/点击/加购/购买各阶段数据，CSS漏斗图可视化，转化率计算，瓶颈定位，优化优先级排序。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="漏斗分析,转化率,瓶颈定位,优化优先级,增长分析,funnel">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/funnel-conversion-analyzer.html">
+<title>漏斗转化分析器 - CSS漏斗图·瓶颈定位·优化优先级 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.fca-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.fca-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.funnel-visual{display:flex;flex-direction:column;align-items:center;gap:4px;padding:20px 0}
+.funnel-stage{position:relative;width:100%;max-width:600px;text-align:center;transition:all .4s}
+.funnel-bar{height:56px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.funnel-bar.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+.funnel-bar.s2{background:linear-gradient(135deg,#6366f1,#818cf8)}
+.funnel-bar.s3{background:linear-gradient(135deg,#818cf8,#a5b4fc)}
+.funnel-bar.s4{background:linear-gradient(135deg,#a5b4fc,#c7d2fe);color:#4f46e5}
+.funnel-meta{display:flex;justify-content:space-between;max-width:600px;width:100%;margin-top:4px;font-size:12px;color:var(--muted);padding:0 8px}
+.funnel-meta .fm-val{font-weight:700;color:var(--ink)}
+.conv-arrow{text-align:center;font-size:20px;color:var(--muted);margin:2px 0;position:relative}
+.conv-rate{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;padding:2px 10px;border-radius:12px}
+.conv-rate.good{background:#d1fae5;color:#059669}
+.conv-rate.mid{background:#fef3c7;color:#d97706}
+.conv-rate.bad{background:#fee2e2;color:#dc2626}
+.bottleneck-box{padding:20px;border-radius:12px;background:linear-gradient(135deg,#fef2f2,#fef3c7);border:2px solid #ef4444;margin-top:16px}
+.bottleneck-box .bb-title{font-size:15px;font-weight:800;color:#dc2626;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.bottleneck-box .bb-desc{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.priority-list{list-style:none;padding:0;margin:0}
+.priority-list li{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule-light)}
+.priority-list li:last-child{border-bottom:none}
+.pl-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;color:#fff}
+.pl-rank.r1{background:#ef4444}
+.pl-rank.r2{background:#f59e0b}
+.pl-rank.r3{background:#4f46e5}
+.pl-rank.r4{background:#10b981}
+.pl-content .pl-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.pl-content .pl-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.pl-impact{margin-left:auto;text-align:right;flex-shrink:0}
+.pl-impact .pi-val{font-size:18px;font-weight:800}
+.pl-impact .pi-lbl{font-size:11px;color:var(--muted)}
+.bench-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.bench-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.bench-card .bc-stage{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.bench-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.bench-row .br-lbl{color:var(--muted)}
+.bench-row .br-val{font-weight:700}
+.bench-bar{height:6px;border-radius:3px;background:#e0e7ff;overflow:hidden;margin-top:4px}
+.bench-bar .bb-fill{height:100%;border-radius:3px}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.related-grid a{display:block;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;text-align:center;transition:all .2s}
+.related-grid a:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;transform:translateY(-2px)}
+@media(max-width:768px){.bench-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:repeat(2,1fr)}.conv-rate{position:static;transform:none;display:inline-block;margin-top:4px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"漏斗转化分析器","description":"输入曝光/点击/加购/购买各阶段数据，CSS漏斗图可视化，转化率计算，瓶颈定位，优化优先级排序。","url":"https://juxin-consulting.help/tools/funnel-conversion-analyzer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"漏斗转化分析器","item":"https://juxin-consulting.help/tools/funnel-conversion-analyzer.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="funnel_conversion">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 增长分析工作流 · 标准版</span>
+      <h1>漏斗转化 <em>分析器</em></h1>
+      <p class="tool-hero-desc">输入曝光/点击/加购/购买各阶段数据，CSS漏斗图实时可视化，逐层转化率计算，自动定位最大流失瓶颈，给出优化优先级排序和行业基准对比。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第7步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <a href="growth-driver-decomposer.html" class="step">增长拆解</a><span class="arrow">→</span>
+      <span class="step current">漏斗转化</span><span class="arrow">→</span>
+      <a href="viral-coefficient-calculator.html" class="step">病毒系数</a><span class="arrow">→</span>
+      <a href="ltv-prediction-model.html" class="step">LTV预测</a><span class="arrow">→</span>
+      <a href="growth-experiment-tracker.html" class="step">增长实验</a><span class="arrow">→</span>
+      <a href="market-share-growth-tracker.html" class="step">市场份额</a><span class="arrow">→</span>
+      <a href="unit-economics-builder.html" class="step">单位经济</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入漏斗各阶段数据</h2>
+          <p class="calc-form-subtitle">填写各阶段用户数，实时计算转化率并定位瓶颈</p>
+          <div class="calc-field"><label>曝光数 <span class="hint">(Impressions)</span></label><input type="number" id="impressions" value="50000" step="100" min="0" oninput="FCA.calc()"></div>
+          <div class="calc-field"><label>点击数 <span class="hint">(Clicks)</span></label><input type="number" id="clicks" value="2500" step="10" min="0" oninput="FCA.calc()"></div>
+          <div class="calc-field"><label>加购数 <span class="hint">(Add to Cart)</span></label><input type="number" id="addToCart" value="500" step="5" min="0" oninput="FCA.calc()"></div>
+          <div class="calc-field"><label>购买数 <span class="hint">(Purchases)</span></label><input type="number" id="purchases" value="125" step="1" min="0" oninput="FCA.calc()"></div>
+          <div class="calc-field"><label>平均客单价 <span class="hint">($)</span></label><input type="number" id="aov" value="29.99" step="0.01" min="0" oninput="FCA.calc()"></div>
+          <div class="fee-rule-box"><h4>📐 漏斗阶段说明</h4><ul><li>曝光→点击：CTR点击率，反映Listing/广告吸引力</li><li>点击→加购：加购率，反映产品页面说服力</li><li>加购→购买：结账转化率，反映购买决策和信任度</li><li>整体转化率：曝光→购买的端到端转化效率</li></ul></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="fca-section" id="funnelSection">
+        <h3>🔻 CSS漏斗转化图</h3>
+        <div class="funnel-visual" id="funnelVisual"></div>
+      </div>
+
+      <div class="fca-section" id="bottleneckSection" style="display:none">
+        <h3>🎯 瓶颈定位</h3>
+        <div id="bottleneckWrap"></div>
+      </div>
+
+      <div class="fca-section">
+        <h3>📊 行业基准对比</h3>
+        <div class="bench-grid" id="benchGrid"></div>
+      </div>
+
+      <div class="fca-section">
+        <h3>🔧 优化优先级排序</h3>
+        <ul class="priority-list" id="priorityList"></ul>
+      </div>
+
+      <div class="fca-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="growth-driver-decomposer.html">增长拆解器</a>
+          <a href="ltv-prediction-model.html">LTV预测模型</a>
+          <a href="conversion-rate-optimizer.html">转化率优化器</a>
+          <a href="click-through-optimizer.html">CTR优化器</a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="growth-driver-decomposer.html" class="wbn-btn prev">← 上一步：增长拆解</a>
+        <a href="viral-coefficient-calculator.html" class="wbn-btn next">下一步：病毒系数 →</a>
+      </div>
+      <div style="text-align:center;margin:20px auto;max-width:1152px"><a href="index.html" style="display:inline-block;padding:10px 28px;border-radius:50px;background:var(--bg-soft);color:var(--ink-soft);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--rule)">← 返回工具中心</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-rate.html">增长率计算</a></li><li><a href="cohort-analysis.html">同期群分析</a></li><li><a href="retention-rate.html">留存率分析</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var FCA=(function(){
+  'use strict';
+  var SK='jx_funnel_analyzer';
+  var BENCHMARKS={
+    ctr:{good:0.04,mid:0.02,bad:0.01,desc:'点击率行业基准2%-5%'},
+    atc:{good:0.15,mid:0.08,bad:0.03,desc:'加购率行业基准8%-20%'},
+    checkout:{good:0.40,mid:0.25,bad:0.10,desc:'结账转化率行业基准25%-50%'},
+    overall:{good:0.005,mid:0.002,bad:0.001,desc:'整体转化率行业基准0.2%-0.8%'}
+  };
+  function v(id){var el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
+  function pct(n){return (n*100).toFixed(2)+'%';}
+  function fmt(n){return n.toLocaleString('en-US',{maximumFractionDigits:0});}
+  function rateCls(rate,bench){
+    if(rate>=bench.good) return 'good';
+    if(rate>=bench.mid) return 'mid';
+    return 'bad';
+  }
+  function calc(){
+    var imp=v('impressions'),clk=v('clicks'),atc=v('addToCart'),pur=v('purchases'),aov=v('aov');
+    if(imp<=0){document.getElementById('resultCard').innerHTML='<p style="text-align:center;color:var(--muted)">请输入曝光数</p>';return;}
+    var ctr=clk/imp, atcRate=clk>0?atc/clk:0, chkRate=atc>0?pur/atc:0, overall=imp>0?pur/imp:0;
+    var revenue=pur*aov;
+    var stages=[
+      {name:'曝光',val:imp,cls:'s1',bar:'100%'},
+      {name:'点击',val:clk,cls:'s2',bar:Math.max(imp>0?clk/imp*100:0,5)+'%'},
+      {name:'加购',val:atc,cls:'s3',bar:Math.max(imp>0?atc/imp*100:0,5)+'%'},
+      {name:'购买',val:pur,cls:'s4',bar:Math.max(imp>0?pur/imp*100:0,5)+'%'}
+    ];
+    var html='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val blue">'+pct(ctr)+'</div><div class="rsb-lbl">CTR点击率</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val green">'+pct(atcRate)+'</div><div class="rsb-lbl">加购率</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val gold">'+pct(chkRate)+'</div><div class="rsb-lbl">结账转化率</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val red">'+pct(overall)+'</div><div class="rsb-lbl">整体转化率</div></div>';
+    html+='</div>';
+    html+='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val">'+fmt(revenue)+'</div><div class="rsb-lbl">总收入 ($)</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+fmt(pur)+'</div><div class="rsb-lbl">订单数</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">$'+aov.toFixed(2)+'</div><div class="rsb-lbl">客单价</div></div>';
+    html+='</div>';
+    document.getElementById('resultCard').innerHTML=html;
+    // Funnel visual
+    var fh='';
+    stages.forEach(function(s,i){
+      fh+='<div class="funnel-stage">';
+      fh+='<div class="funnel-bar '+s.cls+'" style="width:'+s.bar+';min-width:120px">'+s.name+' · '+fmt(s.val)+'</div>';
+      fh+='<div class="funnel-meta"><span>阶段'+(i+1)+'</span><span class="fm-val">'+fmt(s.val)+' 用户</span></div>';
+      if(i<3){
+        var r=i===0?ctr:i===1?atcRate:chkRate;
+        var b=i===0?BENCHMARKS.ctr:i===1?BENCHMARKS.atc:BENCHMARKS.checkout;
+        fh+='<div class="conv-arrow">↓ <span class="conv-rate '+rateCls(r,b)+'">'+pct(r)+' 转化</span></div>';
+      }
+      fh+='</div>';
+    });
+    document.getElementById('funnelVisual').innerHTML=fh;
+    // Bottleneck
+    var losses=[
+      {stage:'曝光→点击',loss:imp-clk,rate:1-ctr,bench:BENCHMARKS.ctr},
+      {stage:'点击→加购',loss:clk-atc,rate:clk>0?1-atcRate:0,bench:BENCHMARKS.atc},
+      {stage:'加购→购买',loss:atc-pur,rate:atc>0?1-chkRate:0,bench:BENCHMARKS.checkout}
+    ];
+    losses.sort(function(a,b){return b.loss-a.loss;});
+    var bn=losses[0];
+    var bnHtml='<div class="bottleneck-box">';
+    bnHtml+='<div class="bb-title">⚠️ 最大流失瓶颈：'+bn.stage+'</div>';
+    bnHtml+='<div class="bb-desc">该阶段流失 <strong>'+fmt(bn.loss)+'</strong> 用户，流失率 <strong>'+pct(bn.rate)+'</strong>。';
+    bnHtml+=' '+(bn.rate>0.9?'转化率远低于行业基准，需立即优化。':bn.rate>0.7?'转化率偏低，有较大优化空间。':'转化率接近行业水平，可继续提升。');
+    bnHtml+='</div></div>';
+    document.getElementById('bottleneckWrap').innerHTML=bnHtml;
+    document.getElementById('bottleneckSection').style.display='block';
+    // Benchmark
+    var benchData=[
+      {stage:'CTR点击率',your:ctr,good:BENCHMARKS.ctr.good,mid:BENCHMARKS.ctr.mid,desc:BENCHMARKS.ctr.desc},
+      {stage:'加购率',your:atcRate,good:BENCHMARKS.atc.good,mid:BENCHMARKS.atc.mid,desc:BENCHMARKS.atc.desc},
+      {stage:'结账转化率',your:chkRate,good:BENCHMARKS.checkout.good,mid:BENCHMARKS.checkout.mid,desc:BENCHMARKS.checkout.desc},
+      {stage:'整体转化率',your:overall,good:BENCHMARKS.overall.good,mid:BENCHMARKS.overall.mid,desc:BENCHMARKS.overall.desc}
+    ];
+    var bh='';
+    benchData.forEach(function(b){
+      var c=rateCls(b.your,{good:b.good,mid:b.mid,bad:0});
+      var col=c==='good'?'#10b981':c==='mid'?'#f59e0b':'#ef4444';
+      var barPct=Math.min(b.your/b.good*100,100);
+      bh+='<div class="bench-card"><div class="bc-stage">'+b.stage+'</div>';
+      bh+='<div class="bench-row"><span class="br-lbl">你的值</span><span class="br-val" style="color:'+col+'">'+pct(b.your)+'</span></div>';
+      bh+='<div class="bench-row"><span class="br-lbl">优秀线</span><span class="br-val">'+pct(b.good)+'</span></div>';
+      bh+='<div class="bench-row"><span class="br-lbl">及格线</span><span class="br-val">'+pct(b.mid)+'</span></div>';
+      bh+='<div class="bench-bar"><div class="bb-fill" style="width:'+barPct+'%;background:'+col+'"></div></div>';
+      bh+='<div style="font-size:11px;color:var(--muted);margin-top:6px">'+b.desc+'</div></div>';
+    });
+    document.getElementById('benchGrid').innerHTML=bh;
+    // Priority
+    var priorities=[
+      {title:'优化点击率(CTR)',desc:'提升主图质量、优化标题关键词、增加Review数量和评分',impact:imp*0.01*aov,loss:imp-clk},
+      {title:'提升加购转化',desc:'优化产品描述、A+页面、价格竞争力和促销策略',impact:clk*0.05*aov,loss:clk-atc},
+      {title:'改善结账转化',desc:'优化Checkout流程、增加信任标识、提供多样支付方式',impact:atc*0.1*aov,loss:atc-pur}
+    ];
+    priorities.sort(function(a,b){return b.impact-a.impact;});
+    var ph='';
+    priorities.forEach(function(p,i){
+      ph+='<li><div class="pl-rank r'+(i+1)+'">'+(i+1)+'</div>';
+      ph+='<div class="pl-content"><div class="pl-title">'+p.title+'</div><div class="pl-desc">'+p.desc+'</div></div>';
+      ph+='<div class="pl-impact"><div class="pi-val" style="color:#4f46e5">$'+fmt(p.impact)+'</div><div class="pi-lbl">预估增量收入</div></div></li>';
+    });
+    document.getElementById('priorityList').innerHTML=ph;
+    save({imp:imp,clk:clk,atc:atc,pur:pur,aov:aov});
+  }
+  function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function init(){
+    try{var d=JSON.parse(localStorage.getItem(SK));if(d){
+      if(d.imp){document.getElementById('impressions').value=d.imp;}
+      if(d.clk){document.getElementById('clicks').value=d.clk;}
+      if(d.atc){document.getElementById('addToCart').value=d.atc;}
+      if(d.pur){document.getElementById('purchases').value=d.pur;}
+      if(d.aov){document.getElementById('aov').value=d.aov;}
+    }}catch(e){}
+    calc();
+  }
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',FCA.init);}else{FCA.init();}
+</script>
+</body>
+</html>

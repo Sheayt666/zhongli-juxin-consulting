@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="推荐计划设计器：推荐奖励结构+裂变系数+成本收益平衡，CSS裂变循环图，奖励结构配置。免费独立站增长工具。">
+<meta name="keywords" content="推荐计划,裂变系数,病毒式增长,推荐奖励,裂变循环,获客成本,独立站增长">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/referral-program-designer.html">
+<title>推荐计划设计器 - 裂变系数·奖励结构·CSS裂变循环 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:110px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.viral-loop{position:relative;width:100%;max-width:560px;height:340px;margin:20px auto}
+.vl-node{position:absolute;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:14px 18px;border-radius:14px;text-align:center;font-size:13px;font-weight:600;box-shadow:var(--shadow-md);min-width:130px}
+.vl-node.give{background:linear-gradient(135deg,#10b981,#34d399)}
+.vl-node.share{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.vl-node.convert{background:linear-gradient(135deg,#ef4444,#f87171)}
+.vl-node small{display:block;font-size:11px;opacity:.9;font-weight:400;margin-top:2px}
+.vl-arrow{position:absolute;font-size:24px;color:#c7d2fe;font-weight:700}
+.reward-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.reward-table th{background:var(--bg-soft);padding:10px 8px;text-align:left;border-bottom:2px solid var(--rule);font-weight:600}
+.reward-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light)}
+.growth-chart{display:flex;align-items:flex-end;gap:6px;height:200px;padding:12px 0;border-bottom:2px solid var(--rule);margin:16px 0}
+.gc-bar{flex:1;background:linear-gradient(180deg,#4f46e5,#6366f1);border-radius:6px 6px 0 0;position:relative;transition:height .5s;min-height:4px}
+.gc-bar .gc-val{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap}
+.gc-bar .gc-lbl{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"推荐计划设计器","description":"推荐奖励结构+裂变系数+成本收益平衡，CSS裂变循环图。","url":"https://juxin-consulting.help/tools/referral-program-designer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="referral_program_designer">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📈</span><span class="workflow-name">独立站增长工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="roas-calculator.html" class="step">ROAS</a><span class="arrow">›</span>
+      <a href="cac-calculator.html" class="step">CAC</a><span class="arrow">›</span>
+      <a href="ltv-cac-ratio.html" class="step">LTV/CAC</a><span class="arrow">›</span>
+      <a href="aov-optimizer.html" class="step">AOV优化</a><span class="arrow">›</span>
+      <a href="repurchase-rate.html" class="step">复购率</a><span class="arrow">›</span>
+      <a href="growth-model.html" class="step">增长模型</a><span class="arrow">›</span>
+      <a href="traffic-source-analyzer.html" class="step">流量分析</a><span class="arrow">›</span>
+      <a href="conversion-rate-optimizer.html" class="step">CRO</a><span class="arrow">›</span>
+      <a href="multi-channel-attribution.html" class="step">归因</a><span class="arrow">›</span>
+      <a href="dtc-profit-calc.html" class="step">DTC利润</a><span class="arrow">›</span>
+      <a href="subscription-model-builder.html" class="step">订阅模型</a><span class="arrow">›</span>
+      <span class="step current">推荐计划</span><span class="arrow">›</span>
+      <a href="pixel-tracking-setup.html" class="step">像素追踪</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 独立站增长工具</span>
+      <h1>推荐计划<em>设计器</em></h1>
+      <p class="tool-hero-desc">设计推荐奖励结构，计算裂变系数(K-factor)与病毒式增长曲线，CSS裂变循环图呈现推荐链路，平衡获客成本与收益，优化裂变效率。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 推荐计划配置</h2>
+          <p class="calc-form-subtitle">设置奖励结构与用户行为参数，实时计算裂变系数</p>
+          <div class="fee-rule-box" style="margin-bottom:14px"><h4>🎁 奖励结构</h4></div>
+          <div class="calc-field"><label>奖励模式</label>
+            <select id="rewardMode" onchange="REF.calc()"><option value="double">双向奖励(推荐人+被推荐人)</option><option value="referrer">仅奖励推荐人</option><option value="referee">仅奖励被推荐人</option></select>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>推荐人奖励 <span class="hint">($)</span></label><input type="number" id="rewardRef" value="10" min="0" oninput="REF.calc()"></div>
+            <div class="calc-field"><label>被推荐人奖励 <span class="hint">($)</span></label><input type="number" id="rewardRec" value="10" min="0" oninput="REF.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>奖励形式</label><select id="rewardType" onchange="REF.calc()"><option value="cash">现金/余额</option><option value="discount">折扣券</option><option value="credit">积分/credit</option><option value="product">免费商品</option></select></div>
+            <div class="calc-field"><label>奖励上限/人 <span class="hint">(次)</span></label><input type="number" id="rewardCap" value="20" min="0" oninput="REF.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>📊 裂变行为参数</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>参与推荐用户占比 <span class="hint">(%)</span></label><input type="number" id="participateRate" value="25" min="0" max="100" oninput="REF.calc()"></div>
+            <div class="calc-field"><label>人均发出邀请数</label><input type="number" id="invitesPerUser" value="5" min="0" step="0.5" oninput="REF.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>邀请转化率 <span class="hint">(%)</span></label><input type="number" id="inviteCvr" value="15" min="0" max="100" oninput="REF.calc()"></div>
+            <div class="calc-field"><label>初始用户基数</label><input type="number" id="baseUsers" value="1000" min="0" oninput="REF.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>💰 商业指标</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>用户LTV <span class="hint">($)</span></label><input type="number" id="ltv" value="120" min="0" oninput="REF.calc()"></div>
+            <div class="calc-field"><label>常规CAC <span class="hint">($)</span></label><input type="number" id="normalCac" value="30" min="0" oninput="REF.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="loopSection">
+        <h3>🔄 裂变循环图</h3>
+        <div class="viral-loop" id="viralLoop"></div>
+      </div>
+      <div class="section-block" id="rewardSection">
+        <h3>🎁 奖励结构表</h3>
+        <div style="overflow-x:auto"><table class="reward-table" id="rewardTable"></table></div>
+      </div>
+      <div class="section-block" id="growthSection">
+        <h3>📈 病毒式增长曲线(6轮裂变)</h3>
+        <div class="growth-chart" id="growthChart"></div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:32px" id="growthNote"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="subscription-model-builder.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 订阅模型</span></a>
+        <a href="pixel-tracking-setup.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">像素追踪 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="referral-program-designer.html">推荐计划设计器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var REF=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var mode=$('rewardMode').value,rRef=num('rewardRef'),rRec=num('rewardRec'),rType=$('rewardType').value,cap=num('rewardCap');
+    var pRate=num('participateRate')/100,invites=num('invitesPerUser'),cvr=num('inviteCvr')/100,base=num('baseUsers');
+    var ltv=num('ltv'),normalCac=num('normalCac');
+    var k=pRate*invites*cvr;
+    var newUsersPerRound=base*k;
+    var totalReward=mode==='double'?rRef+rRec:mode==='referrer'?rRef:rRec;
+    var refCac=totalReward>0?totalReward/(cvr):0;
+    var refCacEff=totalReward/cvr;
+    var rounds=6;
+    var cumulative=base;
+    var roundUsers=[base];
+    for(var i=1;i<=rounds;i++){var nu=roundUsers[i-1]*k;roundUsers.push(nu);cumulative+=nu;}
+    var savings=normalCac-refCacEff;
+    var savingsPct=normalCac>0?savings/normalCac:0;
+    renderResult(k,newUsersPerRound,refCacEff,savings,savingsPct,cumulative);
+    renderLoop(mode,rRef,rRec,k);
+    renderReward(mode,rRef,rRec,rType,cap,cvR);
+    renderGrowth(roundUsers,k);
+  }
+  function renderResult(k,newPer,refCac,savings,savingsPct,cumulative){
+    var col=k>=1?'#10b981':k>=0.5?'#f59e0b':'#ef4444';
+    var status=k>=1?'病毒式增长':k>=0.5?'有效裂变':'裂变不足';
+    $('resultCard').innerHTML='<h3>📊 裂变分析结果</h3>'+
+      '<div style="text-align:center;margin:16px 0"><div style="font-size:14px;color:var(--muted)">裂变系数 K-factor</div><div style="font-size:48px;font-weight:800;color:'+col+'">'+k.toFixed(3)+'</div><span style="display:inline-block;padding:6px 20px;border-radius:30px;background:'+col+';color:#fff;font-weight:700">'+status+'</span></div>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+Math.round(newPer)+'</div><div class="rsb-lbl">首轮新增用户</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">$'+refCac.toFixed(1)+'</div><div class="rsb-lbl">推荐CAC</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+(savings>0?'#10b981':'#ef4444')+'">'+(savings>0?'-$':'+$')+Math.abs(savings).toFixed(1)+'</div><div class="rsb-lbl">vs常规CAC</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 K-factor=参与率×邀请数×转化率。≥1为病毒式增长(每用户带来≥1新用户)，'+savingsPct>0?'推荐获客比常规省'+(savingsPct*100).toFixed(0)+'%':'推荐获客成本偏高'+'。6轮累计触达 '+Math.round(cumulative)+' 用户。</div>';
+  }
+  function renderLoop(mode,rRef,rRec,k){
+    var giveText=mode==='double'?'双方各得$'+rRef+'/'+rRec:mode==='referrer'?'推荐人得$'+rRef:'被推荐人得$'+rRec;
+    $('viralLoop').innerHTML=
+      '<div class="vl-node" style="left:30px;top:120px">👤 用户使用<small>'+num('baseUsers')+'用户</small></div>'+
+      '<div class="vl-arrow" style="left:175px;top:130px">→</div>'+
+      '<div class="vl-node give" style="left:210px;top:30px">🎁 给出奖励<small>'+giveText+'</small></div>'+
+      '<div class="vl-arrow" style="left:330px;top:80px">↘</div>'+
+      '<div class="vl-node share" style="left:360px;top:120px">📤 分享邀请<small>人均'+num('invitesPerUser')+'邀请</small></div>'+
+      '<div class="vl-arrow" style="left:330px;top:200px">↘</div>'+
+      '<div class="vl-node convert" style="left:200px;top:230px">✅ 新用户转化<small>转化率'+num('inviteCvr')+'%</small></div>'+
+      '<div class="vl-arrow" style="left:140px;top:200px">↖</div>'+
+      '<div style="position:absolute;left:30px;top:230px;font-size:12px;color:#10b981;font-weight:700;background:#ecfdf5;padding:8px 14px;border-radius:10px">K='+k.toFixed(2)+' 循环</div>';
+  }
+  function renderReward(mode,rRef,rRec,rType,cap,cvR){
+    var rows=[
+      {role:'推荐人',reward:mode==='double'||mode==='referrer'?rRef:0,type:rType},
+      {role:'被推荐人',reward:mode==='double'||mode==='referee'?rRec:0,type:rType},
+      {role:'单次总成本',reward:(mode==='double'?rRef+rRec:mode==='referrer'?rRef:rRec),type:'-'}
+    ];
+    var totalCostPerAcq=(mode==='double'?rRef+rRec:mode==='referrer'?rRef:rRec)/cvr;
+    var maxPayout=cap*(mode==='double'||mode==='referrer'?rRef:0);
+    $('rewardTable').innerHTML='<thead><tr><th>对象</th><th>奖励金额</th><th>形式</th><th>单人上限</th><th>单人最大支出</th></tr></thead><tbody>'+
+      rows.map(function(r){return '<tr><td><strong>'+r.role+'</strong></td><td>$'+r.reward.toFixed(2)+'</td><td>'+r.type+'</td><td>'+cap+'次</td><td>$'+(r.reward*cap).toFixed(0)+'</td></tr>';}).join('')+
+      '<tr style="font-weight:700;background:var(--bg-soft)"><td>单次获客成本</td><td colspan="4">$'+totalCostPerAcq.toFixed(2)+' (奖励/转化率'+cvR+')</td></tr></tbody>';
+  }
+  function renderGrowth(roundUsers,k){
+    var max=Math.max.apply(null,roundUsers);
+    $('growthChart').innerHTML=roundUsers.map(function(u,i){
+      var h=max>0?(u/max*100):0;
+      return '<div class="gc-bar" style="height:'+h+'%"><span class="gc-val">'+Math.round(u)+'</span><span class="gc-lbl">R'+i+'</span></div>';
+    }).join('');
+    $('growthNote').innerHTML='📈 K='+k.toFixed(3)+' · '+roundsText(k)+' · 6轮后用户从 '+Math.round(roundUsers[0])+' 增长至 '+Math.round(roundUsers.reduce(function(s,u){return s+u;},0))+' 累计。';
+  }
+  function roundsText(k){
+    if(k>=1)return '病毒式增长，每轮用户递增';
+    if(k>=0.5)return '有效裂变，用户持续增长但趋缓';
+    if(k>0)return '裂变微弱，增长有限';
+    return '无裂变';
+  }
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',REF.init);}else{REF.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

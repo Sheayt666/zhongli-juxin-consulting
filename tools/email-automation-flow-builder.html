@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="邮件自动化流程构建器：触发器+条件分支+延迟等待+行为触发工作流，CSS可视化流程编排图。免费邮件营销深度工具。">
+<meta name="keywords" content="邮件自动化,触发器,条件分支,行为触发,工作流编排,邮件营销,自动化流程">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/email-automation-flow-builder.html">
+<title>邮件自动化流程构建器 - 触发器·条件分支·CSS流程编排 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:110px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.flow-canvas{background:linear-gradient(135deg,#f8f9ff,#f0f4ff);border:1px solid #e0e7ff;border-radius:14px;padding:24px;overflow-x:auto;margin:12px 0}
+.flow-chain{display:flex;align-items:center;gap:10px;min-width:max-content}
+.fl-node{background:#fff;border:2px solid var(--rule);border-radius:12px;padding:12px 16px;min-width:130px;text-align:center;box-shadow:var(--shadow-sm);position:relative;flex-shrink:0}
+.fl-node .fl-icon{font-size:22px}
+.fl-node .fl-title{font-size:13px;font-weight:700;margin:4px 0 2px;color:var(--ink)}
+.fl-node .fl-sub{font-size:11px;color:var(--muted)}
+.fl-node.trigger{border-color:#4f46e5;background:linear-gradient(135deg,#eef2ff,#fff)}
+.fl-node.email{border-color:#10b981;background:linear-gradient(135deg,#ecfdf5,#fff)}
+.fl-node.delay{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fff);border-style:dashed}
+.fl-node.condition{border-color:#8b5cf6;background:linear-gradient(135deg,#f5f3ff,#fff);transform:rotate(0)}
+.fl-node.action{border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fff)}
+.fl-arrow{color:#c7d2fe;font-size:20px;font-weight:700;flex-shrink:0}
+.fl-branch{display:flex;flex-direction:column;gap:10px}
+.fl-branch-label{font-size:10px;color:#8b5cf6;font-weight:700;text-align:center}
+.scenario-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.stab{padding:10px 16px;border-radius:10px;border:2px solid var(--rule);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.stab.active{border-color:#4f46e5;background:#eef2ff;color:#4f46e5}
+.metrics-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.metrics-table th{background:var(--bg-soft);padding:10px;text-align:left;border-bottom:2px solid var(--rule);font-weight:600}
+.metrics-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.bar-track{height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"邮件自动化流程构建器","description":"触发器+条件分支+延迟等待+行为触发工作流，CSS可视化流程编排图。","url":"https://juxin-consulting.help/tools/email-automation-flow-builder.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="email_automation_flow_builder">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📧</span><span class="workflow-name">邮件营销工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="email-sequence-designer.html" class="step">序列设计</a><span class="arrow">›</span>
+      <a href="email-abandoned-cart.html" class="step">弃购挽回</a><span class="arrow">›</span>
+      <a href="email-open-rate-analyzer.html" class="step">打开率</a><span class="arrow">›</span>
+      <a href="email-roi-calculator.html" class="step">ROI</a><span class="arrow">›</span>
+      <a href="email-welcome-series.html" class="step">欢迎系列</a><span class="arrow">›</span>
+      <a href="email-subject-tester.html" class="step">标题测试</a><span class="arrow">›</span>
+      <a href="email-segmentation.html" class="step">分群</a><span class="arrow">›</span>
+      <a href="email-frequency-optimizer.html" class="step">频次</a><span class="arrow">›</span>
+      <a href="email-template-builder.html" class="step">模板</a><span class="arrow">›</span>
+      <a href="email-compliance-check.html" class="step">合规</a><span class="arrow">›</span>
+      <span class="step current">自动化流程</span><span class="arrow">›</span>
+      <a href="email-win-back-campaign.html" class="step">流失挽回</a><span class="arrow">›</span>
+      <a href="email-deliverability-checker.html" class="step">可达性</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📧 邮件营销工具 · 深度版</span>
+      <h1>邮件自动化流程<em>构建器</em></h1>
+      <p class="tool-hero-desc">可视化编排邮件自动化工作流：触发器、条件分支、延迟等待、行为触发，CSS流程编排图直观呈现4大经典场景，预估触达与转化效果。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 场景与参数</h2>
+          <p class="calc-form-subtitle">选择自动化场景，调整触达参数预估效果</p>
+          <div class="scenario-tabs">
+            <div class="stab active" onclick="EAF.scene('welcome',this)">👋 欢迎系列</div>
+            <div class="stab" onclick="EAF.scene('cart',this)">🛒 弃购挽回</div>
+            <div class="stab" onclick="EAF.scene('browse',this)">👀 浏览挽回</div>
+            <div class="stab" onclick="EAF.scene('winback',this)">💤 流失唤醒</div>
+          </div>
+          <div class="fee-rule-box" style="margin-bottom:14px"><h4>📊 触达规模</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>触发用户数/月</label><input type="number" id="triggerUsers" value="3000" min="0" oninput="EAF.calc()"></div>
+            <div class="calc-field"><label>邮件订阅率 <span class="hint">(%)</span></label><input type="number" id="subRate" value="85" min="0" max="100" oninput="EAF.calc()"></div>
+          </div>
+          <div class="fee-row-2">
+            <div class="calc-field"><label>平均打开率 <span class="hint">(%)</span></label><input type="number" id="openRate" value="28" min="0" max="100" oninput="EAF.calc()"></div>
+            <div class="calc-field"><label>平均点击率 <span class="hint">(%)</span></label><input type="number" id="clickRate" value="12" min="0" max="100" oninput="EAF.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>💸 转化与收入</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>转化率 <span class="hint">(%)</span></label><input type="number" id="cvr" value="4.5" min="0" step="0.1" oninput="EAF.calc()"></div>
+            <div class="calc-field"><label>客单价 <span class="hint">($)</span></label><input type="number" id="aov" value="42" min="0" oninput="EAF.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="flowSection">
+        <h3>🔀 可视化流程编排图</h3>
+        <div class="flow-canvas"><div class="flow-chain" id="flowChain"></div></div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:12px" id="flowDesc"></div>
+      </div>
+      <div class="section-block" id="stepSection">
+        <h3>📋 流程节点详情</h3>
+        <div style="overflow-x:auto"><table class="metrics-table" id="stepTable"></table></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="email-compliance-check.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 合规</span></a>
+        <a href="email-win-back-campaign.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">流失挽回 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="email-automation-flow-builder.html">邮件自动化流程构建器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var EAF=(function(){
+  'use strict';
+  var cur='welcome';
+  var SCENES={
+    welcome:{name:'新订阅欢迎系列',desc:'用户订阅后立即触发，3封邮件建立品牌认知并引导首单',nodes:[
+      {t:'trigger',i:'⚡',title:'触发:订阅',sub:'用户填写邮箱'},
+      {t:'email',i:'📧',title:'邮件1:欢迎',sub:'立即发送·品牌故事'},
+      {t:'delay',i:'⏱',title:'延迟2天',sub:'等待48小时'},
+      {t:'email',i:'🎁',title:'邮件2:首单券',sub:'新人9折优惠'},
+      {t:'delay',i:'⏱',title:'延迟3天',sub:'等待72小时'},
+      {t:'condition',i:'🔀',title:'是否下单?',sub:'条件判断'},
+      {t:'email',i:'🌟',title:'邮件3:热销推荐',sub:'未购买路径'}
+    ]},
+    cart:{name:'弃购挽回系列',desc:'用户加购未结账触发，3封递进式挽回邮件',nodes:[
+      {t:'trigger',i:'🛒',title:'触发:弃购',sub:'加购30分钟未结账'},
+      {t:'delay',i:'⏱',title:'延迟1小时',sub:'等待60分钟'},
+      {t:'email',i:'📧',title:'邮件1:提醒',sub:'购物车仍在'},
+      {t:'delay',i:'⏱',title:'延迟24小时',sub:'等待1天'},
+      {t:'email',i:'💬',title:'邮件2:答疑',sub:'常见问题+客服'},
+      {t:'delay',i:'⏱',title:'延迟48小时',sub:'等待2天'},
+      {t:'email',i:'🎁',title:'邮件3:激励',sub:'5%优惠最后机会'}
+    ]},
+    browse:{name:'浏览挽回系列',desc:'用户浏览商品未加购触发，基于行为再营销',nodes:[
+      {t:'trigger',i:'👀',title:'触发:浏览',sub:'查看商品页>30秒未加购'},
+      {t:'delay',i:'⏱',title:'延迟3小时',sub:'等待3小时'},
+      {t:'email',i:'📧',title:'邮件1:商品推荐',sub:'浏览商品+相似款'},
+      {t:'condition',i:'🔀',title:'是否点击?',sub:'条件判断'},
+      {t:'delay',i:'⏱',title:'延迟2天',sub:'等待48小时'},
+      {t:'email',i:'⭐',title:'邮件2:评价展示',sub:'社会证明+UGC'},
+      {t:'email',i:'🎁',title:'邮件3:限时优惠',sub:'浏览商品专享价'}
+    ]},
+    winback:{name:'流失唤醒系列',desc:'沉睡用户(90天未购买)触发，分级优惠唤醒',nodes:[
+      {t:'trigger',i:'💤',title:'触发:沉睡',sub:'90天未购买'},
+      {t:'email',i:'📧',title:'邮件1:想念你',sub:'品牌动态+新品'},
+      {t:'delay',i:'⏱',title:'延迟7天',sub:'等待1周'},
+      {t:'condition',i:'🔀',title:'是否打开?',sub:'条件判断'},
+      {t:'email',i:'🎁',title:'邮件2:10%券',sub:'回归专享优惠'},
+      {t:'delay',i:'⏱',title:'延迟14天',sub:'等待2周'},
+      {t:'email',i:'💎',title:'邮件3:15%券',sub:'最后唤醒+会员福利'}
+    ]}
+  };
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function scene(s,el){cur=s;document.querySelectorAll('.stab').forEach(function(t){t.classList.remove('active');});if(el)el.classList.add('active');calc();}
+  function calc(){
+    var users=num('triggerUsers'),subR=num('subRate')/100,openR=num('openRate')/100,clickR=num('clickRate')/100,cvr=num('cvr')/100,aov=num('aov');
+    var sc=SCENES[cur];
+    var subscribers=users*subR;
+    var totalEmails=sc.nodes.filter(function(n){return n.t==='email';}).length;
+    var opens=subscribers*openR;
+    var clicks=opens*clickR;
+    var conversions=clicks*cvr;
+    var revenue=conversions*aov;
+    renderResult(subscribers,opens,clicks,conversions,revenue,totalEmails,sc);
+    renderFlow(sc);
+    renderSteps(sc,subscribers,openR,clickR,cvr,aov);
+  }
+  function renderResult(sub,opens,clicks,conv,rev,totalEmails,sc){
+    $('resultCard').innerHTML='<h3>📊 '+sc.name+'预估</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+Math.round(sub)+'</div><div class="rsb-lbl">触达订阅</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+Math.round(opens)+'</div><div class="rsb-lbl">总打开</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+Math.round(conv)+'</div><div class="rsb-lbl">转化订单</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">$'+rev.toFixed(0)+'</div><div class="rsb-lbl">预计收入</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 '+totalEmails+'封邮件 · 综合转化率 '+(conv/sub*100).toFixed(1)+'% · 客单价$'+num('aov')+'。每封邮件均需A/B测试主题与发送时间。</div>';
+  }
+  function renderFlow(sc){
+    $('flowChain').innerHTML=sc.nodes.map(function(n,i){
+      var html='<div class="fl-node '+n.t+'"><div class="fl-icon">'+n.i+'</div><div class="fl-title">'+n.title+'</div><div class="fl-sub">'+n.sub+'</div></div>';
+      if(i<sc.nodes.length-1)html+='<div class="fl-arrow">→</div>';
+      return html;
+    }).join('');
+    $('flowDesc').innerHTML='📌 '+sc.name+'：'+sc.desc;
+  }
+  function renderSteps(sc,sub,openR,clickR,cvr,aov){
+    var emailIdx=0;
+    var rows=sc.nodes.filter(function(n){return n.t==='email';}).map(function(n){
+      emailIdx++;
+      var reach=sub;
+      var opens=reach*Math.pow(openR,emailIdx<=2?1:0.85);
+      var clicks=opens*clickR;
+      var conv=clicks*cvr;
+      var rev=conv*aov;
+      return '<tr><td><strong>'+n.title+'</strong></td><td>'+n.sub+'</td><td>'+Math.round(reach)+'</td><td>'+Math.round(opens)+'</td><td>'+Math.round(clicks)+'</td><td>'+Math.round(conv)+'</td><td>$'+rev.toFixed(0)+'</td><td><div class="bar-track"><div class="bar-fill" style="width:'+(opens/reach*100)+'%;background:#10b981"></div></div> '+(opens/reach*100).toFixed(0)+'%</td></tr>';
+    }).join('');
+    $('stepTable').innerHTML='<thead><tr><th>邮件</th><th>内容</th><th>触达</th><th>打开</th><th>点击</th><th>转化</th><th>收入</th><th>打开率</th></tr></thead><tbody>'+rows+'</tbody>';
+  }
+  function init(){calc();}
+  return{scene:scene,calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',EAF.init);}else{EAF.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

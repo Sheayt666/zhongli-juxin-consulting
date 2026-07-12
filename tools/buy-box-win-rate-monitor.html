@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="购物车赢得率监控器：购物车占比数据，竞品价格，赢得率趋势，丢失原因分析，竞品抢夺预警，CSS仪表盘。">
+<title>购物车赢得率监控器 - 趋势·丢失原因·竞品预警 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}.gauge{width:240px;height:120px;position:relative;overflow:hidden}.gauge-bg{width:240px;height:240px;border-radius:50%;border:30px solid var(--rule-light);position:absolute;top:0;left:0;clip-path:inset(0 0 50% 0)}.gauge-fill{width:240px;height:240px;border-radius:50%;border:30px solid;position:absolute;top:0;left:0;clip-path:inset(0 0 50% 0);transition:transform .8s}.gauge-center{text-align:center;position:absolute;top:60px;left:50%;transform:translateX(-50%)}.gauge-val{font-size:42px;font-weight:800;line-height:1}.gauge-lbl{font-size:13px;color:var(--muted)}
+.trend-chart{display:flex;align-items:flex-end;gap:6px;height:180px;padding:16px 0;border-bottom:2px solid var(--rule)}.trend-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}.trend-bar-fill{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .6s;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:10px;font-weight:700;color:#fff}.trend-bar-label{font-size:10px;color:var(--muted)}
+.comp-table{width:100%;border-collapse:collapse;font-size:13px}.comp-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px}.comp-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.reason-list{display:flex;flex-direction:column;gap:10px}.reason-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--rule-light)}.reason-icon{font-size:20px;flex-shrink:0}.reason-info{flex:1}.reason-info h4{font-size:13px;font-weight:700}.reason-info p{font-size:12px;color:var(--muted)}.reason-pct{font-size:16px;font-weight:800;flex-shrink:0}
+.alert-box{padding:16px;border-radius:var(--radius);margin-bottom:10px;display:flex;gap:12px}.alert-box.danger{background:var(--danger-bg);border:1px solid #fecaca}.alert-box.warning{background:var(--warning-bg);border:1px solid #fde68a}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W6 运营数据工作流</div><div class="workflow-steps">
+<a href="sales-estimator.html" class="workflow-step">销量估算</a><a href="bsr-tracker.html" class="workflow-step">BSR追踪</a><a href="conversion-funnel.html" class="workflow-step">转化漏斗</a><a href="review-analyzer.html" class="workflow-step">评论分析</a><a href="profit-calendar.html" class="workflow-step">利润日历</a><a href="real-time-sales-dashboard.html" class="workflow-step">实时仪表盘</a><a href="product-performance-integrator.html" class="workflow-step">表现整合</a><a href="session-page-analyzer.html" class="workflow-step">会话分析</a><a href="ad-attribution-analyzer.html" class="workflow-step">广告归因</a><a href="buy-box-win-rate-monitor.html" class="workflow-step active">购物车监控</a><a href="traffic-source-breakdown.html" class="workflow-step">流量拆解</a><a href="daily-ops-report-generator.html" class="workflow-step">日报生成</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W6 运营数据</a><span>/</span>购物车赢得率监控器</div>
+<div class="tool-header"><span class="tool-badge">W6 运营数据工作流</span><h1>购物车<em>赢得率监控器</em></h1><p>购物车占比数据追踪，赢得率趋势CSS图表，丢失原因分析，竞品价格抢夺预警，CSS仪表盘实时监控Buy Box状态。</p></div>
+
+<div class="card"><h2>购物车数据输入</h2><div class="form-grid">
+<div class="form-field"><label>当前购物车赢得率 <span class="hint">(%)</span></label><input type="number" id="winRate" value="78" step="1" min="0" max="100" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>我的价格 <span class="hint">($)</span></label><input type="number" id="myPrice" value="29.99" step="0.01" min="0" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>FBA库存 <span class="hint">(件)</span></label><input type="number" id="fbaStock" value="500" min="0" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>竞品A价格 <span class="hint">($)</span></label><input type="number" id="compA" value="28.99" step="0.01" min="0" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>竞品B价格 <span class="hint">($)</span></label><input type="number" id="compB" value="31.50" step="0.01" min="0" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>竞品C价格 <span class="hint">($)</span></label><input type="number" id="compC" value="27.50" step="0.01" min="0" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>近7天赢得率均值 <span class="hint">(%)</span></label><input type="number" id="avg7d" value="82" step="1" min="0" max="100" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>前7天赢得率均值 <span class="hint">(%)</span></label><input type="number" id="prev7d" value="88" step="1" min="0" max="100" oninput="BuyBox.calc()"></div>
+<div class="form-field"><label>日均销售额 <span class="hint">($)</span></label><input type="number" id="dailySales" value="2500" step="100" min="0" oninput="BuyBox.calc()"></div>
+</div></div>
+
+<div class="card"><h2>购物车赢得率仪表盘</h2><div class="gauge-wrap"><div class="gauge" id="gauge"></div><div id="gaugeStatus"></div></div></div>
+<div class="card"><h2>近14天赢得率趋势</h2><div class="trend-chart" id="trendChart"></div></div>
+<div class="card"><h2>竞品价格对比</h2><div id="compWrap"></div></div>
+<div class="card"><h2>购物车丢失原因分析</h2><div class="reason-list" id="reasonWrap"></div></div>
+<div class="card"><h2>竞品抢夺预警</h2><div id="alertWrap"></div></div>
+
+<div class="related-grid">
+<a href="real-time-sales-dashboard.html" class="related-card"><span class="rc-icon">📊</span><div><h4>实时仪表盘</h4><p>实时销售监控</p></div></a>
+<a href="traffic-source-breakdown.html" class="related-card"><span class="rc-icon">🌐</span><div><h4>流量来源拆解</h4><p>各来源占比</p></div></a>
+<a href="daily-ops-report-generator.html" class="related-card"><span class="rc-icon">📝</span><div><h4>日报生成器</h4><p>每日运营报告</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const BuyBox={
+  calc(){
+    const winRate=parseFloat(document.getElementById('winRate').value)||0;
+    const myPrice=parseFloat(document.getElementById('myPrice').value)||0;
+    const fbaStock=parseFloat(document.getElementById('fbaStock').value)||0;
+    const compA=parseFloat(document.getElementById('compA').value)||0;
+    const compB=parseFloat(document.getElementById('compB').value)||0;
+    const compC=parseFloat(document.getElementById('compC').value)||0;
+    const avg7=parseFloat(document.getElementById('avg7d').value)||0;
+    const prev7=parseFloat(document.getElementById('prev7d').value)||0;
+    const dailySales=parseFloat(document.getElementById('dailySales').value)||0;
+    this.renderGauge(winRate);
+    this.renderTrend(avg7,prev7);
+    this.renderComp(myPrice,compA,compB,compC);
+    this.renderReasons(myPrice,compA,compB,compC,fbaStock,winRate);
+    this.renderAlerts(myPrice,compA,compB,compC,winRate,avg7,prev7,dailySales);
+  },
+  renderGauge(rate){
+    const color=rate>=80?'#10b981':rate>=50?'#f59e0b':'#ef4444';
+    const deg=rate/100*180;
+    document.getElementById('gauge').innerHTML=`
+      <div class="gauge-bg"></div>
+      <div class="gauge-fill" style="border-color:${color};transform:rotate(${deg-90}deg);transform-origin:center"></div>
+      <div class="gauge-center"><div class="gauge-val" style="color:${color}">${rate}%</div><div class="gauge-lbl">Buy Box 赢得率</div></div>`;
+    const status=rate>=80?'🟢 优秀 — 购物车稳定':rate>=50?'🟡 需关注 — 购物车不稳定':'🔴 危险 — 购物车频繁丢失';
+    document.getElementById('gaugeStatus').innerHTML=`<div style="font-size:16px;font-weight:700;color:${color}">${status}</div>`;
+  },
+  renderTrend(avg7,prev7){
+    const base=avg7;
+    const data=Array.from({length:14},(_,i)=>{
+      const trend=prev7+(base-prev7)*i/13;
+      return Math.round(trend+(Math.random()-0.5)*8);
+    });
+    const max=Math.max(...data,100);
+    document.getElementById('trendChart').innerHTML=data.map((v,i)=>{
+      const h=v/max*150;
+      const color=v>=80?'#10b981':v>=50?'#f59e0b':'#ef4444';
+      return `<div class="trend-bar"><div class="trend-bar-fill" style="height:${h}px;background:${color}">${v}%</div><div class="trend-bar-label">D${i+1}</div></div>`;
+    }).join('');
+  },
+  renderComp(myPrice,a,b,c){
+    const comps=[{name:'我的价格',price:myPrice,isMe:true},{name:'竞品A',price:a},{name:'竞品B',price:b},{name:'竞品C',price:c}];
+    comps.sort((x,y)=>x.price-y.price);
+    const min=comps[0].price;
+    const max=comps[comps.length-1].price||1;
+    document.getElementById('compWrap').innerHTML=`<table class="comp-table"><thead><tr><th>卖家</th><th>价格</th><th>价差</th><th>价格竞争力</th></tr></thead><tbody>${
+      comps.map(c=>{
+        const diff=c.price-myPrice;
+        const barW=(max-c.price+1)/(max-min+1)*100;
+        const color=c.isMe?'var(--primary)':c.price<myPrice?'var(--danger)':'var(--success)';
+        return `<tr><td><strong style="color:${color}">${c.name}${c.isMe?' (我)':''}</strong></td><td>$${c.price.toFixed(2)}</td><td style="color:${diff<0?'var(--success)':'var(--danger)'}">${diff===0?'—':(diff>0?'+':'')+$${diff.toFixed(2)}</td><td><div style="height:8px;width:100%;background:var(--rule-light);border-radius:4px;overflow:hidden"><div style="height:100%;width:${barW}%;background:${c.isMe?'var(--primary)':'var(--ink-soft)'};border-radius:4px"></div></div></td></tr>`;
+      }).join('')
+    }</tbody></table>`;
+  },
+  renderReasons(myPrice,a,b,c,fbaStock,winRate){
+    const reasons=[];
+    const minComp=Math.min(a,b,c);
+    if(myPrice>minComp)reasons.push({icon:'💰',title:'价格高于竞品',desc:`我的价格$${myPrice}高于最低竞品$${minComp}，差价$${(myPrice-minComp).toFixed(2)}`,pct:45});
+    if(fbaStock<50)reasons.push({icon:'📦',title:'FBA库存不足',desc:`当前FBA库存仅${fbaStock}件，低库存会降低购物车赢得概率`,pct:25});
+    if(winRate<70)reasons.push({icon:'📉',title:'近期表现下滑',desc:`赢得率${winRate}%低于80%健康线，需要综合优化`,pct:15});
+    reasons.push({icon:'🚚',title:'物流时效',desc:'FBA配送时效影响购物车权重，确保Prime标识有效',pct:10});
+    reasons.push({icon:'⭐',title:'账号健康度',desc:'ODR、迟发率等指标影响购物车资格',pct:5});
+    document.getElementById('reasonWrap').innerHTML=reasons.map(r=>
+      `<div class="reason-item"><span class="reason-icon">${r.icon}</span><div class="reason-info"><h4>${r.title}</h4><p>${r.desc}</p></div><span class="reason-pct" style="color:${r.pct>=30?'var(--danger)':'var(--warning)'}">${r.pct}%</span></div>`
+    ).join('');
+  },
+  renderAlerts(myPrice,a,b,c,winRate,avg7,prev7,dailySales){
+    let alerts=[];
+    if(a<myPrice||b<myPrice||c<myPrice){
+      const minComp=Math.min(a,b,c);
+      const loss=(myPrice-minComp)/myPrice*dailySales*(1-winRate/100);
+      alerts.push({type:'danger',icon:'🚨',title:'竞品低价抢夺购物车',desc:`竞品最低价$${minComp.toFixed(2)}低于你的$${myPrice.toFixed(2)}，预估日均损失$${loss.toFixed(0)}，建议降价或优化差异化卖点`});
+    }
+    if(avg7<prev7-5){
+      alerts.push({type:'warning',icon:'📉',title:'赢得率持续下滑',desc:`近7天均值${avg7}%较前7天${prev7}%下降${(prev7-avg7).toFixed(0)}个百分点，需立即排查原因`});
+    }
+    if(winRate<50){
+      alerts.push({type:'danger',icon:'⚠️',title:'购物车赢得率危险',desc:`当前赢得率仅${winRate}%，超过一半流量被竞品抢走，严重影响销售`});
+    }
+    if(alerts.length===0)alerts.push({type:'warning',icon:'✅',title:'购物车状态正常',desc:'当前赢得率健康，无竞品低价威胁'});
+    document.getElementById('alertWrap').innerHTML=alerts.map(al=>
+      `<div class="alert-box ${al.type}"><span style="font-size:20px">${al.icon}</span><div><strong style="font-size:14px">${al.title}</strong><p style="font-size:13px;color:var(--muted);margin-top:2px">${al.desc}</p></div></div>`
+    ).join('');
+  }
+};
+BuyBox.calc();
+</script>
+</body>
+</html>

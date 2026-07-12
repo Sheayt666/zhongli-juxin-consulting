@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="分时段自动化器（深度版）：不同时段出价/预算自动调整，高峰加码+低谷缩减，24小时热力图，数据驱动建议。免费广告自动化工具。">
+<meta name="keywords" content="分时段广告,dayparting,出价调整,24小时热力图,广告自动化,时段优化">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/dayparting-automation.html">
+<title>分时段自动化器 - 24h热力图·出价调整·深度版 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:16px}
+.heatmap-cell{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;min-height:36px}
+.heatmap-cell:hover{transform:scale(1.2);z-index:10;box-shadow:var(--shadow-lg)}
+.heatmap-labels{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:4px}
+.heatmap-label{text-align:center;font-size:9px;color:var(--muted)}
+.heatmap-legend{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--muted)}
+.heatmap-legend-bar{width:120px;height:12px;border-radius:6px;background:linear-gradient(90deg,#dbeafe,#6366f1,#4f46e5,#3730a3)}
+.bid-strategy-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.bid-strategy-table th{background:#4f46e5;color:#fff;padding:10px;text-align:left;font-weight:600;border-radius:6px 6px 0 0}
+.bid-strategy-table td{padding:10px;border-bottom:1px solid var(--rule-light)}
+.bid-strategy-table tr:hover td{background:var(--bg-soft)}
+.time-segment{display:inline-block;padding:2px 10px;border-radius:6px;font-size:11px;font-weight:600}
+.ts-peak{background:#fee2e2;color:#dc2626}
+.ts-normal{background:#dbeafe;color:#2563eb}
+.ts-low{background:#d1fae5;color:#059669}
+.ts-dead{background:#f3f4f6;color:#9ca3af}
+.suggestion-box{padding:14px;border-radius:10px;margin-top:12px;font-size:13px;line-height:1.8}
+.suggestion-box.peak{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+.suggestion-box.normal{background:#eff6ff;border:1px solid #93c5fd;color:#1e40af}
+.suggestion-box.low{background:#f0fdf4;border:1px solid #86efac;color:#065f46}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"分时段自动化器","description":"不同时段出价/预算自动调整，24小时热力图，数据驱动建议。","url":"https://juxin-consulting.help/tools/dayparting-automation.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="dayparting_automation">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🤖</span><span class="workflow-name">广告自动化工作流</span><span class="workflow-step">第11步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="auto-bidding-rules.html" class="step">自动出价</a><span class="arrow">→</span>
+      <a href="auto-budget-adjuster.html" class="step">预算调整</a><span class="arrow">→</span>
+      <a href="ad-placement-optimizer.html" class="step">广告位优化</a><span class="arrow">→</span>
+      <a href="auto-keyword-expansion.html" class="step">关键词扩展</a><span class="arrow">→</span>
+      <a href="auto-negative-keywords.html" class="step">否定关键词</a><span class="arrow">→</span>
+      <a href="ad-schedule-optimizer.html" class="step">排期优化</a><span class="arrow">→</span>
+      <a href="sp-campaign-builder.html" class="step">SP搭建</a><span class="arrow">→</span>
+      <a href="sb-ad-planner.html" class="step">SB规划</a><span class="arrow">→</span>
+      <a href="sd-audience-targeter.html" class="step">SD受众</a><span class="arrow">→</span>
+      <a href="ad-25-metrics.html" class="step">25项指标</a><span class="arrow">→</span>
+      <span class="step current">分时段自动化</span><span class="arrow">→</span>
+      <a href="campaign-performance-alert.html" class="step">效果预警</a><span class="arrow">→</span>
+      <a href="bulk-operation-center.html" class="step">批量操作</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🤖 广告自动化工具 · 深度版</span>
+      <h1>分时段<em>自动化器</em></h1>
+      <p class="tool-hero-desc">24小时转化热力图可视化，高峰时段自动加码出价，低谷时段缩减预算，数据驱动的时段出价策略推荐。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 基础参数</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>基础CPC出价（$）</label><input type="number" id="baseBid" value="0.80" step="0.05" oninput="DPA.calc()"></div>
+            <div class="calc-field"><label>日预算（$）</label><input type="number" id="dailyBudget" value="100" oninput="DPA.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>高峰出价增幅（%）</label><input type="number" id="peakBoost" value="50" oninput="DPA.calc()"></div>
+            <div class="calc-field"><label>低谷出价降幅（%）</label><input type="number" id="lowReduce" value="40" oninput="DPA.calc()"></div>
+          </div>
+          <div class="calc-field"><label>死时段处理</label><select id="deadAction" onchange="DPA.calc()"><option value="pause">暂停广告</option><option value="minbid">最低出价</option><option value="keep">保持出价</option></select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="heatmapSection">
+        <h3>🔥 24小时转化热力图</h3>
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+        <div class="heatmap-labels" id="heatmapLabels"></div>
+        <div class="heatmap-legend"><span>低转化</span><div class="heatmap-legend-bar"></div><span>高转化</span></div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 时段策略汇总</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block" id="strategySection">
+        <h3>📋 分时段出价策略</h3>
+        <table class="bid-strategy-table" id="strategyTable"></table>
+      </div>
+
+      <div class="section-block" id="suggestionSection">
+        <h3>💡 数据驱动建议</h3>
+        <div id="suggestions"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="ad-25-metrics.html" class="prev"><span class="fn-label">上一步 · 第10步</span><span class="fn-name">← 25项指标</span></a>
+        <a href="campaign-performance-alert.html" class="next"><span class="fn-label">下一步 · 第12步</span><span class="fn-name">效果预警 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="dayparting-automation.html">分时段自动化</a></li><li><a href="campaign-performance-alert.html">效果预警</a></li><li><a href="bulk-operation-center.html">批量操作</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var DPA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var hourlyData=[
+    15,10,8,5,3,5,12,25,40,55,60,50,45,48,52,58,65,70,85,90,75,55,35,20
+  ];
+  function calc(){
+    var baseBid=v('baseBid'),budget=v('dailyBudget');
+    var peakBoost=v('peakBoost')/100,lowReduce=v('lowReduce')/100;
+    var deadAction=$('deadAction').value;
+    var maxVal=Math.max.apply(null,hourlyData);
+    var minVal=Math.min.apply(null,hourlyData);
+    var range=maxVal-minVal;
+    var peakHours=[],normalHours=[],lowHours=[],deadHours=[];
+    var totalAdjustedCost=0;
+    var hourlyBids=[];
+    for(var h=0;h<24;h++){
+      var val=hourlyData[h];
+      var ratio=range>0?(val-minVal)/range:0.5;
+      var level,bid,cls;
+      if(ratio>=0.7){level='peak';cls='ts-peak';bid=baseBid*(1+peakBoost);peakHours.push(h);}
+      else if(ratio>=0.35){level='normal';cls='ts-normal';bid=baseBid;normalHours.push(h);}
+      else if(ratio>=0.15){level='low';cls='ts-low';bid=baseBid*(1-lowReduce);lowHours.push(h);}
+      else{level='dead';cls='ts-dead';bid=deadAction==='pause'?0:deadAction==='minbid'?baseBid*0.1:baseBid;deadHours.push(h);}
+      hourlyBids.push({hour:h,val:val,level:level,bid:bid,cls:cls});
+      totalAdjustedCost+=bid;
+    }
+    var avgCost=totalAdjustedCost/24;
+    var estSpend=avgCost*budget/baseBid;
+    var efficiencyGain=((budget-estSpend)/budget*100);
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">预计效率提升</div><div class="rh-value" style="color:#10b981">+'+efficiencyGain.toFixed(1)+'%</div></div>'+
+      '<div class="result-detail"><span>高峰时段</span><strong style="color:#dc2626">'+peakHours.length+'h</strong></div>'+
+      '<div class="result-detail"><span>正常时段</span><strong style="color:#2563eb">'+normalHours.length+'h</strong></div>'+
+      '<div class="result-detail"><span>低谷时段</span><strong style="color:#059669">'+lowHours.length+'h</strong></div>'+
+      '<div class="result-detail"><span>死时段</span><strong style="color:#9ca3af">'+deadHours.length+'h</strong></div>'+
+      '<div class="result-detail"><span>调整后日花费</span><strong>$'+estSpend.toFixed(2)+'</strong></div>';
+    var heatHtml='';
+    for(var i=0;i<24;i++){
+      var val=hourlyData[i];
+      var ratio=range>0?(val-minVal)/range:0.5;
+      var intensity=Math.round(ratio*255);
+      var bg='rgb('+(37+intensity*0.3)+','+(30+intensity*0.2)+','+(130+intensity*0.4)+')';
+      if(ratio<0.15)bg='rgb(243,244,246)';
+      else if(ratio<0.35)bg='rgb(209,250,229)';
+      else if(ratio<0.7)bg='rgb(219,234,254)';
+      else bg='rgb(254,226,226)';
+      var textColor=ratio<0.35?'#64748b':'#fff';
+      if(ratio>=0.15&&ratio<0.35)textColor='#059669';
+      else if(ratio>=0.35&&ratio<0.7)textColor='#2563eb';
+      else if(ratio>=0.7)textColor='#dc2626';
+      heatHtml+='<div class="heatmap-cell" style="background:'+bg+';color:'+textColor+'" title="'+i+':00 - 转化指数:'+val+'">'+val+'</div>';
+    }
+    $('heatmapGrid').innerHTML=heatHtml;
+    var labelHtml='';
+    for(var l=0;l<24;l++){labelHtml+='<div class="heatmap-label">'+l+'</div>';}
+    $('heatmapLabels').innerHTML=labelHtml;
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#dc2626">'+peakHours.length+'h</div><div class="rsb-lbl">高峰时段</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#2563eb">'+normalHours.length+'h</div><div class="rsb-lbl">正常时段</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#059669">'+lowHours.length+'h</div><div class="rsb-lbl">低谷时段</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#9ca3af">'+deadHours.length+'h</div><div class="rsb-lbl">死时段</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">+'+efficiencyGain.toFixed(0)+'%</div><div class="rsb-lbl">效率提升</div></div>';
+    var segments=[
+      {name:'凌晨死时段',hours:'0:00-5:00',level:'dead',cls:'ts-dead',bid:deadAction==='pause'?'暂停':deadAction==='minbid'?'$'+(baseBid*0.1).toFixed(2):'$'+baseBid.toFixed(2),action:deadAction==='pause'?'暂停广告节省预算':deadAction==='minbid'?'最低出价维持曝光':'保持出价等待转化'},
+      {name:'早高峰',hours:'7:00-10:00',level:'peak',cls:'ts-peak',bid:'$'+(baseBid*(1+peakBoost)).toFixed(2),action:'出价加码'+(peakBoost*100)+'%，抢占流量'},
+      {name:'午间正常',hours:'11:00-14:00',level:'normal',cls:'ts-normal',bid:'$'+baseBid.toFixed(2),action:'保持基础出价，稳定曝光'},
+      {name:'晚间高峰',hours:'17:00-21:00',level:'peak',cls:'ts-peak',bid:'$'+(baseBid*(1+peakBoost)).toFixed(2),action:'出价加码'+(peakBoost*100)+'%，冲刺转化'},
+      {name:'深夜低谷',hours:'22:00-23:00',level:'low',cls:'ts-low',bid:'$'+(baseBid*(1-lowReduce)).toFixed(2),action:'出价降低'+(lowReduce*100)+'%，控制成本'}
+    ];
+    $('strategyTable').innerHTML=
+      '<tr><th>时段</th><th>时间范围</th><th>等级</th><th>调整后出价</th><th>策略</th></tr>'+
+      segments.map(function(s){
+        return '<tr><td><strong>'+s.name+'</strong></td><td>'+s.hours+'</td><td><span class="time-segment '+s.cls+'">'+s.level.toUpperCase()+'</span></td><td><strong>'+s.bid+'</strong></td><td>'+s.action+'</td></tr>';
+      }).join('');
+    $('suggestions').innerHTML=
+      '<div class="suggestion-box peak"><strong>🔥 高峰时段优化建议：</strong><br>• '+peakHours.map(function(h){return h+':00';}).join('、 ')+' 为转化高峰，建议出价提升'+(peakBoost*100)+'%<br>• 高峰时段预算占比建议提升至60%以上<br>• 可设置高峰时段独立预算池，确保预算不被提前耗尽</div>'+
+      '<div class="suggestion-box normal"><strong>📊 正常时段策略：</strong><br>• '+normalHours.length+'小时为正常转化时段，保持基础出价<br>• 适当分配30%预算用于维持品牌曝光<br>• 关注正常时段的ACOS变化，及时微调</div>'+
+      '<div class="suggestion-box low"><strong>🌙 低谷/死时段处理：</strong><br>• '+lowHours.length+'小时低谷时段出价降低'+(lowReduce*100)+'%<br>• '+deadHours.length+'小时死时段'+(deadAction==='pause'?'暂停广告':'降低出价')+'<br>• 预计可节省预算$'+((budget-estSpend)).toFixed(2)+'/天，效率提升'+efficiencyGain.toFixed(1)+'%<br>• 建议将节省预算转移至高峰时段</div>';
+  }
+  return{calc:calc};
+})();
+DPA.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

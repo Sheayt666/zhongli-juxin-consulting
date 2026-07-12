@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="邮件可达性检查器：SPF/DKIM/DMARC配置+垃圾邮件评分，CSS可达性评分卡，配置检查清单。免费邮件营销工具。">
+<meta name="keywords" content="邮件可达性,SPF,DKIM,DMARC,垃圾邮件评分,邮件 deliverability,邮件配置">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/email-deliverability-checker.html">
+<title>邮件可达性检查器 - SPF/DKIM/DMARC·垃圾评分·配置清单 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.scorecard{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border-radius:16px;padding:28px;margin:16px 0;text-align:center}
+.scorecard .sc-grade{font-size:20px;font-weight:700;margin-bottom:8px}
+.scorecard .sc-score{font-size:64px;font-weight:800;line-height:1}
+.scorecard .sc-label{font-size:14px;opacity:.9;margin-top:4px}
+.scorecard .sc-bar{height:12px;background:rgba(255,255,255,.25);border-radius:6px;margin:16px auto 0;max-width:400px;overflow:hidden}
+.scorecard .sc-bar-fill{height:100%;background:#fff;border-radius:6px;transition:width .5s}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:10px;background:var(--bg-soft);margin-bottom:8px;cursor:pointer;transition:all .2s;font-size:14px}
+.check-item:hover{background:#eef2ff}
+.ci-status{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.ci-pass{background:#10b981;color:#fff}
+.ci-fail{background:#ef4444;color:#fff}
+.ci-warn{background:#f59e0b;color:#fff}
+.ci-content{flex:1}
+.ci-title{font-weight:600;color:var(--ink);margin-bottom:2px}
+.ci-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.ci-cmd{font-family:monospace;font-size:11px;background:#1e293b;color:#86efac;padding:4px 8px;border-radius:5px;margin-top:4px;display:inline-block}
+.spam-factor{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light)}
+.sf-name{flex:1;font-size:13px;color:var(--ink-soft)}
+.sf-penalty{font-size:13px;font-weight:700;color:#ef4444;min-width:60px;text-align:right}
+.sf-status{font-size:11px;padding:3px 10px;border-radius:6px;font-weight:600}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"邮件可达性检查器","description":"SPF/DKIM/DMARC配置+垃圾邮件评分，CSS可达性评分卡与配置检查清单。","url":"https://juxin-consulting.help/tools/email-deliverability-checker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="email_deliverability_checker">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📧</span><span class="workflow-name">邮件营销工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="email-sequence-designer.html" class="step">序列设计</a><span class="arrow">›</span>
+      <a href="email-abandoned-cart.html" class="step">弃购挽回</a><span class="arrow">›</span>
+      <a href="email-open-rate-analyzer.html" class="step">打开率</a><span class="arrow">›</span>
+      <a href="email-roi-calculator.html" class="step">ROI</a><span class="arrow">›</span>
+      <a href="email-welcome-series.html" class="step">欢迎系列</a><span class="arrow">›</span>
+      <a href="email-subject-tester.html" class="step">标题测试</a><span class="arrow">›</span>
+      <a href="email-segmentation.html" class="step">分群</a><span class="arrow">›</span>
+      <a href="email-frequency-optimizer.html" class="step">频次</a><span class="arrow">›</span>
+      <a href="email-template-builder.html" class="step">模板</a><span class="arrow">›</span>
+      <a href="email-compliance-check.html" class="step">合规</a><span class="arrow">›</span>
+      <a href="email-automation-flow-builder.html" class="step">自动化流程</a><span class="arrow">›</span>
+      <a href="email-win-back-campaign.html" class="step">流失挽回</a><span class="arrow">›</span>
+      <span class="step current">可达性</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📧 邮件营销工具</span>
+      <h1>邮件可达性<em>检查器</em></h1>
+      <p class="tool-hero-desc">检查SPF/DKIM/DMARC三大认证配置，评估邮件内容垃圾评分，CSS可达性评分卡量化进箱能力，交互式配置清单指导修复，提升收件箱到达率。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 邮件配置自检</h2>
+          <p class="calc-form-subtitle">勾选已配置项，填写发送特征，实时评估可达性</p>
+          <div class="fee-rule-box" style="margin-bottom:14px"><h4>🔐 认证配置</h4></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:14px"><input type="checkbox" id="hasSPF" checked onchange="DEL.calc()"> SPF记录已配置(发件人策略框架)</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:14px"><input type="checkbox" id="hasDKIM" checked onchange="DEL.calc()"> DKIM签名已启用(域名密钥识别)</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:14px"><input type="checkbox" id="hasDMARC" onchange="DEL.calc()"> DMARC策略已部署(p=quarantine/reject)</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:14px"><input type="checkbox" id="hasRDNS" checked onchange="DEL.calc()"> 反向DNS(rDNS)已配置</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:14px"><input type="checkbox" id="hasPostmaster" onchange="DEL.calc()"> Postmaster工具已接入(Google/Microsoft)</label>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>📨 发送特征</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>发送域名</label><input type="text" id="domain" value="mybrand.com" oninput="DEL.calc()"></div>
+            <div class="calc-field"><label>ESP服务商</label><select id="esp" onchange="DEL.calc()"><option value="klaviyo">Klaviyo</option><option value="mailchimp">Mailchimp</option><option value="sendgrid">SendGrid</option><option value="amazon">Amazon SES</option></select></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>月发送量</label><input type="number" id="monthlyVol" value="50000" min="0" oninput="DEL.calc()"></div>
+            <div class="calc-field"><label>退信率 <span class="hint">(%)</span></label><input type="number" id="bounceRate" value="1.2" min="0" max="20" step="0.1" oninput="DEL.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>投诉率 <span class="hint">(%)</span></label><input type="number" id="complaintRate" value="0.08" min="0" max="5" step="0.01" oninput="DEL.calc()"></div>
+            <div class="calc-field"><label>取消订阅率 <span class="hint">(%)</span></label><input type="number" id="unsubRate" value="0.3" min="0" max="10" step="0.1" oninput="DEL.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>📝 内容特征(垃圾评分因素)</h4></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:13px"><input type="checkbox" id="spamExclaim" onchange="DEL.calc()"> 主题含多个感叹号/全大写</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:13px"><input type="checkbox" id="spamMoney" onchange="DEL.calc()"> 含"免费/中奖/100%"等敏感词</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:13px"><input type="checkbox" id="spamImgHeavy" onchange="DEL.calc()"> 图片占比过高(文本少)</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:13px"><input type="checkbox" id="spamAttach" onchange="DEL.calc()"> 含附件</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-soft);border-radius:8px;cursor:pointer;font-size:13px"><input type="checkbox" id="spamShortUrl" onchange="DEL.calc()"> 大量短链/可疑链接</label>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="scorecardSection">
+        <h3>🏅 可达性评分卡</h3>
+        <div id="scorecard"></div>
+      </div>
+      <div class="section-block" id="configSection">
+        <h3>🔧 配置检查清单</h3>
+        <div id="configList"></div>
+      </div>
+      <div class="section-block" id="spamSection">
+        <h3>⚠️ 垃圾评分因子</h3>
+        <div id="spamFactors"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="email-win-back-campaign.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 流失挽回</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="email-deliverability-checker.html">邮件可达性检查器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var DEL=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function chk(id){return $(id).checked;}
+  function num(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var spf=chk('hasSPF'),dkim=chk('hasDKIM'),dmarc=chk('hasDMARC'),rdns=chk('hasRDNS'),postmaster=chk('hasPostmaster');
+    var domain=$('domain').value||'mybrand.com',esp=$('esp').value;
+    var bounce=num('bounceRate'),complaint=num('complaintRate'),unsub=num('unsubRate');
+    var spamScore=0;
+    if(chk('spamExclaim'))spamScore+=2;
+    if(chk('spamMoney'))spamScore+=3;
+    if(chk('spamImgHeavy'))spamScore+=2;
+    if(chk('spamAttach'))spamScore+=2;
+    if(chk('spamShortUrl'))spamScore+=1.5;
+    var authScore=spf*15+dkim*20+dmarc*20+rdns*10+postmaster*10;
+    var repScore=100-bounce*8-complaint*30-unsub*5;
+    if(repScore<0)repScore=0;
+    var contentScore=Math.max(0,100-spamScore*10);
+    var total=Math.round(authScore*0.4+repScore*0.4+contentScore*0.2);
+    renderScorecard(total,authScore,repScore,contentScore);
+    renderConfig(spf,dkim,dmarc,rdns,postmaster,domain,esp);
+    renderSpam(spamScore);
+  }
+  function renderScorecard(total,auth,rep,content){
+    var grade=total>=90?'A+ 优秀':total>=75?'B 良好':total>=60?'C 一般':'D 风险';
+    var col=total>=75?'#10b981':total>=60?'#f59e0b':'#ef4444';
+    $('scorecard').innerHTML='<div class="scorecard" style="background:linear-gradient(135deg,'+col+','+col+'cc)"><div class="sc-grade">'+grade+'</div><div class="sc-score">'+total+'</div><div class="sc-label">可达性评分 / 100</div><div class="sc-bar"><div class="sc-bar-fill" style="width:'+total+'%"></div></div></div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px">'+
+      '<div style="text-align:center;padding:14px;background:var(--bg-soft);border-radius:10px"><div style="font-size:24px;font-weight:800;color:#4f46e5">'+Math.round(auth)+'</div><div style="font-size:12px;color:var(--muted)">认证得分(40%)</div></div>'+
+      '<div style="text-align:center;padding:14px;background:var(--bg-soft);border-radius:10px"><div style="font-size:24px;font-weight:800;color:#10b981">'+Math.round(rep)+'</div><div style="font-size:12px;color:var(--muted)">声誉得分(40%)</div></div>'+
+      '<div style="text-align:center;padding:14px;background:var(--bg-soft);border-radius:10px"><div style="font-size:24px;font-weight:800;color:#f59e0b">'+Math.round(content)+'</div><div style="font-size:12px;color:var(--muted)">内容得分(20%)</div></div>'+
+      '</div>';
+    $('resultCard').innerHTML='<h3>📊 可达性速览</h3><div style="text-align:center;margin:12px 0"><div style="font-size:48px;font-weight:800;color:'+col+'">'+total+'</div><div style="font-size:14px;color:var(--muted)">'+grade+'</div></div><div class="result-note">💡 评分≥90进箱率>95%，75-89进箱率85-95%，60-74易进垃圾箱，<60高进箱风险。三大维度：认证配置(40%)、发送声誉(40%)、内容(20%)。</div>';
+  }
+  function renderConfig(spf,dkim,dmarc,rdns,postmaster,domain,esp){
+    var items=[
+      {ok:spf,title:'SPF记录',desc:'防止发件人伪造，邮件服务商验证发件IP授权',cmd:'TXT @ v=spf1 include:_spf.'+({klaviyo:'klaviyo.com',mailchimp:'mailchimpapp.net',sendgrid:'sendgrid.net',amazon:'amazonses.com'}[esp])+' ~all'},
+      {ok:dkim,title:'DKIM签名',desc:'邮件数字签名，验证内容未被篡改',cmd:esp==='klaviyo'?'CNAME k1._domainkey klaviyo._domainkey.'+domain:'TXT default._domainkey v=DKIM1; k=rsa; p=MIGfMA0...'},
+      {ok:dmarc,title:'DMARC策略',desc:'基于SPF/DKIM的邮件认证报告策略，p=reject最严',cmd:'TXT _dmarc v=DMARC1; p=quarantine; rua=mailto:admin@'+domain},
+      {ok:rdns,title:'反向DNS(rDNS)',desc:'发送IP反向解析到发送域名，部分ISP强制要求',cmd:'PTR <发送IP> → '+domain},
+      {ok:postmaster,title:'Postmaster工具',desc:'Google Postmaster Tools/Microsoft SNDS监控发送声誉',cmd:'注册 Google Postmaster Tools 并验证域名'}
+    ];
+    $('configList').innerHTML=items.map(function(it){
+      var cls=it.ok?'ci-pass':'it.fail'?'ci-fail':'ci-warn';
+      var status=it.ok?'✓':'✗';
+      var action=it.ok?'<span style="color:#10b981;font-size:12px;font-weight:600">已配置</span>':'<span style="color:#ef4444;font-size:12px;font-weight:600">待配置</span>';
+      return '<div class="check-item"><div class="ci-status '+(it.ok?'ci-pass':'ci-fail')+'">'+status+'</div><div class="ci-content"><div class="ci-title">'+it.title+' '+action+'</div><div class="ci-desc">'+it.desc+'</div>'+(it.ok?'':'<div class="ci-cmd">'+it.cmd+'</div>')+'</div></div>';
+    }).join('');
+  }
+  function renderSpam(score){
+    var factors=[
+      {name:'主题感叹号/全大写',penalty:2,on:chk('spamExclaim')},
+      {name:'敏感词(免费/中奖/100%)',penalty:3,on:chk('spamMoney')},
+      {name:'图片占比过高文本少',penalty:2,on:chk('spamImgHeavy')},
+      {name:'含附件',penalty:2,on:chk('spamAttach')},
+      {name:'短链/可疑链接',penalty:1.5,on:chk('spamShortUrl')}
+    ];
+    var level=score>=6?'高风险':score>=3?'中风险':score>0?'低风险':'安全';
+    var col=score>=6?'#ef4444':score>=3?'#f59e0b':score>0?'#f59e0b':'#10b981';
+    $('spamFactors').innerHTML='<div style="text-align:center;margin-bottom:16px"><span style="font-size:14px;color:var(--muted)">垃圾评分</span> <span style="font-size:32px;font-weight:800;color:'+col+'">'+score+'</span>/10 <span style="display:inline-block;padding:4px 14px;border-radius:20px;background:'+col+';color:#fff;font-weight:600;font-size:13px;margin-left:8px">'+level+'</span></div>'+
+      factors.map(function(f){
+        return '<div class="spam-factor"><div class="sf-name">'+f.name+'</div><div class="sf-penalty">-'+f.penalty+'</div><span class="sf-status" style="background:'+(f.on?'#fef2f2':'#ecfdf5')+';color:'+(f.on?'#ef4444':'#10b981')+'">'+(f.on?'命中':'未命中')+'</span></div>';
+      }).join('')+'<div style="margin-top:12px;padding:12px;background:var(--bg-soft);border-radius:10px;font-size:13px;color:var(--ink-soft)">💡 评分≥6极易进垃圾箱。建议：文本/图片比≥60%，避免敏感词与全大写，链接使用完整域名，重要邮件A/B测试后发送。</div>';
+  }
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',DEL.init);}else{DEL.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

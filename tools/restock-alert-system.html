@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="补货预警系统：多级阈值+自动通知+审批流程+紧急补货触发，CSS预警看板与阈值配置。免费补货全链路工具。">
+<meta name="keywords" content="补货预警,库存阈值,自动通知,紧急补货,审批流程,补货系统">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/restock-alert-system.html">
+<title>补货预警系统 - 多级阈值·自动通知·紧急触发 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.alert-dashboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
+.alert-card{border-radius:14px;padding:18px;border:2px solid;transition:all .2s}
+.alert-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.alert-card.critical{border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fff5f5)}
+.alert-card.warning{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fffdf7)}
+.alert-card.safe{border-color:#10b981;background:linear-gradient(135deg,#f0fdf4,#f7fef9)}
+.alert-card .ac-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.alert-card .ac-sku{font-size:14px;font-weight:700}
+.alert-card .ac-level{padding:2px 10px;border-radius:6px;font-size:11px;font-weight:700}
+.ac-level.critical{background:#fee2e2;color:#dc2626}
+.ac-level.warning{background:#fef3c7;color:#d97706}
+.ac-level.safe{background:#d1fae5;color:#059669}
+.alert-card .ac-bar{height:8px;border-radius:4px;background:var(--rule-light);margin:8px 0;overflow:hidden;position:relative}
+.alert-card .ac-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.alert-card .ac-info{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.alert-card .ac-info strong{color:var(--ink)}
+.threshold-config{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.threshold-card{padding:16px;border-radius:12px;text-align:center;border:2px solid}
+.threshold-card.critical{border-color:#ef4444;background:#fef2f2}
+.threshold-card.warning{border-color:#f59e0b;background:#fffbeb}
+.threshold-card.safe{border-color:#10b981;background:#f0fdf4}
+.threshold-card .tc-level{font-size:13px;font-weight:700;margin-bottom:8px}
+.threshold-card .tc-value{font-size:24px;font-weight:800}
+.threshold-card .tc-unit{font-size:12px;color:var(--muted)}
+.threshold-card .tc-action{font-size:11px;color:var(--ink-soft);margin-top:4px}
+.approval-flow{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.flow-step{padding:10px 16px;border-radius:10px;font-size:12px;font-weight:600;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.flow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.flow-arrow{color:#c7d2fe;font-size:16px}
+@media(max-width:768px){.threshold-config{grid-template-columns:1fr}.alert-dashboard{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"补货预警系统","description":"多级阈值+自动通知+审批流程+紧急补货触发。","url":"https://juxin-consulting.help/tools/restock-alert-system.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="restock_alert_system">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📦</span><span class="workflow-name">补货全链路工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="restock-simulator.html" class="step">补货模拟</a><span class="arrow">→</span>
+      <a href="multi-channel-restock.html" class="step">多渠道补货</a><span class="arrow">→</span>
+      <a href="overseas-warehouse-compare.html" class="step">海外仓对比</a><span class="arrow">→</span>
+      <a href="fnsku-generator.html" class="step">FNSKU生成</a><span class="arrow">→</span>
+      <a href="sta-packing-calc.html" class="step">STA装箱</a><span class="arrow">→</span>
+      <a href="first-mile-cost-allocator.html" class="step">头程分摊</a><span class="arrow">→</span>
+      <a href="awd-restock-calc.html" class="step">AWD补货</a><span class="arrow">→</span>
+      <a href="inventory-audit.html" class="step">库存盘点</a><span class="arrow">→</span>
+      <a href="stockout-cost-calc.html" class="step">断货成本</a><span class="arrow">→</span>
+      <a href="overstock-alert.html" class="step">滞销预警</a><span class="arrow">→</span>
+      <a href="lead-time-forecaster.html" class="step">交期预测</a><span class="arrow">→</span>
+      <a href="seasonal-restock-planner.html" class="step">旺季补货</a><span class="arrow">→</span>
+      <span class="step current">补货预警</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📦 补货全链路工具 · 标准版</span>
+      <h1>补货<em>预警系统</em></h1>
+      <p class="tool-hero-desc">多级库存阈值配置（安全/警告/紧急），自动触发补货通知与审批流程，紧急补货一键触发，CSS预警看板实时监控。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 阈值配置</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>日均销量</label><input type="number" id="dailySales" value="80" oninput="RAS.calc()"></div>
+            <div class="calc-field"><label>交货周期（天）</label><input type="number" id="leadTime" value="35" oninput="RAS.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>安全库存倍率</label><input type="number" id="safeMult" value="1.5" step="0.1" oninput="RAS.calc()"></div>
+            <div class="calc-field"><label>警告库存倍率</label><input type="number" id="warnMult" value="1.0" step="0.1" oninput="RAS.calc()"></div>
+          </div>
+          <div class="calc-field"><label>紧急库存倍率</label><input type="number" id="critMult" value="0.5" step="0.1" oninput="RAS.calc()"></div>
+
+          <div class="fee-rule-box" style="margin-top:20px"><h4>📦 库存SKU监控</h4></div>
+          <div class="calc-field"><label>SKU数量</label><input type="number" id="skuCount" value="6" oninput="RAS.calc()"></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:4px">下方看板将模拟生成对应数量的SKU库存状态</p>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="thresholdSection">
+        <h3>🎚️ 阈值配置</h3>
+        <div class="threshold-config" id="thresholdConfig"></div>
+      </div>
+
+      <div class="section-block" id="dashboardSection">
+        <h3>📊 预警看板</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+        <div class="alert-dashboard" id="alertDashboard"></div>
+      </div>
+
+      <div class="section-block" id="flowSection">
+        <h3>🔄 补货审批流程</h3>
+        <div class="approval-flow" id="approvalFlow"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="seasonal-restock-planner.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 旺季补货</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="restock-alert-system.html">补货预警</a></li><li><a href="seasonal-restock-planner.html">旺季补货</a></li><li><a href="lead-time-forecaster.html">交期预测</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var RAS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var daily=v('dailySales'),lead=v('leadTime');
+    var safeM=v('safeMult'),warnM=v('warnMult'),critM=v('critMult');
+    var reorderPoint=daily*lead;
+    var safeLevel=Math.round(reorderPoint*safeM);
+    var warnLevel=Math.round(reorderPoint*warnM);
+    var critLevel=Math.round(reorderPoint*critM);
+    var skuCount=Math.min(Math.max(Math.round(v('skuCount')),1),20);
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">补货点</div><div class="rh-value">'+Math.round(reorderPoint)+'</div></div>'+
+      '<div class="result-detail"><span>安全库存</span><strong style="color:#10b981">'+safeLevel+' 件</strong></div>'+
+      '<div class="result-detail"><span>警告库存</span><strong style="color:#f59e0b">'+warnLevel+' 件</strong></div>'+
+      '<div class="result-detail"><span>紧急库存</span><strong style="color:#ef4444">'+critLevel+' 件</strong></div>'+
+      '<div class="result-detail"><span>监控SKU数</span><strong>'+skuCount+'</strong></div>';
+    $('thresholdConfig').innerHTML=
+      '<div class="threshold-card safe"><div class="tc-level" style="color:#059669">✅ 安全</div><div class="tc-value" style="color:#10b981">'+safeLevel+'</div><div class="tc-unit">件以上</div><div class="tc-action">正常销售，无需补货</div></div>'+
+      '<div class="threshold-card warning"><div class="tc-level" style="color:#d97706">⚠️ 警告</div><div class="tc-value" style="color:#f59e0b">'+warnLevel+'</div><div class="tc-unit">-'+safeLevel+' 件</div><div class="tc-action">建议下单补货</div></div>'+
+      '<div class="threshold-card critical"><div class="tc-level" style="color:#dc2626">🚨 紧急</div><div class="tc-value" style="color:#ef4444">'+critLevel+'</div><div class="tc-unit">件以下</div><div class="tc-action">立即紧急补货</div></div>';
+    var skus=[];
+    var stockLevels=[0.3,0.6,0.85,1.2,1.8,0.45,0.95,1.5,0.7,0.2];
+    for(var i=0;i<skuCount;i++){
+      var stock=Math.round(reorderPoint*(stockLevels[i%stockLevels.length]+(Math.random()*0.2-0.1)));
+      var level,cls,action;
+      if(stock<=critLevel){level='紧急';cls='critical';action='立即紧急补货';}
+      else if(stock<=warnLevel){level='警告';cls='warning';action='建议下单补货';}
+      else{level='安全';cls='safe';action='库存充足';}
+      skus.push({sku:'SKU-'+String(1001+i),name:'产品'+(i+1),stock:Math.max(0,stock),level:level,cls:cls,action:action});
+    }
+    var critCount=skus.filter(function(s){return s.cls==='critical';}).length;
+    var warnCount=skus.filter(function(s){return s.cls==='warning';}).length;
+    var safeCount=skus.filter(function(s){return s.cls==='safe';}).length;
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+critCount+'</div><div class="rsb-lbl">紧急</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+warnCount+'</div><div class="rsb-lbl">警告</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+safeCount+'</div><div class="rsb-lbl">安全</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val">'+skuCount+'</div><div class="rsb-lbl">总SKU</div></div>';
+    $('alertDashboard').innerHTML=skus.map(function(s){
+      var pct=Math.min(100,s.stock/safeLevel*100);
+      var barColor=s.cls==='critical'?'#ef4444':s.cls==='warning'?'#f59e0b':'#10b981';
+      return '<div class="alert-card '+s.cls+'"><div class="ac-header"><div><div class="ac-sku">'+s.sku+'</div><div style="font-size:12px;color:var(--muted)">'+s.name+'</div></div><span class="ac-level '+s.cls+'">'+s.level+'</span></div><div class="ac-bar"><div class="ac-bar-fill" style="width:'+pct+'%;background:'+barColor+'"></div></div><div class="ac-info">当前库存：<strong>'+s.stock+'</strong> 件<br>补货点：<strong>'+Math.round(reorderPoint)+'</strong> 件<br>建议：<strong>'+s.action+'</strong></div></div>';
+    }).join('');
+    var steps=critCount>0?[
+      {name:'库存触发紧急阈值',active:true},
+      {name:'系统自动通知',active:true},
+      {name:'采购审核',active:true},
+      {name:'经理审批',active:true},
+      {name:'紧急下单',active:false},
+      {name:'加急物流',active:false}
+    ]:warnCount>0?[
+      {name:'库存触发警告阈值',active:true},
+      {name:'系统自动通知',active:true},
+      {name:'采购审核',active:false},
+      {name:'下单补货',active:false}
+    ]:[
+      {name:'库存正常',active:true},
+      {name:'无需操作',active:false}
+    ];
+    $('approvalFlow').innerHTML=steps.map(function(s,i){
+      return (i>0?'<span class="flow-arrow">→</span>':'')+'<div class="flow-step'+(s.active?' active':'')+'">'+s.name+'</div>';
+    }).join('');
+  }
+  return{calc:calc};
+})();
+RAS.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="客户分群引擎：6类客户分群（新客/老客/高频/高价值/沉睡/流失），RFM自动分群，每群精准营销策略，CSS分群矩阵。">
+<title>客户分群引擎 - RFM分群·精准营销策略·分群矩阵 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--primary)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.seg-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;border-top:4px solid}.seg-card.s1{border-top-color:#10b981}.seg-card.s2{border-top-color:#4f46e5}.seg-card.s3{border-top-color:#06b6d4}.seg-card.s4{border-top-color:#f59e0b}.seg-card.s5{border-top-color:#94a3b8}.seg-card.s6{border-top-color:#ef4444}.seg-icon{font-size:28px;margin-bottom:8px}.seg-name{font-size:16px;font-weight:700;margin-bottom:4px}.seg-desc{font-size:12px;color:var(--muted);margin-bottom:12px}.seg-count{font-size:28px;font-weight:800;margin-bottom:8px}.seg-pct{font-size:12px;color:var(--muted)}.seg-strategy{margin-top:12px;padding-top:12px;border-top:1px solid var(--rule-light)}.seg-strategy h5{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:4px}.seg-strategy p{font-size:12px;color:var(--ink-soft)}
+.matrix-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:2px solid var(--rule);border-radius:var(--radius);overflow:hidden}.matrix-cell{padding:20px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-height:120px;position:relative}.matrix-cell:nth-child(3n){border-right:none}.matrix-cell:nth-child(n+7){border-bottom:none}.mc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}.mc-content{font-size:13px}.mc-count{font-size:20px;font-weight:800}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.seg-grid{grid-template-columns:1fr}.matrix-wrap{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W7 品牌增长工作流</div><div class="workflow-steps">
+<a href="brand-registry-check.html" class="workflow-step">品牌注册</a><a href="brand-health-score.html" class="workflow-step">品牌健康</a><a href="external-traffic-calculator.html" class="workflow-step">外部流量</a><a href="product-matrix.html" class="workflow-step">产品矩阵</a><a href="social-content.html" class="workflow-step">社交内容</a><a href="brand-store-builder.html" class="workflow-step">旗舰店建设</a><a href="brand-analytics-reporter.html" class="workflow-step">品牌分析</a><a href="customer-segmentation-engine.html" class="workflow-step active">客户分群</a><a href="brand-search-volume-tracker.html" class="workflow-step">搜索量追踪</a><a href="storefront-traffic-analyzer.html" class="workflow-step">旗舰店流量</a><a href="brand-loyalty-scorer.html" class="workflow-step">忠诚度评分</a><a href="cross-sell-analyzer.html" class="workflow-step">交叉销售</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W7 品牌增长</a><span>/</span>客户分群引擎</div>
+<div class="tool-header"><span class="tool-badge">W7 品牌增长工作流 · 深度版</span><h1>客户<em>分群引擎</em></h1><p>6类客户分群（新客/老客/高频/高价值/沉睡/流失），RFM自动分群算法，每群精准营销策略推荐，CSS分群矩阵可视化。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val" id="sTotal">0</div><div class="stat-lbl">总客户数</div></div>
+<div class="stat-card"><div class="stat-val" id="sNew">0</div><div class="stat-lbl">新客占比</div></div>
+<div class="stat-card"><div class="stat-val" id="sValue">0</div><div class="stat-lbl">高价值客户</div></div>
+<div class="stat-card"><div class="stat-val" id="sChurn">0</div><div class="stat-lbl">流失风险</div></div>
+</div>
+
+<div class="card"><h2>客户数据输入</h2><div class="form-grid">
+<div class="form-field"><label>总客户数</label><input type="number" id="totalCustomers" value="5000" oninput="Seg.calc()"></div>
+<div class="form-field"><label>新客户数 (90天内)</label><input type="number" id="newCustomers" value="1800" oninput="Seg.calc()"></div>
+<div class="form-field"><label>高频购买客户 (3次+)</label><input type="number" id="frequentCustomers" value="850" oninput="Seg.calc()"></div>
+<div class="form-field"><label>高价值客户 ($200+)</label><input type="number" id="highValueCustomers" value="620" oninput="Seg.calc()"></div>
+<div class="form-field"><label>沉睡客户 (90-180天)</label><input type="number" id="dormantCustomers" value="750" oninput="Seg.calc()"></div>
+<div class="form-field"><label>流失客户 (180天+)</label><input type="number" id="churnedCustomers" value="480" oninput="Seg.calc()"></div>
+</div></div>
+
+<div class="card"><h2>6类客户分群结果</h2><div class="seg-grid" id="segGrid"></div></div>
+<div class="card"><h2>RFM分群矩阵</h2><div class="matrix-wrap" id="matrixWrap"></div></div>
+
+<div class="related-grid">
+<a href="brand-analytics-reporter.html" class="related-card"><span class="rc-icon">📈</span><div><h4>品牌分析报告</h4><p>品牌数据洞察</p></div></a>
+<a href="brand-loyalty-scorer.html" class="related-card"><span class="rc-icon">❤</span><div><h4>忠诚度评分</h4><p>品牌忠诚度评估</p></div></a>
+<a href="cross-sell-analyzer.html" class="related-card"><span class="rc-icon">🔄</span><div><h4>交叉销售分析</h4><p>关联购买分析</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Seg={
+  calc(){
+    const total=parseFloat(document.getElementById('totalCustomers').value)||0;
+    const newC=parseFloat(document.getElementById('newCustomers').value)||0;
+    const freq=parseFloat(document.getElementById('frequentCustomers').value)||0;
+    const highVal=parseFloat(document.getElementById('highValueCustomers').value)||0;
+    const dormant=parseFloat(document.getElementById('dormantCustomers').value)||0;
+    const churned=parseFloat(document.getElementById('churnedCustomers').value)||0;
+    const loyal=total-newC-dormant-churned;
+    const segments=[
+      {id:'s1',icon:'✨',name:'新客 (New)',desc:'90天内首次购买',count:newC,strategy:'欢迎邮件+首单优惠+产品教育内容，引导二次购买'},
+      {id:'s2',icon:'💎',name:'高价值 (High Value)',desc:'累计消费$200+',count:highVal,strategy:'VIP专属服务+新品优先体验+专属折扣，维持高满意度'},
+      {id:'s3',icon:'🔁',name:'高频 (Frequent)',desc:'购买3次以上',count:freq,strategy:'订阅计划+捆绑套餐推荐+积分奖励，提升留存'},
+      {id:'s4',icon:'⭐',name:'老客 (Loyal)',desc:'稳定回购客户',count:loyal>0?loyal:0,strategy:'会员体系+个性化推荐+社交分享奖励，增强粘性'},
+      {id:'s5',icon:'😴',name:'沉睡 (Dormant)',desc:'90-180天未购',count:dormant,strategy:'唤醒邮件+限时优惠+新品通知+问卷调查'},
+      {id:'s6',icon:'🚪',name:'流失 (Churned)',desc:'180天+未购',count:churned,strategy:'大额挽回优惠+客户回访+流失原因调研'},
+    ];
+    document.getElementById('sTotal').textContent=total.toLocaleString();
+    document.getElementById('sNew').textContent=total>0?(newC/total*100).toFixed(0)+'%':'0%';
+    document.getElementById('sValue').textContent=highVal.toLocaleString();
+    document.getElementById('sChurn').textContent=(dormant+churned).toLocaleString();
+    document.getElementById('segGrid').innerHTML=segments.map(s=>{
+      const pct=total>0?(s.count/total*100).toFixed(1):0;
+      return `<div class="seg-card ${s.id}"><div class="seg-icon">${s.icon}</div><div class="seg-name">${s.name}</div><div class="seg-desc">${s.desc}</div><div class="seg-count">${s.count.toLocaleString()}</div><div class="seg-pct">占总客户 ${pct}%</div><div class="seg-strategy"><h5>精准营销策略</h5><p>${s.strategy}</p></div></div>`;
+    }).join('');
+    this.renderMatrix(newC,freq,highVal,loyal,dormant,churned,total);
+  },
+  renderMatrix(newC,freq,highVal,loyal,dormant,churned,total){
+    const cells=[
+      {label:'高频 × 高价值',count:Math.round(highVal*0.4),color:'#10b981',bg:'rgba(16,185,129,.08)'},
+      {label:'高频 × 中价值',count:Math.round(freq*0.3),color:'#4f46e5',bg:'rgba(79,70,229,.08)'},
+      {label:'高频 × 低价值',count:Math.round(freq*0.15),color:'#06b6d4',bg:'rgba(6,182,212,.08)'},
+      {label:'中频 × 高价值',count:Math.round(highVal*0.35),color:'#4f46e5',bg:'rgba(79,70,229,.08)'},
+      {label:'中频 × 中价值',count:Math.round(loyal*0.4),color:'#8b5cf6',bg:'rgba(139,92,246,.08)'},
+      {label:'中频 × 低价值',count:Math.round(newC*0.3),color:'#94a3b8',bg:'rgba(148,163,184,.08)'},
+      {label:'低频 × 高价值',count:Math.round(highVal*0.25),color:'#f59e0b',bg:'rgba(245,158,11,.08)'},
+      {label:'低频 × 中价值',count:Math.round(dormant*0.5),color:'#94a3b8',bg:'rgba(148,163,184,.08)'},
+      {label:'低频 × 低价值',count:Math.round(churned*0.7),color:'#ef4444',bg:'rgba(239,68,68,.08)'},
+    ];
+    document.getElementById('matrixWrap').innerHTML=cells.map(c=>`<div class="matrix-cell" style="background:${c.bg}"><div class="mc-label">${c.label}</div><div class="mc-content"><div class="mc-count" style="color:${c.color}">${c.count.toLocaleString()}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${total>0?(c.count/total*100).toFixed(1):0}% of total</div></div></div>`).join('');
+  }
+};
+Seg.calc();
+</script>
+</body>
+</html>

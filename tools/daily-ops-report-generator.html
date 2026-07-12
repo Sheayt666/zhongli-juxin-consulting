@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="每日运营报告生成器：格式化日报，核心指标+异常预警+环比对比，可复制文本。">
+<title>每日运营报告生成器 - 核心指标·异常预警·环比对比 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.form-field{display:flex;flex-direction:column;gap:4px}.form-field label{font-size:12px;font-weight:600;color:var(--ink-soft)}.form-field input{padding:8px 12px;border:1px solid var(--rule);border-radius:8px;font-size:13px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(79,70,229,.1)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.35)}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.report-output{background:#1e293b;color:#e2e8f0;border-radius:var(--radius);padding:24px;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-word;max-height:600px;overflow-y:auto}
+.report-output .r-header{color:#818cf8;font-weight:700}.report-output .r-section{color:#34d399;font-weight:700}.report-output .r-alert{color:#f87171}.report-output .r-good{color:#4ade80}.report-output .r-warn{color:#fbbf24}.report-output .r-divider{color:#64748b}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.kpi-card{background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center}.kpi-card .kpi-val{font-size:22px;font-weight:800}.kpi-card .kpi-lbl{font-size:11px;color:var(--muted);margin-top:2px}.kpi-card .kpi-diff{font-size:12px;font-weight:600;margin-top:4px}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:repeat(2,1fr)}.kpi-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W6 运营数据工作流</div><div class="workflow-steps">
+<a href="sales-estimator.html" class="workflow-step">销量估算</a><a href="bsr-tracker.html" class="workflow-step">BSR追踪</a><a href="conversion-funnel.html" class="workflow-step">转化漏斗</a><a href="review-analyzer.html" class="workflow-step">评论分析</a><a href="profit-calendar.html" class="workflow-step">利润日历</a><a href="real-time-sales-dashboard.html" class="workflow-step">实时仪表盘</a><a href="product-performance-integrator.html" class="workflow-step">表现整合</a><a href="session-page-analyzer.html" class="workflow-step">会话分析</a><a href="ad-attribution-analyzer.html" class="workflow-step">广告归因</a><a href="buy-box-win-rate-monitor.html" class="workflow-step">购物车监控</a><a href="traffic-source-breakdown.html" class="workflow-step">流量拆解</a><a href="daily-ops-report-generator.html" class="workflow-step active">日报生成</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W6 运营数据</a><span>/</span>每日运营报告生成器</div>
+<div class="tool-header"><span class="tool-badge">W6 运营数据工作流</span><h1>每日运营<em>报告生成器</em></h1><p>输入当日各项运营数据，自动生成格式化日报，包含核心指标、异常预警、环比对比，一键复制文本。</p></div>
+
+<div class="card"><h2>今日运营数据输入</h2><div class="form-grid">
+<div class="form-field"><label>今日销售额 ($)</label><input type="number" id="sales" value="3200" step="50" oninput="Report.gen()"></div>
+<div class="form-field"><label>昨日销售额 ($)</label><input type="number" id="salesY" value="2800" step="50" oninput="Report.gen()"></div>
+<div class="form-field"><label>今日订单数</label><input type="number" id="orders" value="110" oninput="Report.gen()"></div>
+<div class="form-field"><label>昨日订单数</label><input type="number" id="ordersY" value="95" oninput="Report.gen()"></div>
+<div class="form-field"><label>Sessions</label><input type="number" id="sessions" value="4200" oninput="Report.gen()"></div>
+<div class="form-field"><label>昨日Sessions</label><input type="number" id="sessionsY" value="3800" oninput="Report.gen()"></div>
+<div class="form-field"><label>广告花费 ($)</label><input type="number" id="adSpend" value="650" step="10" oninput="Report.gen()"></div>
+<div class="form-field"><label>昨日广告花费 ($)</label><input type="number" id="adSpendY" value="580" step="10" oninput="Report.gen()"></div>
+<div class="form-field"><label>广告销售额 ($)</label><input type="number" id="adSales" value="1450" step="50" oninput="Report.gen()"></div>
+<div class="form-field"><label>购物车赢得率 (%)</label><input type="number" id="buyBox" value="82" oninput="Report.gen()"></div>
+<div class="form-field"><label>退货订单数</label><input type="number" id="returns" value="5" oninput="Report.gen()"></div>
+<div class="form-field"><label>新增Review数</label><input type="number" id="reviews" value="3" oninput="Report.gen()"></div>
+</div>
+<div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-secondary" onclick="Report.loadSample()">载入示例</button></div>
+</div>
+
+<div class="card"><h2>核心指标概览</h2><div class="kpi-grid" id="kpiGrid"></div></div>
+<div class="card"><h2>生成报告 <button class="btn btn-primary" style="float:right;padding:6px 16px;font-size:12px" onclick="Report.copy()">复制报告</button></h2><div class="report-output" id="reportOutput"></div></div>
+
+<div class="related-grid">
+<a href="real-time-sales-dashboard.html" class="related-card"><span class="rc-icon">📊</span><div><h4>实时仪表盘</h4><p>实时销售监控</p></div></a>
+<a href="product-performance-integrator.html" class="related-card"><span class="rc-icon">📈</span><div><h4>产品表现整合</h4><p>多维度评分</p></div></a>
+<a href="profit-calendar.html" class="related-card"><span class="rc-icon">📅</span><div><h4>利润日历</h4><p>日历视图利润</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Report={
+  loadSample(){},
+  gen(){
+    const sales=parseFloat(document.getElementById('sales').value)||0;
+    const salesY=parseFloat(document.getElementById('salesY').value)||0;
+    const orders=parseFloat(document.getElementById('orders').value)||0;
+    const ordersY=parseFloat(document.getElementById('ordersY').value)||0;
+    const sessions=parseFloat(document.getElementById('sessions').value)||0;
+    const sessionsY=parseFloat(document.getElementById('sessionsY').value)||0;
+    const adSpend=parseFloat(document.getElementById('adSpend').value)||0;
+    const adSpendY=parseFloat(document.getElementById('adSpendY').value)||0;
+    const adSales=parseFloat(document.getElementById('adSales').value)||0;
+    const buyBox=parseFloat(document.getElementById('buyBox').value)||0;
+    const returns=parseFloat(document.getElementById('returns').value)||0;
+    const reviews=parseFloat(document.getElementById('reviews').value)||0;
+    const aov=orders>0?sales/orders:0;
+    const cvr=sessions>0?orders/sessions*100:0;
+    const cvrY=sessionsY>0?ordersY/sessionsY*100:0;
+    const acos=adSales>0?adSpend/adSales*100:0;
+    const roas=adSpend>0?adSales/adSpend:0;
+    const returnRate=orders>0?returns/orders*100:0;
+    const d=(c,y)=>y>0?((c-y)/y*100):0;
+    const salesDiff=d(sales,salesY);
+    const ordersDiff=d(orders,ordersY);
+    const cvrDiff=d(cvr,cvrY);
+    const spendDiff=d(adSpend,adSpendY);
+    const kpis=[
+      {val:'$'+sales.toFixed(0),lbl:'销售额',diff:salesDiff,invert:false},
+      {val:orders,lbl:'订单数',diff:ordersDiff,invert:false},
+      {val:cvr.toFixed(1)+'%',lbl:'转化率',diff:cvrDiff,invert:false},
+      {val:acos.toFixed(1)+'%',lbl:'ACOS',diff:spendDiff-salesDiff,invert:true},
+    ];
+    document.getElementById('kpiGrid').innerHTML=kpis.map(k=>{
+      const good=k.invert?k.diff<0:k.diff>=0;
+      return `<div class="kpi-card"><div class="kpi-val" style="color:${good?'var(--success)':'var(--danger)'}">${k.val}</div><div class="kpi-lbl">${k.lbl}</div><div class="kpi-diff" style="color:${good?'var(--success)':'var(--danger)'}">${k.diff>=0?'↑':'↓'} ${Math.abs(k.diff).toFixed(1)}%</div></div>`;
+    }).join('');
+    const alerts=[];
+    if(salesDiff<0)alerts.push(`⚠️ 销售额下降 ${Math.abs(salesDiff).toFixed(1)}%，需排查原因`);
+    if(acos>30)alerts.push(`🚨 ACOS过高 ${acos.toFixed(1)}%，超过30%阈值`);
+    if(buyBox<70)alerts.push(`⚠️ 购物车赢得率偏低 ${buyBox}%`);
+    if(returnRate>8)alerts.push(`⚠️ 退货率偏高 ${returnRate.toFixed(1)}%`);
+    if(cvrDiff<0&&cvrDiff<-10)alerts.push(`🚨 转化率大幅下降 ${Math.abs(cvrDiff).toFixed(1)}%`);
+    const goodNews=[];
+    if(salesDiff>15)goodNews.push(`销售额增长 ${salesDiff.toFixed(1)}%`);
+    if(ordersDiff>15)goodNews.push(`订单量增长 ${ordersDiff.toFixed(1)}%`);
+    if(buyBox>=85)goodNews.push(`购物车赢得率健康 ${buyBox}%`);
+    const date=new Date().toLocaleDateString('zh-CN');
+    let r='';
+    r+=`╔══════════════════════════════════════════╗\n`;
+    r+=`║     亚马逊每日运营报告 — ${date}        ║\n`;
+    r+=`╚══════════════════════════════════════════╝\n\n`;
+    r+=`━━━ 一、核心指标 ━━━\n`;
+    r+=`  销售额:    $${sales.toFixed(2)}  (昨日: $${salesY.toFixed(2)})  ${salesDiff>=0?'↑':'↓'} ${Math.abs(salesDiff).toFixed(1)}%\n`;
+    r+=`  订单数:    ${orders}  (昨日: ${ordersY})  ${ordersDiff>=0?'↑':'↓'} ${Math.abs(ordersDiff).toFixed(1)}%\n`;
+    r+=`  客单价:    $${aov.toFixed(2)}\n`;
+    r+=`  Sessions:  ${sessions.toLocaleString()}  (昨日: ${sessionsY.toLocaleString()})\n`;
+    r+=`  转化率:    ${cvr.toFixed(2)}%  (昨日: ${cvrY.toFixed(2)}%)  ${cvrDiff>=0?'↑':'↓'} ${Math.abs(cvrDiff).toFixed(1)}%\n`;
+    r+=`  ACOS:      ${acos.toFixed(1)}%  |  ROAS: ${roas.toFixed(2)}x\n`;
+    r+=`  广告花费:  $${adSpend.toFixed(2)}  →  广告销售: $${adSales.toFixed(2)}\n`;
+    r+=`  购物车:    ${buyBox}%\n`;
+    r+=`  退货:      ${returns}单 (${returnRate.toFixed(1)}%)  |  新增Review: ${reviews}条\n\n`;
+    r+=`━━━ 二、异常预警 ━━━\n`;
+    if(alerts.length===0)r+=`  ✅ 今日无异常，各项指标正常\n`;
+    else alerts.forEach(a=>r+=`  ${a}\n`);
+    r+=`\n`;
+    r+=`━━━ 三、积极信号 ━━━\n`;
+    if(goodNews.length===0)r+=`  — 暂无明显增长信号\n`;
+    else goodNews.forEach(g=>r+=`  ✅ ${g}\n`);
+    r+=`\n`;
+    r+=`━━━ 四、环比分析 ━━━\n`;
+    r+=`  销售环比:  ${salesDiff>=0?'+':''}${salesDiff.toFixed(1)}%  ${salesDiff>0?'增长':'下降'}\n`;
+    r+=`  订单环比:  ${ordersDiff>=0?'+':''}${ordersDiff.toFixed(1)}%  ${ordersDiff>0?'增长':'下降'}\n`;
+    r+=`  流量环比:  ${d(sessions,sessionsY)>=0?'+':''}${d(sessions,sessionsY).toFixed(1)}%  ${d(sessions,sessionsY)>0?'增长':'下降'}\n`;
+    r+=`  广告环比:  ${spendDiff>=0?'+':''}${spendDiff.toFixed(1)}%  ${spendDiff>0?'增加':'减少'}\n`;
+    r+=`\n`;
+    r+=`━━━ 五、建议行动 ━━━\n`;
+    if(salesDiff<0)r+=`  → 排查销售下降原因：检查购物车、库存、广告预算\n`;
+    if(acos>30)r+=`  → 优化广告结构：降低ACOS，否词降噪\n`;
+    if(buyBox<80)r+=`  → 检查购物车：竞品价格、FBA库存、账号健康\n`;
+    if(cvr<8)r+=`  → 提升转化：优化Listing图片、标题、价格\n`;
+    if(returnRate>8)r+=`  → 控制退货：检查产品质量和描述准确性\n`;
+    r+=`  → 持续监控核心指标，保持数据驱动决策\n\n`;
+    r+=`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    r+=`报告生成时间: ${new Date().toLocaleString('zh-CN')}\n`;
+    document.getElementById('reportOutput').textContent=r;
+  },
+  copy(){
+    const text=document.getElementById('reportOutput').textContent;
+    navigator.clipboard.writeText(text).then(()=>{const btn=event.target;const orig=btn.textContent;btn.textContent='已复制!';setTimeout(()=>btn.textContent=orig,2000);});
+  }
+};
+Report.gen();
+</script>
+</body>
+</html>

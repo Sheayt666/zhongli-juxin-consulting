@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="跟卖自动防御系统：跟卖检测+自动清退+Buy Box抢回+证据保全+清理效果追踪，CSS防御面板可视化，跨境卖家品牌保护工具。">
+<title>跟卖自动防御系统 - 检测清退BuyBox抢回证据保全 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+/* 防御面板 */
+.defense-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dp-card{border:1px solid var(--rule);border-radius:14px;padding:16px;background:#fff}
+.dp-card.alert{border-color:#fecaca;background:#fef2f2}
+.dp-card.ok{border-color:#a7f3d0;background:#ecfdf5}
+.dp-card h4{font-size:14px;font-weight:700;margin:0 0 8px;display:flex;align-items:center;gap:6px}
+.dp-status{font-size:12px;font-weight:700;padding:3px 10px;border-radius:8px}
+.dp-status-active{background:#dc2626;color:#fff}
+.dp-status-clear{background:#10b981;color:#fff}
+.dp-list{font-size:12px;color:var(--ink-soft);margin:0;padding-left:16px;line-height:1.8}
+.hijack-table{width:100%;border-collapse:collapse;font-size:13px}
+.hijack-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.hijack-table th.num{text-align:right}
+.hijack-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light)}
+.hijack-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.action-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700}
+.action-warning{background:#fffbeb;color:#d97706}
+.action-danger{background:#fef2f2;color:#dc2626}
+.action-success{background:#ecfdf5;color:#059669}
+.action-pending{background:#eef2ff;color:#4f46e5}
+.evidence-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:10px;border:1px solid var(--rule);margin-bottom:8px}
+.evidence-item:hover{background:var(--bg-soft)}
+.ev-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ev-body{flex:1}.ev-body h4{font-size:13px;font-weight:700;margin:0 0 2px}.ev-body p{font-size:12px;color:var(--muted);margin:0}
+.ev-status{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
+.cleanup-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding:16px 0;border-bottom:2px solid var(--rule);margin-top:8px}
+.cleanup-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:40px}
+.cleanup-bar{width:60%;border-radius:6px 6px 0 0;transition:height .4s;min-height:4px}
+.cleanup-label{font-size:10px;color:var(--muted);margin-top:6px;text-align:center}
+.cleanup-val{font-size:11px;font-weight:700;margin-top:2px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3,.defense-panel{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护工作流</div><div class="workflow-steps">
+  <a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a><a href="hijack-auto-defense.html" class="workflow-step active">跟卖防御</a><a href="brand-monitoring-alert.html" class="workflow-step">品牌预警</a><a href="anti-counterfeit-action-planner.html" class="workflow-step">防伪行动</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W42 品牌保护</a><span class="sep">›</span><span class="current">跟卖自动防御系统</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🛡️</span>跟卖自动防御系统 Hijack Auto Defense</h1>
+  <p>7x24小时跟卖监控检测，自动清退流程执行，Buy Box抢回策略，证据保全归档，清理效果追踪，CSS防御面板实时显示跟卖状态和防御动作。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">监控ASIN数</div><div class="mc-value" id="mASINs">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">当前跟卖者</div><div class="mc-value" id="mHijackers">0</div></div>
+    <div class="metric-card success"><div class="mc-label">已清退</div><div class="mc-value" id="mCleared">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">Buy Box持有率</div><div class="mc-value" id="mBuyBox">0%</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 防御系统配置</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>监控ASIN数量</label><input type="number" id="asinCount" value="25" oninput="HAD.calc()"></div>
+      <div class="jx-field"><label>扫描频率</label><select id="scanFreq" onchange="HAD.calc()"><option value="15">每15分钟</option><option value="30">每30分钟</option><option value="60">每1小时</option><option value="360">每6小时</option></select></div>
+      <div class="jx-field"><label>自动响应级别</label><select id="autoLevel" onchange="HAD.calc()"><option value="full">全自动响应</option><option value="semi">半自动（需确认）</option><option value="manual">仅告警</option></select></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>品牌备案状态</label><select id="brandReg" onchange="HAD.calc()"><option value="yes">已备案</option><option value="no">未备案</option></select></div>
+      <div class="jx-field"><label>Transparency项目</label><select id="transparency" onchange="HAD.calc()"><option value="no">未加入</option><option value="yes">已加入</option></select></div>
+      <div class="jx-field"><label>Project Zero</label><select id="projectZero" onchange="HAD.calc()"><option value="no">未加入</option><option value="yes">已加入</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🛡️ 防御面板 — 实时状态</h2>
+    <div class="defense-panel" id="defensePanel"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 跟卖者清单与处理状态</h2>
+    <div style="overflow-x:auto"><table class="hijack-table" id="hijackTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📸 证据保全归档</h2>
+    <div id="evidenceList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 清理效果追踪</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">过去7天每日跟卖者数量变化</p>
+    <div class="cleanup-chart" id="cleanupChart"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 防御策略建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="unauthorized-seller-tracker.html" class="rt-card"><div class="rt-icon">👁️</div><div><h5>未授权卖家</h5><p>卖家追踪</p></div></a>
+      <a href="ip-complaint-builder.html" class="rt-card"><div class="rt-icon">⚖️</div><div><h5>IP投诉</h5><p>侵权投诉</p></div></a>
+      <a href="transparency-program-guide.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>Transparency</h5><p>产品溯源</p></div></a>
+      <a href="brand-monitoring-alert.html" class="rt-card"><div class="rt-icon">🔔</div><div><h5>品牌预警</h5><p>监控告警</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="hijack-auto-defense.html">跟卖防御</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var HAD=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function num(id){return parseFloat($(id).value)||0}
+
+  var HIJACKERS=[
+    {seller:'CheapDeals2026',asin:'B08XYZ123',price:'$19.99',myPrice:'$29.99',buybox:'否',joinDate:'2026-07-08',action:'warning',actionText:'Test Buy已下单',evidence:'已截图'},
+    {seller:'GlobalSeller HK',asin:'B08XYZ456',price:'$24.50',myPrice:'$29.99',buybox:'否',joinDate:'2026-07-06',action:'danger',actionText:'IP投诉已提交',evidence:'已保全'},
+    {seller:'Factory Direct',asin:'B08XYZ789',price:'$18.99',myPrice:'$29.99',buybox:'否',joinDate:'2026-07-05',action:'danger',actionText:'Project Zero清退',evidence:'已保全'},
+    {seller:'Discount King',asin:'B08XYZ012',price:'$22.00',myPrice:'$29.99',buybox:'是',joinDate:'2026-07-03',action:'pending',actionText:'等待Test Buy结果',evidence:'已截图'},
+    {seller:'Clearance Hub',asin:'B08XYZ345',price:'$21.50',myPrice:'$29.99',buybox:'否',joinDate:'2026-07-01',action:'success',actionText:'已清退',evidence:'已归档'}
+  ];
+
+  var EVIDENCE=[
+    {icon:'📸',color:'#4f46e5',title:'Listing截图',desc:'跟卖者Listing页面截图，含价格/卖家信息/日期',status:'已保全',statusColor:'#10b981'},
+    {icon:'📦',color:'#f59e0b',title:'Test Buy订单',desc:'下单购买跟卖者产品，保存订单号和产品实物',status:'进行中',statusColor:'#f59e0b'},
+    {icon:'🔬',color:'#8b5cf6',title:'产品鉴定报告',desc:'收到产品后拍照对比，记录差异点',status:'待完成',statusColor:'#dc2626'},
+    {icon:'📄',color:'#06b6d4',title:'IP投诉文件',desc:'准备商标/版权/专利侵权投诉文件',status:'已准备',statusColor:'#10b981'},
+    {icon:'💬',color:'#ef4444',title:'买家消息记录',desc:'向跟卖者发送的警告信及回复记录',status:'已保存',statusColor:'#10b981'}
+  ];
+
+  var CLEANUP_DATA=[
+    {day:'7/6',count:8,color:'#dc2626'},
+    {day:'7/7',count:7,color:'#dc2626'},
+    {day:'7/8',count:5,color:'#f59e0b'},
+    {day:'7/9',count:4,color:'#f59e0b'},
+    {day:'7/10',count:3,color:'#f59e0b'},
+    {day:'7/11',count:2,color:'#10b981'},
+    {day:'7/12',count:4,color:'#f59e0b'}
+  ];
+
+  function calc(){
+    var asins=num('asinCount'),freq=$('scanFreq').value,level=$('autoLevel').value;
+    var brandReg=$('brandReg').value,transp=$('transparency').value,pz=$('projectZero').value;
+
+    var activeHijackers=HIJACKERS.filter(function(h){return h.action!=='success'}).length;
+    var cleared=HIJACKERS.filter(function(h){return h.action==='success'}).length;
+    var buyBoxRate=Math.round((1-activeHijackers/asins)*100);
+
+    $('mASINs').textContent=asins;
+    $('mHijackers').textContent=activeHijackers;
+    $('mCleared').textContent=cleared;
+    $('mBuyBox').textContent=buyBoxRate+'%';
+
+    renderDefense(freq,level,brandReg,transp,pz,activeHijackers);
+    renderHijackTable();
+    renderEvidence();
+    renderCleanup();
+    renderTips(asins,freq,level,brandReg,transp,pz,activeHijackers,cleared,buyBoxRate);
+    save();
+  }
+
+  function renderDefense(freq,level,brandReg,transp,pz,active){
+    var freqLabel={15:'每15分钟',30:'每30分钟',60:'每1小时',360:'每6小时'}[freq];
+    var levelLabel={full:'全自动响应',semi:'半自动（需确认）',manual:'仅告警'}[level];
+    var h='';
+    h+='<div class="dp-card '+(active>0?'alert':'ok')+'"><h4>🔍 跟卖监控</h4><span class="dp-status '+(active>0?'dp-status-active':'dp-status-clear')+'">'+(active>0?'检测到'+active+'个跟卖':'全部正常')+'</span><ul class="dp-list"><li>扫描频率：'+freqLabel+'</li><li>上次扫描：2分钟前</li><li>下次扫描：13分钟后</li></ul></div>';
+    h+='<div class="dp-card"><h4>⚡ 自动响应</h4><span class="dp-status dp-status-clear">'+levelLabel+'</span><ul class="dp-list"><li>Test Buy：2个进行中</li><li>警告信：3封已发送</li><li>IP投诉：1个已提交</li></ul></div>';
+    h+='<div class="dp-card"><h4>🏆 Buy Box状态</h4><span class="dp-status '+(active>0?'dp-status-active':'dp-status-clear')+'">'+(active>0?'部分丢失':'全部持有')+'</span><ul class="dp-list"><li>持有Buy Box：'+(25-active)+'/'+25+' ASIN</li><li>Buy Box丢失：'+active+' ASIN</li><li>恢复策略：价格调整+广告加码</li></ul></div>';
+    h+='<div class="dp-card"><h4>🛡️ 品牌保护工具</h4><span class="dp-status '+(brandReg==='yes'?'dp-status-clear':'dp-status-active')+'">'+(brandReg==='yes'?'已启用':'未启用')+'</span><ul class="dp-list"><li>品牌备案：'+(brandReg==='yes'?'✓ 已备案':'✗ 未备案')+'</li><li>Transparency：'+(transp==='yes'?'✓ 已加入':'✗ 未加入')+'</li><li>Project Zero：'+(pz==='yes'?'✓ 已加入':'✗ 未加入')+'</li></ul></div>';
+    $('defensePanel').innerHTML=h;
+  }
+
+  function renderHijackTable(){
+    var h='<thead><tr><th>跟卖者</th><th>ASIN</th><th class="num">跟卖价</th><th class="num">我的价格</th><th>Buy Box</th><th>加入日期</th><th>处理状态</th><th>证据</th></tr></thead><tbody>';
+    HIJACKERS.forEach(function(hj){
+      var actionCls='action-'+hj.action;
+      h+='<tr><td><strong>'+hj.seller+'</strong></td><td style="font-family:monospace;font-size:12px">'+hj.asin+'</td><td class="num" style="color:#dc2626;font-weight:700">'+hj.price+'</td><td class="num">'+hj.myPrice+'</td><td>'+(hj.buybox==='是'?'<span style="color:#dc2626;font-weight:700">'+hj.buybox+'</span>':'<span style="color:#059669">'+hj.buybox+'</span>')+'</td><td style="font-size:12px">'+hj.joinDate+'</td><td><span class="action-badge '+actionCls+'">'+hj.actionText+'</span></td><td style="font-size:11px">'+hj.evidence+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('hijackTable').innerHTML=h;
+  }
+
+  function renderEvidence(){
+    var h='';
+    EVIDENCE.forEach(function(e){
+      h+='<div class="evidence-item"><div class="ev-icon" style="background:'+e.color+'15">'+e.icon+'</div><div class="ev-body"><h4>'+e.title+'</h4><p>'+e.desc+'</p></div><span class="ev-status" style="background:'+e.statusColor+'15;color:'+e.statusColor+'">'+e.status+'</span></div>';
+    });
+    $('evidenceList').innerHTML=h;
+  }
+
+  function renderCleanup(){
+    var maxCount=Math.max.apply(null,CLEANUP_DATA.map(function(d){return d.count}));
+    var h='';
+    CLEANUP_DATA.forEach(function(d){
+      var height=d.count/maxCount*120;
+      h+='<div class="cleanup-col"><div class="cleanup-bar" style="height:'+height+'px;background:'+d.color+'"></div><div class="cleanup-val" style="color:'+d.color+'">'+d.count+'</div><div class="cleanup-label">'+d.day+'</div></div>';
+    });
+    $('cleanupChart').innerHTML=h;
+  }
+
+  function renderTips(asins,freq,level,brandReg,transp,pz,active,cleared,buyBox){
+    var freqLabel={15:'每15分钟',30:'每30分钟',60:'每1小时',360:'每6小时'}[freq];
+    var tips=[];
+    tips.push('监控 '+asins+' 个ASIN，扫描频率'+freqLabel+'，当前检测到 '+active+' 个活跃跟卖者，已清退 '+cleared+' 个，Buy Box持有率 '+buyBox+'%。');
+    if(active>0)tips.push('检测到 '+active+' 个跟卖者正在抢占Buy Box，建议立即启动Test Buy流程收集证据，同时提交IP投诉清退。');
+    if(brandReg==='no')tips.push('未完成品牌备案，无法使用品牌保护工具（Project Zero/IP投诉等），建议尽快完成品牌备案。');
+    if(brandReg==='yes'&&pz==='no')tips.push('已备案但未加入Project Zero，建议申请加入，可自动删除假货Listing，无需逐个投诉。');
+    if(brandReg==='yes'&&transp==='no')tips.push('已备案但未加入Transparency项目，建议对高价值产品加入，从源头防止假货跟卖。');
+    tips.push('跟卖清退标准流程：1.检测到跟卖→2.Test Buy购买取证→3.收到产品鉴定→4.提交IP投诉→5.Project Zero自动删除→6.恢复Buy Box。');
+    tips.push('Buy Box抢回策略：降低价格至跟卖者以下+增加广告投入提升转化率+优化Listing提高页面质量分+确保Prime配送。');
+    tips.push('证据保全要点：截图含时间戳、保存Test Buy订单号、产品实物拍照对比差异、保留所有通信记录，证据保留至少6个月。');
+    tips.push('预防跟卖最佳实践：品牌备案+Transparency项目+Project Zero三重防护，独有包装设计，独家SKU，定期监控。');
+    tips.push('长期防御建议：注册商标+版权登记+专利保护，构建完整IP护城河，使跟卖者无法通过正规渠道获取你的产品。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_had_data',JSON.stringify({asinCount:num('asinCount'),scanFreq:$('scanFreq').value,autoLevel:$('autoLevel').value,brandReg:$('brandReg').value,transparency:$('transparency').value,projectZero:$('projectZero').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_had_data'));if(d){['scanFreq','autoLevel','brandReg','transparency','projectZero'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]});if(d.asinCount)$('asinCount').value=d.asinCount}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',HAD.init)}else{HAD.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="绩效考核系统：输入员工KPI完成度和360评估数据，输出综合评分、晋升建议、面谈记录模板，CSS评分卡展示。">
+<meta name="keywords" content="绩效考核,综合评分,KPI完成度,360评估,晋升建议,面谈模板,绩效管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/performance-review-system.html">
+<title>绩效考核系统 - 综合评分·晋升建议·面谈模板 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.review-card{background:#fff;border:1px solid var(--rule);border-radius:16px;padding:24px;margin-top:16px;transition:all .2s}
+.review-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.score-big{display:flex;align-items:center;gap:20px;margin-bottom:20px}
+.score-ring{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.score-ring::before{content:'';position:absolute;inset:8px;border-radius:50%;background:#fff}
+.score-ring-text{position:relative;z-index:1;font-size:28px;font-weight:800}
+.review-dim{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.dim-card{padding:14px;border-radius:10px;background:var(--bg-soft);text-align:center}
+.dim-card .dc-score{font-size:22px;font-weight:800;margin:4px 0}
+.dim-card .dc-name{font-size:12px;color:var(--muted)}
+.promo-box{padding:20px;border-radius:12px;margin-top:16px}
+.promo-yes{background:var(--green-bg);border:1px solid var(--green);color:#065f46}
+.promo-no{background:var(--red-bg);border:1px solid var(--red);color:#991b1b}
+.promo-watch{background:var(--gold-bg);border:1px solid var(--gold);color:#92400e}
+</style>
+</head>
+<body class="tool-page" data-tool="performance_review_system">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第8步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <a href="okr-goal-tracker.html" class="step">OKR追踪</a>
+      <span class="arrow">→</span>
+      <a href="training-onboarding-manager.html" class="step">培训入职</a>
+      <span class="arrow">→</span>
+      <span class="step current">绩效考核</span>
+      <span class="arrow">→</span>
+      <a href="role-permission-manager.html" class="step">权限管理</a>
+      <span class="arrow">→</span>
+      <a href="team-workflow-automation.html" class="step">工作流自动化</a>
+      <span class="arrow">→</span>
+      <a href="recruitment-pipeline.html" class="step">招聘漏斗</a>
+      <span class="arrow">→</span>
+      <a href="competency-model-builder.html" class="step">胜任力模型</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 标准版</span>
+      <h1>绩效考核 <em>系统</em></h1>
+      <p class="tool-hero-desc">输入员工KPI完成度和360评估数据，输出综合评分、晋升建议、面谈记录模板，CSS评分卡展示，帮你系统化进行绩效管理。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 绩效考核输入</h2>
+          <p class="calc-form-subtitle">输入员工信息和考核数据，生成综合评估报告</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>员工姓名</label><input type="text" id="empName" value="张三" oninput="PRS.calc()"></div>
+            <div class="calc-field"><label>职级</label><select id="level" onchange="PRS.calc()">
+              <option value="p4" selected>P4 中级</option>
+              <option value="p5">P5 高级</option>
+              <option value="p6">P6 资深</option>
+              <option value="p7">P7 专家</option>
+            </select></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>KPI完成度 (%)</label><input type="number" id="kpiScore" value="92" min="0" max="200" step="1" oninput="PRS.calc()"></div>
+            <div class="calc-field"><label>上级评分 (1-100)</label><input type="number" id="managerScore" value="88" min="1" max="100" step="1" oninput="PRS.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>同事评分 (1-100)</label><input type="number" id="peerScore" value="85" min="1" max="100" step="1" oninput="PRS.calc()"></div>
+            <div class="calc-field"><label>下属评分 (1-100)</label><input type="number" id="subScore" value="90" min="1" max="100" step="1" oninput="PRS.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>自评分数 (1-100)</label><input type="number" id="selfScore" value="80" min="1" max="100" step="1" oninput="PRS.calc()"></div>
+            <div class="calc-field"><label>出勤率 (%)</label><input type="number" id="attendance" value="98" min="0" max="100" step="0.5" oninput="PRS.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📋 综合评分卡</h3>
+        <div class="review-card" id="reviewCard"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>💬 面谈记录模板</h3>
+        <div id="talkTemplate"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="training-onboarding-manager.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第7步</span>培训入职 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="role-permission-manager.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第9步</span>权限管理 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="performance-review-system.html">绩效考核</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var PRS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function sc(s){return s>=85?'score-high':(s>=70?'score-mid':'score-low');}
+  function grade(s){return s>=90?'S':(s>=80?'A':(s>=70?'B':(s>=60?'C':'D')));}
+  return{
+    calc:function(){
+      var name=$('empName').value,level=$('level').value;
+      var kpi=v('kpiScore'),mgr=v('managerScore'),peer=v('peerScore');
+      var sub=v('subScore'),self=v('selfScore'),att=v('attendance');
+      var kpiNorm=Math.min(100,kpi);
+      var total=Math.round(kpiNorm*0.35+mgr*0.25+peer*0.15+sub*0.1+self*0.05+att*0.1);
+      var g=grade(total);
+      var promo=total>=85&&kpi>=90;
+      var watch=total>=70&&total<85;
+      var html='<h3>📋 考核结果</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">综合评分</div><div class="hc-value" style="color:'+(total>=85?'var(--green)':(total>=70?'var(--accent)':'var(--red)'))+'">'+total+'</div><div class="hc-sub">等级 '+g+'</div></div>';
+      html+='<div class="highlight-card '+(promo?'roi':(watch?'warning':'profit'))+'"><div class="hc-label">晋升建议</div><div class="hc-value" style="font-size:20px">'+(promo?'建议晋升':(watch?'观察':'不晋升'))+'</div><div class="hc-sub">KPI '+kpi+'%</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">KPI完成度 (权重35%)</span><span class="fr-val">'+kpiNorm+'/100</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">上级评分 (权重25%)</span><span class="fr-val">'+mgr+'/100</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">同事评分 (权重15%)</span><span class="fr-val">'+peer+'/100</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">下属评分 (权重10%)</span><span class="fr-val">'+sub+'/100</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">自评 (权重5%)</span><span class="fr-val">'+self+'/100</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">出勤率 (权重10%)</span><span class="fr-val">'+att+'%</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var rHtml='<div class="score-big">';
+      rHtml+='<div class="score-ring" style="background:conic-gradient('+(total>=85?'var(--green)':(total>=70?'var(--accent)':'var(--red)'))+' '+total*3.6+'deg, var(--rule) '+total*3.6+'deg)"><div class="score-ring-text" style="color:'+(total>=85?'var(--green)':(total>=70?'var(--accent)':'var(--red)'))+'">'+total+'</div></div>';
+      rHtml+='<div><div style="font-size:20px;font-weight:700">'+name+'</div><div style="font-size:14px;color:var(--muted)">'+level.toUpperCase()+' · 等级 '+g+'</div>';
+      rHtml+='<div style="margin-top:8px;font-size:13px">'+(promo?'✅ 建议晋升至'+(level==='p4'?'P5':(level==='p5'?'P6':(level==='p6'?'P7':'P7+'))):(watch?'⚠️ 需继续观察':'❌ 本期不建议晋升'))+'</div></div></div>';
+      rHtml+='<div class="review-dim">';
+      var dims=[{name:'KPI完成',val:kpiNorm},{name:'上级评价',val:mgr},{name:'同事评价',val:peer},{name:'下属评价',val:sub},{name:'自评',val:self},{name:'出勤',val:att}];
+      dims.forEach(function(d){
+        rHtml+='<div class="dim-card"><div class="dc-score '+sc(d.val)+'">'+d.val+'</div><div class="dc-name">'+d.name+'</div></div>';
+      });
+      rHtml+='</div>';
+      var promoClass=promo?'promo-yes':(watch?'promo-watch':'promo-no');
+      rHtml+='<div class="promo-box '+promoClass+'"><strong>晋升建议：</strong>'+(promo?'员工表现优异，KPI超额完成，建议纳入晋升候选名单。':(watch?'员工表现良好，建议继续观察1-2个季度后再评估。':'员工本期表现未达预期，建议制定改进计划。'))+'</div>';
+      $('reviewCard').innerHTML=rHtml;
+      var tHtml='<div style="background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:24px;font-size:14px;line-height:2">';
+      tHtml+='<h4 style="font-size:16px;font-weight:700;margin-bottom:12px">💬 绩效面谈记录</h4>';
+      tHtml+='<p><strong>员工：</strong>'+name+' ('+level.toUpperCase()+')</p>';
+      tHtml+='<p><strong>面谈日期：</strong>____________</p>';
+      tHtml+='<p><strong>面谈人：</strong>____________</p>';
+      tHtml+='<hr style="border:none;border-top:1px dashed var(--rule);margin:12px 0">';
+      tHtml+='<p><strong>1. 本期成果回顾：</strong></p>';
+      tHtml+='<p style="padding-left:20px">• KPI完成度：'+kpi+'%</p>';
+      tHtml+='<p style="padding-left:20px">• 亮点成果：______________________</p>';
+      tHtml+='<p style="padding-left:20px">• 不足之处：______________________</p>';
+      tHtml+='<p><strong>2. 综合评分：</strong>'+total+'分 (等级 '+g+')</p>';
+      tHtml+='<p><strong>3. 发展建议：</strong>'+(promo?'建议晋升':'建议制定改进计划')+'</p>';
+      tHtml+='<p><strong>4. 下期目标：</strong></p>';
+      tHtml+='<p style="padding-left:20px">• ______________________</p>';
+      tHtml+='<p style="padding-left:20px">• ______________________</p>';
+      tHtml+='<p><strong>5. 员工反馈：</strong>______________________</p>';
+      tHtml+='<hr style="border:none;border-top:1px dashed var(--rule);margin:12px 0">';
+      tHtml+='<p><strong>员工签名：</strong>____________  <strong>面谈人签名：</strong>____________</p>';
+      tHtml+='</div>';
+      $('talkTemplate').innerHTML=tHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PRS.calc);}else{PRS.calc();}
+</script>
+</body>
+</html>

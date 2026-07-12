@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="蓝海扫描器：低竞争高需求品类自动发现+蓝海分数排序+市场空白识别，CSS蓝海矩阵可视化，跨境卖家选品蓝海机会挖掘工具。">
+<title>蓝海扫描器 - 低竞争高需求品类发现·蓝海矩阵 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.ocean-matrix{position:relative;height:380px;border:1px solid var(--rule);border-radius:14px;background:linear-gradient(135deg,#ecfdf5 0%,#fff 30%,#fff 70%,#fef2f2 100%);overflow:hidden;margin:16px 0}
+.ocean-quadant-label{position:absolute;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px}
+.ql-blue{top:12px;left:12px;background:#d1fae5;color:#059669}
+.ql-gap{top:12px;right:12px;background:#dbeafe;color:#4f46e5}
+.ql-red{bottom:12px;right:12px;background:#fee2e2;color:#dc2626}
+.ql-niche{bottom:12px;left:12px;background:#fef3c7;color:#d97706}
+.ocean-axis-x{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);font-weight:600}
+.ocean-axis-y{position:absolute;top:50%;left:-30px;transform:rotate(-90deg) translateY(-50%);font-size:11px;color:var(--muted);font-weight:600}
+.ocean-dot{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;transition:all .2s;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.ocean-dot:hover{transform:translate(-50%,-50%) scale(1.5);z-index:10}
+.ocean-dot-label{position:absolute;font-size:9px;color:var(--ink);white-space:nowrap;transform:translate(-50%,8px);pointer-events:none;font-weight:600}
+.bo-table{width:100%;border-collapse:collapse;font-size:13px}
+.bo-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.bo-table th.num{text-align:right}
+.bo-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.bo-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.bo-table tr.blue td{background:#ecfdf5}
+.score-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800}
+.score-blue{background:#d1fae5;color:#059669}
+.score-gap{background:#dbeafe;color:#4f46e5}
+.score-red{background:#fee2e2;color:#dc2626}
+.score-niche{background:#fef3c7;color:#d97706}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.bo-table{font-size:11px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+  <a href="product-research-scorecard.html" class="workflow-step">选品评分</a>
+  <a href="market-gap-finder.html" class="workflow-step">市场空白</a>
+  <a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a>
+  <a href="competition-density-mapper.html" class="workflow-step">竞争密度</a>
+  <a href="product-differentiation-planner.html" class="workflow-step">差异化</a>
+  <a href="seasonality-checker.html" class="workflow-step">季节性</a>
+  <a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a>
+  <a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a>
+  <a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a>
+  <a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+  <a href="blue-ocean-scanner.html" class="workflow-step active">蓝海扫描</a>
+  <a href="review-pain-point-miner.html" class="workflow-step">痛点挖掘</a>
+  <a href="product-improvement-ideator.html" class="workflow-step">改进创意</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W36 选品深度</a><span class="sep">›</span><span class="current">蓝海扫描器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🌊</span>蓝海扫描器 Blue Ocean Scanner</h1>
+  <p>输入品类搜索量、竞争度、评论数等数据，自动计算蓝海分数排序，识别低竞争高需求品类，CSS蓝海矩阵四象限可视化（蓝海/红海/利基/空白），帮助跨境卖家发现选品蓝海机会与市场空白。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card success"><div class="mc-label">蓝海品类数</div><div class="mc-value" id="mBlue">0</div></div>
+    <div class="metric-card"><div class="mc-label">最高蓝海分</div><div class="mc-value" id="mTopScore">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">利基机会</div><div class="mc-value" id="mNiche">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">红海品类</div><div class="mc-value" id="mRed">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 品类数据录入</h2>
+    <div class="jx-row-3" style="font-size:11px;font-weight:700;color:var(--muted);padding:0 4px 8px">
+      <div>品类名称</div><div>月搜索量</div><div>竞品数</div>
+    </div>
+    <div id="catRows"></div>
+    <button onclick="BOS.addCat()" style="margin-top:12px;padding:8px 16px;border:1px dashed #4f46e5;background:#f5f3ff;color:#4f46e5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">+ 添加品类</button>
+  </div>
+
+  <div class="jx-card">
+    <h2>🌊 蓝海矩阵（需求×竞争）</h2>
+    <div class="ocean-matrix" id="oceanMatrix">
+      <div class="ocean-quadant-label ql-blue">🌊 蓝海区<br><span style="font-size:10px;font-weight:400">高需求·低竞争</span></div>
+      <div class="ocean-quadant-label ql-gap">🎯 空白区<br><span style="font-size:10px;font-weight:400">低需求·低竞争</span></div>
+      <div class="ocean-quadant-label ql-red">🔴 红海区<br><span style="font-size:10px;font-weight:400">高需求·高竞争</span></div>
+      <div class="ocean-quadant-label ql-niche">💎 利基区<br><span style="font-size:10px;font-weight:400">低需求·高竞争</span></div>
+      <div class="ocean-axis-x">竞争度 →</div>
+      <div class="ocean-axis-y">需求量 →</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 蓝海分数排行</h2>
+    <div style="overflow-x:auto"><table class="bo-table" id="boTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 蓝海选品建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="market-gap-finder.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>市场空白发现</h5><p>空白品类识别</p></div></a>
+      <a href="competition-density-mapper.html" class="rt-card"><div class="rt-icon">🗺️</div><div><h5>竞争密度图</h5><p>竞争可视化</p></div></a>
+      <a href="product-research-scorecard.html" class="rt-card"><div class="rt-icon">⭐</div><div><h5>选品评分卡</h5><p>选品综合评分</p></div></a>
+      <a href="profit-margin-forecaster.html" class="rt-card"><div class="rt-icon">💰</div><div><h5>利润预测</h5><p>利润率预估</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="blue-ocean-scanner.html">蓝海扫描器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var BOS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var cats=[
+    {name:'硅胶厨房垫',demand:18000,comp:45,revs:120},
+    {name:'便携榨汁杯',demand:35000,comp:280,revs:850},
+    {name:'宠物自动喂食器',demand:28000,comp:120,revs:420},
+    {name:'桌面收纳架',demand:12000,comp:30,revs:80},
+    {name:'蓝牙助听器',demand:8000,comp:65,revs:200},
+    {name:'筋膜枪mini',demand:52000,comp:450,revs:1200},
+    {name:'车载香薰',demand:22000,comp:90,revs:310},
+    {name:'婴儿辅食盒',demand:15000,comp:55,revs:150}
+  ];
+
+  function renderRows(){
+    var h='';
+    cats.forEach(function(c,i){
+      h+='<div class="jx-row-3" style="margin-bottom:8px"><input type="text" value="'+c.name+'" oninput="BOS.update('+i+',{name:this.value})" style="padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px"><input type="number" value="'+c.demand+'" step="500" oninput="BOS.update('+i+',{demand:parseFloat(this.value)||0})" style="padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px"><input type="number" value="'+c.comp+'" step="5" oninput="BOS.update('+i+',{comp:parseFloat(this.value)||0})" style="padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px"></div>';
+    });
+    $('catRows').innerHTML=h;
+  }
+  function update(i,obj){Object.assign(cats[i],obj);calc()}
+  function addCat(){cats.push({name:'新品类',demand:10000,comp:50,revs:100});renderRows();calc()}
+
+  function calc(){
+    renderRows();
+    var maxDemand=Math.max.apply(null,cats.map(function(c){return c.demand}));
+    var maxComp=Math.max.apply(null,cats.map(function(c){return c.comp}));
+    var data=cats.map(function(c){
+      var demandScore=maxDemand>0?c.demand/maxDemand*100:0;
+      var compScore=maxComp>0?c.comp/maxComp*100:0;
+      //蓝海分=需求高+竞争低 → demandScore*(100-compScore)/100 标准化
+      var blueScore=Math.round(demandScore*(100-compScore)/100*10)/10;
+      //归一化到0-100
+      c._demandScore=demandScore;c._compScore=compScore;c._blueScore=blueScore;
+      c._quadrant=demandScore>=50&&compScore<50?'blue':demandScore<50&&compScore<50?'gap':demandScore>=50&&compScore>=50?'red':'niche';
+      return c;
+    });
+    //归一化蓝海分到0-100
+    var maxBlue=Math.max.apply(null,data.map(function(c){return c._blueScore}));
+    data.forEach(function(c){c._blueNorm=maxBlue>0?Math.round(c._blueScore/maxBlue*100):0});
+    var blue=data.filter(function(c){return c._quadrant==='blue'}).length;
+    var niche=data.filter(function(c){return c._quadrant==='niche'}).length;
+    var red=data.filter(function(c){return c._quadrant==='red'}).length;
+    var topScore=Math.max.apply(null,data.map(function(c){return c._blueNorm}));
+    $('mBlue').textContent=blue;
+    $('mTopScore').textContent=topScore;
+    $('mNiche').textContent=niche;
+    $('mRed').textContent=red;
+    renderMatrix(data);
+    renderTable(data);
+    renderTips(data,blue,niche,red);
+    save();
+  }
+
+  function renderMatrix(data){
+    var matrix=$('oceanMatrix');
+    //remove old dots
+    var oldDots=matrix.querySelectorAll('.ocean-dot,.ocean-dot-label');
+    oldDots.forEach(function(d){d.remove()});
+    var colors={blue:'#10b981',gap:'#4f46e5',red:'#ef4444',niche:'#f59e0b'};
+    data.forEach(function(c,i){
+      //x=竞争度(左低右高), y=需求量(下低上高)
+      var x=8+c._compScore/100*84; //8%-92%
+      var y=92-c._demandScore/100*84; //92%(底)-8%(顶)
+      var dot=document.createElement('div');
+      dot.className='ocean-dot';
+      dot.style.left=x+'%';dot.style.top=y+'%';
+      dot.style.background=colors[c._quadrant];
+      dot.title=c.name+' | 蓝海分:'+c._blueNorm;
+      matrix.appendChild(dot);
+      var label=document.createElement('div');
+      label.className='ocean-dot-label';
+      label.style.left=x+'%';label.style.top=y+'%';
+      label.textContent=c.name.length>6?c.name.slice(0,5)+'..':c.name;
+      matrix.appendChild(label);
+    });
+  }
+
+  function renderTable(data){
+    var sorted=data.slice().sort(function(a,b){return b._blueNorm-a._blueNorm});
+    var qLabel={blue:'蓝海',gap:'空白',red:'红海',niche:'利基'};
+    var qClass={blue:'score-blue',gap:'score-gap',red:'score-red',niche:'score-niche'};
+    var h='<thead><tr><th>排名</th><th>品类</th><th class="num">月搜索量</th><th class="num">竞品数</th><th class="num">需求分</th><th class="num">竞争分</th><th>象限</th><th class="num">蓝海分</th></tr></thead><tbody>';
+    sorted.forEach(function(c,i){
+      h+='<tr class="'+(c._quadrant==='blue'?'blue':'')+'"><td>'+(i+1)+'</td><td><strong>'+c.name+'</strong></td><td class="num">'+c.demand.toLocaleString()+'</td><td class="num">'+c.comp+'</td><td class="num">'+Math.round(c._demandScore)+'</td><td class="num">'+Math.round(c._compScore)+'</td><td><span class="score-badge '+qClass[c._quadrant]+'">'+qLabel[c._quadrant]+'</span></td><td class="num" style="font-size:16px;font-weight:800;color:'+ (c._quadrant==='blue'?'#059669':c._quadrant==='red'?'#dc2626':'#4f46e5') +'">'+c._blueNorm+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('boTable').innerHTML=h;
+  }
+
+  function renderTips(data,blue,niche,red){
+    var sorted=data.slice().sort(function(a,b){return b._blueNorm-a._blueNorm});
+    var tips=[];
+    var top=sorted[0];
+    if(top)tips.push('蓝海分最高品类「'+top.name+'」（'+top._blueNorm+'分），月搜索量'+top.demand.toLocaleString()+'，仅'+top.comp+'个竞品，是最优先选品方向。');
+    tips.push('共扫描 '+data.length+' 个品类，其中蓝海区 '+blue+' 个、利基区 '+niche+' 个、红海区 '+red+' 个。');
+    var blueCats=sorted.filter(function(c){return c._quadrant==='blue'});
+    if(blueCats.length){
+      tips.push('蓝海机会品类：'+blueCats.map(function(c){return c.name+'('+c._blueNorm+')'}).join('、')+'，建议优先深入调研利润率与供应链。');
+    }else{tips.push('当前数据无蓝海区品类，建议调整搜索方向或降低竞争度门槛寻找机会。')}
+    var redCats=sorted.filter(function(c){return c._quadrant==='red'});
+    if(redCats.length)tips.push('红海品类：'+redCats.map(function(c){return c.name}).join('、')+'，竞争激烈，除非有强差异化否则不建议进入。');
+    var gapCats=sorted.filter(function(c){return c._quadrant==='gap'});
+    if(gapCats.length)tips.push('空白区品类：'+gapCats.map(function(c){return c.name}).join('、')+'，需求低竞争也低，可能是尚未被验证的小众市场，需谨慎判断需求真实性。');
+    tips.push('蓝海分=需求强度×(1-竞争强度)，建议蓝海分≥60的品类进入深度选品评估，结合利润率、季节性、评论增速综合决策。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_bos_data',JSON.stringify(cats))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_bos_data'));if(d&&d.length)cats=d}catch(e){}}
+  return {calc:calc,update:update,addCat:addCat,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',BOS.init)}else{BOS.init()}
+</script>
+</body>
+</html>

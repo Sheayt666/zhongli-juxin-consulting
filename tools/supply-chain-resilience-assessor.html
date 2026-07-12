@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="供应链韧性评估器：单点依赖识别+替代方案评估+风险传导分析+应急预案+韧性评分，CSS韧性矩阵可视化，跨境卖家供应链风险防御工具。">
+<title>供应链韧性评估器 - 单点依赖识别·韧性矩阵评分 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.node-row{display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 0.8fr 0.8fr 0.7fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule-light);font-size:12px}
+.node-row input{padding:7px 10px;border:1px solid var(--rule);border-radius:8px;font-size:12px;width:100%}
+.node-row .nr-score{font-size:13px;font-weight:700;text-align:center}
+.res-matrix{display:grid;grid-template-columns:80px repeat(5,1fr);gap:4px;margin-top:12px}
+.res-matrix .rm-cell{padding:8px 4px;text-align:center;font-size:11px;border-radius:6px;font-weight:600}
+.res-matrix .rm-head{background:var(--bg-soft);color:var(--ink);font-weight:700}
+.res-matrix .rm-row-label{background:var(--bg-soft);color:var(--ink);font-weight:700;display:flex;align-items:center;justify-content:center}
+.res-matrix .rm-low{background:#ecfdf5;color:#059669}
+.res-matrix .rm-med{background:#fffbeb;color:#d97706}
+.res-matrix .rm-high{background:#fef2f2;color:#dc2626}
+.res-matrix .rm-crit{background:#fee2e2;color:#991b1b;font-weight:800}
+.sc-table{width:100%;border-collapse:collapse;font-size:13px}
+.sc-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.sc-table th.num{text-align:right}
+.sc-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.sc-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.sc-table tr.danger td{background:#fef2f2}
+.sc-table tr.warning td{background:#fffbeb}
+.risk-bar{height:8px;border-radius:4px;background:var(--rule-light);overflow:hidden;margin-top:4px}
+.risk-bar-fill{height:100%;border-radius:4px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.node-row{grid-template-columns:1fr 1fr}.res-matrix{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+  <a href="supply-chain-resilience-assessor.html" class="workflow-step active">韧性评估</a>
+  <a href="supplier-collaboration-portal.html" class="workflow-step">协同门户</a>
+  <a href="tco-calculator.html" class="workflow-step">TCO</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">供应链韧性评估器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🛡️</span>供应链韧性评估器 Supply Chain Resilience Assessor</h1>
+  <p>识别供应链单点依赖节点，评估替代方案就绪度，分析风险传导路径，匹配应急预案，计算综合韧性评分，CSS韧性矩阵展示各节点风险等级与影响范围，帮助跨境卖家构建抗风险供应链。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card success"><div class="mc-label">韧性评分</div><div class="mc-value" id="mScore">0</div></div>
+    <div class="metric-card"><div class="mc-label">韧性等级</div><div class="mc-value" id="mLevel">-</div></div>
+    <div class="metric-card danger"><div class="mc-label">单点依赖</div><div class="mc-value" id="mSPoF">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">高危节点</div><div class="mc-value" id="mHigh">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔗 供应链节点录入</h2>
+    <div class="node-row" style="font-size:11px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--rule)">
+      <div>节点名称</div><div>占比%</div><div>中断概率%</div><div>影响天数</div><div>替代就绪%</div><div>风险分</div>
+    </div>
+    <div id="nodeRows"></div>
+    <button onclick="SCRA.addNode()" style="margin-top:12px;padding:8px 16px;border:1px dashed #4f46e5;background:#f5f3ff;color:#4f46e5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">+ 添加节点</button>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 韧性矩阵（影响×概率）</h2>
+    <div class="res-matrix" id="resMatrix"></div>
+    <div style="display:flex;gap:16px;margin-top:12px;font-size:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#ecfdf5;border:1px solid #a7f3d0"></div>低风险</div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#fffbeb;border:1px solid #fde68a"></div>中风险</div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#fef2f2;border:1px solid #fecaca"></div>高风险</div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:14px;height:14px;border-radius:4px;background:#fee2e2;border:1px solid #fca5a5"></div>极高风险</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 节点风险明细</h2>
+    <div style="overflow-x:auto"><table class="sc-table" id="nodeTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🚨 应急预案匹配</h2>
+    <div id="emergencyPlans"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 韧性优化建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="supplier-risk-assessment.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>供应商风险评估</h5><p>供应商风险评分</p></div></a>
+      <a href="multi-supplier-allocator.html" class="rt-card"><div class="rt-icon">🔀</div><div><h5>多供应商分配</h5><p>分散供应风险</p></div></a>
+      <a href="supply-chain-mapping.html" class="rt-card"><div class="rt-icon">🗺️</div><div><h5>供应链图谱</h5><p>全链路可视化</p></div></a>
+      <a href="delivery-performance-tracker.html" class="rt-card"><div class="rt-icon">🚚</div><div><h5>交付绩效</h5><p>交付追踪</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supply-chain-resilience-assessor.html">韧性评估</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var SCRA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var nodes=[
+    {name:'深圳主板供应商',share:65,prob:15,impact:21,alt:30},
+    {name:'义乌包装材料',share:80,prob:10,impact:7,alt:50},
+    {name:'盐田港海运',share:70,prob:20,impact:30,alt:40},
+    {name:'FBA美西仓',share:90,prob:8,impact:14,alt:20}
+  ];
+
+  function renderRows(){
+    var h='';
+    nodes.forEach(function(n,i){
+      var score=riskScore(n);
+      h+='<div class="node-row"><input type="text" value="'+n.name+'" oninput="SCRA.update('+i+',{name:this.value})"><input type="number" value="'+n.share+'" step="5" oninput="SCRA.update('+i+',{share:parseFloat(this.value)||0})"><input type="number" value="'+n.prob+'" step="5" oninput="SCRA.update('+i+',{prob:parseFloat(this.value)||0})"><input type="number" value="'+n.impact+'" step="1" oninput="SCRA.update('+i+',{impact:parseFloat(this.value)||0})"><input type="number" value="'+n.alt+'" step="10" oninput="SCRA.update('+i+',{alt:parseFloat(this.value)||0})"><div class="nr-score" style="color:'+scoreColor(score)+'">'+score+'</div></div>';
+    });
+    $('nodeRows').innerHTML=h;
+  }
+  function update(i,obj){Object.assign(nodes[i],obj);calc()}
+  function addNode(){nodes.push({name:'新节点',share:50,prob:15,impact:14,alt:30});renderRows();calc()}
+  function riskScore(n){return Math.round(n.share/100*30+n.prob/100*25+n.impact/30*25+(100-n.alt)/100*20)}
+  function scoreColor(s){return s>=70?'#dc2626':s>=50?'#d97706':s>=30?'#f59e0b':'#059669'}
+
+  function calc(){
+    renderRows();
+    var data=nodes.map(function(n){n._score=riskScore(n);return n});
+    var avgScore=data.length?data.reduce(function(a,b){return a+b._score},0)/data.length:0;
+    var spof=data.filter(function(n){return n.share>=70&&n.alt<40}).length;
+    var high=data.filter(function(n){return n._score>=60}).length;
+    var level=avgScore>=65?'脆弱':avgScore>=50?'中等':avgScore>=35?'较强':'强韧';
+    var levelColor=avgScore>=65?'#dc2626':avgScore>=50?'#d97706':avgScore>=35?'#4f46e5':'#059669';
+    $('mScore').textContent=Math.round(avgScore);
+    $('mLevel').textContent=level;$('mLevel').style.color=levelColor;
+    $('mSPoF').textContent=spof;
+    $('mHigh').textContent=high;
+    renderMatrix(data);
+    renderTable(data);
+    renderPlans(data);
+    renderTips(data,avgScore,spof,high,level);
+    save();
+  }
+
+  function renderMatrix(data){
+    var impactLabels=['轻微(<7天)','中等(7-14)','严重(14-21)','重大(21-30)','灾难(>30)'];
+    var probLabels=['极低(<5%)','低(5-15%)','中(15-30%)','高(30-50%)','极高(>50%)'];
+    var impactLevel=function(d){if(d.impact<7)return 0;if(d.impact<14)return 1;if(d.impact<21)return 2;if(d.impact<30)return 3;return 4};
+    var probLevel=function(d){if(d.prob<5)return 0;if(d.prob<15)return 1;if(d.prob<30)return 2;if(d.prob<50)return 3;return 4};
+    var cellClass=function(il,pl){var r=il+pl;if(r<=1)return'rm-low';if(r<=3)return'rm-med';if(r<=5)return'rm-high';return'rm-crit'};
+    var h='<div class="rm-cell rm-head"></div>';
+    impactLabels.forEach(function(il){h+='<div class="rm-cell rm-head">'+il+'</div>'});
+    probLabels.forEach(function(pl,pi){
+      h+='<div class="rm-cell rm-row-label">'+pl+'</div>';
+      for(var ii=0;ii<5;ii++){
+        var cellNodes=data.filter(function(n){return impactLevel(n)===ii&&probLevel(n)===pi});
+        var txt=cellNodes.length?cellNodes.map(function(n){return n.name}).join(', '):'';
+        h+='<div class="rm-cell '+cellClass(ii,pi)+'" '+(txt?'style="font-weight:700"':'')+'>'+(txt||'-')+'</div>';
+      }
+    });
+    $('resMatrix').innerHTML=h;
+  }
+
+  function renderTable(data){
+    var sorted=data.slice().sort(function(a,b){return b._score-a._score});
+    var h='<thead><tr><th>节点</th><th class="num">占比</th><th class="num">中断概率</th><th class="num">影响天数</th><th class="num">替代就绪</th><th class="num">风险分</th><th>风险等级</th></tr></thead><tbody>';
+    sorted.forEach(function(n){
+      var cls=n._score>=60?'danger':n._score>=40?'warning':'';
+      var lv=n._score>=70?'极高风险':n._score>=50?'高风险':n._score>=30?'中风险':'低风险';
+      h+='<tr class="'+cls+'"><td>'+n.name+'</td><td class="num">'+n.share+'%</td><td class="num">'+n.prob+'%</td><td class="num">'+n.impact+'天</td><td class="num">'+n.alt+'%</td><td class="num" style="color:'+scoreColor(n._score)+';font-size:15px">'+n._score+'</td><td><div class="risk-bar"><div class="risk-bar-fill" style="width:'+n._score+'%;background:'+scoreColor(n._score)+'"></div></div><span style="font-size:11px;margin-top:2px;display:block">'+lv+'</span></td></tr>';
+    });
+    h+='</tbody>';
+    $('nodeTable').innerHTML=h;
+  }
+
+  function renderPlans(data){
+    var plans={
+      spof:{title:'单点依赖节点',icon:'🎯',items:[]},
+      high:{title:'高风险节点',icon:'🚨',items:[]},
+      alt:{title:'替代方案不足',icon:'🔄',items:[]}
+    };
+    data.forEach(function(n){
+      if(n.share>=70&&n.alt<40)plans.spof.items.push(n.name+'（占比'+n.share+'%，替代仅'+n.alt+'%）→ 建议：开发备选供应商，目标替代就绪≥60%，3个月内完成');
+      if(n._score>=60)plans.high.items.push(n.name+'（风险分'+n._score+'）→ 建议：建立安全库存（'+Math.ceil(n.impact*0.5)+'天用量），签订保供协议');
+      if(n.alt<40)plans.alt.items.push(n.name+'（替代就绪'+n.alt+'%）→ 建议：启动双源采购，储备2-3家备选，缩短切换周期至'+Math.ceil(n.impact*0.3)+'天');
+    });
+    var h='';
+    Object.keys(plans).forEach(function(k){
+      var p=plans[k];
+      if(p.items.length){
+        h+='<div style="margin-bottom:16px"><div style="font-size:14px;font-weight:700;color:'+ (k==='spof'?'#dc2626':k==='high'?'#d97706':'#4f46e5') +';margin-bottom:8px">'+p.icon+' '+p.title+'（'+p.items.length+'项）</div>';
+        h+='<ul style="list-style:none;padding:0;margin:0">';
+        p.items.forEach(function(it){h+='<li style="padding:8px 12px;background:var(--bg-soft);border-radius:8px;margin-bottom:6px;font-size:13px;color:var(--ink-soft);border-left:3px solid '+(k==='spof'?'#dc2626':k==='high'?'#d97706':'#4f46e5')+'">'+it+'</li>'});
+        h+='</ul></div>';
+      }
+    });
+    if(!h)h='<p style="color:var(--muted);text-align:center;padding:20px">暂无高危节点，供应链韧性良好</p>';
+    $('emergencyPlans').innerHTML=h;
+  }
+
+  function renderTips(data,avg,spof,high,level){
+    var tips=[];
+    tips.push('供应链综合韧性评分 '+Math.round(avg)+'，等级「'+level+'」，'+(avg>=50?'韧性不足，需优先治理高危节点。':avg>=35?'韧性中等，有优化空间。':'韧性良好，保持监控。'));
+    if(spof>0)tips.push('识别到 '+spof+' 个单点依赖节点（占比≥70%且替代就绪<40%），是供应链最大脆弱点，建议优先开发备选供应商。');
+    if(high>0)tips.push('有 '+high+' 个高风险节点（风险分≥60），建议为每个高危节点建立安全库存并签订保供协议。');
+    var worst=data.slice().sort(function(a,b){return b._score-a._score})[0];
+    if(worst)tips.push('风险最高节点「'+worst.name+'」（风险分'+worst._score+'，占比'+worst.share+'%，影响'+worst.impact+'天），中断可能导致约'+Math.round(worst.share/100*worst.impact)+'天·占比的供应缺口。');
+    var avgAlt=data.length?data.reduce(function(a,b){return a+b.alt},0)/data.length:0;
+    tips.push('平均替代就绪度 '+Math.round(avgAlt)+'%，'+(avgAlt<50?'偏低，建议系统性提升备选供应商能力。':'良好，多元化供应基础扎实。'));
+    tips.push('建议建立"韧性仪表盘"持续监控各节点占比、中断概率、替代就绪三项核心指标，月度复盘更新。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_scra_data',JSON.stringify(nodes))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_scra_data'));if(d&&d.length)nodes=d}catch(e){}}
+  return {calc:calc,update:update,addNode:addNode,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SCRA.init)}else{SCRA.init()}
+</script>
+</body>
+</html>

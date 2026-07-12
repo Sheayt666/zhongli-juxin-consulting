@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="TCO总拥有成本计算器：采购+物流+质量+库存+管理全成本核算，供应商TCO对比，CSS成本堆叠图可视化，跨境卖家供应链成本分析工具。">
+<title>TCO总拥有成本计算器 - 全成本核算·供应商TCO对比 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.supplier-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.supplier-panel{border:1px solid var(--rule);border-radius:14px;padding:20px;background:#fff}
+.supplier-panel h3{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.supplier-panel.a h3{color:#4f46e5}.supplier-panel.b h3{color:#10b981}
+.tco-stack{display:flex;flex-direction:column-reverse;gap:2px;height:300px;border-radius:10px;overflow:hidden;margin:16px 0}
+.tco-segment{display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12px;font-weight:600;color:#fff;transition:flex .4s;min-height:20px}
+.tco-segment .ts-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tco-segment .ts-val{flex-shrink:0;margin-left:8px}
+.tco-table{width:100%;border-collapse:collapse;font-size:13px}
+.tco-table th{padding:10px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.tco-table th.num{text-align:right}
+.tco-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.tco-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.tco-table tr.total td{background:linear-gradient(90deg,#f0f4ff,#e0e7ff);font-weight:800;color:#4f46e5;font-size:14px}
+.tco-table tr.winner td{background:linear-gradient(90deg,#ecfdf5,#d1fae5);color:#059669}
+.cost-input-row{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule-light)}
+.cost-input-row label{font-size:12px;font-weight:600;color:var(--ink-soft)}
+.cost-input-row input{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;font-size:13px;width:100%}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3,.supplier-cols{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.cost-input-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+  <a href="supply-chain-resilience-assessor.html" class="workflow-step">韧性评估</a>
+  <a href="supplier-collaboration-portal.html" class="workflow-step">协同门户</a>
+  <a href="tco-calculator.html" class="workflow-step active">TCO</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">TCO总拥有成本计算器</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">💸</span>TCO总拥有成本计算器 Total Cost of Ownership</h1>
+  <p>采购成本+物流成本+质量成本+库存成本+管理成本全成本核算，跳出"只看采购单价"陷阱，双供应商TCO对比，CSS成本堆叠图直观展示隐藏成本，找出真正最优供应商。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card warning"><div class="mc-label">供应商A TCO</div><div class="mc-value" id="mTCOa">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">供应商B TCO</div><div class="mc-value" id="mTCOb">$0</div></div>
+    <div class="metric-card"><div class="mc-label">TCO差额</div><div class="mc-value" id="mDiff">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">最优供应商</div><div class="mc-value" id="mWinner" style="font-size:18px">-</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏭 供应商成本输入（按订单10000件计）</h2>
+    <div class="cost-input-row" style="font-size:11px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--rule)">
+      <div>成本类别</div><div style="text-align:right">供应商A ($)</div><div style="text-align:right">供应商B ($)</div>
+    </div>
+    <div id="costRows"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 TCO成本堆叠对比图</h2>
+    <div class="supplier-cols">
+      <div class="supplier-panel a">
+        <h3>🔵 供应商A</h3>
+        <div class="tco-stack" id="stackA"></div>
+        <div style="text-align:center;font-size:20px;font-weight:800;color:#4f46e5" id="totalA">$0</div>
+      </div>
+      <div class="supplier-panel b">
+        <h3>🟢 供应商B</h3>
+        <div class="tco-stack" id="stackB"></div>
+        <div style="text-align:center;font-size:20px;font-weight:800;color:#10b981" id="totalB">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 TCO明细对比表</h2>
+    <div style="overflow-x:auto"><table class="tco-table" id="tcoTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 TCO分析建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">⭐</div><div><h5>供应商评分</h5><p>综合评分</p></div></a>
+      <a href="cost-reduction-planner.html" class="rt-card"><div class="rt-icon">📉</div><div><h5>降本规划</h5><p>成本优化</p></div></a>
+      <a href="multi-supplier-allocator.html" class="rt-card"><div class="rt-icon">🔀</div><div><h5>多供应商分配</h5><p>份额分配</p></div></a>
+      <a href="first-mile-cost-allocator.html" class="rt-card"><div class="rt-icon">🚢</div><div><h5>头程成本分摊</h5><p>物流成本分摊</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="tco-calculator.html">TCO计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var TCO=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var costItems=[
+    {key:'purchase',name:'采购成本(单价×数量)',a:48000,b:44000,color:'#4f46e5'},
+    {key:'logistics',name:'物流运输成本',a:8000,b:12000,color:'#6366f1'},
+    {key:'tariff',name:'关税与清关',a:4000,b:5500,color:'#818cf8'},
+    {key:'quality',name:'质量成本(不良+返工)',a:3000,b:6500,color:'#f59e0b'},
+    {key:'inventory',name:'库存持有成本',a:2500,b:3500,color:'#ef4444'},
+    {key:'management',name:'管理沟通成本',a:1500,b:4000,color:'#8b5cf6'},
+    {key:'payment',name:'资金占用成本',a:2000,b:3000,color:'#10b981'},
+    {key:'other',name:'其他隐性成本',a:1000,b:2500,color:'#64748b'}
+  ];
+
+  function renderRows(){
+    var h='';
+    costItems.forEach(function(it){
+      h+='<div class="cost-input-row"><label>'+it.name+'</label><input type="number" value="'+it.a+'" step="100" oninput="TCO.update(\''+it.key+'\',\'a\',parseFloat(this.value)||0)"><input type="number" value="'+it.b+'" step="100" oninput="TCO.update(\''+it.key+'\',\'b\',parseFloat(this.value)||0)"></div>';
+    });
+    $('costRows').innerHTML=h;
+  }
+  function update(k,s,v){var it=costItems.find(function(c){return c.key===k});if(it)it[s]=v;calc()}
+
+  function calc(){
+    var totalA=costItems.reduce(function(a,b){return a+b.a},0);
+    var totalB=costItems.reduce(function(a,b){return a+b.b},0);
+    var diff=Math.abs(totalA-totalB);
+    var winner=totalA<totalB?'供应商A':'供应商B';
+    $('mTCOa').textContent=fmt(totalA);
+    $('mTCOb').textContent=fmt(totalB);
+    $('mDiff').textContent=fmt(diff);
+    $('mWinner').textContent=winner;
+    $('totalA').textContent='TCO '+fmt(totalA);
+    $('totalB').textContent='TCO '+fmt(totalB);
+    renderStack('stackA',costItems,totalA,'a');
+    renderStack('stackB',costItems,totalB,'b');
+    renderTable(costItems,totalA,totalB);
+    renderTips(costItems,totalA,totalB,diff,winner);
+    save();
+  }
+
+  function renderStack(id,items,total,side){
+    var max=total;
+    var h='';
+    items.forEach(function(it){
+      var v=it[side];
+      var pct=max>0?v/max*100:0;
+      if(pct>0)h+='<div class="tco-segment" style="flex:'+Math.max(pct,3)+';background:'+it.color+'"><span class="ts-name">'+it.name.replace(/\(.*\)/,'')+'</span><span class="ts-val">'+fmt(v)+'</span></div>';
+    });
+    $(id).innerHTML=h;
+  }
+
+  function renderTable(items,totalA,totalB){
+    var h='<thead><tr><th>成本类别</th><th class="num">供应商A</th><th class="num">供应商B</th><th class="num">差额</th><th class="num">A占比</th><th class="num">B占比</th></tr></thead><tbody>';
+    items.forEach(function(it){
+      var d=it.b-it.a;
+      h+='<tr><td>'+it.name+'</td><td class="num">'+fmt(it.a)+'</td><td class="num">'+fmt(it.b)+'</td><td class="num" style="color:'+(d>0?'#059669':'#dc2626')+'">'+(d>0?'A省':'B省')+fmt(Math.abs(d))+'</td><td class="num">'+(totalA>0?it.a/totalA*100:0).toFixed(1)+'%</td><td class="num">'+(totalB>0?it.b/totalB*100:0).toFixed(1)+'%</td></tr>';
+    });
+    h+='<tr class="total"><td>TCO总计</td><td class="num">'+fmt(totalA)+'</td><td class="num">'+fmt(totalB)+'</td><td class="num">'+fmt(Math.abs(totalA-totalB))+'</td><td class="num">100%</td><td class="num">100%</td></tr>';
+    var unitA=totalA/10000,unitB=totalB/10000;
+    h+='<tr class="'+(unitA<unitB?'winner':'')+'"><td>单件TCO (按10000件)</td><td class="num">$'+unitA.toFixed(2)+'</td><td class="num">$'+unitB.toFixed(2)+'</td><td class="num">$'+Math.abs(unitA-unitB).toFixed(2)+'</td><td class="num">-</td><td class="num">-</td></tr>';
+    h+='</tbody>';
+    $('tcoTable').innerHTML=h;
+  }
+
+  function renderTips(items,totalA,totalB,diff,winner){
+    var tips=[];
+    tips.push('供应商A TCO '+fmt(totalA)+' vs 供应商B TCO '+fmt(totalB)+'，'+winner+'更优，节省 '+fmt(diff)+'（'+(Math.min(totalA,totalB)/Math.max(totalA,totalB)*100).toFixed(1)+'%成本比）。');
+    var purchaseA=items[0].a,purchaseB=items[0].b;
+    var hiddenA=totalA-purchaseA,hiddenB=totalB-purchaseB;
+    tips.push('供应商A采购价 '+fmt(purchaseA)+'，隐藏成本 '+fmt(hiddenA)+'（占TCO '+(hiddenA/totalA*100).toFixed(0)+'%）；供应商B采购价 '+fmt(purchaseB)+'，隐藏成本 '+fmt(hiddenB)+'（占TCO '+(hiddenB/totalB*100).toFixed(0)+'%）。');
+    if(purchaseB<purchaseA&&totalB>totalA)tips.push('供应商B采购单价更低，但TCO更高——典型"低价陷阱"，隐藏成本吞噬了采购节省。');
+    var biggestGap=items.slice().sort(function(a,b){return Math.abs(b.b-b.a)-Math.abs(a.a-a.b)})[0];
+    if(biggestGap)tips.push('成本差异最大项「'+biggestGap.name+'」（差额'+fmt(Math.abs(biggestGap.b-biggestGap.a))+'），是供应商选择的关键差异点。');
+    var qualityA=items[3].a,qualityB=items[3].b;
+    if(qualityB>qualityA*1.5)tips.push('供应商B质量成本是A的'+(qualityB/qualityA).toFixed(1)+'倍，若选B需重点管控质量，否则隐性损失持续扩大。');
+    tips.push('建议用TCO而非采购单价作为供应商选择标准，并每季度更新TCO核算，持续监控隐藏成本变化。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_tco_data',JSON.stringify(costItems))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_tco_data'));if(d&&d.length)costItems=d}catch(e){}}
+  return {calc:calc,update:update,init:function(){load();renderRows();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TCO.init)}else{TCO.init()}
+</script>
+</body>
+</html>

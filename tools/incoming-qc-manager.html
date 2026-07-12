@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="来料质检管理器：AQL抽样方案、缺陷分类、退货处理，CSS质检报告。免费在线跨境电商来料质检工具。">
+<meta name="keywords" content="来料质检,AQL抽样,缺陷分类,质检报告,退货处理,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/incoming-qc-manager.html">
+<title>来料质检管理器 - AQL抽样·缺陷分类·退货处理 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.iqm-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.iqm-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.aql-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.aql-table th{background:var(--bg-soft);padding:10px;text-align:center;font-weight:600;border:1px solid var(--rule)}
+.aql-table td{padding:10px;text-align:center;border:1px solid var(--rule-light);color:var(--ink-soft)}
+.aql-table td.highlight{background:#eef2ff;font-weight:700;color:#4f46e5}
+.defect-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.defect-card{padding:18px;border-radius:12px;border-top:4px solid #ef4444;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.defect-card.major{border-top-color:#f59e0b}.defect-card.minor{border-top-color:#4f46e5}
+.defect-card .dc-title{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--ink)}
+.defect-card .dc-list{list-style:none;padding:0;margin:0}
+.defect-card .dc-list li{padding:5px 0 5px 18px;font-size:12px;color:var(--ink-soft);position:relative}
+.defect-card .dc-list li::before{content:'•';position:absolute;left:0;color:var(--muted)}
+.result-box{padding:20px;border-radius:12px;margin-bottom:14px}
+.result-box.pass{background:#ecfdf5;border:1px solid #6ee7b7}
+.result-box.fail{background:#fef2f2;border:1px solid #fca5a5}
+.result-box.cond{background:#fffbeb;border:1px solid #fcd34d}
+.result-box .rb-icon{font-size:32px;margin-bottom:8px}
+.result-box .rb-title{font-size:18px;font-weight:800;margin-bottom:6px}
+.result-box .rb-desc{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.action-list{list-style:none;padding:0;margin:0}
+.action-list li{padding:12px 0 12px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.6}
+.action-list li:last-child{border-bottom:none}
+.action-list li::before{content:'✓';position:absolute;left:0;top:12px;color:#10b981;font-weight:700}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.defect-grid{grid-template-columns:1fr}.aql-table{font-size:11px}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"来料质检管理器","description":"AQL抽样方案、缺陷分类、退货处理，CSS质检报告。","url":"https://juxin-consulting.help/tools/incoming-qc-manager.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"来料质检管理器","item":"https://juxin-consulting.help/tools/incoming-qc-manager.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="incoming_qc_manager">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🔍 采购管理工作流</span>
+      <h1>来料质检 <em>管理器</em></h1>
+      <p class="tool-hero-desc">基于AQL 2.5抽样标准自动计算抽样方案，按致命/主要/次要三级分类缺陷，判定批次接收或退货，输出CSS质检报告与退货处理流程，把控入库质量关。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第10步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a><span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a><span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a><span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本</a><span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a><span class="arrow">→</span>
+      <a href="supplier-database-search-w18.html" class="step">供应商搜索</a><span class="arrow">→</span>
+      <a href="purchase-order-manager.html" class="step">采购订单</a><span class="arrow">→</span>
+      <a href="supplier-performance-scorecard-w18.html" class="step">供应商记分卡</a><span class="arrow">→</span>
+      <a href="price-negotiation-strategist.html" class="step">价格谈判</a><span class="arrow">→</span>
+      <span class="step current">来料质检</span><span class="arrow">→</span>
+      <a href="supplier-risk-monitor.html" class="step">供应商风险</a><span class="arrow">→</span>
+      <a href="purchase-cost-tracker.html" class="step">采购成本</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 质检参数</h2>
+          <p class="calc-form-subtitle">填写批量大小与检出缺陷数</p>
+          <div class="calc-field"><label>订单/PO编号</label><input type="text" id="po" value="PO-1001" oninput="IQM.calc()"></div>
+          <div class="calc-field"><label>批量大小 <span class="hint">(pcs)</span></label><input type="number" id="lot" value="1000" oninput="IQM.calc()"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>AQL等级</label><select id="aql" onchange="IQM.calc()"><option value="2.5" selected>2.5 (常规)</option><option value="1.5">1.5 (严格)</option><option value="4.0">4.0 (宽松)</option></select></div>
+            <div class="calc-field"><label>检验水平</label><select id="level" onchange="IQM.calc()"><option value="II" selected>Level II (常规)</option><option value="I">Level I (宽松)</option><option value="S4">S-4 (特殊)</option></select></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>致命缺陷数</label><input type="number" id="critical" value="0" min="0" oninput="IQM.calc()"></div>
+            <div class="calc-field"><label>主要缺陷数</label><input type="number" id="major" value="3" min="0" oninput="IQM.calc()"></div>
+          </div>
+          <div class="calc-field"><label>次要缺陷数</label><input type="number" id="minor" value="8" min="0" oninput="IQM.calc()"></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="iqm-section">
+        <h3>📊 AQL抽样方案表</h3>
+        <table class="aql-table" id="aqlTable"></table>
+        <p style="font-size:12px;color:var(--muted)">💡 标准依据 ISO 2859-1 (GB/T 2828.1)，Ac=接收数，Re=拒收数</p>
+      </div>
+
+      <div class="iqm-section">
+        <h3>🏷️ 缺陷分类标准</h3>
+        <div class="defect-grid">
+          <div class="defect-card"><div class="dc-title">致命缺陷 (Critical)</div><ul class="dc-list"><li>电气安全隐患/漏电</li><li>尖锐边缘致伤</li><li>有毒有害物质超标</li><li>缺失安全警示标识</li></ul></div>
+          <div class="defect-card major"><div class="dc-title">主要缺陷 (Major)</div><ul class="dc-list"><li>功能失效/无法使用</li><li>外观明显划痕变形</li><li>尺寸超差影响装配</li><li>包装破损影响销售</li></ul></div>
+          <div class="defect-card minor"><div class="dc-title">次要缺陷 (Minor)</div><ul class="dc-list"><li>轻微外观瑕疵</li><li>标签字体模糊</li><li>包装轻微污渍</li><li>说明书缺页</li></ul></div>
+        </div>
+      </div>
+
+      <div class="iqm-section">
+        <h3>📄 质检判定结果</h3>
+        <div id="verdictWrap"></div>
+        <h4 style="font-size:14px;font-weight:700;margin:16px 0 10px">退货处理流程（如不合格）</h4>
+        <ul class="action-list" id="actionList"></ul>
+      </div>
+
+      <div class="iqm-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="qc-checklist.html" class="related-card"><span class="related-card-icon">✅</span><div class="related-card-content"><h5>质检清单</h5><p>质检要点</p></div></a>
+          <a href="purchase-order-manager.html" class="related-card"><span class="related-card-icon">📝</span><div class="related-card-content"><h5>采购订单管理</h5><p>PO追踪</p></div></a>
+          <a href="supplier-performance-scorecard-w18.html" class="related-card"><span class="related-card-icon">📊</span><div class="related-card-content"><h5>供应商记分卡</h5><p>质量评分</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="price-negotiation-strategist.html" class="wbn-btn prev">← 上一步：价格谈判</a>
+        <a href="supplier-risk-monitor.html" class="wbn-btn next">下一步：供应商风险 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="incoming-qc-manager.html">来料质检</a></li><li><a href="qc-checklist.html">质检清单</a></li><li><a href="purchase-cost-tracker.html">采购成本</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var IQM=(function(){
+  'use strict';
+  // AQL抽样表（简化）：批量范围→样本量字码→样本量
+  var SAMPLE_PLAN={
+    'II':{'51-90':{n:13,crit:[0,1],maj:[1,2],min:[3,4]},'91-150':{n:20,crit:[0,1],maj:[1,2],min:[3,4]},'151-280':{n:32,crit:[0,1],maj:[2,3],min:[5,6]},'281-500':{n:50,crit:[0,1],maj:[3,4],min:[7,8]},'501-1200':{n:80,crit:[0,1],maj:[5,6],min:[10,11]},'1201-3200':{n:125,crit:[0,1],maj:[7,8],min:[14,15]},'3201-10000':{n:200,crit:[0,1],maj:[10,11],min:[21,22]}},
+    'I':{'51-90':{n:8,crit:[0,1],maj:[1,2],min:[2,3]},'91-150':{n:13,crit:[0,1],maj:[1,2],min:[3,4]},'151-280':{n:20,crit:[0,1],maj:[2,3],min:[5,6]},'281-500':{n:32,crit:[0,1],maj:[3,4],min:[7,8]},'501-1200':{n:50,crit:[0,1],maj:[5,6],min:[10,11]},'1201-3200':{n:80,crit:[0,1],maj:[7,8],min:[14,15]}},
+    'S4':{'51-90':{n:5,crit:[0,1],maj:[0,1],min:[1,2]},'91-150':{n:8,crit:[0,1],maj:[1,2],min:[2,3]},'151-280':{n:13,crit:[0,1],maj:[1,2],min:[3,4]},'281-500':{n:20,crit:[0,1],maj:[2,3],min:[5,6]},'501-1200':{n:32,crit:[0,1],maj:[3,4],min:[7,8]},'1201-3200':{n:50,crit:[0,1],maj:[5,6],min:[10,11]}}
+  };
+  var AQL_LIMITS={'2.5':'II','1.5':'II','4.0':'II'};
+  function v(id){var el=document.getElementById(id);return el?el.value:'';}
+  function n(id){return parseInt(document.getElementById(id).value)||0;}
+  function getPlan(lot,level){
+    var plan=SAMPLE_PLAN[level]||SAMPLE_PLAN['II'];
+    for(var k in plan){var parts=k.split('-');if(lot>=parseInt(parts[0])&&lot<=parseInt(parts[1]))return {range:k,info:plan[k]};}
+    // 默认取最大
+    var lastKey=Object.keys(plan).pop();return {range:lastKey,info:plan[lastKey]};
+  }
+  function calc(){
+    var lot=n('lot'),level=v('level'),aql=v('aql');
+    var crit=n('critical'),maj=n('major'),min=n('minor');
+    var p=getPlan(lot,level);
+    var sampleN=p.info.n;
+    var critAc=p.info.crit[0],critRe=p.info.crit[1];
+    var majAc=p.info.maj[0],majRe=p.info.maj[1];
+    var minAc=p.info.min[0],minRe=p.info.min[1];
+    var verdict='pass',verdictText='接收',verdictDesc='批次质量合格，准予入库',verdictColor='#10b981';
+    if(crit>=critRe){verdict='fail';verdictText='拒收';verdictDesc='发现致命缺陷，批次直接拒收，不得入库',verdictColor='#ef4444';}
+    else if(maj>=majRe){verdict='fail';verdictText='拒收';verdictDesc='主要缺陷数'+maj+'超过接收数'+majAc+'，批次拒收',verdictColor='#ef4444';}
+    else if(min>=minRe){verdict='cond';verdictText='条件接收';verdictDesc='次要缺陷数'+min+'超过接收数'+minAc+'，建议让步接收并要求供应商整改',verdictColor='#f59e0b';}
+    var h='<table class="aql-table"><thead><tr><th>批量范围</th><th>检验水平</th><th>样本量</th><th>缺陷类型</th><th>AQL</th><th>Ac接收</th><th>Re拒收</th><th>实际</th><th>判定</th></tr></thead><tbody>';
+    var rows=[
+      {type:'致命',aql:'0.65',ac:critAc,re:critRe,act:crit,pass:crit<critRe},
+      {type:'主要',aql:aql,ac:majAc,re:majRe,act:maj,pass:maj<majRe},
+      {type:'次要',aql:(parseFloat(aql)+1.5).toFixed(1),ac:minAc,re:minRe,act:min,pass:min<minRe}
+    ];
+    h+='<tr><td rowspan="3">'+p.range+'</td><td rowspan="3">Level '+level+'</td><td rowspan="3">'+sampleN+'</td><td>致命</td><td>0.65</td><td>'+critAc+'</td><td>'+critRe+'</td><td>'+crit+'</td><td '+(crit<critRe?'style="color:#10b981;font-weight:700"':'style="color:#ef4444;font-weight:700"')+'>'+(crit<critRe?'通过':'拒收')+'</td></tr>';
+    h+='<tr><td>主要</td><td>'+aql+'</td><td>'+majAc+'</td><td>'+majRe+'</td><td>'+maj+'</td><td '+(maj<majRe?'style="color:#10b981;font-weight:700"':'style="color:#ef4444;font-weight:700"')+'>'+(maj<majRe?'通过':'拒收')+'</td></tr>';
+    h+='<tr><td>次要</td><td>'+(parseFloat(aql)+1.5).toFixed(1)+'</td><td>'+minAc+'</td><td>'+minRe+'</td><td>'+min+'</td><td '+(min<minRe?'style="color:#10b981;font-weight:700"':'style="color:#f59e0b;font-weight:700"')+'>'+(min<minRe?'通过':(verdict==='cond'?'条件':'拒收'))+'</td></tr>';
+    h+='</tbody></table>';
+    document.getElementById('aqlTable').innerHTML=h;
+    var vh='<div class="result-box '+verdict+'"><div class="rb-icon">'+(verdict==='pass'?'✅':verdict==='cond'?'⚠️':'❌')+'</div><div class="rb-title" style="color:'+verdictColor+'">'+verdictText+'</div><div class="rb-desc">'+verdictDesc+'</div></div>';
+    document.getElementById('verdictWrap').innerHTML=vh;
+    var actions=verdict==='fail'?['1. 立即冻结该批次库存，贴"不合格待处理"标识','2. 拍照记录所有缺陷样本，留存证据','3. 通知供应商并发出SCAR纠正预防措施报告','4. 协商退货/换货/返工方案及费用承担','5. 全批100%全检挑出合格品（如可行）','6. 更新供应商绩效记分卡，记录质量异常','7. 要求供应商提供8D报告与改善验证']:verdict==='cond'?['1. 让步接收该批次，加贴标识便于追溯','2. 通知供应商次要缺陷情况并要求整改','3. 适当增加下批次抽检比例至加严检验','4. 跟踪供应商改善措施落实情况','5. 必要时协商次要缺陷扣款']:['1. 批次准予入库，正常流转','2. 记录质检数据归档','3. 持续监控该供应商质量稳定性','4. 定期复盘质量趋势'];
+    var ah='';actions.forEach(function(a){ah+='<li>'+a+'</li>';});
+    document.getElementById('actionList').innerHTML=ah;
+    var totalDefect=crit+maj+min;
+    var dppm=Math.round(totalDefect/sampleN*1000000);
+    document.getElementById('resultCard').innerHTML=
+      '<h3>🔍 质检概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">抽样量</div><div class="ri-value">'+sampleN+' pcs</div></div>'+
+      '<div class="result-item"><div class="ri-label">总缺陷数</div><div class="ri-value '+(totalDefect>0?'negative':'positive')+'">'+totalDefect+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">不良率</div><div class="ri-value" style="color:'+verdictColor+'">'+(totalDefect/sampleN*100).toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">判定</div><div class="ri-value" style="color:'+verdictColor+'">'+verdictText+'</div></div>'+
+      '</div><div class="result-note">'+verdictDesc+'</div>';
+  }
+  function init(){calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',IQM.init);}else{IQM.init();}
+</script>
+</body>
+</html>

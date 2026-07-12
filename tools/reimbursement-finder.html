@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FBA赔偿查找器：自动核查异常库存项（丢失/损坏/多收），生成索赔建议列表，预估追回金额。">
+<title>FBA赔偿查找器 - 异常核查·索赔建议·追回预估 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;color:var(--ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.35)}.btn-secondary{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.warning{color:var(--warning)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.inv-table{width:100%;border-collapse:collapse;font-size:13px}.inv-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px}.inv-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}.inv-table input{width:70px;padding:5px 8px;border:1px solid var(--rule);border-radius:6px;font-size:13px;font-family:inherit}.inv-table input:focus{outline:none;border-color:var(--primary)}
+.claim-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px}.claim-card.high{border-left:4px solid var(--danger)}.claim-card.medium{border-left:4px solid var(--warning)}.claim-card.low{border-left:4px solid var(--primary)}.claim-icon{font-size:28px;flex-shrink:0}.claim-info{flex:1}.claim-info h4{font-size:15px;font-weight:700;margin-bottom:4px}.claim-info p{font-size:13px;color:var(--muted);margin-bottom:4px}.claim-amount{font-size:20px;font-weight:800;color:var(--success);text-align:right;flex-shrink:0}.claim-amount .ca-label{font-size:11px;color:var(--muted);font-weight:400}
+.priority-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}.priority-high{background:var(--danger-bg);color:var(--danger)}.priority-medium{background:var(--warning-bg);color:var(--warning)}.priority-low{background:var(--primary-bg);color:var(--primary)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W5 财务利润工作流</div><div class="workflow-steps">
+<a href="fba-calculator.html" class="workflow-step">FBA利润</a><a href="margin-markup.html" class="workflow-step">利润率</a><a href="roi-payback.html" class="workflow-step">ROI回本</a><a href="break-even-volume.html" class="workflow-step">盈亏平衡</a><a href="cash-flow-forecast.html" class="workflow-step">现金流预测</a><a href="fba-refund-claim-tracker.html" class="workflow-step">索赔追踪</a><a href="fee-breakdown-decomposer.html" class="workflow-step">费用拆解</a><a href="sku-profit-analyzer.html" class="workflow-step">SKU分析</a><a href="multi-country-vat-calculator.html" class="workflow-step">VAT计算</a><a href="reimbursement-finder.html" class="workflow-step active">赔偿查找</a><a href="profit-trend-analyzer.html" class="workflow-step">利润趋势</a><a href="cost-optimization-advisor.html" class="workflow-step">成本优化</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W5 财务利润</a><span>/</span>赔偿查找器</div>
+<div class="tool-header"><span class="tool-badge">W5 财务利润工作流</span><h1>FBA<em>赔偿查找器</em></h1><p>输入库存记录与FBA费用记录，自动核查异常项（库存丢失/仓库损坏/费用多收），生成索赔建议列表并预估追回金额。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sTotalItems">0</div><div class="stat-lbl">核查项目</div></div>
+<div class="stat-card"><div class="stat-val danger" id="sAnomalies">0</div><div class="stat-lbl">异常项</div></div>
+<div class="stat-card"><div class="stat-val success" id="sRecoverable">$0</div><div class="stat-lbl">预估追回</div></div>
+<div class="stat-card"><div class="stat-val warning" id="sClaimCount">0</div><div class="stat-lbl">索赔建议</div></div>
+</div>
+
+<div class="card"><h2>库存记录输入</h2>
+<div style="overflow-x:auto"><table class="inv-table"><thead><tr><th>ASIN</th><th>系统记录库存</th><th>实际盘点库存</th><th>单价($)</th><th>差异</th></tr></thead><tbody id="invBody"></tbody></table></div>
+<div style="margin-top:12px"><button class="btn btn-secondary" onclick="Reimb.addInvRow()">+ 添加库存记录</button> <button class="btn btn-secondary" onclick="Reimb.loadSample()">载入示例</button></div>
+</div>
+
+<div class="card"><h2>FBA费用记录</h2>
+<div style="overflow-x:auto"><table class="inv-table"><thead><tr><th>ASIN</th><th>应收FBA费($)</th><th>实收FBA费($)</th><th>差异</th></tr></thead><tbody id="feeBody"></tbody></table></div>
+<div style="margin-top:12px"><button class="btn btn-secondary" onclick="Reimb.addFeeRow()">+ 添加费用记录</button></div>
+</div>
+
+<div class="card"><h2>索赔建议列表</h2><div id="claimList"></div></div>
+
+<div class="related-grid">
+<a href="fba-refund-claim-tracker.html" class="related-card"><span class="rc-icon">📋</span><div><h4>索赔追踪器</h4><p>7类索赔状态追踪</p></div></a>
+<a href="fee-breakdown-decomposer.html" class="related-card"><span class="rc-icon">💰</span><div><h4>费用拆解器</h4><p>费用明细可视化</p></div></a>
+<a href="fba-calculator.html" class="related-card"><span class="rc-icon">📦</span><div><h4>FBA利润计算器</h4><p>利润计算工具</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Reimb = {
+  inv:[],fees:[],
+  init(){ this.loadSample(); },
+  loadSample(){
+    this.inv=[
+      {asin:'B08AAA111',sys:100,actual:95,price:12.50},
+      {asin:'B08BBB222',sys:200,actual:185,price:8.99},
+      {asin:'B08CCC333',sys:50,actual:50,price:25.00},
+      {asin:'B08DDD444',sys:300,actual:280,price:5.50},
+      {asin:'B08EEE555',sys:80,actual:72,price:19.99},
+    ];
+    this.fees=[
+      {asin:'B08AAA111',expected:3.95,actual:4.50},
+      {asin:'B08BBB222',expected:2.80,actual:2.80},
+      {asin:'B08CCC333',expected:5.50,actual:6.20},
+      {asin:'B08DDD444',expected:2.40,actual:2.40},
+      {asin:'B08EEE555',expected:4.20,actual:5.10},
+    ];
+    this.render();
+  },
+  addInvRow(){ this.inv.push({asin:'B08'+Math.random().toString(36).substr(2,7).toUpperCase(),sys:0,actual:0,price:0}); this.render(); },
+  addFeeRow(){ this.fees.push({asin:'B08'+Math.random().toString(36).substr(2,7).toUpperCase(),expected:0,actual:0}); this.render(); },
+  updateInv(i,f,v){ this.inv[i][f]=parseFloat(v)||0; this.render(); },
+  updateFee(i,f,v){ this.fees[i][f]=parseFloat(v)||0; this.render(); },
+  delInv(i){ this.inv.splice(i,1); this.render(); },
+  delFee(i){ this.fees.splice(i,1); this.render(); },
+  render(){
+    document.getElementById('invBody').innerHTML=this.inv.map((r,i)=>{
+      const diff=r.sys-r.actual;
+      return `<tr><td><input type="text" value="${r.asin}" style="width:110px" oninput="Reimb.updateInv(${i},'asin',this.value)"></td><td><input type="number" value="${r.sys}" min="0" oninput="Reimb.updateInv(${i},'sys',this.value)"></td><td><input type="number" value="${r.actual}" min="0" oninput="Reimb.updateInv(${i},'actual',this.value)"></td><td><input type="number" value="${r.price}" step="0.01" min="0" oninput="Reemb.updateInv(${i},'price',this.value)" oninput="Reimb.updateInv(${i},'price',this.value)"></td><td style="font-weight:700;color:${diff>0?'var(--danger)':'var(--muted)'}">${diff>0?'-'+diff:'0'}</td><td><button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="Reimb.delInv(${i})">删除</button></td></tr>`;
+    }).join('');
+    document.getElementById('feeBody').innerHTML=this.fees.map((r,i)=>{
+      const diff=r.actual-r.expected;
+      return `<tr><td><input type="text" value="${r.asin}" style="width:110px" oninput="Reimb.updateFee(${i},'asin',this.value)"></td><td><input type="number" value="${r.expected}" step="0.01" min="0" oninput="Reimb.updateFee(${i},'expected',this.value)"></td><td><input type="number" value="${r.actual}" step="0.01" min="0" oninput="Reimb.updateFee(${i},'actual',this.value)"></td><td style="font-weight:700;color:${diff>0?'var(--danger)':'var(--muted)'}">${diff>0?'+$'+diff.toFixed(2):'$0.00'}</td><td><button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="Reimb.delFee(${i})">删除</button></td></tr>`;
+    }).join('');
+    this.calc();
+  },
+  calc(){
+    const claims=[];
+    let totalRecover=0,anomalyCount=0;
+    this.inv.forEach(r=>{
+      const diff=r.sys-r.actual;
+      if(diff>0){
+        const amount=diff*r.price;
+        totalRecover+=amount; anomalyCount++;
+        claims.push({type:'库存丢失',asin:r.asin,qty:diff,amount,priority:amount>100?'high':amount>30?'medium':'low',desc:`系统记录${r.sys}件，实际盘点${r.actual}件，缺失${diff}件，单价$${r.price}`});
+      }
+    });
+    this.fees.forEach(r=>{
+      const diff=r.actual-r.expected;
+      if(diff>0.01){
+        totalRecover+=diff; anomalyCount++;
+        claims.push({type:'费用多收',asin:r.asin,qty:1,amount:diff,priority:diff>1?'high':diff>0.3?'medium':'low',desc:`应收FBA费$${r.expected}，实际收取$${r.actual}，多收$${diff.toFixed(2)}`});
+      }
+    });
+    document.getElementById('sTotalItems').textContent=this.inv.length+this.fees.length;
+    document.getElementById('sAnomalies').textContent=anomalyCount;
+    document.getElementById('sRecoverable').textContent='$'+totalRecover.toFixed(2);
+    document.getElementById('sClaimCount').textContent=claims.length;
+    const sorted=claims.sort((a,b)=>b.amount-a.amount);
+    document.getElementById('claimList').innerHTML=sorted.length?sorted.map(c=>{
+      const icon=c.type==='库存丢失'?'📦':'💰';
+      return `<div class="claim-card ${c.priority}"><div class="claim-icon">${icon}</div><div class="claim-info"><h4>${c.type} — ${c.asin} <span class="priority-badge priority-${c.priority}">${c.priority==='high'?'高优先':'中优先'}</span></h4><p>${c.desc}</p><p style="font-size:12px;color:var(--muted)">建议操作：${c.type==='库存丢失'?'在Seller Central提交库存调查索赔 (Inventory Reconciliation)':'提交Case要求退还多收的FBA费用'}</p></div><div class="claim-amount">$${c.amount.toFixed(2)}<div class="ca-label">预估追回</div></div></div>`;
+    }).join(''):'<div style="text-align:center;padding:32px;color:var(--muted)">✅ 未发现异常项，所有库存和费用记录正常</div>';
+  }
+};
+Reimb.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="培训入职管理器：输入岗位和新员工信息，输出培训路径、技能矩阵、入职清单、考核认证，CSS时间线展示，团队培训管理利器。">
+<meta name="keywords" content="培训管理,入职管理,培训路径,技能矩阵,考核认证,入职清单,团队培训">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/training-onboarding-manager.html">
+<title>培训入职管理器 - 培训路径·技能矩阵·考核认证 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+@media(max-width:768px){.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.timeline{position:relative;padding-left:30px;margin-top:20px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),var(--accent2));border-radius:2px}
+.timeline-item{position:relative;margin-bottom:20px;padding:16px;background:#fff;border:1px solid var(--rule);border-radius:12px;transition:all .2s}
+.timeline-item:hover{box-shadow:0 4px 14px rgba(0,0,0,.06);border-color:var(--accent)}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:18px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 0 0 2px var(--accent)}
+.timeline-item.done::before{background:var(--green);box-shadow:0 0 0 2px var(--green)}
+.timeline-item .ti-day{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase}
+.timeline-item .ti-title{font-size:15px;font-weight:700;margin:4px 0}
+.timeline-item .ti-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.skill-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
+.skill-cell{padding:14px;border-radius:10px;border:1px solid var(--rule);background:#fff;text-align:center}
+.skill-cell .ss-name{font-size:13px;font-weight:600;margin-bottom:6px}
+.skill-cell .ss-level{font-size:20px;font-weight:800}
+.skill-dots{display:flex;gap:3px;justify-content:center;margin-top:4px}
+.skill-dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
+.skill-dot.active{background:var(--accent)}
+</style>
+</head>
+<body class="tool-page" data-tool="training_onboarding_manager">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span><span class="workflow-name">团队管理工作流</span><span class="workflow-step">第7步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+      <span class="arrow">→</span>
+      <a href="okr-goal-tracker.html" class="step">OKR追踪</a>
+      <span class="arrow">→</span>
+      <span class="step current">培训入职</span>
+      <span class="arrow">→</span>
+      <a href="performance-review-system.html" class="step">绩效考核</a>
+      <span class="arrow">→</span>
+      <a href="role-permission-manager.html" class="step">权限管理</a>
+      <span class="arrow">→</span>
+      <a href="team-workflow-automation.html" class="step">工作流自动化</a>
+      <span class="arrow">→</span>
+      <a href="recruitment-pipeline.html" class="step">招聘漏斗</a>
+      <span class="arrow">→</span>
+      <a href="competency-model-builder.html" class="step">胜任力模型</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 团队管理工作流 · 标准版</span>
+      <h1>培训入职 <em>管理器</em></h1>
+      <p class="tool-hero-desc">输入岗位和新员工信息，输出培训路径、技能矩阵、入职清单、考核认证，CSS时间线展示，帮你系统化管理团队培训与入职流程。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🎓 培训入职配置</h2>
+          <p class="calc-form-subtitle">输入岗位和新员工信息，生成个性化培训计划</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>员工姓名</label><input type="text" id="empName" value="李明" oninput="TOM.gen()"></div>
+            <div class="calc-field"><label>岗位</label><select id="position" onchange="TOM.gen()">
+              <option value="ops" selected>运营专员</option>
+              <option value="designer">产品设计师</option>
+              <option value="developer">技术开发</option>
+              <option value="sales">销售经理</option>
+              <option value="cs">客服专员</option>
+            </select></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>入职日期</label><input type="date" id="startDate" value="2026-07-01" onchange="TOM.gen()"></div>
+            <div class="calc-field"><label>培训周期 (天)</label><input type="number" id="duration" value="30" min="7" max="90" step="1" oninput="TOM.gen()"></div>
+          </div>
+          <div class="calc-field"><label>经验等级</label><select id="level" onchange="TOM.gen()">
+            <option value="junior" selected>初级 (0-2年)</option>
+            <option value="mid">中级 (3-5年)</option>
+            <option value="senior">高级 (5年+)</option>
+          </select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📅 培训时间线</h3>
+        <div class="timeline" id="timeline"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 技能矩阵评估</h3>
+        <div class="skill-matrix" id="skillMatrix"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="okr-goal-tracker.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第6步</span>OKR追踪 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="performance-review-system.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第8步</span>绩效考核 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="training-onboarding-manager.html">培训入职</a></li><li><a href="okr-goal-tracker.html">OKR追踪</a></li><li><a href="competency-model-builder.html">胜任力模型</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var TOM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  var TRAINING={
+    ops:[
+      {day:1,title:'公司介绍与文化',desc:'了解公司历史、价值观、组织架构',done:true},
+      {day:3,title:'平台运营基础',desc:'Amazon/eBay后台操作、Listing发布流程',done:true},
+      {day:7,title:'数据分析入门',desc:'销售报表、广告数据、库存分析基础',done:false},
+      {day:14,title:'广告投放实操',desc:'PPC广告创建、关键词研究、竞品分析',done:false},
+      {day:21,title:'客服与售后',desc:'客户沟通、退换货处理、评价维护',done:false},
+      {day:30,title:'独立运营考核',desc:'独立完成Listing优化+广告投放任务',done:false}
+    ],
+    designer:[
+      {day:1,title:'公司介绍与产品线',desc:'了解产品线和设计规范',done:true},
+      {day:5,title:'设计工具培训',desc:'Photoshop/Illustrator/Figma培训',done:false},
+      {day:12,title:'产品包装设计',desc:'包装设计规范与实操',done:false},
+      {day:20,title:'设计稿评审',desc:'独立完成产品设计稿',done:false},
+      {day:30,title:'设计交付考核',desc:'独立完成完整设计交付',done:false}
+    ],
+    developer:[
+      {day:1,title:'技术架构介绍',desc:'了解公司技术栈和开发流程',done:true},
+      {day:5,title:'代码规范培训',desc:'Git工作流、代码规范、Code Review',done:false},
+      {day:14,title:'项目实操',desc:'参与实际项目开发',done:false},
+      {day:30,title:'独立开发考核',desc:'独立完成功能模块开发',done:false}
+    ],
+    sales:[
+      {day:1,title:'公司与产品介绍',desc:'了解产品线和销售策略',done:true},
+      {day:5,title:'客户管理系统',desc:'CRM操作、客户分层管理',done:false},
+      {day:14,title:'销售谈判技巧',desc:'谈判策略、合同签署',done:false},
+      {day:30,title:'业绩考核',desc:'独立完成客户开发任务',done:false}
+    ],
+    cs:[
+      {day:1,title:'公司与产品介绍',desc:'了解产品和客服流程',done:true},
+      {day:3,title:'客服系统操作',desc:'各平台客服后台操作',done:false},
+      {day:10,title:'常见问题处理',desc:'退换货、投诉、差评处理',done:false},
+      {day:21,title:'客户沟通技巧',desc:'高效沟通与情绪管理',done:false},
+      {day:30,title:'客服考核',desc:'独立处理客服问题',done:false}
+    ]
+  };
+  var SKILLS={
+    ops:['Amazon运营','eBay运营','数据分析','广告投放','库存管理','客户沟通'],
+    designer:['PS/AI','Figma','包装设计','UI/UX','品牌设计','手绘能力'],
+    developer:['HTML/CSS','JavaScript','Git','后端开发','数据库','API设计'],
+    sales:['客户开发','谈判技巧','CRM','合同管理','市场分析','关系维护'],
+    cs:['平台操作','问题处理','沟通技巧','情绪管理','数据记录','客户维护']
+  };
+  return{
+    gen:function(){
+      var name=$('empName').value,pos=$('position').value;
+      var dur=v('duration'),level=$('level').value;
+      var training=TRAINING[pos]||TRAINING.ops;
+      var skills=SKILLS[pos]||SKILLS.ops;
+      var doneCount=training.filter(function(t){return t.done;}).length;
+      var html='<h3>🎓 培训计划概览</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">培训进度</div><div class="hc-value">'+Math.round(doneCount/training.length*100)+'%</div><div class="hc-sub">'+doneCount+'/'+training.length+'完成</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">培训周期</div><div class="hc-value">'+dur+'</div><div class="hc-sub">天 · '+({junior:'初级',mid:'中级',senior:'高级'}[level])+'</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">员工</span><span class="fr-val">'+name+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">岗位</span><span class="fr-val">'+({ops:'运营专员',designer:'产品设计师',developer:'技术开发',sales:'销售经理',cs:'客服专员'}[pos])+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">技能项目</span><span class="fr-val">'+skills.length+'项</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var tlHtml='';
+      training.forEach(function(t){
+        tlHtml+='<div class="timeline-item'+(t.done?' done':'')+'">';
+        tlHtml+='<div class="ti-day">第'+t.day+'天</div>';
+        tlHtml+='<div class="ti-title">'+t.title+(t.done?' ✅':'')+'</div>';
+        tlHtml+='<div class="ti-desc">'+t.desc+'</div>';
+        tlHtml+='</div>';
+      });
+      $('timeline').innerHTML=tlHtml;
+      var smHtml='';
+      skills.forEach(function(s,i){
+        var lvl=level==='senior'?4:(level==='mid'?3:2);
+        var current=i<2?lvl:Math.max(1,lvl-2);
+        smHtml+='<div class="skill-cell"><div class="ss-name">'+s+'</div>';
+        smHtml+='<div class="ss-level" style="color:'+(current>=4?'var(--green)':(current>=3?'var(--accent)':(current>=2?'var(--gold)':'var(--red)')))+'">'+current+'/5</div>';
+        smHtml+='<div class="skill-dots">';
+        for(var d=1;d<=5;d++)smHtml+='<div class="skill-dot'+(d<=current?' active':'')+'"></div>';
+        smHtml+='</div></div>';
+      });
+      $('skillMatrix').innerHTML=smHtml;
+    }
+  };
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TOM.gen);}else{TOM.gen();}
+</script>
+</body>
+</html>

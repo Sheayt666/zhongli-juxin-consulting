@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="信任信号构建器：8类信任信号(安全标识/评价/退换政策/社会证明/品牌故事/媒体背书/认证/保证)，CSS信号矩阵，优先级排序。免费独立站建站深度工具。">
+<meta name="keywords" content="信任信号,安全标识,用户评价,退换政策,社会证明,品牌故事,媒体背书,认证保证,独立站转化">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/trust-signal-builder.html">
+<title>信任信号构建器 - 8类信号矩阵·优先级排序·转化提升 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:120px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.signal-matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}
+.signal-cat{background:var(--surface);border:2px solid var(--rule);border-radius:14px;padding:18px;transition:all .2s;cursor:pointer}
+.signal-cat:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.signal-cat.complete{border-color:#10b981;background:linear-gradient(135deg,#ecfdf5,#f0fdf4)}
+.signal-cat.partial{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fefce8)}
+.signal-cat.missing{border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fff)}
+.sc-icon{font-size:28px;margin-bottom:8px}
+.sc-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.sc-status{font-size:11px;padding:3px 10px;border-radius:6px;font-weight:600;display:inline-block}
+.sc-status.ok{background:#10b981;color:#fff}
+.sc-status.warn{background:#f59e0b;color:#fff}
+.sc-status.no{background:#ef4444;color:#fff}
+.sc-items{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6}
+.priority-list{list-style:none;padding:0;margin:0;counter-reset:p}
+.priority-list li{padding:12px 16px 12px 56px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light);line-height:1.5;counter-increment:p}
+.priority-list li:last-child{border-bottom:none}
+.priority-list li::before{content:counter(p);position:absolute;left:12px;top:10px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.priority-list li.p1::before{background:#ef4444;color:#fff}
+.priority-list li.p2::before{background:#f59e0b;color:#fff}
+.priority-list li.p3::before{background:#3b82f6;color:#fff}
+.priority-list li.p4::before{background:#10b981;color:#fff}
+.pl-cat{font-weight:700;color:var(--ink)}
+.pl-action{font-size:12px;color:var(--muted);margin-top:2px}
+.toggle-pill{display:inline-flex;gap:6px;padding:4px;background:var(--bg-soft);border-radius:12px;margin:3px}
+.toggle-pill input{display:none}
+.toggle-pill label{padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;color:var(--ink-soft);transition:all .2s;border:1px solid transparent}
+.toggle-pill input:checked+label{background:#4f46e5;color:#fff;font-weight:600}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"信任信号构建器","description":"8类信任信号矩阵与优先级排序，提升独立站转化。","url":"https://juxin-consulting.help/tools/trust-signal-builder.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="trust_signal_builder">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🛒</span><span class="workflow-name">独立站建站工作流</span><span class="workflow-step">第13步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="shopify-plan-comparator.html" class="step">套餐对比</a><span class="arrow">›</span>
+      <a href="shopify-app-cost.html" class="step">应用成本</a><span class="arrow">›</span>
+      <a href="shopify-theme-selector.html" class="step">主题选择</a><span class="arrow">›</span>
+      <a href="payment-gateway-comparator.html" class="step">支付对比</a><span class="arrow">›</span>
+      <a href="shipping-calculator-dtc.html" class="step">运费计算</a><span class="arrow">›</span>
+      <a href="landing-page-optimizer.html" class="step">落地页</a><span class="arrow">›</span>
+      <a href="checkout-optimizer.html" class="step">结账优化</a><span class="arrow">›</span>
+      <a href="cart-abandonment-calc.html" class="step">弃购计算</a><span class="arrow">›</span>
+      <a href="page-speed-checker.html" class="step">速度检查</a><span class="arrow">›</span>
+      <a href="mobile-ux-checker.html" class="step">移动UX</a><span class="arrow">›</span>
+      <a href="domain-dns-setup-guide.html" class="step">域名DNS</a><span class="arrow">›</span>
+      <a href="navigation-ux-optimizer.html" class="step">导航UX</a><span class="arrow">›</span>
+      <span class="step current">信任信号</span>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🛒 独立站建站工具 · 深度版</span>
+      <h1>信任信号<em>构建器</em></h1>
+      <p class="tool-hero-desc">系统构建8类信任信号(安全标识/用户评价/退换政策/社会证明/品牌故事/媒体背书/认证资质/售后保证)，CSS信号矩阵可视化覆盖度，按转化影响力排出优先级，提升新客信任与转化。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 信任信号盘点</h2>
+          <p class="calc-form-subtitle">勾选已部署的信任信号，实时生成覆盖度与优先级</p>
+          <div id="signalToggles"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="matrixSection">
+        <h3>🎲 8类信任信号矩阵</h3>
+        <div class="signal-matrix" id="signalMatrix"></div>
+      </div>
+      <div class="section-block" id="prioritySection">
+        <h3>🎯 优先级行动排序</h3>
+        <ol class="priority-list" id="priorityList"></ol>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="navigation-ux-optimizer.html" class="prev"><span class="fn-label">上一步 · 第12步</span><span class="fn-name">← 导航UX</span></a>
+        <a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="trust-signal-builder.html">信任信号构建器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var TSB=(function(){
+  'use strict';
+  var KEY='jx_trust_signals';
+  var state={};
+  var CATS=[
+    {key:'security',icon:'🔒',name:'安全标识',priority:1,impact:9,items:['SSL锁标识','支付PCI-DSS认证','Norton/McAfee安全章','GDPR合规声明','信任徽章(TrustBadge)']},
+    {key:'review',icon:'⭐',name:'用户评价',priority:1,impact:9,items:['星级评分汇总','带图评价展示','评价数量徽章','第三方评价(Judge.me/Yotpo)','视频评价']},
+    {key:'return',icon:'↩️',name:'退换政策',priority:2,impact:8,items:['30天无理由退换','退换流程图解','免费退货标识','退款时效承诺','退换政策FAQ']},
+    {key:'social',icon:'👥',name:'社会证明',priority:2,impact:8,items:['已售件数显示','实时购买通知','粉丝/关注数','UGC内容墙','网红合作展示']},
+    {key:'brand',icon:'📖',name:'品牌故事',priority:3,impact:6,items:['品牌创始故事','团队介绍','生产过程展示','品牌价值观','社会责任']},
+    {key:'media',icon:'📰',name:'媒体背书',priority:3,impact:6,items:['媒体报道LOGO墙','获奖证书','行业排名','KOL推荐语','展会/活动亮相']},
+    {key:'cert',icon:'🏅',name:'认证资质',priority:2,impact:7,items:['产品质检报告','FDA/CE认证','ISO认证','有机/环保认证','原产地证明']},
+    {key:'guarantee',icon:'🛡️',name:'售后保证',priority:1,impact:8,items:['正品保证','质量保证期','7×24客服','物流时效承诺','满意度保证']}
+  ];
+  function $(id){return document.getElementById(id);}
+  function chk(k){return state[k];}
+  function buildToggles(){
+    var html='';
+    CATS.forEach(function(c){
+      html+='<div class="fee-rule-box" style="margin:12px 0"><h4>'+c.icon+' '+c.name+' <span style="font-size:11px;color:var(--muted);font-weight:400">影响度'+c.impact+'/10</span></h4></div><div style="display:flex;flex-wrap:wrap">';
+      c.items.forEach(function(it){
+        var k=c.key+'_'+it;
+        var ck=state[k]?'checked':'';
+        html+='<span class="toggle-pill"><input type="checkbox" id="tg_'+btoa(unescape(encodeURIComponent(k))).replace(/=/g,'')+'" '+ck+' onchange="TSB.toggle(\''+k+'\')"><label for="tg_'+btoa(unescape(encodeURIComponent(k))).replace(/=/g,'')+'">'+it+'</label></span>';
+      });
+      html+='</div>';
+    });
+    $('signalToggles').innerHTML=html;
+  }
+  function toggle(k){state[k]=!state[k];save();calc();}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  function load(){try{var s=localStorage.getItem(KEY);if(s)state=JSON.parse(s)||{};}catch(e){}}
+  function calc(){
+    var totalItems=0,checkedItems=0;
+    var catData=CATS.map(function(c){
+      var checked=c.items.filter(function(it){return state[c.key+'_'+it];});
+      var ratio=checked.length/c.items.length;
+      totalItems+=c.items.length;checkedItems+=checked.length;
+      return{cat:c,checked:checked,ratio:ratio};
+    });
+    var coverage=Math.round(checkedItems/totalItems*100);
+    var weightedScore=Math.round(catData.reduce(function(s,cd){return s+cd.ratio*cd.cat.impact;},0)/CATS.reduce(function(s,c){return s+c.impact;},0)*100);
+    renderResult(coverage,weightedScore,checkedItems,totalItems);
+    renderMatrix(catData);
+    renderPriority(catData);
+  }
+  function renderResult(coverage,score,checked,total){
+    var col=score>=80?'#10b981':score>=50?'#f59e0b':'#ef4444';
+    var grade=score>=80?'高信任度':score>=50?'中等信任度':'低信任度';
+    $('resultCard').innerHTML='<h3>🛡️ 信任度评分</h3>'+
+      '<div style="text-align:center;margin:16px 0"><div style="font-size:48px;font-weight:800;color:'+col+'">'+score+'</div><span style="display:inline-block;padding:6px 20px;border-radius:30px;background:'+col+';color:#fff;font-weight:700">'+grade+'</span></div>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+checked+'/'+total+'</div><div class="rsb-lbl">已部署信号</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+coverage+'%</div><div class="rsb-lbl">覆盖度</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 信任度评分按各信号影响度加权。≥80为高信任度(转化友好)，50-79中等需补齐关键信号，<50新客信任不足转化受损。</div>';
+  }
+  function renderMatrix(catData){
+    $('signalMatrix').innerHTML=catData.map(function(cd){
+      var status=cd.ratio>=0.8?'complete':cd.ratio>=0.4?'partial':'missing';
+      var stClass=cd.ratio>=0.8?'ok':cd.ratio>=0.4?'warn':'no';
+      var stText=cd.ratio>=0.8?'已完善':cd.ratio>=0.4?'部分覆盖':'缺失';
+      return '<div class="signal-cat '+status+'"><div class="sc-icon">'+cd.cat.icon+'</div><div class="sc-name">'+cd.cat.name+'</div><span class="sc-status '+stClass+'">'+stText+' '+Math.round(cd.ratio*100)+'%</span><div class="sc-items">'+cd.checked.length+'/'+cd.cat.items.length+'项：'+(cd.checked.length?cd.checked.join('、'):'暂无')+'</div></div>';
+    }).join('');
+  }
+  function renderPriority(catData){
+    var actions=catData.filter(function(cd){return cd.ratio<1;}).map(function(cd){
+      var missing=cd.cat.items.filter(function(it){return !state[cd.cat.key+'_'+it];});
+      return{cat:cd.cat,missing:missing,ratio:cd.ratio,urgency:cd.cat.impact*(1-cd.ratio)};
+    }).sort(function(a,b){return b.urgency-a.urgency;});
+    if(!actions.length){$('priorityList').innerHTML='<li style="counter-increment:none;padding-left:16px">✅ 所有8类信任信号已部署完毕，信任度优秀！</li>';return;}
+    $('priorityList').innerHTML=actions.map(function(a,idx){
+      var pClass=idx<2?'p1':idx<4?'p2':idx<6?'p3':'p4';
+      var pLabel=idx<2?'紧急':idx<4?'高':idx<6?'中':'低';
+      return '<li class="'+pClass+'"><span class="pl-cat">'+a.cat.icon+' '+a.cat.name+'</span> <span style="font-size:11px;color:#ef4444;font-weight:600">['+pLabel+'优先级]</span><div class="pl-action">缺失：'+a.missing.join('、')+' (影响度'+a.cat.impact+'/10，当前覆盖'+Math.round(a.ratio*100)+'%)</div></li>';
+    }).join('');
+  }
+  function init(){load();buildToggles();calc();}
+  return{toggle:toggle,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',TSB.init);}else{TSB.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

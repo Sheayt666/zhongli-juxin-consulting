@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="流失挽回邮件系列：沉睡客户激活+分级优惠+回归触发，CSS挽回时间线，成功率追踪。免费邮件营销工具。">
+<meta name="keywords" content="流失挽回,沉睡客户,分级优惠,回归触发,邮件营销,客户激活,挽回时间线">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://juxin-consulting.help/tools/email-win-back-campaign.html">
+<title>流失挽回邮件系列 - 分级优惠·CSS时间线·成功率追踪 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航(sticky横向滚动) */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:110px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.timeline{position:relative;padding:20px 0;margin:16px 0}
+.timeline::before{content:'';position:absolute;left:30px;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#4f46e5,#10b981)}
+.tl-item{position:relative;padding:0 0 24px 70px}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:20px;top:4px;width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid #4f46e5;z-index:1}
+.tl-item.win .tl-dot{border-color:#10b981;background:#10b981}
+.tl-card{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px 18px}
+.tl-day{font-size:11px;color:#4f46e5;font-weight:700;text-transform:uppercase}
+.tl-title{font-size:15px;font-weight:700;color:var(--ink);margin:4px 0}
+.tl-desc{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.tl-offer{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.offer-low{background:#dbeafe;color:#1e40af}
+.offer-mid{background:#fef3c7;color:#92400e}
+.offer-high{background:#fce7f3;color:#9d174d}
+.tl-stats{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--muted)}
+.seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+.seg-card{background:var(--surface);border:2px solid var(--rule);border-radius:14px;padding:18px;text-align:center}
+.seg-card .seg-icon{font-size:28px}
+.seg-card .seg-name{font-size:15px;font-weight:700;margin:6px 0}
+.seg-card .seg-stat{font-size:22px;font-weight:800}
+.bar-track{height:10px;background:var(--rule-light);border-radius:5px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:5px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"流失挽回邮件系列","description":"沉睡客户激活+分级优惠+回归触发，CSS挽回时间线与成功率追踪。","url":"https://juxin-consulting.help/tools/email-win-back-campaign.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询"}}
+</script>
+</head>
+<body class="tool-page" data-tool="email_win_back_campaign">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="index.html" class="tool-nav-back">← 工具中心</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📧</span><span class="workflow-name">邮件营销工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="email-sequence-designer.html" class="step">序列设计</a><span class="arrow">›</span>
+      <a href="email-abandoned-cart.html" class="step">弃购挽回</a><span class="arrow">›</span>
+      <a href="email-open-rate-analyzer.html" class="step">打开率</a><span class="arrow">›</span>
+      <a href="email-roi-calculator.html" class="step">ROI</a><span class="arrow">›</span>
+      <a href="email-welcome-series.html" class="step">欢迎系列</a><span class="arrow">›</span>
+      <a href="email-subject-tester.html" class="step">标题测试</a><span class="arrow">›</span>
+      <a href="email-segmentation.html" class="step">分群</a><span class="arrow">›</span>
+      <a href="email-frequency-optimizer.html" class="step">频次</a><span class="arrow">›</span>
+      <a href="email-template-builder.html" class="step">模板</a><span class="arrow">›</span>
+      <a href="email-compliance-check.html" class="step">合规</a><span class="arrow">›</span>
+      <a href="email-automation-flow-builder.html" class="step">自动化流程</a><span class="arrow">›</span>
+      <span class="step current">流失挽回</span><span class="arrow">›</span>
+      <a href="email-deliverability-checker.html" class="step">可达性</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📧 邮件营销工具</span>
+      <h1>流失挽回邮件<em>系列</em></h1>
+      <p class="tool-hero-desc">激活沉睡客户的分级挽回邮件系列，CSS挽回时间线呈现3阶段递进优惠策略，按沉睡程度分群预估挽回成功率与收入，回归触发自动停止挽回。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 挽回计划配置</h2>
+          <p class="calc-form-subtitle">设置沉睡用户规模与挽回参数，预估成功率与收入</p>
+          <div class="fee-rule-box" style="margin-bottom:14px"><h4>💤 沉睡用户规模</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>轻度沉睡(30-60天)</label><input type="number" id="dormLight" value="8000" min="0" oninput="WBC.calc()"></div>
+            <div class="calc-field"><label>中度沉睡(60-90天)</label><input type="number" id="dormMid" value="4500" min="0" oninput="WBC.calc()"></div>
+          </div>
+          <div class="calc-field"><label>深度沉睡(90天+)</label><input type="number" id="dormDeep" value="2200" min="0" oninput="WBC.calc()"></div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>🎁 分级优惠策略</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>第1封优惠 <span class="hint">(%)</span></label><input type="number" id="off1" value="5" min="0" max="50" oninput="WBC.calc()"></div>
+            <div class="calc-field"><label>第2封优惠 <span class="hint">(%)</span></label><input type="number" id="off2" value="10" min="0" max="50" oninput="WBC.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>第3封优惠 <span class="hint">(%)</span></label><input type="number" id="off3" value="15" min="0" max="60" oninput="WBC.calc()"></div>
+            <div class="calc-field"><label>间隔天数(封间)</label><input type="number" id="interval" value="7" min="1" max="30" oninput="WBC.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin:14px 0"><h4>📊 效果参数</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>打开率 <span class="hint">(%)</span></label><input type="number" id="openRate" value="22" min="0" max="100" oninput="WBC.calc()"></div>
+            <div class="calc-field"><label>转化率 <span class="hint">(%)</span></label><input type="number" id="cvr" value="3.5" min="0" step="0.1" oninput="WBC.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>客单价 <span class="hint">($)</span></label><input type="number" id="aov" value="38" min="0" oninput="WBC.calc()"></div>
+            <div class="calc-field"><label>折扣成本计入 <span class="hint">(%)</span></label><input type="number" id="costRate" value="60" min="0" max="100" oninput="WBC.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="section-block" id="timelineSection">
+        <h3>📅 挽回时间线</h3>
+        <div class="timeline" id="timeline"></div>
+      </div>
+      <div class="section-block" id="segSection">
+        <h3>👥 分群挽回预估</h3>
+        <div class="seg-grid" id="segGrid"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="email-automation-flow-builder.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 自动化流程</span></a>
+        <a href="email-deliverability-checker.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">可达性 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="email-win-back-campaign.html">流失挽回邮件系列</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var WBC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function num(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var dL=num('dormLight'),dM=num('dormMid'),dD=num('dormDeep');
+    var off1=num('off1'),off2=num('off2'),off3=num('off3'),interval=num('interval');
+    var openR=num('openRate')/100,cvr=num('cvr')/100,aov=num('aov'),costR=num('costRate')/100;
+    var total=dL+dM+dD;
+    var totalReach=total;
+    var opens1=total*openR,conv1=opens1*cvr*(1-off1/100*0.5);
+    var opens2=(total-conv1)*openR*0.85,conv2=opens2*cvr*(1-off2/100*0.5);
+    var opens3=(total-conv1-conv2)*openR*0.7,conv3=opens3*cvr*(1-off3/100*0.5);
+    var totalConv=conv1+conv2+conv3;
+    var grossRev=totalConv*aov;
+    var avgOff=(off1+off2+off3)/3;
+    var netRev=grossRev*(1-avgOff/100*costR);
+    var winRate=total>0?totalConv/total:0;
+    renderResult(totalReach,totalConv,grossRev,netRev,winRate);
+    renderTimeline(off1,off2,off3,interval,conv1,conv2,conv3,openR,cvr);
+    renderSeg(dL,dM,dD,openR,cvr,aov);
+  }
+  function renderResult(reach,conv,gross,net,rate){
+    var col=rate>=0.08?'#10b981':rate>=0.04?'#f59e0b':'#ef4444';
+    $('resultCard').innerHTML='<h3>📊 挽回效果预估</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+Math.round(reach).toLocaleString()+'</div><div class="rsb-lbl">触达沉睡用户</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+Math.round(conv)+'</div><div class="rsb-lbl">挽回客户</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:'+col+'">'+(rate*100).toFixed(1)+'%</div><div class="rsb-lbl">挽回率</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">$'+net.toFixed(0)+'</div><div class="rsb-lbl">净收入</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 3封递进优惠挽回。毛收入$'+gross.toFixed(0)+'，扣折扣成本后净收入$'+net.toFixed(0)+'。行业平均挽回率3-8%，≥8%为优秀。客户一旦回归即触发停止。</div>';
+  }
+  function renderTimeline(off1,off2,off3,interval,conv1,conv2,conv3,openR,cvr){
+    var items=[
+      {day:'第0天',title:'邮件1：温和唤醒',desc:'品牌近况+新品推荐+轻度优惠，唤起记忆不显功利',offer:off1,cls:'offer-low',conv:conv1,opens:'打开率'+(openR*100).toFixed(0)+'%'},
+      {day:'第'+interval+'天',title:'邮件2：价值强化',desc:'热销爆款+用户评价+客服答疑+加码优惠，强化回归理由',offer:off2,cls:'offer-mid',conv:conv2,opens:'打开率'+(openR*0.85*100).toFixed(0)+'%'},
+      {day:'第'+(interval*2)+'天',title:'邮件3：最后机会',desc:'最高优惠+会员专属+限时倒计时，制造紧迫感促成回归',offer:off3,cls:'offer-high',conv:conv3,opens:'打开率'+(openR*0.7*100).toFixed(0)+'%'}
+    ];
+    $('timeline').innerHTML=items.map(function(it){
+      return '<div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-day">'+it.day+'</div><div class="tl-title">'+it.title+'</div><div class="tl-desc">'+it.desc+'</div><span class="tl-offer '+it.cls+'">优惠 '+it.offer+'% OFF</span><div class="tl-stats"><span>'+it.opens+'</span><span>挽回 '+Math.round(it.conv)+' 人</span></div></div></div>';
+    }).join('')+'<div class="tl-item win"><div class="tl-dot"></div><div class="tl-card" style="border-color:#10b981"><div class="tl-day" style="color:#10b981">回归触发</div><div class="tl-title" style="color:#10b981">✅ 客户回归</div><div class="tl-desc">客户任意邮件点击/下单后自动移出挽回序列，避免过度打扰，转入正常营销流程。</div></div></div>';
+  }
+  function renderSeg(dL,dM,dD,openR,cvr,aov){
+    var segs=[
+      {icon:'🟢',name:'轻度沉睡',count:dL,factor:1.2,baseRate:5},
+      {icon:'🟡',name:'中度沉睡',count:dM,factor:0.7,baseRate:3},
+      {icon:'🔴',name:'深度沉睡',count:dD,factor:0.35,baseRate:1.5}
+    ];
+    $('segGrid').innerHTML=segs.map(function(s){
+      var rate=s.baseRate*s.factor/100;
+      var conv=s.count*openR*cvr*s.factor;
+      var rev=conv*aov;
+      var pct=rate*100;
+      var col=pct>=5?'#10b981':pct>=3?'#f59e0b':'#ef4444';
+      return '<div class="seg-card"><div class="seg-icon">'+s.icon+'</div><div class="seg-name">'+s.name+'</div><div style="font-size:13px;color:var(--muted)">'+s.count.toLocaleString()+' 用户</div><div class="seg-stat" style="color:'+col+'">'+pct.toFixed(1)+'%</div><div style="font-size:12px;color:var(--muted)">挽回率</div><div class="bar-track"><div class="bar-fill" style="width:'+(pct/8*100)+'%;background:'+col+'"></div></div><div style="margin-top:8px;font-size:13px">挽回 <strong>'+Math.round(conv)+'</strong> 人<br>收入 <strong style="color:#10b981">$'+rev.toFixed(0)+'</strong></div></div>';
+    }).join('');
+  }
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',WBC.init);}else{WBC.init();}
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>

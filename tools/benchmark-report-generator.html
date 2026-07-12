@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="行业基准报告生成器：输入自身指标与行业均值，自动计算百分位排名，6维度对标对比，CSS差距分析图，综合排名评估。">
+<meta name="keywords" content="行业基准,百分位排名,差距分析,对标对比,基准报告,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="行业基准报告生成器 - 百分位排名·差距分析·对标对比 | 众力聚鑫咨询">
+<meta property="og:description" content="行业基准报告生成器：输入自身指标与行业均值，自动计算百分位排名，6维度对标对比，CSS差距分析图，综合排名评估。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/benchmark-report-generator.html">
+<title>行业基准报告生成器 - 百分位排名·差距分析·对标对比 | 众力聚鑫咨询 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"行业基准报告","description":"行业基准报告生成器：输入自身指标与行业均值，自动计算百分位排名，6维度对标对比，CSS差距分析图，综合排名评估。","url":"https://juxin-consulting.help/tools/benchmark-report-generator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"行业基准报告","item":"https://juxin-consulting.help/tools/benchmark-report-generator.html"}]}
+</script>
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.wf-steps-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.rpt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.rpt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+
+
+.bench-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.bench-card{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.bench-card h4{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.bench-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bench-row .br-label{font-size:12px;color:var(--muted);width:70px;flex-shrink:0}
+.bench-bar-wrap{flex:1;height:24px;border-radius:6px;background:var(--bg-soft);overflow:hidden;position:relative}
+.bench-bar{height:100%;border-radius:6px;transition:width .5s;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:700;color:#fff}
+.bench-bar.self{background:linear-gradient(90deg,var(--accent),#6366f1)}
+.bench-bar.industry{background:linear-gradient(90deg,#94a3b8,#64748b)}
+.bench-bar.top{background:linear-gradient(90deg,var(--green),#059669)}
+.bench-bar.bottom{background:linear-gradient(90deg,var(--red),#dc2626)}
+.percentile-box{text-align:center;padding:16px;border-radius:12px;margin-top:12px}
+.percentile-box .pb-val{font-size:32px;font-weight:800}
+.percentile-box .pb-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.gap-chart{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:12px;border-radius:10px;background:var(--bg-soft)}
+.gap-metric{width:120px;font-size:13px;font-weight:600;flex-shrink:0}
+.gap-vis{flex:1;display:flex;align-items:center;gap:4px}
+.gap-bar-neg{height:12px;border-radius:4px;background:var(--red);transition:width .5s}
+.gap-bar-pos{height:12px;border-radius:4px;background:var(--green);transition:width .5s}
+.gap-center{width:2px;height:24px;background:var(--ink);flex-shrink:0}
+.gap-val{width:80px;font-size:12px;font-weight:600;text-align:right;flex-shrink:0}
+.rank-summary{padding:20px;border-radius:12px;background:linear-gradient(135deg,var(--accent-bg),#e0e7ff);text-align:center;margin-bottom:16px}
+.rank-summary .rs-val{font-size:36px;font-weight:800;color:var(--accent)}
+.rank-summary .rs-lbl{font-size:14px;color:var(--ink-soft);margin-top:4px}
+@media(max-width:768px){.bench-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body class="tool-page" data-tool="benchmark_report_generator">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner"><a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a><ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></ul><a href="../index.html" class="tool-nav-back">← 返回首页</a></div></nav>
+<main id="main-content">
+<div class="workflow-nav"><div class="workflow-nav-header"><span class="workflow-icon">📊</span><span class="workflow-name">数据报表工作流</span><span class="workflow-step">第9步 / 共12步</span></div><div class="wf-steps-scroll"><div class="workflow-nav-steps"><a href="daily-report.html" class="step">日报</a><span class="arrow">→</span><a href="weekly-report.html" class="step">周报</a><span class="arrow">→</span><a href="monthly-report.html" class="step">月报</a><span class="arrow">→</span><a href="custom-dashboard.html" class="step">自定义看板</a><span class="arrow">→</span><a href="kpi-dashboard.html" class="step">KPI看板</a><span class="arrow">→</span><a href="real-time-dashboard.html" class="step">实时看板</a><span class="arrow">→</span><a href="executive-summary-report.html" class="step">管理摘要</a><span class="arrow">→</span><a href="automated-report-scheduler.html" class="step">报表调度</a><span class="arrow">→</span><span class="step current">基准报告</span><span class="arrow">→</span><a href="data-export-center.html" class="step">数据导出</a><span class="arrow">→</span><a href="alert-notification-system.html" class="step">预警通知</a><span class="arrow">→</span><a href="report-template-library.html" class="step">模板库</a></div></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">📊 数据报表工作流 · 标准版</span><h1>行业基准 <em>报告</em></h1><p class="tool-hero-desc">输入自身指标与行业基准数据，自动计算百分位排名，6大维度对标对比（GMV/利润率/ACoS/转化率/退货率/库存周转），CSS差距分析图直观展示优劣势，综合排名评估行业地位。</p></div></header>
+<section class="tool-section"><div class="container">
+
+<div class="calculator-wrap">
+<div class="calculator-form">
+<h2>📊 输入自身指标与行业基准</h2>
+<p class="calc-form-subtitle">输入自身数据和行业基准/Top10均值，自动计算百分位排名和差距分析</p>
+<div class="calc-row-2">
+<div class="calc-field"><label>自身GMV <span class="hint">($/月)</span></label><input type="number" id="selfGmv" value="85000" step="1000" oninput="BMR.calc()"></div>
+<div class="calc-field"><label>行业均值GMV <span class="hint">($/月)</span></label><input type="number" id="indGmv" value="120000" step="1000" oninput="BMR.calc()"></div>
+</div>
+<div class="calc-row-2">
+<div class="calc-field"><label>自身利润率 <span class="hint">(%)</span></label><input type="number" id="selfMargin" value="22" step="0.5" oninput="BMR.calc()"></div>
+<div class="calc-field"><label>行业均值利润率 <span class="hint">(%)</span></label><input type="number" id="indMargin" value="18" step="0.5" oninput="BMR.calc()"></div>
+</div>
+<div class="calc-row-2">
+<div class="calc-field"><label>自身ACoS <span class="hint">(%)</span></label><input type="number" id="selfAcos" value="24" step="0.5" oninput="BMR.calc()"></div>
+<div class="calc-field"><label>行业均值ACoS <span class="hint">(%)</span></label><input type="number" id="indAcos" value="28" step="0.5" oninput="BMR.calc()"></div>
+</div>
+<div class="calc-row-2">
+<div class="calc-field"><label>自身转化率 <span class="hint">(%)</span></label><input type="number" id="selfCvr" value="12" step="0.5" oninput="BMR.calc()"></div>
+<div class="calc-field"><label>行业均值转化率 <span class="hint">(%)</span></label><input type="number" id="indCvr" value="10" step="0.5" oninput="BMR.calc()"></div>
+</div>
+<div class="calc-row-2">
+<div class="calc-field"><label>自身退货率 <span class="hint">(%)</span></label><input type="number" id="selfRet" value="4" step="0.5" oninput="BMR.calc()"></div>
+<div class="calc-field"><label>行业均值退货率 <span class="hint">(%)</span></label><input type="number" id="indRet" value="6" step="0.5" oninput="BMR.calc()"></div>
+</div>
+<div class="calc-row-2">
+<div class="calc-field"><label>自身库存周转 <span class="hint">(天)</span></label><input type="number" id="selfInv" value="45" step="1" oninput="BMR.calc()"></div>
+<div class="calc-field"><label>行业均值库存周转 <span class="hint">(天)</span></label><input type="number" id="indInv" value="55" step="1" oninput="BMR.calc()"></div>
+</div>
+</div>
+<div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+</div>
+<div class="rpt-section">
+<h3>📊 指标对标对比</h3>
+<div class="bench-grid" id="benchGrid"></div>
+</div>
+<div class="rpt-section">
+<h3>📉 差距分析图</h3>
+<div id="gapChart"></div>
+</div>
+<div class="rpt-section">
+<h3>🏆 综合排名</h3>
+<div class="rank-summary" id="rankSummary"></div>
+</div>
+
+<div class="wf-foot-nav"><a href="automated-report-scheduler.html" class="prev"><span class="fn-label">上一步 · 第8步</span><span class="fn-name">← 报表调度</span></a><a href="data-export-center.html" class="next"><span class="fn-label">下一步 · 第10步</span><span class="fn-name">数据导出 →</span></a></div>
+</div></section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="real-time-dashboard.html">实时看板</a></li><li><a href="report-template-library.html">报表模板库</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script src="../assets/js/engagement.js"></script>
+<script>
+
+var BMR=(function(){
+'use strict';
+function v(id){return parseFloat(document.getElementById(id).value)||0;}
+function calc(){
+var metrics=[
+{name:'GMV($/月)',self:v('selfGmv'),ind:v('indGmv'),inverse:false,icon:'💰'},
+{name:'利润率(%)',self:v('selfMargin'),ind:v('indMargin'),inverse:false,icon:'💎'},
+{name:'ACoS(%)',self:v('selfAcos'),ind:v('indAcos'),inverse:true,icon:'📢'},
+{name:'转化率(%)',self:v('selfCvr'),ind:v('indCvr'),inverse:false,icon:'🎯'},
+{name:'退货率(%)',self:v('selfRet'),ind:v('indRet'),inverse:true,icon:'↩️'},
+{name:'库存周转(天)',self:v('selfInv'),ind:v('indInv'),inverse:true,icon:'📦'}
+];
+var better=0;var totalScore=0;
+metrics.forEach(function(m){
+var isBetter=m.inverse?(m.self<m.ind):(m.self>m.ind);
+if(isBetter)better++;
+var diff=m.inverse?((m.ind-m.self)/m.ind*100):((m.self-m.ind)/m.ind*100);
+totalScore+=Math.max(0,Math.min(100,50+diff*2));
+});
+var avgScore=totalScore/metrics.length;
+var percentile=Math.round(avgScore);
+document.getElementById('resultCard').innerHTML=
+'<h3>📊 基准对比结果</h3>'+
+'<div class="result-grid">'+
+'<div class="result-item"><div class="ri-label">优于行业指标</div><div class="ri-value" style="color:'+(better>=4?'var(--green)':(better>=3?'var(--gold)':'var(--red)'))+'">'+better+'/'+metrics.length+'</div></div>'+
+'<div class="result-item"><div class="ri-label">综合百分位</div><div class="ri-value" style="color:var(--accent)">'+percentile+'%</div></div>'+
+'<div class="result-item"><div class="ri-label">行业排名</div><div class="ri-value">'+(percentile>=75?'Top 25%':(percentile>=50?'中等偏上':(percentile>=25?'中等偏下':'Bottom 25%'))+'</div></div>'+
+'</div>'+
+'<div class="result-note">💡 '+(better>=4?'综合表现优于行业均值，保持优势':(better>=3?'部分指标领先，仍有提升空间':'多数指标低于行业均值，需重点改进'))+'</div>';
+document.getElementById('benchGrid').innerHTML=metrics.map(function(m){
+var diff=m.inverse?((m.ind-m.self)/m.ind*100):((m.self-m.ind)/m.ind*100);
+var isBetter=m.inverse?(m.self<m.ind):(m.self>m.ind);
+var selfPct=Math.min(m.self/(m.inverse?m.ind*0.5:m.ind*1.5)*100,100);
+var indPct=Math.min(m.ind/(m.inverse?m.ind*0.5:m.ind*1.5)*100,100);
+if(m.inverse){selfPct=Math.min((m.ind*1.5-m.self)/(m.ind*1.5)*100+20,100);indPct=Math.min((m.ind*1.5-m.ind)/(m.ind*1.5)*100+20,100);}
+return '<div class="bench-card">'+
+'<h4>'+m.icon+' '+m.name+'</h4>'+
+'<div class="bench-row"><span class="br-label">自身</span><div class="bench-bar-wrap"><div class="bench-bar self" style="width:'+selfPct+'%">'+m.self+'</div></div></div>'+
+'<div class="bench-row"><span class="br-label">行业均值</span><div class="bench-bar-wrap"><div class="bench-bar industry" style="width:'+indPct+'%">'+m.ind+'</div></div></div>'+
+'<div class="percentile-box" style="background:'+(isBetter?'var(--green-bg)':'var(--red-bg)')+'">'+
+'<div class="pb-val" style="color:'+(isBetter?'var(--green)':'var(--red)')+'">'+(diff>=0?'+':'')+diff.toFixed(1)+'%</div>'+
+'<div class="pb-lbl">'+(isBetter?'优于行业':'低于行业')+'</div></div></div>';
+}).join('');
+document.getElementById('gapChart').innerHTML=metrics.map(function(m){
+var diff=m.inverse?((m.ind-m.self)/m.ind*100):((m.self-m.ind)/m.ind*100);
+var isBetter=diff>0;
+var absDiff=Math.abs(diff);
+var barWidth=Math.min(absDiff*3,50);
+var gapClass=isBetter?'gap-bar-pos':'gap-bar-neg';
+return '<div class="gap-chart">'+
+'<div class="gap-metric">'+m.icon+' '+m.name+'</div>'+
+'<div class="gap-vis">'+
+(isBetter?'<div style="flex:'+(50-barWidth)+'"></div><div class="'+gapClass+'" style="width:'+barWidth+'%"></div>':'<div class="'+gapClass+'" style="width:'+barWidth+'%"></div><div style="flex:'+(50-barWidth)+'"></div>')+
+'<div class="gap-center"></div>'+
+(isBetter?'<div class="'+gapClass+'" style="width:'+barWidth+'%"></div><div style="flex:'+(50-barWidth)+'"></div>':'<div style="flex:'+(50-barWidth)+'"></div><div class="'+gapClass+'" style="width:'+barWidth+'%"></div>')+
+'</div>'+
+'<div class="gap-val" style="color:'+(isBetter?'var(--green)':'var(--red)')+'">'+(diff>=0?'+':'')+diff.toFixed(1)+'%</div></div>';
+}).join('');
+var rank=percentile>=75?'行业领先':(percentile>=50?'中上水平':(percentile>=25?'中等水平':'需重点改进'));
+var rankColor=percentile>=75?'var(--green)':(percentile>=50?'var(--accent)':(percentile>=25?'var(--gold)':'var(--red)'));
+document.getElementById('rankSummary').innerHTML=
+'<div class="rs-val" style="color:'+rankColor+'">'+percentile+'</div>'+
+'<div class="rs-lbl">综合百分位排名 · '+rank+'<br>优于行业 '+better+'/'+metrics.length+' 项指标</div>';
+}
+function init(){calc();}
+return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',BMR.init);}else{BMR.init();}
+
+</script>
+</body>
+</html>

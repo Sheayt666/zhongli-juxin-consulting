@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="品牌忠诚度评分器：复购率、NPS、品牌提及量、社媒声量，忠诚度综合评分，SVG雷达图，改善建议。">
+<title>品牌忠诚度评分器 - SVG雷达图·综合评分·改善建议 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.score-display{display:flex;align-items:center;gap:40px;justify-content:center;flex-wrap:wrap}.score-circle{position:relative;width:160px;height:160px}.score-circle svg{transform:rotate(-90deg)}.score-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.score-center .sc-val{font-size:42px;font-weight:800;line-height:1}.score-center .sc-lbl{font-size:12px;color:var(--muted)}.score-info h3{font-size:20px;font-weight:700;margin-bottom:8px}.score-info p{font-size:14px;color:var(--muted);max-width:300px}
+.radar-wrap{display:flex;align-items:center;gap:40px;justify-content:center;flex-wrap:wrap}.dim-list{display:flex;flex-direction:column;gap:10px}.dim-item{display:flex;align-items:center;gap:12px}.dim-label{width:100px;font-size:13px;font-weight:600;flex-shrink:0}.dim-bar{width:120px;height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden}.dim-bar-fill{height:100%;border-radius:4px}.dim-val{font-size:14px;font-weight:700;width:40px;text-align:right}
+.suggestion-list{display:flex;flex-direction:column;gap:10px}.sug-item{display:flex;gap:12px;padding:14px;border-radius:var(--radius);border-left:4px solid}.sug-item.good{background:var(--success-bg);border-left-color:var(--success)}.sug-item.warn{background:var(--warning-bg);border-left-color:var(--warning)}.sug-item.bad{background:var(--danger-bg);border-left-color:var(--danger)}.sug-icon{font-size:20px;flex-shrink:0}.sug-text h4{font-size:13px;font-weight:700;margin-bottom:2px}.sug-text p{font-size:12px;color:var(--muted)}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W7 品牌增长工作流</div><div class="workflow-steps">
+<a href="brand-registry-check.html" class="workflow-step">品牌注册</a><a href="brand-health-score.html" class="workflow-step">品牌健康</a><a href="external-traffic-calculator.html" class="workflow-step">外部流量</a><a href="product-matrix.html" class="workflow-step">产品矩阵</a><a href="social-content.html" class="workflow-step">社交内容</a><a href="brand-store-builder.html" class="workflow-step">旗舰店建设</a><a href="brand-analytics-reporter.html" class="workflow-step">品牌分析</a><a href="customer-segmentation-engine.html" class="workflow-step">客户分群</a><a href="brand-search-volume-tracker.html" class="workflow-step">搜索量追踪</a><a href="storefront-traffic-analyzer.html" class="workflow-step">旗舰店流量</a><a href="brand-loyalty-scorer.html" class="workflow-step active">忠诚度评分</a><a href="cross-sell-analyzer.html" class="workflow-step">交叉销售</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W7 品牌增长</a><span>/</span>品牌忠诚度评分器</div>
+<div class="tool-header"><span class="tool-badge">W7 品牌增长工作流</span><h1>品牌<em>忠诚度评分器</em></h1><p>复购率、NPS、品牌提及量、社媒声量多维度评估，忠诚度综合评分SVG圆环，CSS雷达图六维展示，改善建议。</p></div>
+
+<div class="card"><h2>忠诚度指标输入</h2><div class="form-grid">
+<div class="form-field"><label>复购率 <span class="hint">(%)</span></label><input type="number" id="repeatRate" value="28" step="0.1" min="0" max="100" oninput="Loyalty.calc()"></div>
+<div class="form-field"><label>NPS分数 <span class="hint">(-100~100)</span></label><input type="number" id="nps" value="45" step="1" min="-100" max="100" oninput="Loyalty.calc()"></div>
+<div class="form-field"><label>品牌提及量 <span class="hint">(月)</span></label><input type="number" id="mentions" value="3200" step="100" min="0" oninput="Loyalty.calc()"></div>
+<div class="form-field"><label>社媒声量 <span class="hint">(月互动)</span></label><input type="number" id="socialEng" value="8500" step="100" min="0" oninput="Loyalty.calc()"></div>
+<div class="form-field"><label>客户留存率 <span class="hint">(%)</span></label><input type="number" id="retention" value="72" step="1" min="0" max="100" oninput="Loyalty.calc()"></div>
+<div class="form-field"><label>品牌推荐意愿 <span class="hint">(%)</span></label><input type="number" id="wom" value="35" step="1" min="0" max="100" oninput="Loyalty.calc()"></div>
+</div></div>
+
+<div class="card"><h2>忠诚度综合评分</h2><div class="score-display" id="scoreDisplay"></div></div>
+<div class="card"><h2>六维雷达图 (SVG)</h2><div class="radar-wrap" id="radarWrap"></div></div>
+<div class="card"><h2>改善建议</h2><div class="suggestion-list" id="sugList"></div></div>
+
+<div class="related-grid">
+<a href="customer-segmentation-engine.html" class="related-card"><span class="rc-icon">👥</span><div><h4>客户分群引擎</h4><p>RFM分群</p></div></a>
+<a href="brand-health-score.html" class="related-card"><span class="rc-icon">💚</span><div><h4>品牌健康分</h4><p>品牌健康评估</p></div></a>
+<a href="brand-analytics-reporter.html" class="related-card"><span class="rc-icon">📈</span><div><h4>品牌分析报告</h4><p>品牌数据洞察</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Loyalty={
+  calc(){
+    const repeat=parseFloat(document.getElementById('repeatRate').value)||0;
+    const nps=parseFloat(document.getElementById('nps').value)||0;
+    const mentions=parseFloat(document.getElementById('mentions').value)||0;
+    const social=parseFloat(document.getElementById('socialEng').value)||0;
+    const retention=parseFloat(document.getElementById('retention').value)||0;
+    const wom=parseFloat(document.getElementById('wom').value)||0;
+    const sRepeat=Math.min(100,repeat*2.5);
+    const sNps=Math.min(100,(nps+100)/2);
+    const sMentions=Math.min(100,mentions/50);
+    const sSocial=Math.min(100,social/150);
+    const sRetention=retention;
+    const sWom=Math.min(100,wom*1.5);
+    const total=Math.round((sRepeat+sNps+sMentions+sSocial+sRetention+sWom)/6);
+    const color=total>=70?'#10b981':total>=40?'#f59e0b':'#ef4444';
+    const label=total>=70?'忠诚度优秀':total>=40?'忠诚度中等':'忠诚度偏低';
+    const desc=total>=70?'品牌忠诚度表现优秀，客户粘性强，品牌力突出':total>=40?'品牌忠诚度有基础但提升空间大，需要系统性增强客户体验':'品牌忠诚度偏低，客户容易流失，需紧急改善客户体验和品牌建设';
+    const r=70,circ=2*Math.PI*r,offset=circ*(1-total/100);
+    document.getElementById('scoreDisplay').innerHTML=`
+      <div class="score-circle"><svg width="160" height="160"><circle cx="80" cy="80" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="12"/><circle cx="80" cy="80" r="${r}" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset .8s"/></svg><div class="score-center"><div class="sc-val" style="color:${color}">${total}</div><div class="sc-lbl">/ 100</div></div></div>
+      <div class="score-info"><h3 style="color:${color}">${label}</h3><p>${desc}</p></div>`;
+    this.renderRadar([sRepeat,sNps,sMentions,sSocial,sRetention,sWom]);
+    this.renderSuggestions(repeat,nps,mentions,social,retention,wom,sRepeat,sNps,sMentions,sSocial,sRetention,sWom);
+  },
+  renderRadar(scores){
+    const dims=['复购率','NPS','品牌提及','社媒声量','客户留存','推荐意愿'];
+    const colors=['#4f46e5','#10b981','#f59e0b','#ec4899','#06b6d4','#8b5cf6'];
+    const cx=150,cy=150,maxR=100;
+    let grid='';
+    for(let i=1;i<=4;i++){
+      const r=maxR*i/4;
+      const points=dims.map((d,j)=>{
+        const ang=-Math.PI/2+j*Math.PI*2/dims.length;
+        return (cx+r*Math.cos(ang))+','+(cy+r*Math.sin(ang));
+      }).join(' ');
+      grid+=`<polygon points="${points}" fill="none" stroke="#e2e8f0" stroke-width="1"/>`;
+    }
+    let axes='',labels='';
+    dims.forEach((d,i)=>{
+      const ang=-Math.PI/2+i*Math.PI*2/dims.length;
+      const x2=cx+maxR*Math.cos(ang),y2=cy+maxR*Math.sin(ang);
+      axes+=`<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#e2e8f0" stroke-width="1"/>`;
+      const lx=cx+(maxR+20)*Math.cos(ang),ly=cy+(maxR+20)*Math.sin(ang);
+      labels+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#64748b" font-weight="600">${d}</text>`;
+    });
+    const dataPoints=scores.map((s,i)=>{
+      const ang=-Math.PI/2+i*Math.PI*2/scores.length;
+      const r=maxR*s/100;
+      return (cx+r*Math.cos(ang))+','+(cy+r*Math.sin(ang));
+    }).join(' ');
+    let svg=`<svg viewBox="0 0 300 300" style="width:300px;height:300px">${grid}${axes}<polygon points="${dataPoints}" fill="rgba(79,70,229,0.2)" stroke="#4f46e5" stroke-width="2"/>${scores.map((s,i)=>{const ang=-Math.PI/2+i*Math.PI*2/scores.length;const r=maxR*s/100;return `<circle cx="${cx+r*Math.cos(ang)}" cy="${cy+r*Math.sin(ang)}" r="4" fill="${colors[i]}"/>`;}).join('')}${labels}</svg>`;
+    document.getElementById('radarWrap').innerHTML=svg+`<div class="dim-list">${dims.map((d,i)=>`<div class="dim-item"><span class="dim-label">${d}</span><div class="dim-bar"><div class="dim-bar-fill" style="width:${scores[i]}%;background:${colors[i]}"></div></div><span class="dim-val" style="color:${colors[i]}">${Math.round(scores[i])}</span></div>`).join('')}</div>`;
+  },
+  renderSuggestions(repeat,nps,mentions,social,retention,wom,sR,sN,sM,sS,sRe,sW){
+    const sugs=[];
+    if(sR<50)sugs.push({type:'bad',icon:'🔁',title:'复购率偏低',desc:`复购率${repeat}%，建议建立会员体系和回购激励机制`});
+    else sugs.push({type:'good',icon:'✅',title:'复购率健康',desc:`复购率${repeat}%表现良好，客户愿意再次购买`});
+    if(sN<50)sugs.push({type:'warn',icon:'📊',title:'NPS有提升空间',desc:`NPS ${nps}分，建议收集客户反馈，改善产品体验提升推荐意愿`});
+    if(sM<50)sugs.push({type:'warn',icon:'📢',title:'品牌提及量不足',desc:`月提及${mentions}次，建议增加PR和KOL合作提升品牌曝光`});
+    if(sS<50)sugs.push({type:'warn',icon:'📱',title:'社媒声量偏低',desc:`月互动${social}次，建议加大社交媒体内容投入和互动活动`});
+    if(sRe<70)sugs.push({type:'bad',icon:'📉',title:'客户留存率低',desc:`留存率${retention}%，建议分析流失原因，建立客户关怀体系`});
+    if(sW<50)sugs.push({type:'warn',icon:'💬',title:'口碑传播弱',desc:`推荐意愿${wom}%，建议设置推荐奖励计划激励老客带新客`});
+    if(sugs.filter(s=>s.type==='bad').length===0&&sugs.filter(s=>s.type==='warn').length===0)
+      sugs.push({type:'good',icon:'🎉',title:'忠诚度全面优秀',desc:'所有维度表现良好，继续保持品牌建设和客户体验优化'});
+    document.getElementById('sugList').innerHTML=sugs.map(s=>`<div class="sug-item ${s.type}"><span class="sug-icon">${s.icon}</span><div class="sug-text"><h4>${s.title}</h4><p>${s.desc}</p></div></div>`).join('');
+  }
+};
+Loyalty.calc();
+</script>
+</body>
+</html>

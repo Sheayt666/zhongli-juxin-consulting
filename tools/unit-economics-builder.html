@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="单位经济模型构建器（深度版）：单客户收入/成本/LTV/CAC/Payback全链路，盈亏平衡分析，敏感性测试，CSS经济模型图。免费在线跨境电商增长分析工具。">
+<meta name="keywords" content="单位经济,LTV,CAC,Payback,盈亏平衡,敏感性分析,增长分析">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/unit-economics-builder.html">
+<title>单位经济模型构建器 - LTV/CAC/Payback·盈亏平衡·敏感性分析 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.ueb-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.ueb-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+/* Unit Economics Flow */
+.ue-flow{display:flex;align-items:stretch;gap:0;margin:20px 0;overflow-x:auto;padding-bottom:10px}
+.ue-node{flex:1;min-width:120px;padding:16px 12px;border-radius:12px;text-align:center;position:relative}
+.ue-node.income{background:linear-gradient(135deg,#d1fae5,#ecfdf5);border:2px solid #10b981}
+.ue-node.cost{background:linear-gradient(135deg,#fee2e2,#fef2f2);border:2px solid #ef4444}
+.ue-node.profit{background:linear-gradient(135deg,#eef2ff,#f0f4ff);border:2px solid #4f46e5}
+.ue-node.gold{background:linear-gradient(135deg,#fef3c7,#fffbeb);border:2px solid #f59e0b}
+.ue-node .un-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.ue-node .un-value{font-size:18px;font-weight:800}
+.ue-node .un-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.ue-arrow{display:flex;align-items:center;color:#c7d2fe;font-size:20px;padding:0 4px;flex-shrink:0}
+/* KPI Cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi-card{padding:18px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.kpi-card .kc-value{font-size:28px;font-weight:800;line-height:1}
+.kpi-card .kc-label{font-size:12px;color:var(--muted);margin-top:6px}
+.kpi-card .kc-status{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700;margin-top:6px;display:inline-block}
+.kpi-card .kc-status.good{background:#d1fae5;color:#059669}
+.kpi-card .kc-status.warn{background:#fef3c7;color:#d97706}
+.kpi-card .kc-status.bad{background:#fee2e2;color:#dc2626}
+/* Breakeven */
+.breakeven-chart{position:relative;height:80px;margin:20px 0}
+.be-bar{position:absolute;top:0;height:100%;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transition:all .5s}
+.be-bar.cost{background:linear-gradient(90deg,#ef4444,#dc2626)}
+.be-bar.revenue{background:linear-gradient(90deg,#10b981,#059669)}
+.be-marker{position:absolute;top:-20px;transform:translateX(-50%);font-size:11px;font-weight:700;white-space:nowrap}
+.be-marker-line{position:absolute;top:0;width:2px;height:100px;background:#4f46e5;margin-top:-10px}
+.be-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--muted)}
+/* Sensitivity Matrix */
+.sens-table{width:100%;border-collapse:collapse;margin-top:12px}
+.sens-table th{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:10px;font-size:12px;text-align:center;font-weight:600}
+.sens-table th:first-child{border-radius:8px 0 0 0}
+.sens-table th:last-child{border-radius:0 8px 0 0}
+.sens-table td{padding:10px;font-size:13px;text-align:center;border:1px solid var(--rule-light)}
+.sens-table td:first-child{font-weight:600;background:var(--bg-soft);text-align:left}
+.sens-cell{font-weight:700;padding:4px 8px;border-radius:6px;display:inline-block;min-width:60px}
+.sens-cell.positive{background:#d1fae5;color:#059669}
+.sens-cell.neutral{background:#fef3c7;color:#d97706}
+.sens-cell.negative{background:#fee2e2;color:#dc2626}
+/* Waterfall */
+.waterfall{display:flex;align-items:flex-end;gap:8px;height:240px;padding:20px 10px 40px;position:relative;border-bottom:2px solid var(--rule);overflow-x:auto}
+.wf-bar{display:flex;flex-direction:column;align-items:center;min-width:70px;position:relative;flex:1}
+.wf-col{width:100%;border-radius:6px 6px 0 0;transition:height .5s;position:relative;display:flex;align-items:flex-start;justify-content:center}
+.wf-col.base{background:#94a3b8}
+.wf-col.positive{background:linear-gradient(180deg,#10b981,#059669)}
+.wf-col.negative{background:linear-gradient(180deg,#ef4444,#dc2626)}
+.wf-col.total{background:linear-gradient(180deg,#4f46e5,#6366f1)}
+.wf-val{position:absolute;top:-22px;font-size:12px;font-weight:700;white-space:nowrap}
+.wf-label{position:absolute;bottom:-30px;font-size:11px;color:var(--ink-soft);text-align:center;width:100%;line-height:1.3}
+/* Formula */
+.formula-line{font-size:14px;font-family:'Courier New',monospace;color:var(--ink);margin-bottom:8px;padding:10px 14px;background:var(--bg-soft);border-radius:8px;border:1px solid var(--rule-light)}
+.formula-line strong{color:#4f46e5}
+/* Summary verdict */
+.verdict-box{padding:24px;border-radius:12px;margin-top:16px;text-align:center}
+.verdict-box.healthy{background:linear-gradient(135deg,#d1fae5,#ecfdf5);border:2px solid #10b981}
+.verdict-box.warning{background:linear-gradient(135deg,#fef3c7,#fffbeb);border:2px solid #f59e0b}
+.verdict-box.danger{background:linear-gradient(135deg,#fee2e2,#fef2f2);border:2px solid #ef4444}
+.verdict-box .vb-title{font-size:18px;font-weight:800;margin-bottom:8px}
+.verdict-box .vb-desc{font-size:14px;color:var(--ink-soft);line-height:1.7}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.related-grid a{display:block;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-decoration:none;color:var(--ink-soft);font-size:13px;text-align:center;transition:all .2s}
+.related-grid a:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;transform:translateY(-2px)}
+@media(max-width:768px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.ue-flow{flex-direction:column}.ue-arrow{transform:rotate(90deg);padding:8px 0}.related-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"单位经济模型构建器","description":"单客户收入/成本/LTV/CAC/Payback全链路，盈亏平衡分析，敏感性测试，CSS经济模型图。深度版跨境电商增长分析工具。","url":"https://juxin-consulting.help/tools/unit-economics-builder.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"单位经济模型构建器","item":"https://juxin-consulting.help/tools/unit-economics-builder.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="unit_economics">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📈 增长分析工作流 · 深度版</span>
+      <h1>单位经济 <em>模型构建器</em></h1>
+      <p class="tool-hero-desc">构建单客户全链路经济模型：收入拆解、成本归集、LTV/CAC/Payback计算、盈亏平衡分析、敏感性测试矩阵，CSS瀑布图展示单客户利润流转，全面评估商业模式健康度。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📈</span>
+      <span class="workflow-name">增长分析工作流</span>
+      <span class="workflow-step">第12步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="growth-rate.html" class="step">增长率</a><span class="arrow">→</span>
+      <a href="cohort-analysis.html" class="step">同期群分析</a><span class="arrow">→</span>
+      <a href="retention-rate.html" class="step">留存率</a><span class="arrow">→</span>
+      <a href="churn-analysis.html" class="step">流失分析</a><span class="arrow">→</span>
+      <a href="north-star-metric.html" class="step">北极星指标</a><span class="arrow">→</span>
+      <a href="growth-driver-decomposer.html" class="step">增长拆解</a><span class="arrow">→</span>
+      <a href="funnel-conversion-analyzer.html" class="step">漏斗转化</a><span class="arrow">→</span>
+      <a href="viral-coefficient-calculator.html" class="step">病毒系数</a><span class="arrow">→</span>
+      <a href="ltv-prediction-model.html" class="step">LTV预测</a><span class="arrow">→</span>
+      <a href="growth-experiment-tracker.html" class="step">增长实验</a><span class="arrow">→</span>
+      <a href="market-share-growth-tracker.html" class="step">市场份额</a><span class="arrow">→</span>
+      <span class="step current">单位经济</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入单位经济参数</h2>
+          <p class="calc-form-subtitle">填写单客户收入和成本数据，构建完整经济模型</p>
+          <div style="font-size:13px;font-weight:600;color:#4f46e5;margin:12px 0 8px">收入端</div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>客单价AOV <span class="hint">($)</span></label><input type="number" id="aov" value="35" step="0.5" min="0" oninput="UEB.calc()"></div>
+            <div class="calc-field"><label>复购次数/年</label><input type="number" id="repurchase" value="3" step="0.5" min="0" oninput="UEB.calc()"></div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:#ef4444;margin:12px 0 8px">成本端</div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品成本COGS <span class="hint">($/单)</span></label><input type="number" id="cogs" value="12" step="0.5" min="0" oninput="UEB.calc()"></div>
+            <div class="calc-field"><label>物流仓储 <span class="hint">($/单)</span></label><input type="number" id="logistics" value="5" step="0.5" min="0" oninput="UEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>平台佣金率 <span class="hint">(%)</span></label><input type="number" id="platformFee" value="15" step="0.5" min="0" max="100" oninput="UEB.calc()"></div>
+            <div class="calc-field"><label>广告费 <span class="hint">($/单)</span></label><input type="number" id="adCost" value="6" step="0.5" min="0" oninput="UEB.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>其他运营 <span class="hint">($/单)</span></label><input type="number" id="otherCost" value="2" step="0.5" min="0" oninput="UEB.calc()"></div>
+            <div class="calc-field"><label>获客成本CAC <span class="hint">($)</span></label><input type="number" id="cac" value="25" step="1" min="0" oninput="UEB.calc()"></div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:#f59e0b;margin:12px 0 8px">留存端</div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>年流失率 <span class="hint">(%)</span></label><input type="number" id="churnRate" value="40" step="1" min="0" max="100" oninput="UEB.calc()"></div>
+            <div class="calc-field"><label>折现率 <span class="hint">(%, 年化)</span></label><input type="number" id="discountRate" value="10" step="1" min="0" max="50" oninput="UEB.calc()"></div>
+          </div>
+          <div class="fee-rule-box"><h4>📐 单位经济核心公式</h4><ul><li>单笔毛利 = AOV - COGS - 物流 - 平台佣金</li><li>年客户收入 = AOV x 复购次数</li><li>年客户毛利 = 单笔毛利 x 复购次数 - 广告 - 其他</li><li>LTV = 年客户毛利 x (1 - 流失率) / 流失率</li><li>LTV/CAC > 3 = 健康，Payback < 12月 = 安全</li></ul></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>🔗 单客户经济流</h3>
+        <div class="ue-flow" id="ueFlow"></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>📊 核心KPI</h3>
+        <div class="kpi-grid" id="kpiGrid"></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>📐 公式拆解</h3>
+        <div id="formulaWrap"></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>📉 CSS单客户利润瀑布图</h3>
+        <div class="waterfall" id="waterfall"></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>⚖️ 盈亏平衡分析</h3>
+        <div id="breakevenWrap"></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>🔬 敏感性分析矩阵</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">LTV/CAC比值在不同AOV和流失率场景下的表现</p>
+        <div style="overflow-x:auto"><table class="sens-table" id="sensTable"></table></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>🎯 模型健康度评估</h3>
+        <div id="verdictWrap"></div>
+      </div>
+
+      <div class="ueb-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="ltv-prediction-model.html">LTV预测模型</a>
+          <a href="cac-calculator.html">CAC计算器</a>
+          <a href="break-even-analysis.html">盈亏平衡分析</a>
+          <a href="aov-optimizer.html">客单价优化器</a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="market-share-growth-tracker.html" class="wbn-btn prev">← 上一步：市场份额</a>
+        <a href="index.html" class="wbn-btn next">完成工作流 →</a>
+      </div>
+      <div style="text-align:center;margin:20px auto;max-width:1152px"><a href="index.html" style="display:inline-block;padding:10px 28px;border-radius:50px;background:var(--bg-soft);color:var(--ink-soft);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--rule)">← 返回工具中心</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="growth-rate.html">增长率计算</a></li><li><a href="cohort-analysis.html">同期群分析</a></li><li><a href="retention-rate.html">留存率分析</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var UEB=(function(){
+  'use strict';
+  var SK='jx_unit_economics';
+  function v(id){var el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
+  function fmt(n){return '$'+n.toFixed(2);}
+  function fmt0(n){return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});}
+  function calc(){
+    var aov=v('aov'),rep=v('repurchase'),cogs=v('cogs'),log=v('logistics'),pf=v('platformFee')/100,ad=v('adCost'),oc=v('otherCost'),cac=v('cac'),churn=v('churnRate')/100,dr=v('discountRate')/100;
+    // Per-order economics
+    var platformCost=aov*pf;
+    var grossPerOrder=aov-cogs-log-platformCost;
+    var netPerOrder=grossPerOrder-ad-oc;
+    // Annual economics
+    var annualRevenue=aov*rep;
+    var annualGross=grossPerOrder*rep;
+    var annualNet=netPerOrder*rep;
+    var annualAd=ad*rep;
+    var annualOther=oc*rep;
+    // LTV
+    var customerLife=churn>0?1/churn:5;
+    var simpleLTV=churn>0?annualNet/churn:annualNet*5;
+    var monthlyDiscount=dr/12;
+    var months=Math.round(customerLife*12);
+    if(months>60)months=60;
+    if(months<1)months=1;
+    var discountedLTV=0;
+    var monthlyNet=annualNet/12;
+    for(var m=1;m<=months;m++){
+      var retention=Math.pow(1-churn/12,m-1);
+      discountedLTV+=monthlyNet*retention/Math.pow(1+monthlyDiscount,m-1);
+    }
+    var ltv=discountedLTV;
+    var ratio=cac>0?ltv/cac:0;
+    var payback=annualNet>0?cac/annualNet*12:0;
+    var contributionMargin=annualNet/annualRevenue;
+    var grossMargin=annualGross/annualRevenue;
+    // Result card
+    var html='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val blue">'+fmt0(ltv)+'</div><div class="rsb-lbl">LTV</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val red">'+fmt0(cac)+'</div><div class="rsb-lbl">CAC</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val '+(ratio>=3?'green':ratio>=1?'gold':'red')+'">'+ratio.toFixed(2)+'</div><div class="rsb-lbl">LTV/CAC</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val '+(payback<=12?'green':payback<=24?'gold':'red')+'">'+payback.toFixed(1)+'</div><div class="rsb-lbl">回本月数</div></div>';
+    html+='</div>';
+    html+='<div class="result-summary-bar">';
+    html+='<div class="rsb-card"><div class="rsb-val">'+fmt0(annualRevenue)+'</div><div class="rsb-lbl">年客户收入</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val green">'+fmt0(annualNet)+'</div><div class="rsb-lbl">年客户净利</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+(contributionMargin*100).toFixed(1)+'%</div><div class="rsb-lbl">贡献毛利率</div></div>';
+    html+='<div class="rsb-card"><div class="rsb-val">'+customerLife.toFixed(1)+'</div><div class="rsb-lbl">客户生命周期(年)</div></div>';
+    html+='</div>';
+    document.getElementById('resultCard').innerHTML=html;
+    // UE Flow
+    var fh='<div class="ue-node income"><div class="un-label">客单价</div><div class="un-value" style="color:#10b981">'+fmt(aov)+'</div><div class="un-sub">x '+rep+'次/年</div></div>';
+    fh+='<div class="ue-arrow">→</div>';
+    fh+='<div class="ue-node cost"><div class="un-label">产品成本</div><div class="un-value" style="color:#ef4444">-'+fmt(cogs)+'</div><div class="un-sub">COGS</div></div>';
+    fh+='<div class="ue-arrow">→</div>';
+    fh+='<div class="ue-node cost"><div class="un-label">物流+佣金</div><div class="un-value" style="color:#ef4444">-'+fmt(log+platformCost)+'</div><div class="un-sub">每单</div></div>';
+    fh+='<div class="ue-arrow">→</div>';
+    fh+='<div class="ue-node profit"><div class="un-label">单笔毛利</div><div class="un-value" style="color:#4f46e5">'+fmt(grossPerOrder)+'</div><div class="un-sub">'+(grossMargin*100).toFixed(0)+'%毛利率</div></div>';
+    fh+='<div class="ue-arrow">→</div>';
+    fh+='<div class="ue-node cost"><div class="un-label">广告+运营</div><div class="un-value" style="color:#ef4444">-'+fmt(ad+oc)+'</div><div class="un-sub">每单</div></div>';
+    fh+='<div class="ue-arrow">→</div>';
+    fh+='<div class="ue-node gold"><div class="un-label">年净利</div><div class="un-value" style="color:#f59e0b">'+fmt0(annualNet)+'</div><div class="un-sub">x '+customerLife.toFixed(1)+'年</div></div>';
+    fh+='<div class="ue-arrow">=</div>';
+    fh+='<div class="ue-node profit"><div class="un-label">LTV</div><div class="un-value" style="color:#4f46e5">'+fmt0(ltv)+'</div><div class="un-sub">折现</div></div>';
+    document.getElementById('ueFlow').innerHTML=fh;
+    // KPI grid
+    var ratioStatus=ratio>=3?'good':ratio>=1?'warn':'bad';
+    var ratioText=ratio>=3?'健康':ratio>=1?'需优化':'亏损';
+    var paybackStatus=payback<=12?'good':payback<=24?'warn':'bad';
+    var paybackText=payback<=12?'安全':payback<=24?'偏长':'危险';
+    var marginStatus=contributionMargin>=0.3?'good':contributionMargin>=0.15?'warn':'bad';
+    var marginText=contributionMargin>=0.3?'优秀':contributionMargin>=0.15?'一般':'偏低';
+    var grossStatus=grossMargin>=0.5?'good':grossMargin>=0.3?'warn':'bad';
+    var grossText=grossMargin>=0.5?'健康':grossMargin>=0.3?'一般':'偏低';
+    var kh='<div class="kpi-card"><div class="kc-value" style="color:'+(ratio>=3?'#10b981':ratio>=1?'#f59e0b':'#ef4444')+'">'+ratio.toFixed(2)+'</div><div class="kc-label">LTV/CAC</div><div class="kc-status '+ratioStatus+'">'+ratioText+'</div></div>';
+    kh+='<div class="kpi-card"><div class="kc-value" style="color:'+(payback<=12?'#10b981':payback<=24?'#f59e0b':'#ef4444')+'">'+payback.toFixed(1)+'</div><div class="kc-label">回本月数</div><div class="kc-status '+paybackStatus+'">'+paybackText+'</div></div>';
+    kh+='<div class="kpi-card"><div class="kc-value" style="color:'+(contributionMargin>=0.3?'#10b981':contributionMargin>=0.15?'#f59e0b':'#ef4444')+'">'+(contributionMargin*100).toFixed(1)+'%</div><div class="kc-label">贡献毛利率</div><div class="kc-status '+marginStatus+'">'+marginText+'</div></div>';
+    kh+='<div class="kpi-card"><div class="kc-value" style="color:'+(grossMargin>=0.5?'#10b981':grossMargin>=0.3?'#f59e0b':'#ef4444')+'">'+(grossMargin*100).toFixed(1)+'%</div><div class="kc-label">毛利率</div><div class="kc-status '+grossStatus+'">'+grossText+'</div></div>';
+    document.getElementById('kpiGrid').innerHTML=kh;
+    // Formula
+    var ff='<div class="formula-line">单笔毛利 = AOV - COGS - 物流 - 平台佣金</div>';
+    ff+='<div class="formula-line">单笔毛利 = '+fmt(aov)+' - '+fmt(cogs)+' - '+fmt(log)+' - '+fmt(platformCost)+' = <strong>'+fmt(grossPerOrder)+'</strong></div>';
+    ff+='<div class="formula-line">年客户净利 = (单笔毛利 - 广告 - 运营) x 复购 = ('+fmt(grossPerOrder)+' - '+fmt(ad)+' - '+fmt(oc)+') x '+rep+' = <strong>'+fmt0(annualNet)+'</strong></div>';
+    ff+='<div class="formula-line">客户生命周期 = 1 / 流失率 = 1 / '+(churn*100).toFixed(0)+'% = <strong>'+customerLife.toFixed(2)+'年</strong></div>';
+    ff+='<div class="formula-line">LTV (折现) = <strong>'+fmt0(ltv)+'</strong></div>';
+    ff+='<div class="formula-line">LTV/CAC = '+fmt0(ltv)+' / '+fmt0(cac)+' = <strong>'+ratio.toFixed(2)+'</strong></div>';
+    ff+='<div class="formula-line">回本月数 = CAC / (年净利/12) = '+fmt0(cac)+' / '+fmt0(annualNet/12)+' = <strong>'+payback.toFixed(1)+'个月</strong></div>';
+    document.getElementById('formulaWrap').innerHTML=ff;
+    // Waterfall
+    var wfData=[
+      {label:'AOV',val:aov,type:'base'},
+      {label:'COGS',val:-cogs,type:'negative'},
+      {label:'物流',val:-log,type:'negative'},
+      {label:'佣金',val:-platformCost,type:'negative'},
+      {label:'毛利',val:grossPerOrder,type:'total'},
+      {label:'广告',val:-ad,type:'negative'},
+      {label:'运营',val:-oc,type:'negative'},
+      {label:'净利/单',val:netPerOrder,type:'total'}
+    ];
+    var maxAbs=Math.max(aov,grossPerOrder,netPerOrder,1);
+    var wh='';
+    wfData.forEach(function(d){
+      var h=Math.abs(d.val)/maxAbs*100;
+      wh+='<div class="wf-bar"><div class="wf-col '+d.type+'" style="height:'+Math.max(h,5)+'%">';
+      wh+='<div class="wf-val">'+(d.val>=0?'+':'')+fmt(d.val)+'</div></div>';
+      wh+='<div class="wf-label">'+d.label+'</div></div>';
+    });
+    document.getElementById('waterfall').innerHTML=wh;
+    // Breakeven
+    var beCustomers=annualNet>0?Math.ceil(cac/annualNet):0;
+    var beRevenue=beCustomers*annualRevenue;
+    var beTime=annualNet>0?cac/annualNet:0;
+    var beHtml='<div class="breakeven-chart" style="height:60px;margin-top:20px">';
+    var maxBar=Math.max(cac,annualNet*beCustomers,1);
+    beHtml+='<div class="be-bar cost" style="width:50%;left:0">'+fmt0(cac)+' CAC</div>';
+    beHtml+='<div class="be-bar revenue" style="width:50%;left:50%">'+fmt0(annualNet)+'/年</div>';
+    beHtml+='</div>';
+    beHtml+='<div class="be-labels"><span>固定成本(CAC)</span><span>年客户净利</span></div>';
+    beHtml+='<div style="margin-top:16px;padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)">';
+    beHtml+='<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px"><span>盈亏平衡客户数</span><strong>'+beCustomers+' 个客户</strong></div>';
+    beHtml+='<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px"><span>盈亏平衡收入</span><strong>'+fmt0(beRevenue)+'</strong></div>';
+    beHtml+='<div style="display:flex;justify-content:space-between;font-size:14px"><span>盈亏平衡时间</span><strong>'+beTime.toFixed(1)+' 年 ('+(beTime*12).toFixed(0)+'个月)</strong></div>';
+    beHtml+='</div>';
+    document.getElementById('breakevenWrap').innerHTML=beHtml;
+    // Sensitivity matrix
+    var aovChanges=[-0.2,-0.1,0,0.1,0.2];
+    var churnChanges=[-0.1,-0.05,0,0.05,0.1];
+    var sh='<table class="sens-table"><thead><tr><th>AOV \\ 流失率</th>';
+    churnChanges.forEach(function(c){
+      sh+='<th>'+((churn+c)*100).toFixed(0)+'%</th>';
+    });
+    sh+='</tr></thead><tbody>';
+    aovChanges.forEach(function(a){
+      var testAov=aov*(1+a);
+      var testGross=testAov-cogs-log-testAov*pf;
+      var testNet=testGross-ad-oc;
+      var testAnnual=testNet*rep;
+      sh+='<tr><td>'+((1+a)*100).toFixed(0)+'% ('+fmt0(testAov)+')</td>';
+      churnChanges.forEach(function(c){
+        var testChurn=churn+c;
+        if(testChurn<=0)testChurn=0.01;
+        if(testChurn>=1)testChurn=0.99;
+        var testLTV=testAnnual/testChurn;
+        var testRatio=cac>0?testLTV/cac:0;
+        var cls=testRatio>=3?'positive':testRatio>=1?'neutral':'negative';
+        sh+='<td><span class="sens-cell '+cls+'">'+testRatio.toFixed(2)+'</span></td>';
+      });
+      sh+='</tr>';
+    });
+    sh+='</tbody></table>';
+    document.getElementById('sensTable').innerHTML=sh;
+    // Verdict
+    var verdictCls,verdictTitle,verdictDesc;
+    if(ratio>=3&&payback<=12){
+      verdictCls='healthy';verdictTitle='商业模式健康';
+      verdictDesc='LTV/CAC = '+ratio.toFixed(2)+'，回本周期 '+payback.toFixed(1)+'个月。单位经济优秀，可以加速获客投入。贡献毛利率 '+(contributionMargin*100).toFixed(1)+'% 处于健康水平。';
+    }else if(ratio>=1&&payback<=24){
+      verdictCls='warning';verdictTitle='商业模式需优化';
+      verdictDesc='LTV/CAC = '+ratio.toFixed(2)+'，回本周期 '+payback.toFixed(1)+'个月。勉强盈亏平衡，建议提升LTV（提高复购/客单价）或降低CAC（优化广告转化）。';
+    }else{
+      verdictCls='danger';verdictTitle='商业模式不可持续';
+      verdictDesc='LTV/CAC = '+ratio.toFixed(2)+'，回本周期 '+payback.toFixed(1)+'个月。每个客户都在亏损，必须立即调整：降低COGS、提高AOV、减少广告依赖或提升留存。';
+    }
+    document.getElementById('verdictWrap').innerHTML='<div class="verdict-box '+verdictCls+'"><div class="vb-title">'+verdictTitle+'</div><div class="vb-desc">'+verdictDesc+'</div></div>';
+    save({aov:aov,rep:rep,cogs:cogs,log:log,pf:pf,ad:ad,oc:oc,cac:cac,churn:churn,dr:dr});
+  }
+  function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
+  function init(){
+    try{var d=JSON.parse(localStorage.getItem(SK));if(d){
+      if(d.aov){document.getElementById('aov').value=d.aov;}
+      if(d.rep){document.getElementById('repurchase').value=d.rep;}
+      if(d.cogs){document.getElementById('cogs').value=d.cogs;}
+      if(d.log){document.getElementById('logistics').value=d.log;}
+      if(d.pf){document.getElementById('platformFee').value=d.pf*100;}
+      if(d.ad){document.getElementById('adCost').value=d.ad;}
+      if(d.oc){document.getElementById('otherCost').value=d.oc;}
+      if(d.cac){document.getElementById('cac').value=d.cac;}
+      if(d.churn){document.getElementById('churnRate').value=d.churn*100;}
+      if(d.dr){document.getElementById('discountRate').value=d.dr*100;}
+    }}catch(e){}
+    calc();
+  }
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',UEB.init);}else{UEB.init();}
+</script>
+</body>
+</html>

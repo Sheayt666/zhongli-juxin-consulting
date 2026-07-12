@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="价格历史分析器：SVG价格走势图、季节性规律、最优定价窗口识别。免费在线跨境电商价格历史分析工具。">
+<meta name="keywords" content="价格历史,价格走势,季节性规律,定价窗口,SVG图表,定价策略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/price-history-analyzer.html">
+<title>价格历史分析器 - SVG走势图·季节性规律·定价窗口 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px;flex-wrap:wrap;gap:12px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pha-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pha-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.chart-box{background:var(--bg-soft);border-radius:12px;padding:20px}
+.season-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.season-card{padding:16px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.season-card.peak{background:#ecfdf5;border:1px solid #6ee7b7}
+.season-card .sc-season{font-size:13px;font-weight:700;color:var(--ink)}
+.season-card .sc-trend{font-size:11px;color:var(--muted);margin-top:4px}
+.season-card .sc-price{font-size:16px;font-weight:800;margin-top:6px}
+.window-box{padding:20px;border-radius:12px;background:linear-gradient(135deg,#ecfdf5,#eef2ff);border:1px solid #6ee7b7;margin-bottom:12px}
+.window-box h4{font-size:15px;font-weight:800;margin-bottom:8px;color:#10b981}
+.window-box p{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.stat-card{flex:1;min-width:110px;padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.stat-card .sv{font-size:20px;font-weight:800;color:var(--ink)}
+.stat-card .sl{font-size:11px;color:var(--muted);margin-top:2px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.related-card{display:flex;gap:12px;padding:14px;background:var(--bg-soft);border-radius:10px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.related-card:hover{background:#eef2ff;transform:translateX(4px);border-color:#c7d2fe}
+.related-card-icon{font-size:22px;flex-shrink:0}
+.related-card-content h5{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.related-card-content p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:768px){.season-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"价格历史分析器","description":"SVG价格走势图、季节性规律、最优定价窗口识别。","url":"https://juxin-consulting.help/tools/price-history-analyzer.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://juxin-consulting.help/index.html"},{"@type":"ListItem","position":2,"name":"工具中心","item":"https://juxin-consulting.help/tools/index.html"},{"@type":"ListItem","position":3,"name":"价格历史分析器","item":"https://juxin-consulting.help/tools/price-history-analyzer.html"}]}
+</script>
+</head>
+<body class="tool-page" data-tool="price_history_analyzer">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📅 定价策略工作流</span>
+      <h1>价格历史 <em>分析器</em></h1>
+      <p class="tool-hero-desc">输入12个月价格数据，SVG折线图可视化价格走势，识别季节性涨跌规律，定位最优定价与促销窗口，辅助制定全年定价日历。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏷️</span>
+      <span class="workflow-name">定价策略工作流</span>
+      <span class="workflow-step">第12步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="dynamic-pricing.html" class="step">动态定价</a><span class="arrow">→</span>
+      <a href="competitor-pricing.html" class="step">竞品定价</a><span class="arrow">→</span>
+      <a href="promo-pricing.html" class="step">促销定价</a><span class="arrow">→</span>
+      <a href="bundle-pricing.html" class="step">套餐定价</a><span class="arrow">→</span>
+      <a href="regional-pricing.html" class="step">区域定价</a><span class="arrow">→</span>
+      <a href="price-elasticity-tester.html" class="step">价格弹性</a><span class="arrow">→</span>
+      <a href="repricing-rules-engine.html" class="step">自动调价</a><span class="arrow">→</span>
+      <a href="psychological-pricing-analyzer.html" class="step">心理定价</a><span class="arrow">→</span>
+      <a href="price-war-simulator.html" class="step">价格战模拟</a><span class="arrow">→</span>
+      <a href="coupon-deal-optimizer.html" class="step">Coupon优化</a><span class="arrow">→</span>
+      <a href="multi-variant-pricing-strategy.html" class="step">多变体定价</a><span class="arrow">→</span>
+      <span class="step current">价格历史</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 12个月价格数据</h2>
+          <p class="calc-form-subtitle">输入各月售价（可逐月调整）</p>
+          <div id="monthInputs"></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="pha-section">
+        <h3>📈 12个月价格走势（SVG）</h3>
+        <div class="chart-box" id="chartBox"></div>
+      </div>
+
+      <div class="pha-section">
+        <h3>📊 价格统计</h3>
+        <div class="stat-row" id="statRow"></div>
+      </div>
+
+      <div class="pha-section">
+        <h3>🍂 季节性规律</h3>
+        <div class="season-grid" id="seasonGrid"></div>
+      </div>
+
+      <div class="pha-section">
+        <h3>🎯 最优定价窗口</h3>
+        <div id="windowWrap"></div>
+      </div>
+
+      <div class="pha-section">
+        <h3>🔗 相关工具</h3>
+        <div class="related-grid">
+          <a href="dynamic-pricing.html" class="related-card"><span class="related-card-icon">⚡</span><div class="related-card-content"><h5>动态定价</h5><p>实时调价</p></div></a>
+          <a href="price-elasticity-tester.html" class="related-card"><span class="related-card-icon">📈</span><div class="related-card-content"><h5>价格弹性</h5><p>弹性分析</p></div></a>
+          <a href="coupon-deal-optimizer.html" class="related-card"><span class="related-card-icon">🎟️</span><div class="related-card-content"><h5>Coupon优化</h5><p>折扣ROI</p></div></a>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="multi-variant-pricing-strategy.html" class="wbn-btn prev">← 上一步：多变体定价</a>
+        <a href="index.html" class="wbn-btn next">返回工具中心 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="price-history-analyzer.html">价格历史分析</a></li><li><a href="dynamic-pricing.html">动态定价</a></li><li><a href="price-elasticity-tester.html">价格弹性</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PHA=(function(){
+  'use strict';
+  var MONTHS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var DEFAULT=[22.99,22.99,23.49,23.99,24.49,24.99,26.99,27.99,25.99,24.99,23.49,21.99];
+  function initInputs(){
+    var h='';
+    DEFAULT.forEach(function(p,i){
+      h+='<div class="calc-field" style="display:inline-block;width:32%;margin-right:1%"><label style="font-size:11px">'+MONTHS[i]+'</label><input type="number" id="m'+i+'" value="'+p+'" step="0.01" style="font-size:13px" oninput="PHA.calc()"></div>';
+    });
+    document.getElementById('monthInputs').innerHTML=h;
+  }
+  function getPrices(){var p=[];for(var i=0;i<12;i++)p.push(parseFloat(document.getElementById('m'+i).value)||0);return p;}
+  function calc(){
+    var prices=getPrices();
+    var minP=Math.min.apply(null,prices),maxP=Math.max.apply(null,prices);
+    var avg=(prices.reduce(function(a,b){return a+b;},0)/12);
+    var range=maxP-minP;
+    var volatility=(range/avg*100).toFixed(1);
+    // chart
+    var W=720,H=300,padL=50,padR=20,padT=20,padB=40;
+    var minV=minP*0.92,maxV=maxP*1.05;
+    var xStep=(W-padL-padR)/11;
+    function yS(v){return padT+(H-padT-padB)*(1-(v-minV)/(maxV-minV));}
+    function xS(i){return padL+i*xStep;}
+    var dPath=prices.map(function(p,i){return (i===0?'M':'L')+xS(i)+','+yS(p);}).join(' ');
+    var areaPath=dPath+' L'+xS(11)+','+(H-padB)+' L'+xS(0)+','+(H-padB)+' Z';
+    var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">';
+    for(var i=0;i<=4;i++){var gy=padT+(H-padT-padB)*i/4;var gv=(maxV-(maxV-minV)*i/4).toFixed(2);svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#e2e8f0" stroke-width="1"/>';svg+='<text x="'+(padL-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#94a3b8">$'+gv+'</text>';}
+    MONTHS.forEach(function(m,i){svg+='<text x="'+xS(i)+'" y="'+(H-padB+18)+'" text-anchor="middle" font-size="10" fill="#94a3b8">'+m+'</text>';});
+    svg+='<path d="'+areaPath+'" fill="url(#grad)" opacity="0.15"/>';
+    svg+='<defs><linearGradient id="grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>';
+    svg+='<path d="'+dPath+'" fill="none" stroke="#4f46e5" stroke-width="2.5"/>';
+    prices.forEach(function(p,i){
+      var isMax=p===maxP,isMin=p===minP;
+      svg+='<circle cx="'+xS(i)+'" cy="'+yS(p)+'" r="'+(isMax||isMin?5:3)+'" fill="'+(isMax?'#ef4444':isMin?'#10b981':'#4f46e5')+'"/>';
+      if(isMax)svg+='<text x="'+xS(i)+'" y="'+(yS(p)-10)+'" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">峰值 $'+p.toFixed(2)+'</text>';
+      if(isMin)svg+='<text x="'+xS(i)+'" y="'+(yS(p)+18)+'" text-anchor="middle" font-size="10" fill="#10b981" font-weight="700">谷值 $'+p.toFixed(2)+'</text>';
+    });
+    svg+='</svg>';
+    document.getElementById('chartBox').innerHTML=svg;
+    document.getElementById('statRow').innerHTML=
+      '<div class="stat-card"><div class="sv" style="color:#4f46e5">$'+avg.toFixed(2)+'</div><div class="sl">年度均价</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#ef4444">$'+maxP.toFixed(2)+'</div><div class="sl">最高价</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#10b981">$'+minP.toFixed(2)+'</div><div class="sl">最低价</div></div>'+
+      '<div class="stat-card"><div class="sv" style="color:#f59e0b">'+volatility+'%</div><div class="sl">价格波动率</div></div>';
+    // seasons
+    var seasons=[
+      {name:'Q1（1-3月）',months:[0,1,2],label:'淡季',trend:'节后需求回落，价格承压'},
+      {name:'Q2（4-6月）',months:[3,4,5],label:'平稳期',trend:'需求回升，价格平稳上行'},
+      {name:'Q3（7-9月）',months:[6,7,8],label:'旺季',trend:'Prime Day+返校季，价格峰值'},
+      {name:'Q4（10-12月）',months:[9,10,11],label:'促销季',trend:'黑五网一+圣诞，先降后升'}
+    ];
+    var sh='';
+    seasons.forEach(function(s){
+      var sAvg=s.months.reduce(function(a,m){return a+prices[m];},0)/3;
+      var isPeak=sAvg>=avg;
+      sh+='<div class="season-card'+(isPeak?' peak':'')+'"><div class="sc-season">'+s.name+'</div><div class="sc-trend">'+s.label+' · '+s.trend+'</div><div class="sc-price" style="color:'+(isPeak?'#10b981':'var(--ink)')+'">$'+sAvg.toFixed(2)+'</div></div>';
+    });
+    document.getElementById('seasonGrid').innerHTML=sh;
+    // window
+    var maxIdx=prices.indexOf(maxP),minIdx=prices.indexOf(minP);
+    var wh='<div class="window-box"><h4>⬆️ 提价窗口：'+MONTHS[maxIdx]+'</h4><p>年度价格峰值出现在'+MONTHS[maxIdx]+'（$'+maxP.toFixed(2)+'），需求旺盛期可维持高价，毛利率最大化。建议提前1个月开始逐步提价，避免一次性大幅调价。</p></div>';
+    wh+='<div class="window-box" style="background:linear-gradient(135deg,#fffbeb,#eef2ff);border-color:#fcd34d"><h4 style="color:#f59e0b">⬇️ 促销窗口：'+MONTHS[minIdx]+'</h4><p>年度价格谷值出现在'+MONTHS[minIdx]+'（$'+minP.toFixed(2)+'），适合开展促销清仓或引流。配合Coupon/Lightning Deal放大流量，为旺季蓄水。</p></div>';
+    wh+='<div class="window-box"><h4>📅 全年定价日历建议</h4><p>Q1维持低位清库存 → Q2平稳提价测试弹性 → Q3旺季冲量冲利润 → Q4黑五促销后回升。价格波动率'+volatility+'%，'+(volatility>15?'波动较大，需灵活调价':'波动适中，定价策略稳定')+'。</p></div>';
+    document.getElementById('windowWrap').innerHTML=wh;
+    document.getElementById('resultCard').innerHTML=
+      '<h3>📅 价格分析概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">年度均价</div><div class="ri-value" style="color:#4f46e5">$'+avg.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">峰谷差</div><div class="ri-value" style="color:#f59e0b">$'+range.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">提价窗口</div><div class="ri-value positive">'+MONTHS[maxIdx]+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">促销窗口</div><div class="ri-value" style="color:#10b981">'+MONTHS[minIdx]+'</div></div>'+
+      '</div><div class="result-note">💡 价格波动率'+volatility+'%，'+(volatility>15?'建议建立动态定价机制把握季节性机会':'价格相对稳定，可维持稳健定价策略')+'</div>';
+  }
+  function init(){initInputs();calc();}
+  return {calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PHA.init);}else{PHA.init();}
+</script>
+</body>
+</html>

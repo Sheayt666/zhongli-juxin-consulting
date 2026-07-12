@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Etsy费用计算器：上架费+交易费+支付处理费+Offsite Ads费全核算，利润测算，Etsy Plus订阅对比，跨境卖家Etsy运营必备工具。">
+<meta name="keywords" content="Etsy费用计算,Etsy佣金,上架费,交易费,支付处理费,Offsite Ads,Etsy利润">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/etsy-fees-calc.html">
+<title>Etsy费用计算器 - 上架费·交易费·支付处理费·Offsite Ads | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.fee-row.total .fr-val{color:var(--red)}
+.fee-row.profit .fr-val{color:var(--green)}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.matrix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.matrix-cell{padding:16px;border-radius:10px;text-align:center;border:1px solid var(--rule);background:#fff;transition:all .3s}
+.matrix-cell .mc-icon{font-size:24px;margin-bottom:6px}
+.matrix-cell .mc-score{font-size:22px;font-weight:800;margin:4px 0}
+.matrix-cell .mc-label{font-size:12px;color:var(--muted)}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}}
+
+.plus-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.plus-card{padding:18px;border-radius:12px;border:2px solid var(--rule);background:#fff;transition:all .2s}
+.plus-card.active{border-color:var(--accent);background:var(--accent-bg)}
+.plus-card h4{font-size:15px;font-weight:700;margin-bottom:8px}
+.plus-card .plus-price{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.plus-card ul{list-style:none;padding:0;margin:0}
+.plus-card li{font-size:12px;color:var(--ink-soft);padding:3px 0;padding-left:16px;position:relative}
+.plus-card li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+@media(max-width:768px){.plus-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="etsy_fees_calc">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🌐</span><span class="workflow-name">多平台运营工作流</span><span class="workflow-step">第9步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="ebay-fees.html" class="step">eBay费用</a>
+      <span class="arrow">→</span>
+      <a href="walmart-fees.html" class="step">Walmart费用</a>
+      <span class="arrow">→</span>
+      <a href="shopify-costs.html" class="step">Shopify成本</a>
+      <span class="arrow">→</span>
+      <a href="tiktok-shop-calc.html" class="step">TikTok利润</a>
+      <span class="arrow">→</span>
+      <a href="temu-pricing.html" class="step">Temu定价</a>
+      <span class="arrow">→</span>
+      <a href="platform-profit-comparison.html" class="step">平台利润对比</a>
+      <span class="arrow">→</span>
+      <a href="cross-platform-listing-sync.html" class="step">Listing同步</a>
+      <span class="arrow">→</span>
+      <a href="aliexpress-fees-calc.html" class="step">速卖通费用</a>
+      <span class="arrow">→</span>
+      <span class="step current">Etsy费用</span>
+      <span class="arrow">→</span>
+      <a href="multichannel-inventory-allocator.html" class="step">库存分配</a>
+      <span class="arrow">→</span>
+      <a href="platform-selection-matrix.html" class="step">平台选择</a>
+      <span class="arrow">→</span>
+      <a href="regional-market-comparator.html" class="step">区域对比</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🌺 多平台运营工作流 · 标准版</span>
+      <h1>Etsy <em>费用计算器</em></h1>
+      <p class="tool-hero-desc">Etsy上架费+交易费+支付处理费+Offsite Ads费全核算，Etsy Plus订阅对比，利润测算，帮你精准核算Etsy运营成本。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>💰 Etsy费用计算</h2>
+          <p class="calc-form-subtitle">输入售价、成本和上架数量，实时计算各项费用与利润</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>售价 ($)</label><input type="number" id="price" value="29.99" min="0" step="0.01" oninput="ETSY.calc()"></div>
+            <div class="calc-field"><label>产品成本 ($)</label><input type="number" id="cost" value="10" min="0" step="0.01" oninput="ETSY.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>运费 ($)</label><input type="number" id="shipping" value="4" min="0" step="0.01" oninput="ETSY.calc()"></div>
+            <div class="calc-field"><label>月上架数</label><input type="number" id="listings" value="40" min="0" step="1" oninput="ETSY.calc()"></div>
+          </div>
+          <div class="calc-field"><label>是否Etsy Plus</label><select id="plus" onchange="ETSY.calc()"><option value="no" selected>标准卖家</option><option value="yes">Etsy Plus ($10/月)</option></select></div>
+          <div class="calc-field"><label>Offsite Ads</label><select id="offsite" onchange="ETSY.calc()"><option value="0.15" selected>标准费率 (15%)</option><option value="0.12">低费率 (12%, 年销>$10K)</select></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>Offsite Ads转化率 (%)</label><input type="number" id="offsiteRate" value="10" min="0" max="100" step="1" oninput="ETSY.calc()"></div>
+            <div class="calc-field"><label>月销量 (件)</label><input type="number" id="monthlyVol" value="150" min="0" step="5" oninput="ETSY.calc()"></div>
+          </div>
+          <div class="fee-breakdown">
+            <h4 style="font-size:14px;font-weight:700;margin-bottom:8px">📋 Etsy费用说明</h4>
+            <ul style="font-size:12px;color:var(--muted);line-height:1.8;padding-left:16px">
+              <li>上架费：$0.20/件，4个月后自动续期</li>
+              <li>交易费：售价的6.5%</li>
+              <li>支付处理费：售价的3% + $0.25</li>
+              <li>Offsite Ads费：通过站外广告成交收取12-15%</li>
+            </ul>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>👑 Etsy Plus vs 标准卖家对比</h3>
+        <div class="plus-compare" id="plusCompare"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 费用构成比例图</h3>
+        <div class="bar-chart" id="feeChart"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="aliexpress-fees-calc.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第8步</span>速卖通费用 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="multichannel-inventory-allocator.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第10步</span>库存分配 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li>
+<li><a href="etsy-fees-calc.html">Etsy</a></li>
+<li><a href="platform-profit-comparison.html">平台利润对比</a></li>
+<li><a href="regional-market-comparator.html">区域对比</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var ETSY=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function calc(price,cost,shipping,listings,isPlus,offsiteRate,offsiteConversion,monthlyVol){
+    var listingFee=Math.max(0,listings-(isPlus?0:0))*0.20/listings*monthlyVol;
+    if(listings<=0) listingFee=monthlyVol*0.20;
+    var transactionFee=price*0.065;
+    var paymentFee=price*0.03+0.25;
+    var offsiteAds=price*offsiteRate*(offsiteConversion/100);
+    var plusFee=isPlus?10/monthlyVol:0;
+    var totalFee=listingFee+transactionFee+paymentFee+offsiteAds+plusFee;
+    var profit=price-cost-totalFee;
+    var margin=price>0?(profit/price*100):0;
+    return{listingFee:listingFee,transactionFee:transactionFee,paymentFee:paymentFee,offsiteAds:offsiteAds,plusFee:plusFee,totalFee:totalFee,profit:profit,margin:margin,roi:cost>0?(profit/cost*100):0};
+  }
+  function mc(m){return m>=30?'var(--green)':(m>=15?'var(--gold)':'var(--red)');}
+  return{
+    calc:function(){
+      var price=v('price'),cost=v('cost'),shipping=v('shipping'),listings=v('listings');
+      var isPlus=$('plus').value==='yes';
+      var offsiteRate=parseFloat($('offsite').value);
+      var offsiteConversion=v('offsiteRate');
+      var monthlyVol=v('monthlyVol');
+      var r=calc(price,cost,shipping,listings,isPlus,offsiteRate,offsiteConversion,monthlyVol);
+      var monthlyProfit=r.profit*monthlyVol;
+      var html='<h3>💰 费用与利润</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">单件利润</div><div class="hc-value">$'+r.profit.toFixed(2)+'</div><div class="hc-sub">利润率 '+r.margin.toFixed(1)+'%</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">月利润预估</div><div class="hc-value">$'+monthlyProfit.toFixed(0)+'</div><div class="hc-sub">ROI '+r.roi.toFixed(0)+'% · '+monthlyVol+'件</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">售价</span><span class="fr-val">$'+price.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">产品成本</span><span class="fr-val">-$'+cost.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">上架费 (均摎)</span><span class="fr-val">-$'+r.listingFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">交易费 (6.5%)</span><span class="fr-val">-$'+r.transactionFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">支付处理费 (3%+$0.25)</span><span class="fr-val">-$'+r.paymentFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">Offsite Ads ('+(offsiteRate*100).toFixed(0)+'%×'+offsiteConversion.toFixed(0)+'%)</span><span class="fr-val">-$'+r.offsiteAds.toFixed(2)+'</span></div>';
+      if(isPlus) html+='<div class="fee-row"><span class="fr-lbl">Etsy Plus月费 (均摊)</span><span class="fr-val">-$'+r.plusFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row total"><span class="fr-lbl">总费用</span><span class="fr-val">-$'+r.totalFee.toFixed(2)+'</span></div>';
+      html+='<div class="fee-row profit" style="font-size:17px"><span class="fr-lbl">净利润</span><span class="fr-val" style="color:'+mc(r.margin)+'">$'+r.profit.toFixed(2)+'</span></div>';
+      html+='</div>';
+      html+='<div class="result-note">📊 利润率：<strong style="color:'+mc(r.margin)+'">'+r.margin.toFixed(1)+'%</strong>。'+(r.margin>=30?'利润率优秀！':(r.margin>=15?'利润率中等，可优化Offsite Ads。':'利润率偏低，建议提高售价或降低成本。'))+'</div>';
+      $('resultCard').innerHTML=html;
+      var stdR=calc(price,cost,shipping,listings,false,offsiteRate,offsiteConversion,monthlyVol);
+      var plusR=calc(price,cost,shipping,listings,true,offsiteRate,offsiteConversion,monthlyVol);
+      var pcHtml='<div class="plus-card'+(!isPlus?' active':'')+'"><h4>标准卖家</h4><div class="plus-price">$0<span style="font-size:13px;color:var(--muted)">/月</span></div><ul><li>上架费$0.20/件</li><li>交易费6.5%</li><li>支付费3%+$0.25</li><li>总费用：$'+stdR.totalFee.toFixed(2)+'</li><li style="color:'+mc(stdR.margin)+';font-weight:700">利润：$'+stdR.profit.toFixed(2)+' ('+stdR.margin.toFixed(1)+'%)</li></ul></div>';
+      pcHtml+='<div class="plus-card'+(isPlus?' active':'')+'"><h4>Etsy Plus</h4><div class="plus-price">$10<span style="font-size:13px;color:var(--muted)">/月</span></div><ul><li>免费上架额度</li><li>商店定制功能</li><li>上架刷新券</li><li>总费用：$'+plusR.totalFee.toFixed(2)+'</li><li style="color:'+mc(plusR.margin)+';font-weight:700">利润：$'+plusR.profit.toFixed(2)+' ('+plusR.margin.toFixed(1)+'%)</li></ul></div>';
+      $('plusCompare').innerHTML=pcHtml;
+      var maxFee=Math.max(r.listingFee,r.transactionFee,r.paymentFee,r.offsiteAds,cost);
+      var fees=[{label:'上架费',val:r.listingFee,color:'#ff9900'},{label:'交易费',val:r.transactionFee,color:'#e53238'},{label:'支付费',val:r.paymentFee,color:'#0071dc'},{label:'Offsite Ads',val:r.offsiteAds,color:'#f59e0b'},{label:'产品成本',val:cost,color:'#8b5cf6'}];
+      var ch='';
+      fees.forEach(function(f){var pct=maxFee>0?Math.max(2,f.val/maxFee*100):2;ch+='<div class="bar-item"><div class="bar-label">'+f.label+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+f.color+'"></div></div><div class="bar-value">$'+f.val.toFixed(2)+'</div></div>';});
+      $('feeChart').innerHTML=ch;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ETSY.calc);}else{ETSY.calc();}
+</script>
+</body>
+</html>

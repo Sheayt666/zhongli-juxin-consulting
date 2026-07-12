@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="开模工具费计算器：输入模具类型、复杂度、预期产量，输出模具成本估算、分摊成本、ROI盈亏平衡量、CSS对比图。">
+<meta name="keywords" content="开模计算,模具成本,工具费,分摊成本,ROI盈亏平衡,注塑模具,产品开发">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/mold-tooling-calculator.html">
+<title>开模工具费计算器 - 模具成本·分摊·ROI盈亏平衡 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--accent:#4f46e5;--accent-dark:#4338ca;--accent-bg:#eef2ff;--accent2:#f59e0b;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px;overflow-x:auto}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px;white-space:nowrap}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;gap:6px;min-width:max-content}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.tool-section-box{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:0 4px 14px rgba(15,23,42,.06);margin-top:24px}
+.tool-section-box h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.fee-breakdown{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-top:14px}
+.fee-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--rule-light)}
+.fee-row:last-child{border-bottom:none}
+.fee-row .fr-lbl{color:var(--muted)}
+.fee-row .fr-val{font-weight:600;color:var(--ink)}
+.fee-row.total{border-top:2px solid var(--rule);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.bar-item{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;align-items:center}
+.bar-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.bar-track{height:28px;background:var(--bg-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-value{text-align:right;font-weight:700;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.data-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light)}
+.data-table .pass{color:var(--green);font-weight:600}
+.data-table .fail{color:var(--red);font-weight:600}
+.data-table .warn{color:var(--gold);font-weight:600}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.btn-action{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-action:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.btn-copy{padding:8px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.supplier-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:14px;transition:all .2s}
+.supplier-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:var(--accent)}
+.supplier-card .sc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.supplier-card .sc-name{font-size:16px;font-weight:700;color:var(--ink)}
+.supplier-card .sc-score{font-size:24px;font-weight:800}
+.gantt-chart{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center}
+.gantt-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.gantt-track{position:relative;height:32px;background:var(--bg-soft);border-radius:8px}
+.gantt-bar{position:absolute;height:100%;border-radius:8px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.checklist-item{display:flex;align-items:start;gap:10px;padding:12px;border-radius:8px;margin-bottom:8px;background:var(--bg-soft);transition:all .2s}
+.checklist-item:hover{background:var(--accent-bg)}
+.checklist-item .ci-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.checklist-item.checked .ci-checkbox{background:var(--green);border-color:var(--green);color:#fff}
+.checklist-item .ci-content{flex:1}
+.checklist-item .ci-title{font-size:14px;font-weight:600;color:var(--ink)}
+.checklist-item .ci-desc{font-size:12px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.bar-item{grid-template-columns:80px 1fr 60px}.data-table{font-size:11px}.data-table th,.data-table td{padding:6px 8px}.gantt-row{grid-template-columns:100px 1fr}}
+
+.mold-compare{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.mold-card{padding:18px;border-radius:12px;border:2px solid var(--rule);background:#fff;transition:all .2s;text-align:center}
+.mold-card.active{border-color:var(--accent);background:var(--accent-bg)}
+.mold-card h4{font-size:14px;font-weight:700;margin-bottom:8px}
+.mold-card .mold-cost{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.mold-card ul{list-style:none;padding:0;margin:0}
+.mold-card li{font-size:12px;color:var(--ink-soft);padding:3px 0}
+.break-even-box{padding:24px;border-radius:14px;background:linear-gradient(135deg,var(--accent-bg),var(--green-bg));border:1px solid var(--accent);text-align:center;margin-top:16px}
+@media(max-width:768px){.mold-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="mold_tooling_calculator">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚀</span><span class="workflow-name">产品开发工作流</span><span class="workflow-step">第10步 / 共12步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="demand-validator.html" class="step">需求验证</a>
+      <span class="arrow">→</span>
+      <a href="packaging-designer.html" class="step">包装设计</a>
+      <span class="arrow">→</span>
+      <a href="certification-check.html" class="step">认证检查</a>
+      <span class="arrow">→</span>
+      <a href="patent-check.html" class="step">专利检查</a>
+      <span class="arrow">→</span>
+      <a href="prototype-cost.html" class="step">原型成本</a>
+      <span class="arrow">→</span>
+      <a href="supplier-database-search.html" class="step">供应商搜索</a>
+      <span class="arrow">→</span>
+      <a href="product-sourcing-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="market-gap-analysis.html" class="step">市场空白</a>
+      <span class="arrow">→</span>
+      <a href="product-specification-builder.html" class="step">规格书</a>
+      <span class="arrow">→</span>
+      <span class="step current">开模计算</span>
+      <span class="arrow">→</span>
+      <a href="product-testing-checklist.html" class="step">测试清单</a>
+      <span class="arrow">→</span>
+      <a href="ip-landscape-analysis.html" class="step">IP全景</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚀 产品开发工作流 · 标准版</span>
+      <h1>开模工具费 <em>计算器</em></h1>
+      <p class="tool-hero-desc">输入模具类型、复杂度、预期产量，输出模具成本估算、单件分摊成本、ROI盈亏平衡量、CSS对比图，帮你评估开模投资可行性。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>🔧 开模成本计算</h2>
+          <p class="calc-form-subtitle">输入模具参数和产量预期，自动计算开模成本与盈亏平衡</p>
+          <div class="calc-field"><label>模具类型</label><select id="moldType" onchange="MTC.calc()">
+            <option value="single" selected>单型腔模具</option>
+            <option value="multi">多型腔模具 (2-4腔)</option>
+            <option value="high">高精密模具</option>
+            <option value="overmold">包覆模具</option>
+          </select></div>
+          <div class="calc-field"><label>模具复杂度 (1-10)</label><input type="range" id="complexity" value="6" min="1" max="10" step="1" oninput="MTC.calc()" style="width:100%"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>预期年产量 (件)</label><input type="number" id="annualQty" value="50000" min="0" step="1000" oninput="MTC.calc()"></div>
+            <div class="calc-field"><label>模具寿命 (模次)</label><input type="number" id="moldLife" value="300000" min="0" step="10000" oninput="MTC.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品售价 ($)</label><input type="number" id="price" value="15" min="0" step="0.5" oninput="MTC.calc()"></div>
+            <div class="calc-field"><label>单件生产成本 ($)</label><input type="number" id="unitCost" value="5" min="0" step="0.5" oninput="MTC.calc()"></div>
+          </div>
+          <div class="calc-field"><label>材料</label><select id="material" onchange="MTC.calc()">
+            <option value="p20" selected>P20 钢 (标准)</option>
+            <option value="718">718 钢 (优质)</option>
+            <option value="nak80">NAK80 (高抛光)</option>
+            <option value="s136">S136 (不锈钢/防腐)</option>
+          </select></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+      <div class="tool-section-box">
+        <h3>🔧 模具类型成本对比</h3>
+        <div class="mold-compare" id="moldCompare"></div>
+      </div>
+      <div class="tool-section-box">
+        <h3>📊 分摊成本与盈亏平衡分析</h3>
+        <div class="bar-chart" id="amortChart"></div>
+        <div class="break-even-box" id="breakEvenBox"></div>
+      </div>
+      <div class="wf-foot-nav">
+        <a href="product-specification-builder.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">上一步 · 第9步</span>规格书 ←</a>
+        <a href="index.html" class="prev"><span style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">返回</span>← 工具中心</a>
+        <a href="product-testing-checklist.html" class="next"><span style="font-size:11px;color:rgba(255,255,255,.75);display:block;margin-bottom:2px">下一步 · 第11步</span>测试清单 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="mold-tooling-calculator.html">开模工具费</a></li><li><a href="supplier-database-search.html">供应商搜索</a></li><li><a href="ip-landscape-analysis.html">IP全景</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4)">&copy; 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+<script>
+var MTC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  var MOLD_TYPES={
+    single:{name:'单型腔',base:3000,perComplexity:800,cavities:1},
+    multi:{name:'多型腔',base:8000,perComplexity:2000,cavities:4},
+    high:{name:'高精密',base:15000,perComplexity:3500,cavities:2},
+    overmold:{name:'包覆模具',base:12000,perComplexity:2500,cavities:2}
+  };
+  var MATERIALS={p20:1.0,'718':1.3,nak80:1.6,s136:1.8};
+  return{
+    calc:function(){
+      var moldKey=$('moldType').value,complexity=v('complexity');
+      var annualQty=v('annualQty'),moldLife=v('moldLife');
+      var price=v('price'),unitCost=v('unitCost');
+      var matKey=$('material').value,matMult=MATERIALS[matKey];
+      function calcMold(key){
+        var m=MOLD_TYPES[key];
+        return Math.round((m.base+m.perComplexity*complexity)*matMult);
+      }
+      var currentCost=calcMold(moldKey);
+      var perUnitAmort=currentCost/Math.min(moldLife,annualQty*5);
+      var profit=price-unitCost-perUnitAmort;
+      var margin=price>0?(profit/price*100):0;
+      var breakEven=currentCost>0?Math.ceil(currentCost/(price-unitCost)):0;
+      var html='<h3>🔧 开模成本分析</h3>';
+      html+='<div class="result-highlight"><div class="highlight-card profit"><div class="hc-label">模具总成本</div><div class="hc-value">$'+currentCost.toLocaleString()+'</div><div class="hc-sub">'+MOLD_TYPES[moldKey].name+' · 复杂度'+complexity+'/10</div></div>';
+      html+='<div class="highlight-card roi"><div class="hc-label">单件分摎</div><div class="hc-value">$'+perUnitAmort.toFixed(3)+'</div><div class="hc-sub">利润率 '+margin.toFixed(1)+'%</div></div></div>';
+      html+='<div class="fee-breakdown">';
+      html+='<div class="fee-row"><span class="fr-lbl">模具基础费</span><span class="fr-val">$'+MOLD_TYPES[moldKey].base.toLocaleString()+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">复杂度加价 ('+complexity+'×$'+MOLD_TYPES[moldKey].perComplexity+')</span><span class="fr-val">$'+(MOLD_TYPES[moldKey].perComplexity*complexity).toLocaleString()+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">材料系数 ('+matKey.toUpperCase()+')</span><span class="fr-val">×'+matMult.toFixed(1)+'</span></div>';
+      html+='<div class="fee-row total"><span class="fr-lbl">模具总成本</span><span class="fr-val">$'+currentCost.toLocaleString()+'</span></div>';
+      html+='<div class="fee-row"><span class="fr-lbl">单件分摎成本</span><span class="fr-val">$'+perUnitAmort.toFixed(3)+'</span></div>';
+      html+='<div class="fee-row profit"><span class="fr-lbl">单件利润</span><span class="fr-val" style="color:'+(margin>=30?'var(--green)':(margin>=15?'var(--gold)':'var(--red)'))+'">$'+profit.toFixed(2)+'</span></div>';
+      html+='</div>';
+      $('resultCard').innerHTML=html;
+      var cmpHtml='';
+      Object.keys(MOLD_TYPES).forEach(function(k){
+        var cost=calcMold(k);
+        var amort=cost/Math.min(moldLife,annualQty*5);
+        var isActive=k===moldKey;
+        cmpHtml+='<div class="mold-card'+(isActive?' active':'')+'">';
+        cmpHtml+='<h4>'+MOLD_TYPES[k].name+(isActive?' ◀':'')+'</h4>';
+        cmpHtml+='<div class="mold-cost">$'+cost.toLocaleString()+'</div>';
+        cmpHtml+='<ul>';
+        cmpHtml+='<li>型腔数: '+MOLD_TYPES[k].cavities+'</li>';
+        cmpHtml+='<li>单件分摎: $'+amort.toFixed(3)+'</li>';
+        cmpHtml+='<li>周期: '+(annualQty>0?Math.ceil(annualQty*MOLD_TYPES[k].cavities/MOLD_TYPES[k].cavities).toLocaleString():0)+'件/年</li>';
+        cmpHtml+='</ul></div>';
+      });
+      $('moldCompare').innerHTML=cmpHtml;
+      var periods=[{label:'1年',qty:annualQty},{label:'2年',qty:annualQty*2},{label:'3年',qty:annualQty*3},{label:'5年',qty:annualQty*5}];
+      var maxQty=periods[periods.length-1].qty;
+      var ch='';
+      periods.forEach(function(p){
+        var amort=currentCost/Math.min(moldLife,p.qty);
+        var pct=maxQty>0?Math.max(5,p.qty/maxQty*100):5;
+        ch+='<div class="bar-item"><div class="bar-label">'+p.label+' ('+p.qty.toLocaleString()+')</div>';
+        ch+='<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:var(--accent)">$'+amort.toFixed(3)+'/件</div></div>';
+        ch+='<div class="bar-value">$'+(amort*p.qty).toFixed(0)+'</div></div>';
+      });
+      $('amortChart').innerHTML=ch;
+      var beHtml='<div style="font-size:13px;color:var(--muted);margin-bottom:8px">🎯 ROI盈亏平衡分析</div>';
+      beHtml+='<div style="font-size:32px;font-weight:800;color:var(--accent)">'+breakEven.toLocaleString()+' 件</div>';
+      beHtml+='<div style="font-size:13px;color:var(--ink-soft);margin-top:8px">需销售 '+breakEven.toLocaleString()+' 件方可回收模具成本 $'+currentCost.toLocaleString()+'<br>预计 '+(annualQty>0?Math.ceil(breakEven/annualQty*12):0)+' 个月回本 · 年产量 '+annualQty.toLocaleString()+' 件</div>';
+      $('breakEvenBox').innerHTML=beHtml;
+    }
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MTC.calc);}else{MTC.calc();}
+</script>
+</body>
+</html>

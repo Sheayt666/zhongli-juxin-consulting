@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="费用明细拆解器：佣金/FBA配送费/仓储费/广告费/头程费/退货费/其他费用明细，占比饼图+费用排名+CSS堆叠柱状图。">
+<title>费用明细拆解器 - 占比饼图·费用排名·堆叠柱状图 | 跨境卖家工具</title>
+<style>
+:root{--primary:#4f46e5;--primary-light:#6366f1;--primary-bg:#eef2ff;--success:#10b981;--success-bg:#ecfdf5;--warning:#f59e0b;--warning-bg:#fffbeb;--danger:#ef4444;--danger-bg:#fef2f2;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--surface:#ffffff;--bg:#f8fafc;--radius:12px;--radius-lg:16px;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{position:sticky;top:0;z-index:100;background:#f8fafc;height:48px;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow-x:auto;white-space:nowrap}.workflow-nav-inner{display:flex;align-items:center;gap:12px;max-width:1152px;margin:0 auto;padding:0 24px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;flex-shrink:0;padding-right:12px;border-right:2px solid var(--rule)}.workflow-steps{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}.workflow-step{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s}.workflow-step:hover{background:var(--primary-bg);color:var(--primary)}.workflow-step.active{background:var(--primary);color:#fff;font-weight:600}
+.breadcrumb{padding:16px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--primary)}.breadcrumb span{margin:0 6px;color:var(--rule)}
+.tool-header{padding:24px 0 32px;text-align:center}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--primary-bg);border:1px solid #c7d2fe;border-radius:50px;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:16px}.tool-header h1{font-size:32px;font-weight:800;margin-bottom:12px;letter-spacing:-.5px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header p{font-size:15px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}.card h2{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--ink-soft)}.form-field label .hint{font-weight:400;color:var(--muted);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;color:var(--ink);background:#fff;font-family:inherit;transition:border-color .2s,box-shadow .2s}.form-field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--ink)}.stat-card .stat-val.danger{color:var(--danger)}.stat-card .stat-val.success{color:var(--success)}.stat-card .stat-val.primary{color:var(--primary)}.stat-card .stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.pie-wrap{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center}.conic-pie{width:200px;height:200px;border-radius:50%;position:relative;flex-shrink:0;box-shadow:var(--shadow-lg)}.conic-pie::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90px;height:90px;border-radius:50%;background:var(--surface)}.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1}.pie-center .pc-val{font-size:22px;font-weight:800;color:var(--ink)}.pie-center .pc-lbl{font-size:11px;color:var(--muted)}.pie-legend{display:flex;flex-direction:column;gap:8px}.legend-item{display:flex;align-items:center;gap:8px;font-size:13px}.legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0}.legend-item .l-name{color:var(--ink-soft);flex:1}.legend-item .l-val{font-weight:700;color:var(--ink)}.legend-item .l-pct{color:var(--muted);font-size:12px;margin-left:6px}
+.fee-table{width:100%;border-collapse:collapse;font-size:13px}.fee-table th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);font-size:12px}.fee-table td{padding:12px;border-bottom:1px solid var(--rule-light)}.fee-bar{height:20px;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;min-width:30px}
+.stacked-bar{display:flex;height:48px;border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-top:16px}.stacked-segment{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:flex .5s;min-width:0;overflow:hidden;white-space:nowrap}
+.rank-list{display:flex;flex-direction:column;gap:10px}.rank-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--rule-light)}.rank-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}.rank-num.r1{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}.rank-num.r2{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}.rank-num.r3{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff}.rank-num.r4,.rank-num.r5,.rank-num.r6,.rank-num.r7{background:var(--rule-light);color:var(--muted)}.rank-info{flex:1}.rank-info .ri-name{font-size:14px;font-weight:600;color:var(--ink)}.rank-info .ri-bar{height:6px;background:var(--rule-light);border-radius:3px;margin-top:4px;overflow:hidden}.rank-info .ri-bar-fill{height:100%;border-radius:3px}.rank-val{font-size:16px;font-weight:800;color:var(--ink);text-align:right}.rank-val .rv-pct{font-size:12px;color:var(--muted);font-weight:500}
+.footer{text-align:center;padding:32px 0;font-size:13px;color:var(--muted)}.footer a{color:var(--primary);font-weight:600;text-decoration:none}.footer a:hover{text-decoration:underline}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.related-card{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);text-decoration:none;transition:all .2s}.related-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}.related-card .rc-icon{font-size:24px;flex-shrink:0}.related-card h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.related-card p{font-size:12px;color:var(--muted)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W5 财务利润工作流</div><div class="workflow-steps">
+<a href="fba-calculator.html" class="workflow-step">FBA利润</a><a href="margin-markup.html" class="workflow-step">利润率</a><a href="roi-payback.html" class="workflow-step">ROI回本</a><a href="break-even-volume.html" class="workflow-step">盈亏平衡</a><a href="cash-flow-forecast.html" class="workflow-step">现金流预测</a><a href="fba-refund-claim-tracker.html" class="workflow-step">索赔追踪</a><a href="fee-breakdown-decomposer.html" class="workflow-step active">费用拆解</a><a href="sku-profit-analyzer.html" class="workflow-step">SKU分析</a><a href="multi-country-vat-calculator.html" class="workflow-step">VAT计算</a><a href="reimbursement-finder.html" class="workflow-step">赔偿查找</a><a href="profit-trend-analyzer.html" class="workflow-step">利润趋势</a><a href="cost-optimization-advisor.html" class="workflow-step">成本优化</a>
+</div></div></div>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a><span>/</span><a href="index.html">工具中心</a><span>/</span><a href="#">W5 财务利润</a><span>/</span>费用明细拆解器</div>
+<div class="tool-header"><span class="tool-badge">W5 财务利润工作流</span><h1>费用<em>明细拆解器</em></h1><p>输入售价与各费用项，实时拆解佣金/FBA配送费/仓储费/广告费/头程费/退货费/其他费用占比，CSS饼图+堆叠柱状图+费用排名一目了然。</p></div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val primary" id="sPrice">$0</div><div class="stat-lbl">售价</div></div>
+<div class="stat-card"><div class="stat-val danger" id="sTotalFee">$0</div><div class="stat-lbl">总费用</div></div>
+<div class="stat-card"><div class="stat-val success" id="sProfit">$0</div><div class="stat-lbl">净利润</div></div>
+<div class="stat-card"><div class="stat-val" id="sFeeRate">0%</div><div class="stat-lbl">费用率</div></div>
+</div>
+
+<div class="card"><h2>输入费用明细</h2><div class="form-grid">
+<div class="form-field"><label>售价 <span class="hint">($)</span></label><input type="number" id="price" value="29.99" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>采购成本 <span class="hint">($)</span></label><input type="number" id="cost" value="8.00" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>销售佣金 Referral Fee <span class="hint">($)</span></label><input type="number" id="referral" value="4.50" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>FBA配送费 FBA Fulfillment <span class="hint">($)</span></label><input type="number" id="fbaFee" value="3.95" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>月度仓储费 Storage <span class="hint">($)</span></label><input type="number" id="storage" value="0.80" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>广告费 Advertising <span class="hint">($)</span></label><input type="number" id="adFee" value="3.00" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>头程物流费 First-Mile <span class="hint">($)</span></label><input type="number" id="freight" value="2.50" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>退货费 Returns <span class="hint">($)</span></label><input type="number" id="returnFee" value="0.60" step="0.01" min="0" oninput="Decomp.calc()"></div>
+<div class="form-field"><label>其他费用 Other <span class="hint">($)</span></label><input type="number" id="other" value="0.40" step="0.01" min="0" oninput="Decomp.calc()"></div>
+</div></div>
+
+<div class="card"><h2>费用占比饼图</h2><div class="pie-wrap" id="pieWrap"></div></div>
+<div class="card"><h2>费用明细表</h2><div id="feeTableWrap"></div></div>
+<div class="card"><h2>费用堆叠柱状图 (占售价比例)</h2><div id="stackedWrap"></div></div>
+<div class="card"><h2>费用排名 (从高到低)</h2><div class="rank-list" id="rankWrap"></div></div>
+
+<div class="related-grid">
+<a href="fba-calculator.html" class="related-card"><span class="rc-icon">📦</span><div><h4>FBA利润计算器</h4><p>三产品对比利润计算</p></div></a>
+<a href="sku-profit-analyzer.html" class="related-card"><span class="rc-icon">📊</span><div><h4>SKU利润分析器</h4><p>多SKU利润对比分析</p></div></a>
+<a href="cost-optimization-advisor.html" class="related-card"><span class="rc-icon">💡</span><div><h4>成本优化顾问</h4><p>降本机会识别</p></div></a>
+</div>
+<div class="footer"><p><a href="index.html">← 返回工具中心</a></p></div>
+</div>
+<script>
+const Decomp = {
+  calc() {
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const cost = parseFloat(document.getElementById('cost').value) || 0;
+    const items = [
+      {name:'销售佣金',en:'Referral Fee',val:parseFloat(document.getElementById('referral').value)||0,color:'#4f46e5'},
+      {name:'FBA配送费',en:'FBA Fulfillment',val:parseFloat(document.getElementById('fbaFee').value)||0,color:'#6366f1'},
+      {name:'月度仓储费',en:'Storage',val:parseFloat(document.getElementById('storage').value)||0,color:'#8b5cf6'},
+      {name:'广告费',en:'Advertising',val:parseFloat(document.getElementById('adFee').value)||0,color:'#ef4444'},
+      {name:'头程物流费',en:'First-Mile',val:parseFloat(document.getElementById('freight').value)||0,color:'#f59e0b'},
+      {name:'退货费',en:'Returns',val:parseFloat(document.getElementById('returnFee').value)||0,color:'#06b6d4'},
+      {name:'其他费用',en:'Other',val:parseFloat(document.getElementById('other').value)||0,color:'#94a3b8'},
+    ];
+    const totalFee = items.reduce((s,i) => s + i.val, 0);
+    const totalCost = totalFee + cost;
+    const profit = price - totalCost;
+    const feeRate = price > 0 ? (totalFee / price * 100) : 0;
+    document.getElementById('sPrice').textContent = '$' + price.toFixed(2);
+    document.getElementById('sTotalFee').textContent = '$' + totalFee.toFixed(2);
+    document.getElementById('sProfit').textContent = '$' + profit.toFixed(2);
+    document.getElementById('sProfit').className = 'stat-val ' + (profit >= 0 ? 'success' : 'danger');
+    document.getElementById('sFeeRate').textContent = feeRate.toFixed(1) + '%';
+    this.renderPie(items, totalFee);
+    this.renderTable(items, price);
+    this.renderStacked(items, price, cost, profit);
+    this.renderRank(items, totalFee);
+  },
+  renderPie(items, total) {
+    const wrap = document.getElementById('pieWrap');
+    if (total === 0) { wrap.innerHTML = '<p style="color:var(--muted);text-align:center">请输入费用数据</p>'; return; }
+    let grad = [], cum = 0, legend = '';
+    items.forEach(i => {
+      if (i.val === 0) return;
+      const pct = i.val / total * 100;
+      grad.push(`${i.color} ${cum}% ${cum + pct}%`);
+      cum += pct;
+      legend += `<div class="legend-item"><span class="legend-dot" style="background:${i.color}"></span><span class="l-name">${i.name}</span><span class="l-val">$${i.val.toFixed(2)}</span><span class="l-pct">${pct.toFixed(1)}%</span></div>`;
+    });
+    wrap.innerHTML = `<div class="conic-pie" style="background:conic-gradient(${grad.join(',')})"><div class="pie-center"><div class="pc-val">$${total.toFixed(0)}</div><div class="pc-lbl">费用总额</div></div></div><div class="pie-legend">${legend}</div>`;
+  },
+  renderTable(items, price) {
+    let html = '<table class="fee-table"><thead><tr><th>费用项</th><th>金额</th><th>占售价</th><th>占费用</th><th>可视化</th></tr></thead><tbody>';
+    items.forEach(i => {
+      const pctPrice = price > 0 ? (i.val / price * 100) : 0;
+      const total = items.reduce((s,x) => s + x.val, 0);
+      const pctFee = total > 0 ? (i.val / total * 100) : 0;
+      html += `<tr><td><strong>${i.name}</strong><br><span style="color:var(--muted);font-size:11px">${i.en}</span></td><td>$${i.val.toFixed(2)}</td><td>${pctPrice.toFixed(1)}%</td><td>${pctFee.toFixed(1)}%</td><td><div class="fee-bar" style="width:${Math.max(pctFee*2,5)}%;background:${i.color}">${pctFee.toFixed(0)}%</div></td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('feeTableWrap').innerHTML = html;
+  },
+  renderStacked(items, price, cost, profit) {
+    const total = price || 1;
+    let segs = '';
+    items.forEach(i => {
+      const pct = i.val / total * 100;
+      if (pct < 0.5) return;
+      segs += `<div class="stacked-segment" style="flex:${pct};background:${i.color}" title="${i.name}: ${pct.toFixed(1)}%">${pct > 5 ? i.name : ''}</div>`;
+    });
+    const costPct = cost / total * 100;
+    const profitPct = profit / total * 100;
+    segs += `<div class="stacked-segment" style="flex:${costPct};background:#10b981" title="采购成本: ${costPct.toFixed(1)}%">${costPct > 5 ? '成本' : ''}</div>`;
+    if (profit > 0) segs += `<div class="stacked-segment" style="flex:${profitPct};background:#059669" title="净利润: ${profitPct.toFixed(1)}%">${profitPct > 5 ? '利润' : ''}</div>`;
+    document.getElementById('stackedWrap').innerHTML = `<div class="stacked-bar">${segs}</div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted)"><span>售价 $${price.toFixed(2)}</span><span>费用+成本+利润 = 售价</span></div>`;
+  },
+  renderRank(items, total) {
+    const sorted = [...items].sort((a,b) => b.val - a.val);
+    const maxVal = sorted[0]?.val || 1;
+    let html = '';
+    sorted.forEach((i, idx) => {
+      const pct = total > 0 ? (i.val / total * 100) : 0;
+      const barW = (i.val / maxVal * 100);
+      html += `<div class="rank-item"><div class="rank-num r${idx+1}">${idx+1}</div><div class="rank-info"><div class="ri-name">${i.name} <span style="color:var(--muted);font-size:12px;font-weight:400">${i.en}</span></div><div class="ri-bar"><div class="ri-bar-fill" style="width:${barW}%;background:${i.color}"></div></div></div><div class="rank-val">$${i.val.toFixed(2)}<div class="rv-pct">${pct.toFixed(1)}%</div></div></div>`;
+    });
+    document.getElementById('rankWrap').innerHTML = html;
+  }
+};
+Decomp.calc();
+</script>
+</body>
+</html>

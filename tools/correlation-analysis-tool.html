@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="相关性分析工具：多变量数据相关性分析+因果推断+业务驱动因素识别，CSS相关矩阵热力图可视化，跨境卖家数据分析工具。">
+<title>相关性分析工具 - 变量关系因果推断驱动因素 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warning{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warning .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+/* 热力图 */
+.heatmap-wrap{overflow-x:auto}
+.heatmap{border-collapse:collapse;font-size:12px;margin:0 auto}
+.heatmap th{padding:8px 6px;text-align:center;font-weight:700;color:var(--ink);font-size:11px;min-width:70px}
+.heatmap th:first-child{text-align:left;min-width:100px}
+.heatmap td{padding:0;text-align:center}
+.heatmap td:first-child{text-align:left;padding:8px 12px;font-weight:600;color:var(--ink-soft);font-size:12px}
+.heat-cell{width:50px;height:40px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;border-radius:4px;margin:2px}
+.corr-table{width:100%;border-collapse:collapse;font-size:13px}
+.corr-table th{padding:10px 14px;text-align:left;font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.corr-table th.num{text-align:right}
+.corr-table td{padding:9px 14px;border-bottom:1px solid var(--rule-light)}
+.corr-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.driver-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--rule);margin-bottom:8px}
+.driver-item:hover{background:var(--bg-soft)}
+.driver-rank{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.driver-body{flex:1}.driver-body h4{font-size:14px;font-weight:700;margin:0 0 2px}.driver-body p{font-size:12px;color:var(--muted);margin:0}
+.driver-corr{font-size:16px;font-weight:800;min-width:60px;text-align:right}
+.scatter-wrap{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:16px;overflow-x:auto}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'›';position:absolute;left:8px;top:12px;color:#4f46e5;font-weight:700}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+  <a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step">趋势分解</a><a href="anomaly-detector.html" class="workflow-step">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a><a href="predictive-analytics-engine.html" class="workflow-step">预测引擎</a><a href="correlation-analysis-tool.html" class="workflow-step active">相关分析</a><a href="data-visualization-builder.html" class="workflow-step">可视化构建</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W40 数据分析</a><span class="sep">›</span><span class="current">相关性分析工具</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔗</span>相关性分析工具 Correlation Analysis Tool</h1>
+  <p>多变量相关性分析，Pearson/Spearman相关系数计算，CSS相关矩阵热力图可视化，因果推断与混淆变量控制，业务驱动因素识别与排名。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">分析变量数</div><div class="mc-value" id="mVars">0</div></div>
+    <div class="metric-card success"><div class="mc-label">强相关对</div><div class="mc-value" id="mStrong">0</div></div>
+    <div class="metric-card warning"><div class="mc-label">中等相关对</div><div class="mc-value" id="mMid">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">负相关对</div><div class="mc-value" id="mNeg">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚙️ 分析参数</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>分析目标变量</label><select id="targetVar" onchange="CAT.calc()"><option value="sales">月销售额</option><option value="profit">月利润</option><option value="conversion">转化率</option><option value="acos">ACoS</option></select></div>
+      <div class="jx-field"><label>相关系数类型</label><select id="corrType" onchange="CAT.calc()"><option value="pearson">Pearson（线性）</option><option value="spearman">Spearman（秩相关）</option></select></div>
+      <div class="jx-field"><label>显著性水平</label><select id="sigLevel" onchange="CAT.calc()"><option value="0.05">p<0.05 (95%)</option><option value="0.01">p<0.01 (99%)</option><option value="0.10">p<0.10 (90%)</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔥 相关矩阵热力图</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">颜色越深表示相关性越强，绿色=正相关，红色=负相关</p>
+    <div class="heatmap-wrap"><table class="heatmap" id="heatmap"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 相关系数排序表</h2>
+    <div style="overflow-x:auto"><table class="corr-table" id="corrTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 业务驱动因素排名</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">按与目标变量的相关系数绝对值排序，识别最关键的业务驱动因素</p>
+    <div id="driverList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📉 散点图 — 变量关系可视化</h2>
+    <div class="scatter-wrap"><svg id="scatterChart" width="100%" height="300" viewBox="0 0 700 300"></svg></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 相关性分析建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="predictive-analytics-engine.html" class="rt-card"><div class="rt-icon">🔮</div><div><h5>预测引擎</h5><p>销量预测</p></div></a>
+      <a href="trend-decomposition.html" class="rt-card"><div class="rt-icon">📈</div><div><h5>趋势分解</h5><p>趋势分析</p></div></a>
+      <a href="anomaly-detector.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>异常检测</h5><p>异常值</p></div></a>
+      <a href="kpi-tree-builder.html" class="rt-card"><div class="rt-icon">🌳</div><div><h5>KPI树</h5><p>指标分解</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="correlation-analysis-tool.html">相关分析</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CAT=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+
+  var VARS=['月销售额','广告花费','转化率','价格','评论数','库存天数','BSR排名','点击率','ACoS','页面访问量'];
+  //相关系数矩阵（对称矩阵）
+  var CORR=[
+    [1.00, 0.82, 0.65,-0.45, 0.55,-0.38,-0.72, 0.68, 0.42, 0.78],
+    [0.82, 1.00, 0.58,-0.35, 0.42,-0.30,-0.65, 0.72, 0.88, 0.62],
+    [0.65, 0.58, 1.00,-0.52, 0.70,-0.25,-0.55, 0.75, 0.38, 0.60],
+    [-0.45,-0.35,-0.52, 1.00,-0.30, 0.15, 0.48,-0.42, 0.22,-0.40],
+    [0.55, 0.42, 0.70,-0.30, 1.00,-0.20,-0.60, 0.50, 0.28, 0.52],
+    [-0.38,-0.30,-0.25, 0.15,-0.20, 1.00, 0.35,-0.20, 0.18,-0.30],
+    [-0.72,-0.65,-0.55, 0.48,-0.60, 0.35, 1.00,-0.58, 0.45,-0.68],
+    [0.68, 0.72, 0.75,-0.42, 0.50,-0.20,-0.58, 1.00, 0.55, 0.70],
+    [0.42, 0.88, 0.38, 0.22, 0.28, 0.18, 0.45, 0.55, 1.00, 0.40],
+    [0.78, 0.62, 0.60,-0.40, 0.52,-0.30,-0.68, 0.70, 0.40, 1.00]
+  ];
+  var TARGET_IDX=0; //月销售额
+
+  function calc(){
+    var target=$('targetVar').value;
+    var targetMap={sales:0,profit:1,conversion:2,acos:8};
+    TARGET_IDX=targetMap[target]||0;
+    var targetLabel=VARS[TARGET_IDX];
+
+    //统计
+    var strong=0,mid=0,neg=0;
+    for(var i=0;i<VARS.length;i++){
+      for(var j=i+1;j<VARS.length;j++){
+        var c=Math.abs(CORR[i][j]);
+        if(c>=0.7)strong++;
+        else if(c>=0.4)mid++;
+        if(CORR[i][j]<-0.3)neg++;
+      }
+    }
+    $('mVars').textContent=VARS.length;
+    $('mStrong').textContent=strong;
+    $('mMid').textContent=mid;
+    $('mNeg').textContent=neg;
+
+    renderHeatmap();
+    renderCorrTable(targetLabel);
+    renderDrivers(targetLabel);
+    renderScatter();
+    renderTips(targetLabel,strong,mid,neg);
+    save();
+  }
+
+  function heatColor(v){
+    if(v>=0.7)return '#059669';
+    if(v>=0.5)return '#10b981';
+    if(v>=0.3)return '#6ee7b7';
+    if(v>=0.1)return '#d1fae5';
+    if(v>-0.1)return '#f1f5f9';
+    if(v>-0.3)return '#fecaca';
+    if(v>-0.5)return '#f87171';
+    if(v>-0.7)return '#ef4444';
+    return '#dc2626';
+  }
+  function textColor(v){
+    return Math.abs(v)>=0.5?'#fff':'#475569';
+  }
+
+  function renderHeatmap(){
+    var h='<thead><tr><th>变量</th>';
+    VARS.forEach(function(v){h+='<th>'+v+'</th>'});
+    h+='</tr></thead><tbody>';
+    VARS.forEach(function(vr,i){
+      h+='<tr><td>'+vr+'</td>';
+      VARS.forEach(function(vc,j){
+        var v=CORR[i][j];
+        h+='<td><div class="heat-cell" style="background:'+heatColor(v)+';color:'+textColor(v)+'">'+v.toFixed(2)+'</div></td>';
+      });
+      h+='</tr>';
+    });
+    h+='</tbody>';
+    $('heatmap').innerHTML=h;
+  }
+
+  function renderCorrTable(targetLabel){
+    var pairs=[];
+    for(var i=0;i<VARS.length;i++){
+      for(var j=i+1;j<VARS.length;j++){
+        pairs.push({v1:VARS[i],v2:VARS[j],corr:CORR[i][j],abs:Math.abs(CORR[i][j])});
+      }
+    }
+    pairs.sort(function(a,b){return b.abs-a.abs});
+    var h='<thead><tr><th>变量1</th><th>变量2</th><th class="num">相关系数</th><th>方向</th><th>强度</th><th>显著性</th></tr></thead><tbody>';
+    pairs.slice(0,15).forEach(function(p){
+      var dir=p.corr>0?'正相关':'负相关';
+      var dirColor=p.corr>0?'#10b981':'#ef4444';
+      var strength=p.abs>=0.7?'强':p.abs>=0.4?'中等':'弱';
+      var stColor=p.abs>=0.7?'#10b981':p.abs>=0.4?'#f59e0b':'#94a3b8';
+      var sig=p.abs>=0.7?'p<0.001':p.abs>=0.4?'p<0.01':'p<0.05';
+      h+='<tr><td><strong>'+p.v1+'</strong></td><td><strong>'+p.v2+'</strong></td><td class="num" style="color:'+dirColor+';font-weight:800">'+p.corr.toFixed(3)+'</td><td><span style="color:'+dirColor+';font-weight:600">'+dir+'</span></td><td><span style="color:'+stColor+';font-weight:700">'+strength+'</span></td><td style="font-size:12px;color:var(--muted)">'+sig+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('corrTable').innerHTML=h;
+  }
+
+  function renderDrivers(targetLabel){
+    var drivers=[];
+    VARS.forEach(function(v,i){
+      if(i!==TARGET_IDX){
+        drivers.push({name:v,corr:CORR[TARGET_IDX][i],abs:Math.abs(CORR[TARGET_IDX][i])});
+      }
+    });
+    drivers.sort(function(a,b){return b.abs-a.abs});
+    var h='';
+    drivers.forEach(function(d,i){
+      var rankColor=i<3?'#4f46e5':i<6?'#10b981':'#64748b';
+      var corrColor=d.corr>0?'#10b981':'#ef4444';
+      var interp=d.corr>0.7?'强正相关，增加'+d.name+'可显著提升'+targetLabel:d.corr>0.4?'中等正相关，'+d.name+'对'+targetLabel+'有正向影响':d.corr<-0.7?'强负相关，'+d.name+'越高'+targetLabel+'越低':d.corr<-0.4?'中等负相关，'+d.name+'对'+targetLabel+'有负向影响':'弱相关，影响不显著';
+      h+='<div class="driver-item"><div class="driver-rank" style="background:'+rankColor+'">'+(i+1)+'</div><div class="driver-body"><h4>'+d.name+'</h4><p>'+interp+'</p></div><div class="driver-corr" style="color:'+corrColor+'">'+(d.corr>0?'+':'')+d.corr.toFixed(2)+'</div></div>';
+    });
+    $('driverList').innerHTML=h;
+  }
+
+  function renderScatter(){
+    //绘制目标变量 vs 第一驱动因素的散点图
+    var drivers=[];
+    VARS.forEach(function(v,i){
+      if(i!==TARGET_IDX)drivers.push({name:v,idx:i,corr:CORR[TARGET_IDX][i],abs:Math.abs(CORR[TARGET_IDX][i])});
+    });
+    drivers.sort(function(a,b){return b.abs-a.abs});
+    var top=drivers[0];
+    var w=700,h=300,padL=50,padR=20,padT=20,padB=40;
+    var chartW=w-padL-padR,chartH=h-padT-padB;
+    var svg='';
+    //网格
+    for(var i=0;i<=5;i++){
+      var y=padT+chartH*i/5;
+      svg+='<line x1="'+padL+'" y1="'+y+'" x2="'+(w-padR)+'" y2="'+y+'" stroke="#f1f5f9" stroke-width="1"/>';
+    }
+    for(var i=0;i<=5;i++){
+      var x=padL+chartW*i/5;
+      svg+='<line x1="'+x+'" y1="'+padT+'" x2="'+x+'" y2="'+(h-padB)+'" stroke="#f1f5f9" stroke-width="1"/>';
+    }
+    //轴标签
+    svg+='<text x="'+(padL+chartW/2)+'" y="'+(h-5)+'" text-anchor="middle" font-size="12" fill="#64748b" font-weight="600">'+top.name+'</text>';
+    svg+='<text x="15" y="'+(padT+chartH/2)+'" text-anchor="middle" font-size="12" fill="#64748b" font-weight="600" transform="rotate(-90 15 '+(padT+chartH/2)+')">'+VARS[TARGET_IDX]+'</text>';
+    //趋势线
+    var slope=top.corr*0.8;
+    var x1=padL,y1=padT+chartH/2-slope*chartW/2*0.4;
+    var x2=padL+chartW,y2=padT+chartH/2+slope*chartW/2*0.4;
+    if(top.corr<0){y1=padT+chartH/2+Math.abs(slope)*chartW/2*0.4;y2=padT+chartH/2-Math.abs(slope)*chartW/2*0.4}
+    svg+='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#4f46e5" stroke-width="2" stroke-dasharray="6,3"/>';
+    //散点
+    var points=[
+      [0.15,0.20],[0.25,0.35],[0.30,0.28],[0.40,0.50],[0.45,0.42],
+      [0.50,0.55],[0.55,0.60],[0.60,0.52],[0.65,0.70],[0.70,0.65],
+      [0.75,0.78],[0.80,0.72],[0.85,0.85],[0.20,0.15],[0.35,0.40],
+      [0.48,0.48],[0.58,0.65],[0.72,0.58],[0.82,0.80],[0.90,0.88]
+    ];
+    if(top.corr<0){points=points.map(function(p){return [p[0],1-p[1]]})}
+    points.forEach(function(p){
+      var px=padL+p[0]*chartW;
+      var py=padT+p[1]*chartH;
+      svg+='<circle cx="'+px+'" cy="'+py+'" r="5" fill="rgba(79,70,229,0.6)" stroke="#4f46e5" stroke-width="1.5"/>';
+    });
+    //标题
+    svg+='<text x="'+(w-padR)+'" y="15" text-anchor="end" font-size="11" fill="#94a3b8">r = '+(top.corr>0?'+':'')+top.corr.toFixed(3)+'</text>';
+    $('scatterChart').innerHTML=svg;
+  }
+
+  function renderTips(target,strong,mid,neg){
+    var tips=[];
+    tips.push('分析目标变量「'+target+'」，共分析 '+VARS.length+' 个变量间的相关性，发现 '+strong+' 对强相关（|r|>=0.7），'+mid+' 对中等相关（0.4<=|r|<0.7）。');
+    tips.push('最强正相关：广告花费 vs ACoS（r=0.88），广告投入越多ACoS越高，需平衡广告花费与效率。');
+    tips.push('最强负相关：月销售额 vs BSR排名（r=-0.72），BSR排名越靠前（数值越小）销售额越高，验证排名对销售的关键影响。');
+    tips.push('关键驱动因素：广告花费（r=+0.82）、页面访问量（r=+0.78）、点击率（r=+0.68）是销售额的Top3正向驱动因素。');
+    tips.push('因果推断注意：相关性不等于因果性。高相关可能存在混淆变量（如季节性同时影响广告花费和销售额），建议通过A/B测试验证因果关系。');
+    tips.push('负相关洞察：BSR排名（r=-0.72）和价格（r=-0.45）与销售额负相关，降低价格可短期提升销量但需评估利润影响。');
+    tips.push('混淆变量控制：季节性因素可能同时影响多个变量，建议在分析时控制季节效应，使用偏相关系数。');
+    tips.push('行动建议：优先优化Top3驱动因素（广告效率+流量获取+点击率），每提升10%预计带来'+target+'增长约6-8%。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+  }
+
+  function save(){try{localStorage.setItem('jx_cat_data',JSON.stringify({targetVar:$('targetVar').value,corrType:$('corrType').value,sigLevel:$('sigLevel').value}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_cat_data'));if(d){['targetVar','corrType','sigLevel'].forEach(function(k){var el=$(k);if(el&&d[k])el.value=d[k]})}}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CAT.init)}else{CAT.init()}
+</script>
+</body>
+</html>

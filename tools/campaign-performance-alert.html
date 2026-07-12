@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="广告效果预警器：ACOS飙升/转化下降/预算耗尽/点击异常自动预警，CSS预警面板，处理建议。免费广告自动化工具。">
+<meta name="keywords" content="广告预警,ACOS预警,转化下降,预算耗尽,点击异常,广告监控">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/campaign-performance-alert.html">
+<title>广告效果预警器 - ACOS飙升·转化下降·异常检测 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* 工作流导航 */
+.workflow-nav{position:sticky;top:64px;z-index:90;background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:0 0 16px 16px;padding:14px 24px;margin:0 auto -8px;max-width:1152px;box-shadow:var(--shadow-sm)}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.workflow-nav-header .workflow-icon{font-size:16px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:12px;white-space:nowrap}
+.workflow-nav-steps{display:flex;align-items:center;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.workflow-nav-steps::-webkit-scrollbar{height:4px}
+.workflow-nav-steps::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:2px}
+.workflow-nav-steps .step{padding:5px 12px;border-radius:18px;font-size:12px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:12px;flex-shrink:0}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:22px;font-weight:800}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.alert-panel{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:16px}
+.alert-item{border-radius:14px;padding:18px;border-left:4px solid;transition:all .2s}
+.alert-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.alert-item.critical{border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fff5f5)}
+.alert-item.warning{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fffdf7)}
+.alert-item.info{border-color:#3b82f6;background:linear-gradient(135deg,#eff6ff,#f0f7ff)}
+.alert-item.healthy{border-color:#10b981;background:linear-gradient(135deg,#f0fdf4,#f7fef9)}
+.ai-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.ai-title{font-size:14px;font-weight:700}
+.ai-severity{padding:2px 10px;border-radius:6px;font-size:11px;font-weight:700}
+.as-critical{background:#fee2e2;color:#dc2626}
+.as-warning{background:#fef3c7;color:#d97706}
+.as-info{background:#dbeafe;color:#2563eb}
+.as-healthy{background:#d1fae5;color:#059669}
+.ai-detail{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.ai-suggestion{padding:10px;border-radius:8px;background:rgba(255,255,255,.6);font-size:12px;line-height:1.6}
+.ai-suggestion strong{color:var(--ink)}
+.threshold-config{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.tc-item{padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.tc-item .tc-label{font-size:12px;color:var(--muted);margin-bottom:4px}
+.tc-item .tc-value{font-size:18px;font-weight:700;color:#4f46e5}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"广告效果预警器","description":"ACOS飙升/转化下降/预算耗尽/点击异常自动预警。","url":"https://juxin-consulting.help/tools/campaign-performance-alert.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="campaign_performance_alert">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🤖</span><span class="workflow-name">广告自动化工作流</span><span class="workflow-step">第12步 / 共13步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="auto-bidding-rules.html" class="step">自动出价</a><span class="arrow">→</span>
+      <a href="auto-budget-adjuster.html" class="step">预算调整</a><span class="arrow">→</span>
+      <a href="ad-placement-optimizer.html" class="step">广告位优化</a><span class="arrow">→</span>
+      <a href="auto-keyword-expansion.html" class="step">关键词扩展</a><span class="arrow">→</span>
+      <a href="auto-negative-keywords.html" class="step">否定关键词</a><span class="arrow">→</span>
+      <a href="ad-schedule-optimizer.html" class="step">排期优化</a><span class="arrow">→</span>
+      <a href="sp-campaign-builder.html" class="step">SP搭建</a><span class="arrow">→</span>
+      <a href="sb-ad-planner.html" class="step">SB规划</a><span class="arrow">→</span>
+      <a href="sd-audience-targeter.html" class="step">SD受众</a><span class="arrow">→</span>
+      <a href="ad-25-metrics.html" class="step">25项指标</a><span class="arrow">→</span>
+      <a href="dayparting-automation.html" class="step">分时段自动化</a><span class="arrow">→</span>
+      <span class="step current">效果预警</span><span class="arrow">→</span>
+      <a href="bulk-operation-center.html" class="step">批量操作</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🤖 广告自动化工具 · 标准版</span>
+      <h1>广告效果<em>预警器</em></h1>
+      <p class="tool-hero-desc">监控ACOS飙升、转化率下降、预算异常耗尽、点击欺诈等异常，自动触发预警并给出处理建议，CSS预警面板实时呈现。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 广告数据输入</h2>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>广告活动名称</label><input type="text" id="campaignName" value="SP-蓝牙耳机-精准" oninput="CPA.calc()"></div>
+            <div class="calc-field"><label>今日花费（$）</label><input type="number" id="spend" value="45" oninput="CPA.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日ACOS（%）</label><input type="number" id="acos" value="45" oninput="CPA.calc()"></div>
+            <div class="calc-field"><label>昨日ACOS（%）</label><input type="number" id="acosYesterday" value="25" oninput="CPA.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日转化率（%）</label><input type="number" id="cvr" value="8" oninput="CPA.calc()"></div>
+            <div class="calc-field"><label>昨日转化率（%）</label><input type="number" id="cvrYesterday" value="12" oninput="CPA.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日点击数</label><input type="number" id="clicks" value="120" oninput="CPA.calc()"></div>
+            <div class="calc-field"><label>日均点击数</label><input type="number" id="avgClicks" value="60" oninput="CPA.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>日预算（$）</label><input type="number" id="budget" value="50" oninput="CPA.calc()"></div>
+            <div class="calc-field"><label>已过时间（%）</label><input type="number" id="timeElapsed" value="60" oninput="CPA.calc()"></div>
+          </div>
+
+          <div class="fee-rule-box" style="margin-top:20px"><h4>⚙️ 预警阈值配置</h4></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>ACOS飙升阈值（%）</label><input type="number" id="acosThreshold" value="50" oninput="CPA.calc()"></div>
+            <div class="calc-field"><label>转化下降阈值（%）</label><input type="number" id="cvrThreshold" value="30" oninput="CPA.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="section-block" id="thresholdSection">
+        <h3>⚙️ 预警阈值</h3>
+        <div class="threshold-config" id="thresholdConfig"></div>
+      </div>
+
+      <div class="section-block" id="summarySection">
+        <h3>📊 预警汇总</h3>
+        <div class="result-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="section-block" id="panelSection">
+        <h3>🚨 预警面板</h3>
+        <div class="alert-panel" id="alertPanel"></div>
+      </div>
+
+      <div class="wf-foot-nav">
+        <a href="dayparting-automation.html" class="prev"><span class="fn-label">上一步 · 第11步</span><span class="fn-name">← 分时段自动化</span></a>
+        <a href="bulk-operation-center.html" class="next"><span class="fn-label">下一步 · 第13步</span><span class="fn-name">批量操作 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="campaign-performance-alert.html">效果预警</a></li><li><a href="dayparting-automation.html">分时段自动化</a></li><li><a href="bulk-operation-center.html">批量操作</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var CPA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return parseFloat($(id).value)||0;}
+  function calc(){
+    var acos=v('acos'),acosY=v('acosYesterday'),cvr=v('cvr'),cvrY=v('cvrYesterday');
+    var clicks=v('clicks'),avgClicks=v('avgClicks'),spend=v('spend'),budget=v('budget');
+    var timeElapsed=v('timeElapsed'),acosThresh=v('acosThreshold'),cvrThresh=v('cvrThreshold');
+    var alerts=[];
+    var acosChange=acosY>0?((acos-acosY)/acosY*100):0;
+    if(acosChange>cvrThresh){alerts.push({type:'critical',title:'ACOS飙升预警',severity:'critical',detail:'ACOS从'+acosY+'%升至'+acos+'%，涨幅'+acosChange.toFixed(0)+'%，超过预警阈值'+acosThresh+'%',suggestion:'<strong>建议处理：</strong><br>1. 检查高ACOS关键词，暂停或降低出价<br>2. 增加否定关键词排除无效流量<br>3. 检查Listing是否变更导致转化下降<br>4. 考虑降低整体出价10-20%'});}
+    else{alerts.push({type:'healthy',title:'ACOS正常',severity:'healthy',detail:'ACOS变化幅度'+acosChange.toFixed(0)+'%，在正常范围内',suggestion:'广告ACOS表现稳定，继续保持当前策略'});}
+    var cvrChange=cvrY>0?((cvr-cvrY)/cvrY*100):0;
+    if(cvrChange<-cvrThresh){alerts.push({type:'critical',title:'转化率下降预警',severity:'critical',detail:'转化率从'+cvrY+'%降至'+cvr+'%，降幅'+Math.abs(cvrChange).toFixed(0)+'%，超过预警阈值'+cvrThresh+'%',suggestion:'<strong>建议处理：</strong><br>1. 检查Listing主图/价格/评价是否有变更<br>2. 排查是否被跟卖或Buy Box丢失<br>3. 检查库存是否紧张导致转化下降<br>4. 审查广告流量来源是否偏移'});}
+    else{alerts.push({type:'healthy',title:'转化率正常',severity:'healthy',detail:'转化率变化'+cvrChange.toFixed(0)+'%，在正常范围内',suggestion:'转化率表现稳定，无需干预'});}
+    var budgetUsage=budget>0?(spend/budget*100):0;
+    var expectedUsage=timeElapsed;
+    if(budgetUsage>expectedUsage*1.3){alerts.push({type:'warning',title:'预算异常消耗',severity:'warning',detail:'日预算$'+budget+'，已花费$'+spend+'（'+budgetUsage.toFixed(0)+'%），但时间仅过'+timeElapsed+'%，预算消耗过快',suggestion:'<strong>建议处理：</strong><br>1. 降低出价控制消耗速度<br>2. 检查是否有点击异常（竞价战或机器人）<br>3. 考虑增加日预算或分时段设置预算<br>4. 预计今日将提前'+Math.round((budgetUsage-expectedUsage))+'%耗尽预算'});}
+    else if(budgetUsage>95){alerts.push({type:'warning',title:'预算即将耗尽',severity:'warning',detail:'日预算$'+budget+'，已花费$'+spend+'（'+budgetUsage.toFixed(0)+'%），预算即将耗尽',suggestion:'<strong>建议处理：</strong><br>1. 考虑增加日预算避免提前停投<br>2. 优化出价策略，确保高转化时段有预算<br>3. 检查是否需要调整广告结构'});}
+    else{alerts.push({type:'healthy',title:'预算消耗正常',severity:'healthy',detail:'预算使用率'+budgetUsage.toFixed(0)+'%，时间过半'+timeElapsed+'%，消耗节奏正常',suggestion:'预算消耗节奏良好，继续保持'});}
+    var clickChange=avgClicks>0?((clicks-avgClicks)/avgClicks*100):0;
+    if(clickChange>100){alerts.push({type:'critical',title:'点击量异常激增',severity:'critical',detail:'今日点击'+clicks+'次，日均'+avgClicks+'次，激增'+clickChange.toFixed(0)+'%，疑似点击异常',suggestion:'<strong>建议处理：</strong><br>1. 立即检查点击来源IP和搜索词报告<br>2. 排除可疑搜索词为否定关键词<br>3. 如确认恶意点击，联系亚马逊申请调查<br>4. 暂时降低出价减少损失'});}
+    else if(clickChange>50){alerts.push({type:'warning',title:'点击量异常偏高',severity:'warning',detail:'今日点击'+clicks+'次，日均'+avgClicks+'次，增长'+clickChange.toFixed(0)+'%，需关注',suggestion:'<strong>建议处理：</strong><br>1. 检查搜索词报告是否有异常词<br>2. 关注转化率是否同步下降<br>3. 如为正常流量增长则无需操作'});}
+    else{alerts.push({type:'info',title:'点击量正常',severity:'info',detail:'今日点击'+clicks+'次，日均'+avgClicks+'次，变化'+clickChange.toFixed(0)+'%',suggestion:'点击量在正常波动范围内'});}
+    var critCount=alerts.filter(function(a){return a.severity==='critical';}).length;
+    var warnCount=alerts.filter(function(a){return a.severity==='warning';}).length;
+    var healthyCount=alerts.filter(function(a){return a.severity==='healthy';}).length;
+    var overallStatus=critCount>0?'紧急':warnCount>0?'需关注':'健康';
+    var statusColor=critCount>0?'#ef4444':warnCount>0?'#f59e0b':'#10b981';
+    $('resultCard').innerHTML=
+      '<div class="result-highlight"><div class="rh-label">整体状态</div><div class="rh-value" style="color:'+statusColor+'">'+overallStatus+'</div></div>'+
+      '<div class="result-detail"><span>紧急预警</span><strong style="color:#ef4444">'+critCount+'</strong></div>'+
+      '<div class="result-detail"><span>警告预警</span><strong style="color:#f59e0b">'+warnCount+'</strong></div>'+
+      '<div class="result-detail"><span>正常指标</span><strong style="color:#10b981">'+healthyCount+'</strong></div>';
+    $('thresholdConfig').innerHTML=
+      '<div class="tc-item"><div class="tc-label">ACOS飙升阈值</div><div class="tc-value">'+acosThresh+'%</div></div>'+
+      '<div class="tc-item"><div class="tc-label">转化下降阈值</div><div class="tc-value">'+cvrThresh+'%</div></div>'+
+      '<div class="tc-item"><div class="tc-label">预算消耗警戒</div><div class="tc-value">130% of时间进度</div></div>'+
+      '<div class="tc-item"><div class="tc-label">点击异常阈值</div><div class="tc-value">+100%</div></div>';
+    $('summaryBar').innerHTML=
+      '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+critCount+'</div><div class="rsb-lbl">紧急</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+warnCount+'</div><div class="rsb-lbl">警告</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+healthyCount+'</div><div class="rsb-lbl">正常</div></div>'+
+      '<div class="rsb-card"><div class="rsb-val" style="color:'+statusColor+'">'+overallStatus+'</div><div class="rsb-lbl">整体状态</div></div>';
+    $('alertPanel').innerHTML=alerts.map(function(a){
+      return '<div class="alert-item '+a.type+'"><div class="ai-header"><div class="ai-title">'+a.title+'</div><span class="ai-severity as-'+a.severity+'">'+({critical:'紧急',warning:'警告',info:'提示',healthy:'正常'})[a.severity]+'</span></div><div class="ai-detail">'+a.detail+'</div><div class="ai-suggestion">'+a.suggestion+'</div></div>';
+    }).join('');
+  }
+  return{calc:calc};
+})();
+CPA.calc();
+(function(){var b=document.getElementById('backToTop');if(!b)return;window.addEventListener('scroll',function(){if(window.scrollY>400)b.classList.add('visible');else b.classList.remove('visible');},{passive:true});b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});})();
+</script>
+</body>
+</html>
