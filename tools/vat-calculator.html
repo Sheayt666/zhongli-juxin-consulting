@@ -51,6 +51,24 @@
 .country-rate-chip .crc-flag{font-size:24px}
 .country-rate-chip .crc-name{font-size:13px;font-weight:600;color:var(--ink);margin:4px 0 2px}
 .country-rate-chip .crc-rate{font-size:18px;font-weight:800;color:var(--accent2)}
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
 </style>
 </head>
 <body class="tool-page" data-tool="vat_calculator">
@@ -81,6 +99,25 @@
       <p class="tool-hero-desc">支持英国、德国、法国、意大利、西班牙、日本、澳洲七国增值税率计算，含税/不含税一键切换，输入金额即可计算税额和含税价格，帮你合规定价与税务申报。</p>
     </div>
   </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚚</span>
+      <span class="workflow-name">物流合规工作流</span>
+      <span class="workflow-step">第3步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="first-mile-shipping.html" class="step">头程运费</a>
+      <span class="arrow">→</span>
+      <a href="supplier-comparison.html" class="step">供应商比价</a>
+      <span class="arrow">→</span>
+      <span class="step current">VAT关税</span>
+      <span class="arrow">→</span>
+      <a href="payment-fee.html" class="step">收款费率</a>
+      <span class="arrow">→</span>
+      <a href="currency-converter.html" class="step">汇率转换</a>
+    </div>
+  </div>
 
   <section class="tool-section">
     <div class="container">
@@ -152,6 +189,12 @@
         <div class="country-rate-chip"><div class="crc-flag">🇪🇸</div><div class="crc-name">西班牙</div><div class="crc-rate">21%</div></div>
         <div class="country-rate-chip"><div class="crc-flag">🇯🇵</div><div class="crc-name">日本</div><div class="crc-rate">10%</div></div>
         <div class="country-rate-chip"><div class="crc-flag">🇦🇺</div><div class="crc-name">澳洲</div><div class="crc-rate">10%</div></div>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="supplier-comparison.html" class="wbn-btn prev">← 上一步：供应商比价</a>
+        <a href="payment-fee.html" class="wbn-btn next">下一步：收款费率 →</a>
       </div>
 
       <div class="share-section">

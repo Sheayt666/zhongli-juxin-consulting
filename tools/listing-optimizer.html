@@ -144,6 +144,27 @@
 .lo-legend-item{display:flex;align-items:center;gap:6px}
 .lo-legend-dot{width:14px;height:14px;border-radius:3px}
 @media(max-width:600px){.lo-score-breakdown{grid-template-columns:1fr}.lo-compare-grid{grid-template-columns:1fr}}
+/* 工作流导航栏 */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 上一步/下一步导航 */
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
 </style>
 </head>
 <body class="tool-page" data-tool="listing_optimizer">
@@ -167,6 +188,25 @@
 </nav>
 
 <main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">✍️</span>
+      <span class="workflow-name">Listing优化工作流</span>
+      <span class="workflow-step">第5步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="keyword-harvest.html" class="step">关键词收割</a>
+      <span class="arrow">→</span>
+      <a href="title-generator.html" class="step">标题生成</a>
+      <span class="arrow">→</span>
+      <a href="bullet-points-generator.html" class="step">五点描述</a>
+      <span class="arrow">→</span>
+      <a href="search-term-optimizer.html" class="step">Search Term</a>
+      <span class="arrow">→</span>
+      <span class="step current">Listing优化</span>
+    </div>
+  </div>
+
   <header class="tool-hero">
     <div class="container">
       <span class="tool-hero-badge">📝 Listing检查器</span>
@@ -404,6 +444,12 @@ ANC</textarea>
             <div id="loPriorityContent"></div>
           </div>
         </div>
+      </div>
+
+      <!-- 上一步/下一步 -->
+      <div class="wf-foot-nav">
+        <a href="search-term-optimizer.html" class="prev"><span class="fn-label">上一步 · 第4步</span><span class="fn-name">← Search Term优化</span></a>
+        <a href="break-even-cpc.html" class="next"><span class="fn-label">下一工作流 · W3 广告投放</span><span class="fn-name">盈亏平衡CPC →</span></a>
       </div>
 
       <!-- 分享区域 -->

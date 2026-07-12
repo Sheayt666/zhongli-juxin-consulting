@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="税务利润综合计算器：输入售价/采购成本/FBA费/广告费，选择国家（US/UK/DE/FR/IT/ES/JP），输出税前利润/VAT/所得税/税后净利润，支持3国税后利润对比，跨境卖家税务规划必备。">
+<meta name="keywords" content="税务利润计算,VAT,所得税,税后利润,多国对比,美国税,英国VAT,德国VAT,日本消费税,跨境电商税务">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="税务利润综合计算器 - 多国税后利润对比">
+<meta property="og:description" content="输入售价/成本/FBA费/广告费，选择7国，输出税前利润/VAT/所得税/税后净利润，3国对比。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/tax-profit-calculator.html">
+<title>税务利润综合计算器 - 多国税后利润对比 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "税务利润综合计算器",
+  "description": "输入售价/成本/FBA费/广告费，选择7国，输出税前利润/VAT/所得税/税后净利润，3国对比。",
+  "url": "https://juxin-consulting.help/tools/tax-profit-calculator.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "众力聚鑫咨询", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "税务利润计算器", "item": "https://juxin-consulting.help/tools/tax-profit-calculator.html" }
+  ]
+}
+</script>
+<style>
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+/* ===== 税务计算器专用样式 ===== */
+.tpc-section{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.tpc-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+/* 国家选择卡 */
+.tpc-country-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px}
+.tpc-country-card{padding:16px 8px;border:2px solid var(--rule);border-radius:var(--radius-md);text-align:center;cursor:pointer;transition:all .2s;background:var(--surface)}
+.tpc-country-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tpc-country-card.active{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 4px 14px rgba(79,70,229,.15)}
+.tpc-country-card .tcc-flag{font-size:28px}
+.tpc-country-card .tcc-name{font-size:12px;font-weight:700;color:var(--ink);margin-top:4px}
+.tpc-country-card .tcc-vat{font-size:11px;color:var(--muted);margin-top:2px}
+/* 结果卡片 */
+.tpc-results{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.tpc-result-card{padding:24px;border-radius:var(--radius-md);text-align:center;border:1px solid var(--rule);background:var(--surface);box-shadow:var(--shadow-sm)}
+.tpc-result-card .trc-val{font-size:28px;font-weight:900}
+.tpc-result-card .trc-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.tpc-result-card.pre-tax .trc-val{color:var(--accent)}
+.tpc-result-card.vat .trc-val{color:var(--gold)}
+.tpc-result-card.income-tax .trc-val{color:#f97316}
+.tpc-result-card.after-tax .trc-val{color:var(--green)}
+.tpc-result-card.highlight{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#a7f3d0}
+/* 对比表 */
+.tpc-compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;overflow:hidden;border-radius:var(--radius-md)}
+.tpc-compare-table th{padding:12px 14px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.tpc-compare-table th:first-child{text-align:left}
+.tpc-compare-table td{padding:12px 14px;border-bottom:1px solid var(--rule-light);text-align:center;color:var(--ink-soft)}
+.tpc-compare-table td:first-child{font-weight:600;text-align:left;color:var(--ink)}
+.tpc-compare-table .best{color:var(--green);font-weight:800}
+.tpc-compare-table .worst{color:var(--red);font-weight:700}
+.tpc-compare-table tr:hover td{background:var(--accent-bg)}
+/* 对比国家选择 */
+.tpc-compare-select{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.tpc-compare-select .tcs-item{display:flex;align-items:center;gap:6px}
+.tpc-compare-select select{padding:8px 12px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;font-family:inherit}
+/* 利润分解条 */
+.tpc-breakdown{margin-top:16px}
+.tpc-bd-bar{display:flex;height:32px;border-radius:8px;overflow:hidden;margin-bottom:8px}
+.tpc-bd-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .5s;min-width:0;overflow:hidden;white-space:nowrap}
+.tpc-bd-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.tpc-bd-legend span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.tpc-bd-legend .dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+@media(max-width:768px){.tpc-country-grid{grid-template-columns:repeat(4,1fr)}.tpc-results{grid-template-columns:1fr 1fr}.tpc-compare-table{font-size:11px}.tpc-compare-table th,.tpc-compare-table td{padding:8px 6px}}
+</style>
+</head>
+<body class="tool-page" data-tool="tax_profit_calculator">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress-bar" id="readingProgress"></div>
+
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo">
+      <div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span>
+    </a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+    <button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚚 跨境电商工具 · 物流合规</span>
+      <h1>税务利润<em>综合计算器</em></h1>
+      <p class="tool-hero-desc">输入售价/采购成本/FBA费/广告费，选择目标国家（US/UK/DE/FR/IT/ES/JP），输出税前利润/VAT/所得税/税后净利润，支持3国税后利润对比，帮你找到利润最优市场。</p>
+    </div>
+  </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚚</span>
+      <span class="workflow-name">物流合规工作流</span>
+      <span class="workflow-step">第3步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="first-mile-shipping.html" class="step">头程运费</a>
+      <span class="arrow">→</span>
+      <a href="supplier-comparison.html" class="step">供应商比价</a>
+      <span class="arrow">→</span>
+      <span class="step current">税务利润</span>
+      <span class="arrow">→</span>
+      <a href="payment-fee.html" class="step">收款费率</a>
+      <span class="arrow">→</span>
+      <a href="currency-converter.html" class="step">汇率转换</a>
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <div class="container">
+
+      <!-- 国家选择 -->
+      <div class="tpc-section">
+        <h3>🌍 选择目标市场</h3>
+        <div class="tpc-country-grid" id="countryGrid"></div>
+      </div>
+
+      <!-- 成本输入 -->
+      <div class="tpc-section">
+        <h3>💰 成本与费用输入</h3>
+        <div class="calc-form-grid" id="inputForm">
+          <div class="calc-field"><label>售价（当地货币）</label><div class="input-wrap"><span class="cur-symbol" id="curSymbol">$</span><input type="number" id="price" value="29.99" step="0.01" min="0" oninput="TPC.calc()"></div></div>
+          <div class="calc-field"><label>采购成本（当地货币）</label><div class="input-wrap"><span class="cur-symbol" id="curSymbol2">$</span><input type="number" id="cost" value="8.00" step="0.01" min="0" oninput="TPC.calc()"></div></div>
+          <div class="calc-field"><label>FBA配送费</label><div class="input-wrap"><span class="cur-symbol" id="curSymbol3">$</span><input type="number" id="fbaFee" value="3.50" step="0.01" min="0" oninput="TPC.calc()"></div></div>
+          <div class="calc-field"><label>平台佣金率 (%)</label><div class="input-wrap"><input type="number" id="commissionRate" value="15" step="0.5" min="0" max="100" oninput="TPC.calc()"><span class="suffix">%</span></div></div>
+          <div class="calc-field"><label>广告费（ACoS）</label><div class="input-wrap"><span class="cur-symbol" id="curSymbol4">$</span><input type="number" id="adCost" value="4.00" step="0.01" min="0" oninput="TPC.calc()"></div></div>
+          <div class="calc-field"><label>其他费用</label><div class="input-wrap"><span class="cur-symbol" id="curSymbol5">$</span><input type="number" id="otherFee" value="1.00" step="0.01" min="0" oninput="TPC.calc()"></div></div>
+        </div>
+      </div>
+
+      <!-- 结果展示 -->
+      <div class="tpc-results" id="results"></div>
+
+      <!-- 利润分解条 -->
+      <div class="tpc-section">
+        <h3>📊 利润分解</h3>
+        <div class="tpc-breakdown">
+          <div class="tpc-bd-bar" id="breakdownBar"></div>
+          <div class="tpc-bd-legend" id="breakdownLegend"></div>
+        </div>
+      </div>
+
+      <!-- 多国对比 -->
+      <div class="tpc-section">
+        <h3>🌍 3国税后利润对比</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:12px">选择3个目标国家，对比税后利润差异，找到利润最优市场。</p>
+        <div class="tpc-compare-select">
+          <div class="tcs-item"><label>国家1:</label><select id="compare1" onchange="TPC.calc()"></select></div>
+          <div class="tcs-item"><label>国家2:</label><select id="compare2" onchange="TPC.calc()"></select></div>
+          <div class="tcs-item"><label>国家3:</label><select id="compare3" onchange="TPC.calc()"></select></div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tpc-compare-table" id="compareTable"></table>
+        </div>
+      </div>
+
+      <!-- 公式说明 -->
+      <div class="fee-rule-box">
+        <h4>📐 税务公式说明</h4>
+        <ul>
+          <li>平台佣金 = 售价 × 佣金率</li>
+          <li>税前利润 = 售价 - 采购成本 - FBA费 - 平台佣金 - 广告费 - 其他费用</li>
+          <li>VAT/消费税 = 售价 × VAT税率（欧洲含税售价场景下为售价/(1+税率)×税率）</li>
+          <li>所得税 = max(0, 税前利润) × 所得税率</li>
+          <li>税后净利润 = 税前利润 - 所得税</li>
+          <li>各国税率仅供参考，实际请咨询当地税务顾问</li>
+        </ul>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="supplier-comparison.html" class="wbn-btn prev">← 上一步：供应商比价</a>
+        <a href="payment-fee.html" class="wbn-btn next">下一步：收款费率 →</a>
+      </div>
+
+      <!-- 分享区域 -->
+      <div class="share-section">
+        <h3>📤 分享给同事</h3>
+        <p>把这个税务利润计算器分享给你的财务团队，一起分析各国税后利润</p>
+        <div class="share-link-box">
+          <input type="text" class="share-link-input" id="shareLinkInput" readonly placeholder="点击生成分享链接">
+          <button class="btn-share" data-share-btn data-tool="tax_profit_calculator" data-share-target="#shareLinkInput" data-share-done="已复制" data-share-label-target="#shareCopiedLabel">复制链接</button>
+        </div>
+        <div class="share-copied-label" id="shareCopiedLabel">✓ 链接已复制到剪贴板</div>
+        <div class="share-channels">
+          <a class="share-channel-btn" href="../contact.html">💬 咨询顾问</a>
+          <a class="share-channel-btn" href="index.html">🧰 更多工具</a>
+          <a class="share-channel-btn" href="../blog.html">📖 深度文章</a>
+        </div>
+      </div>
+
+      <!-- 相关文章 -->
+      <section class="tool-related">
+        <div class="section-header" style="margin-bottom:28px;">
+          <span class="section-tag">📖 延伸阅读</span>
+          <h2>税务合规相关<em>深度文章</em></h2>
+        </div>
+        <div class="tool-related-grid">
+          <a href="../article-amazon-vat-deep-dive.html" class="tool-related-card">
+            <div class="trc-icon">📋</div>
+            <h4>亚马逊欧洲VAT税务详解</h4>
+            <p>从注册到申报的完整指南</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-cross-border-tax-planning.html" class="tool-related-card">
+            <div class="trc-icon">💰</div>
+            <h4>跨境电商税务规划</h4>
+            <p>合法降低税负的策略</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-cross-border-cost.html" class="tool-related-card">
+            <div class="trc-icon">📊</div>
+            <h4>跨境电商成本核算全指南</h4>
+            <p>从采购到回款的完整成本拆解</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>众力聚鑫咨询</h3>
+        <p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.4);">让每一家企业都拥有可持续的增长力</p>
+      </div>
+      <div class="footer-col">
+        <h4>工具中心</h4>
+        <ul>
+          <li><a href="index.html">工具首页</a></li>
+          <li><a href="fba-calculator.html">FBA利润计算器</a></li>
+          <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
+          <li><a href="currency-converter.html">汇率转换器</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>知识资源</h4>
+        <ul>
+          <li><a href="../blog.html">深度文章</a></li>
+          <li><a href="../courses.html">知识课程</a></li>
+          <li><a href="../cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <ul>
+          <li><a href="../about.html">公司介绍</a></li>
+          <li><a href="../contact.html">联系我们</a></li>
+          <li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/engagement.js"></script>
+<script>
+/* ===== 税务利润综合计算器 ===== */
+var TPC = (function () {
+  'use strict';
+
+  var COUNTRIES = [
+    { code: 'US', name: '美国',   flag: '🇺🇸', currency: 'USD', symbol: '$',  vatRate: 0,    incomeTaxRate: 0.21, vatName: 'Sales Tax' },
+    { code: 'UK', name: '英国',   flag: '🇬🇧', currency: 'GBP', symbol: '£',  vatRate: 0.20, incomeTaxRate: 0.19, vatName: 'VAT' },
+    { code: 'DE', name: '德国',   flag: '🇩🇪', currency: 'EUR', symbol: '€',  vatRate: 0.19, incomeTaxRate: 0.30, vatName: 'MwSt' },
+    { code: 'FR', name: '法国',   flag: '🇫🇷', currency: 'EUR', symbol: '€',  vatRate: 0.20, incomeTaxRate: 0.28, vatName: 'TVA' },
+    { code: 'IT', name: '意大利', flag: '🇮🇹', currency: 'EUR', symbol: '€',  vatRate: 0.22, incomeTaxRate: 0.28, vatName: 'IVA' },
+    { code: 'ES', name: '西班牙', flag: '🇪🇸', currency: 'EUR', symbol: '€',  vatRate: 0.21, incomeTaxRate: 0.25, vatName: 'IVA' },
+    { code: 'JP', name: '日本',   flag: '🇯🇵', currency: 'JPY', symbol: '¥',  vatRate: 0.10, incomeTaxRate: 0.30, vatName: '消费税' }
+  ];
+
+  var selectedCountry = 'US';
+
+  function init() {
+    renderCountries();
+    renderCompareSelects();
+    loadSaved();
+    calc();
+  }
+
+  function renderCountries() {
+    var container = document.getElementById('countryGrid');
+    container.innerHTML = COUNTRIES.map(function (c) {
+      return '<div class="tpc-country-card' + (c.code === selectedCountry ? ' active' : '') + '" id="cc_' + c.code + '" onclick="TPC.selectCountry(\'' + c.code + '\')">' +
+        '<div class="tcc-flag">' + c.flag + '</div>' +
+        '<div class="tcc-name">' + c.name + '</div>' +
+        '<div class="tcc-vat">' + c.vatName + ' ' + (c.vatRate * 100).toFixed(0) + '%</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function selectCountry(code) {
+    selectedCountry = code;
+    document.querySelectorAll('.tpc-country-card').forEach(function (el) { el.classList.remove('active'); });
+    document.getElementById('cc_' + code).classList.add('active');
+    var country = COUNTRIES.find(function (c) { return c.code === code; });
+    // 更新货币符号
+    for (var i = 1; i <= 5; i++) {
+      var el = document.getElementById('curSymbol' + (i > 1 ? i : ''));
+      if (el) el.textContent = country.symbol;
+    }
+    document.getElementById('curSymbol').textContent = country.symbol;
+    calc();
+  }
+
+  function renderCompareSelects() {
+    var opts = COUNTRIES.map(function (c) {
+      return '<option value="' + c.code + '">' + c.flag + ' ' + c.name + '</option>';
+    }).join('');
+    document.getElementById('compare1').innerHTML = opts;
+    document.getElementById('compare2').innerHTML = opts;
+    document.getElementById('compare3').innerHTML = opts;
+    document.getElementById('compare1').value = 'US';
+    document.getElementById('compare2').value = 'DE';
+    document.getElementById('compare3').value = 'JP';
+  }
+
+  function calc() {
+    var country = COUNTRIES.find(function (c) { return c.code === selectedCountry; });
+    var price = parseFloat(document.getElementById('price').value) || 0;
+    var cost = parseFloat(document.getElementById('cost').value) || 0;
+    var fbaFee = parseFloat(document.getElementById('fbaFee').value) || 0;
+    var commissionRate = parseFloat(document.getElementById('commissionRate').value) || 0;
+    var adCost = parseFloat(document.getElementById('adCost').value) || 0;
+    var otherFee = parseFloat(document.getElementById('otherFee').value) || 0;
+
+    // 计算
+    var commission = price * (commissionRate / 100);
+    var totalCost = cost + fbaFee + commission + adCost + otherFee;
+    var preTaxProfit = price - totalCost;
+    var vatAmount = price * country.vatRate; // 简化：售价×VAT税率
+    var incomeTax = Math.max(0, preTaxProfit) * country.incomeTaxRate;
+    var afterTaxProfit = preTaxProfit - incomeTax;
+
+    // 渲染结果
+    var results = document.getElementById('results');
+    results.innerHTML =
+      '<div class="tpc-result-card pre-tax"><div class="trc-val">' + fmt(preTaxProfit, country.symbol) + '</div><div class="trc-lbl">税前利润</div></div>' +
+      '<div class="tpc-result-card vat"><div class="trc-val">' + fmt(vatAmount, country.symbol) + '</div><div class="trc-lbl">' + country.vatName + ' (' + (country.vatRate * 100).toFixed(0) + '%)</div></div>' +
+      '<div class="tpc-result-card income-tax"><div class="trc-val">' + fmt(incomeTax, country.symbol) + '</div><div class="trc-lbl">所得税 (' + (country.incomeTaxRate * 100).toFixed(0) + '%)</div></div>' +
+      '<div class="tpc-result-card after-tax highlight"><div class="trc-val">' + fmt(afterTaxProfit, country.symbol) + '</div><div class="trc-lbl">税后净利润</div></div>';
+
+    // 利润分解
+    renderBreakdown(price, cost, fbaFee, commission, adCost, otherFee, incomeTax, country.symbol);
+
+    // 多国对比
+    renderCompare(price, cost, fbaFee, commissionRate, adCost, otherFee);
+
+    // 埋点
+    if (window.HistoryStore) HistoryStore.save('税务利润计算器', { 国家: country.name, 税前利润: preTaxProfit.toFixed(2), 税后利润: afterTaxProfit.toFixed(2) });
+    if (window.EngagementTracker) EngagementTracker.calcCompleted('tax_profit_calculator', country.name + ' 税后' + fmt(afterTaxProfit, country.symbol));
+  }
+
+  function renderBreakdown(price, cost, fbaFee, commission, adCost, otherFee, incomeTax, symbol) {
+    var segs = [
+      { name: '采购成本', val: cost, color: '#4f46e5' },
+      { name: 'FBA费', val: fbaFee, color: '#7c3aed' },
+      { name: '平台佣金', val: commission, color: '#0891b2' },
+      { name: '广告费', val: adCost, color: '#d97706' },
+      { name: '其他费用', val: otherFee, color: '#dc2626' },
+      { name: '所得税', val: incomeTax, color: '#f97316' },
+      { name: '税后利润', val: Math.max(0, price - cost - fbaFee - commission - adCost - otherFee - incomeTax), color: '#10b981' }
+    ];
+    var total = segs.reduce(function (s, seg) { return s + seg.val; }, 0);
+    if (total === 0) total = 1;
+
+    var bar = document.getElementById('breakdownBar');
+    bar.innerHTML = segs.map(function (seg) {
+      var pct = (seg.val / total) * 100;
+      if (pct < 1) return '';
+      return '<div class="tpc-bd-seg" style="width:' + pct + '%;background:' + seg.color + '" title="' + seg.name + ': ' + fmt(seg.val, symbol) + '">' + (pct > 8 ? seg.name : '') + '</div>';
+    }).join('');
+
+    var legend = document.getElementById('breakdownLegend');
+    legend.innerHTML = segs.map(function (seg) {
+      return '<span><span class="dot" style="background:' + seg.color + '"></span>' + seg.name + ' ' + fmt(seg.val, symbol) + '</span>';
+    }).join('');
+  }
+
+  function renderCompare(price, cost, fbaFee, commissionRate, adCost, otherFee) {
+    var c1 = document.getElementById('compare1').value;
+    var c2 = document.getElementById('compare2').value;
+    var c3 = document.getElementById('compare3').value;
+    var codes = [c1, c2, c3];
+    var countries = codes.map(function (code) { return COUNTRIES.find(function (c) { return c.code === code; }); });
+
+    var results = countries.map(function (country) {
+      var commission = price * (commissionRate / 100);
+      var totalCost = cost + fbaFee + commission + adCost + otherFee;
+      var preTaxProfit = price - totalCost;
+      var vatAmount = price * country.vatRate;
+      var incomeTax = Math.max(0, preTaxProfit) * country.incomeTaxRate;
+      var afterTaxProfit = preTaxProfit - incomeTax;
+      var margin = price > 0 ? (afterTaxProfit / price * 100) : 0;
+      return { country: country, preTaxProfit: preTaxProfit, vatAmount: vatAmount, incomeTax: incomeTax, afterTaxProfit: afterTaxProfit, margin: margin };
+    });
+
+    // 找到最高和最低税后利润
+    var maxAfter = Math.max.apply(null, results.map(function (r) { return r.afterTaxProfit; }));
+    var minAfter = Math.min.apply(null, results.map(function (r) { return r.afterTaxProfit; }));
+
+    var table = document.getElementById('compareTable');
+    var rows = [
+      { label: '🇺🇸 国家', vals: results.map(function (r) { return r.country.flag + ' ' + r.country.name; }) },
+      { label: '💱 货币', vals: results.map(function (r) { return r.country.currency + ' (' + r.country.symbol + ')'; }) },
+      { label: '📋 VAT税率', vals: results.map(function (r) { return r.country.vatName + ' ' + (r.country.vatRate * 100).toFixed(0) + '%'; }) },
+      { label: '💼 所得税率', vals: results.map(function (r) { return (r.country.incomeTaxRate * 100).toFixed(0) + '%'; }) },
+      { label: '💵 税前利润', vals: results.map(function (r) { return fmt(r.preTaxProfit, r.country.symbol); }) },
+      { label: '📋 VAT金额', vals: results.map(function (r) { return fmt(r.vatAmount, r.country.symbol); }) },
+      { label: '💼 所得税', vals: results.map(function (r) { return fmt(r.incomeTax, r.country.symbol); }) },
+      { label: '✅ 税后净利润', vals: results.map(function (r) { return r.afterTaxProfit; }), isKey: true, fmt: function (v, i) { return fmt(v, results[i].country.symbol); } },
+      { label: '📊 税后利润率', vals: results.map(function (r) { return r.margin.toFixed(1) + '%'; }) }
+    ];
+
+    var html = '<thead><tr><th>指标</th>';
+    results.forEach(function (r) { html += '<th>' + r.country.flag + ' ' + r.country.name + '</th>'; });
+    html += '</tr></thead><tbody>';
+
+    rows.forEach(function (row) {
+      html += '<tr' + (row.isKey ? ' style="background:var(--accent-bg)"' : '') + '><td' + (row.isKey ? ' style="font-weight:800"' : '') + '>' + row.label + '</td>';
+      row.vals.forEach(function (v, i) {
+        var displayVal = row.fmt ? row.fmt(v, i) : v;
+        var cls = '';
+        if (row.isKey) {
+          if (v === maxAfter && v > 0) cls = ' class="best"';
+          else if (v === minAfter && v !== maxAfter) cls = ' class="worst"';
+        }
+        html += '<td' + cls + '>' + displayVal + '</td>';
+      });
+      html += '</tr>';
+    });
+
+    html += '</tbody>';
+    table.innerHTML = html;
+  }
+
+  function fmt(n, symbol) {
+    if (!isFinite(n)) n = 0;
+    return symbol + n.toFixed(2);
+  }
+
+  function saveData() {
+    try {
+      var data = {
+        price: document.getElementById('price').value,
+        cost: document.getElementById('cost').value,
+        fbaFee: document.getElementById('fbaFee').value,
+        commissionRate: document.getElementById('commissionRate').value,
+        adCost: document.getElementById('adCost').value,
+        otherFee: document.getElementById('otherFee').value,
+        country: selectedCountry
+      };
+      localStorage.setItem('jx_tax_profit', JSON.stringify(data));
+    } catch (e) {}
+  }
+
+  function loadSaved() {
+    try {
+      var saved = localStorage.getItem('jx_tax_profit');
+      if (!saved) return;
+      var data = JSON.parse(saved);
+      if (data.price) document.getElementById('price').value = data.price;
+      if (data.cost) document.getElementById('cost').value = data.cost;
+      if (data.fbaFee) document.getElementById('fbaFee').value = data.fbaFee;
+      if (data.commissionRate) document.getElementById('commissionRate').value = data.commissionRate;
+      if (data.adCost) document.getElementById('adCost').value = data.adCost;
+      if (data.otherFee) document.getElementById('otherFee').value = data.otherFee;
+      if (data.country) selectCountry(data.country);
+    } catch (e) {}
+  }
+
+  return { init: init, calc: calc, selectCountry: selectCountry, saveData: saveData };
+})();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', TPC.init);
+} else {
+  TPC.init();
+}
+</script>
+</body>
+</html>

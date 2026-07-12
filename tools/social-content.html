@@ -60,6 +60,25 @@
 .stat-box .sb-num{font-size:24px;font-weight:800;color:var(--accent)}
 .stat-box .sb-label{font-size:11px;color:var(--muted);margin-top:2px}
 @media(max-width:600px){.platform-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+/* === 工作流导航栏 === */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* === 底部工作流导航 === */
+.bottom-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding:20px 0;border-top:1px solid var(--rule);flex-wrap:wrap;gap:12px}
+.bn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius-md);font-size:14px;font-weight:600;text-decoration:none;transition:all .2s}
+.bn-btn.prev{background:var(--bg-soft);color:var(--ink-soft);border:1px solid var(--rule)}
+.bn-btn.prev:hover{background:var(--rule-light);color:var(--ink)}
+.bn-btn.next{background:#4f46e5;color:#fff}
+.bn-btn.next:hover{background:#4338ca;transform:translateX(3px)}
+.bn-btn .arr{font-size:18px;line-height:1}
 </style>
 </head>
 <body class="tool-page" data-tool="social_content">
@@ -85,11 +104,30 @@
 <main id="main-content">
   <header class="tool-hero">
     <div class="container">
-      <span class="tool-hero-badge">✍️ 跨境电商工具</span>
+      <span class="tool-hero-badge">🚀 品牌增长工作流 · 第5步</span>
       <h1>社媒文案<em>字数工具</em></h1>
       <p class="tool-hero-desc">实时字符/字数计数，支持TikTok标题(≤100)/描述(≤2200)、Instagram标题(≤2200)、Twitter(≤280)字数限制，自动提取Hashtag和Emoji计数，多平台字数限制一目了然，帮你高效创作社媒内容。</p>
     </div>
   </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚀</span>
+      <span class="workflow-name">品牌增长工作流</span>
+      <span class="workflow-step">第5步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="brand-registry-check.html" class="step">品牌备案检查</a>
+      <span class="arrow">→</span>
+      <a href="brand-health-score.html" class="step">品牌健康分</a>
+      <span class="arrow">→</span>
+      <a href="external-traffic-calculator.html" class="step">站外引流</a>
+      <span class="arrow">→</span>
+      <a href="product-matrix.html" class="step">产品矩阵</a>
+      <span class="arrow">→</span>
+      <span class="step current">社媒文案</span>
+    </div>
+  </div>
 
   <section class="tool-section">
     <div class="container">
@@ -169,6 +207,11 @@
           </a>
         </div>
       </section>
+
+      <div class="bottom-nav">
+        <a class="bn-btn prev" href="product-matrix.html"><span class="arr">←</span> 上一步：产品矩阵</a>
+        <a class="bn-btn next" href="market-entry-evaluator.html">下一个工作流：市场进入评估 <span class="arr">→</span></a>
+      </div>
     </div>
   </section>
 </main>
@@ -187,9 +230,11 @@
         <h4>工具中心</h4>
         <ul>
           <li><a href="index.html">工具首页</a></li>
-          <li><a href="fba-calculator.html">FBA利润计算器</a></li>
-          <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
-          <li><a href="currency-converter.html">汇率转换器</a></li>
+          <li><a href="brand-registry-check.html">品牌备案检查</a></li>
+          <li><a href="brand-health-score.html">品牌健康评分</a></li>
+          <li><a href="external-traffic-calculator.html">站外引流计算器</a></li>
+          <li><a href="product-matrix.html">产品矩阵分析</a></li>
+          <li><a href="social-content.html">社媒文案工具</a></li>
         </ul>
       </div>
       <div class="footer-col">

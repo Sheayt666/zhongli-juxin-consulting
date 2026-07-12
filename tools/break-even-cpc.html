@@ -62,6 +62,24 @@
 .matrix-table .danger{color:var(--red);font-weight:700}
 .hidden{display:none!important}
 @media(max-width:768px){.cvr-table,.matrix-table{font-size:12px}.cvr-table th,.cvr-table td,.matrix-table th,.matrix-table td{padding:8px 10px}}
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
 </style>
 <script type="application/ld+json">
 {
@@ -116,6 +134,25 @@
       <p class="tool-hero-desc">精准计算盈亏平衡CPC，自动生成5档转化率对比表，推荐竞价策略和安全出价，一键生成关键词出价矩阵。让每一分广告预算都花在刀刃上。</p>
     </div>
   </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📊</span>
+      <span class="workflow-name">广告投放工作流</span>
+      <span class="workflow-step">第1步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <span class="step current">盈亏平衡CPC</span>
+      <span class="arrow">→</span>
+      <a href="keyword-bid-matrix.html" class="step">出价矩阵</a>
+      <span class="arrow">→</span>
+      <a href="acos-calculator.html" class="step">ACoS</a>
+      <span class="arrow">→</span>
+      <a href="ad-budget-pacing.html" class="step">预算追踪</a>
+      <span class="arrow">→</span>
+      <a href="ad-report-analyzer.html" class="step">报表分析</a>
+    </div>
+  </div>
 
   <section class="tool-section">
     <div class="container">
@@ -215,6 +252,12 @@
           </table>
         </div>
         <p style="font-size:12px;color:var(--muted);margin-top:12px">💡 表格中绿色=安全出价区间，黄色=谨慎出价区间，红色=超出盈亏线不建议出价。数值为安全竞价（盈亏CPC×70%）。</p>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="index.html" class="wbn-btn prev">← 工具中心</a>
+        <a href="keyword-bid-matrix.html" class="wbn-btn next">下一步：出价矩阵 →</a>
       </div>
 
       <!-- 分享区域 -->

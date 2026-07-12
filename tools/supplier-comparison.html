@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="供应商比价器：支持5个供应商对比（价格/起订量/交期/质量评分/付款方式），CSS横向对比表最优值高亮，加权综合评分，帮助跨境卖家选择最优供应商。">
+<meta name="keywords" content="供应商比价,供应商对比,采购比价,供应商评估,起订量,交期,质量评分,付款方式,加权评分">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="供应商比价器 - 5供应商横向对比与加权评分">
+<meta property="og:description" content="5个供应商对比，CSS对比表最优值高亮，加权综合评分。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/supplier-comparison.html">
+<title>供应商比价器 - 5供应商对比·加权综合评分 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "供应商比价器",
+  "description": "支持5个供应商对比（价格/起订量/交期/质量评分/付款方式），CSS对比表最优值高亮，加权综合评分。",
+  "url": "https://juxin-consulting.help/tools/supplier-comparison.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "众力聚鑫咨询", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "供应商比价器", "item": "https://juxin-consulting.help/tools/supplier-comparison.html" }
+  ]
+}
+</script>
+<style>
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+/* ===== 比价器专用样式 ===== */
+.sc-section{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.sc-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+/* 供应商输入卡片 */
+.sc-supplier-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.sc-supplier-card{border:1px solid var(--rule);border-radius:var(--radius-md);padding:16px;background:var(--bg-soft)}
+.sc-supplier-card .ssc-header{display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.sc-supplier-card .ssc-icon{font-size:20px}
+.sc-supplier-card .ssc-name{font-size:14px;font-weight:700;color:var(--ink);flex:1;border:none;background:transparent;font-family:inherit;padding:2px 0}
+.sc-supplier-card .ssc-name:focus{outline:none;border-bottom:1px solid var(--accent)}
+.sc-field{margin-bottom:10px}
+.sc-field label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+.sc-field input,.sc-field select{width:100%;padding:7px 10px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;font-family:inherit}
+.sc-field input:focus,.sc-field select:focus{outline:none;border-color:var(--accent)}
+/* 对比表 */
+.sc-compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;overflow:hidden;border-radius:var(--radius-md)}
+.sc-compare-table th{padding:12px 14px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.sc-compare-table th:first-child{text-align:left}
+.sc-compare-table td{padding:12px 14px;border-bottom:1px solid var(--rule-light);text-align:center;color:var(--ink-soft)}
+.sc-compare-table td:first-child{font-weight:600;text-align:left;color:var(--ink)}
+.sc-compare-table .best{color:var(--green);font-weight:800}
+.sc-compare-table .best-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:rgba(16,185,129,.1);color:var(--green);font-weight:700;margin-left:4px}
+.sc-compare-table tr:hover td{background:var(--accent-bg)}
+.sc-compare-table .score-row td{background:var(--accent-bg);font-weight:800;font-size:16px}
+.sc-compare-table .winner td{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.05));font-weight:700}
+/* 权重设置 */
+.sc-weights{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.sc-weight-item{text-align:center}
+.sc-weight-item label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.sc-weight-item input{width:60px;padding:6px;border:1px solid var(--rule);border-radius:var(--radius-sm);text-align:center;font-family:inherit}
+/* 排名卡片 */
+.sc-ranking{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+.sc-rank-card{padding:20px;border-radius:var(--radius-md);text-align:center;border:2px solid;position:relative;transition:transform .2s}
+.sc-rank-card:hover{transform:translateY(-4px)}
+.sc-rank-card.rank-1{border-color:#fbbf24;background:linear-gradient(135deg,#fffbeb,#fef3c7)}
+.sc-rank-card.rank-2{border-color:#d1d5db;background:linear-gradient(135deg,#f9fafb,#f3f4f6)}
+.sc-rank-card.rank-3{border-color:#fb923c;background:linear-gradient(135deg,#fff7ed,#ffedd5)}
+.sc-rank-card.rank-4,.sc-rank-card.rank-5{border-color:var(--rule);background:var(--bg-soft)}
+.sc-rank-card .src-rank{font-size:28px;font-weight:900;color:var(--muted);position:absolute;top:8px;right:12px;opacity:.3}
+.sc-rank-card.rank-1 .src-rank{color:#f59e0b;opacity:.5}
+.sc-rank-card .src-medal{font-size:24px}
+.sc-rank-card .src-name{font-size:14px;font-weight:700;margin:6px 0}
+.sc-rank-card .src-score{font-size:28px;font-weight:900;color:var(--accent)}
+.sc-rank-card .src-tag{font-size:11px;color:var(--muted);margin-top:4px}
+@media(max-width:768px){.sc-supplier-grid{grid-template-columns:1fr 1fr}.sc-weights{grid-template-columns:1fr 1fr 1fr}.sc-ranking{grid-template-columns:1fr 1fr}.sc-compare-table{font-size:11px}.sc-compare-table th,.sc-compare-table td{padding:8px 6px}}
+</style>
+</head>
+<body class="tool-page" data-tool="supplier_comparison">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress-bar" id="readingProgress"></div>
+
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo">
+      <div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span>
+    </a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+    <button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🚚 跨境电商工具 · 物流合规</span>
+      <h1>供应商<em>比价器</em></h1>
+      <p class="tool-hero-desc">支持5个供应商横向对比（价格/起订量/交期/质量评分/付款方式），CSS对比表最优值高亮，加权综合评分，自动排名，帮你选择最优供应商。</p>
+    </div>
+  </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🚚</span>
+      <span class="workflow-name">物流合规工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="first-mile-shipping.html" class="step">头程运费</a>
+      <span class="arrow">→</span>
+      <span class="step current">供应商比价</span>
+      <span class="arrow">→</span>
+      <a href="vat-calculator.html" class="step">VAT关税</a>
+      <span class="arrow">→</span>
+      <a href="payment-fee.html" class="step">收款费率</a>
+      <span class="arrow">→</span>
+      <a href="currency-converter.html" class="step">汇率转换</a>
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <div class="container">
+
+      <!-- 供应商输入 -->
+      <div class="sc-section">
+        <h3>🏭 供应商信息输入</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">为每个供应商输入以下5个维度的数据，系统自动计算综合得分与排名。</p>
+        <div class="sc-supplier-grid" id="supplierInputs"></div>
+      </div>
+
+      <!-- 权重设置 -->
+      <div class="sc-section">
+        <h3>⚖️ 维度权重设置</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">调整各维度权重（总和100%），系统自动归一化。</p>
+        <div class="sc-weights" id="weightInputs"></div>
+      </div>
+
+      <!-- 对比表 -->
+      <div class="sc-section">
+        <h3>📊 横向对比表（最优值高亮）</h3>
+        <div style="overflow-x:auto">
+          <table class="sc-compare-table" id="compareTable"></table>
+        </div>
+      </div>
+
+      <!-- 排名卡片 -->
+      <div class="sc-section">
+        <h3>🏆 综合排名</h3>
+        <div class="sc-ranking" id="ranking"></div>
+      </div>
+
+      <!-- 公式说明 -->
+      <div class="fee-rule-box">
+        <h4>📐 评分公式说明</h4>
+        <ul>
+          <li>价格得分 = (最低价格 ÷ 该供应商价格) × 100（价格越低得分越高）</li>
+          <li>起订量得分 = (最低起订量 ÷ 该供应商起订量) × 100（起订量越低得分越高）</li>
+          <li>交期得分 = (最短交期 ÷ 该供应商交期) × 100（交期越短得分越高）</li>
+          <li>质量得分 = 供应商质量评分 × 10（1-10分直接映射）</li>
+          <li>付款方式得分：预付30%得60分/50%得70分/月结得90分/款到发货得80分</li>
+          <li>综合得分 = Σ(各维度得分 × 权重)</li>
+        </ul>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="first-mile-shipping.html" class="wbn-btn prev">← 上一步：头程运费</a>
+        <a href="vat-calculator.html" class="wbn-btn next">下一步：VAT关税 →</a>
+      </div>
+
+      <!-- 分享区域 -->
+      <div class="share-section">
+        <h3>📤 分享给同事</h3>
+        <p>把这个供应商比价器分享给你的采购团队，一起选择最优供应商</p>
+        <div class="share-link-box">
+          <input type="text" class="share-link-input" id="shareLinkInput" readonly placeholder="点击生成分享链接">
+          <button class="btn-share" data-share-btn data-tool="supplier_comparison" data-share-target="#shareLinkInput" data-share-done="已复制" data-share-label-target="#shareCopiedLabel">复制链接</button>
+        </div>
+        <div class="share-copied-label" id="shareCopiedLabel">✓ 链接已复制到剪贴板</div>
+        <div class="share-channels">
+          <a class="share-channel-btn" href="../contact.html">💬 咨询顾问</a>
+          <a class="share-channel-btn" href="index.html">🧰 更多工具</a>
+          <a class="share-channel-btn" href="../blog.html">📖 深度文章</a>
+        </div>
+      </div>
+
+      <!-- 相关文章 -->
+      <section class="tool-related">
+        <div class="section-header" style="margin-bottom:28px;">
+          <span class="section-tag">📖 延伸阅读</span>
+          <h2>供应链相关<em>深度文章</em></h2>
+        </div>
+        <div class="tool-related-grid">
+          <a href="../article-cross-border-supply-chain.html" class="tool-related-card">
+            <div class="trc-icon">🏭</div>
+            <h4>跨境电商供应链管理全指南</h4>
+            <p>从选品到交付的供应链策略</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-amazon-inventory-cashflow.html" class="tool-related-card">
+            <div class="trc-icon">📦</div>
+            <h4>亚马逊库存与现金流管理</h4>
+            <p>采购计划与资金周转</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-sourcing-from-china-guide.html" class="tool-related-card">
+            <div class="trc-icon">🇨🇳</div>
+            <h4>从中国采购的完整指南</h4>
+            <p>供应商选择与验厂流程</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>众力聚鑫咨询</h3>
+        <p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.4);">让每一家企业都拥有可持续的增长力</p>
+      </div>
+      <div class="footer-col">
+        <h4>工具中心</h4>
+        <ul>
+          <li><a href="index.html">工具首页</a></li>
+          <li><a href="fba-calculator.html">FBA利润计算器</a></li>
+          <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
+          <li><a href="currency-converter.html">汇率转换器</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>知识资源</h4>
+        <ul>
+          <li><a href="../blog.html">深度文章</a></li>
+          <li><a href="../courses.html">知识课程</a></li>
+          <li><a href="../cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <ul>
+          <li><a href="../about.html">公司介绍</a></li>
+          <li><a href="../contact.html">联系我们</a></li>
+          <li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/engagement.js"></script>
+<script>
+/* ===== 供应商比价器 ===== */
+var SC = (function () {
+  'use strict';
+
+  var SUPPLIERS = [
+    { name: '供应商A', icon: '🏭' }, { name: '供应商B', icon: '🏭' },
+    { name: '供应商C', icon: '🏭' }, { name: '供应商D', icon: '🏭' },
+    { name: '供应商E', icon: '🏭' }
+  ];
+
+  var DIMENSIONS = [
+    { key: 'price',    name: '单价($)',   icon: '💰', weight: 30, defaultVal: [5.0, 4.5, 6.0, 5.5, 4.8] },
+    { key: 'moq',      name: '起订量',     icon: '📦', weight: 20, defaultVal: [500, 1000, 300, 800, 600] },
+    { key: 'leadTime', name: '交期(天)',   icon: '⏱️', weight: 20, defaultVal: [15, 20, 10, 18, 25] },
+    { key: 'quality',  name: '质量(1-10)', icon: '⭐', weight: 20, defaultVal: [8, 7, 9, 6, 7] },
+    { key: 'payment',  name: '付款方式',   icon: '💳', weight: 10, defaultVal: ['预付50%', '月结30天', '款到发货', '预付30%', '月结60天'] }
+  ];
+
+  var PAYMENT_SCORES = {
+    '款到发货': 80, '月结60天': 100, '月结30天': 90, '月结15天': 85,
+    '预付30%': 60, '预付50%': 50, '预付70%': 40, '全款预付': 30
+  };
+  var PAYMENT_OPTIONS = ['款到发货','月结30天','月结60天','预付30%','预付50%','预付70%','全款预付'];
+
+  function init() {
+    renderInputs();
+    renderWeights();
+    loadSaved();
+    calc();
+  }
+
+  function renderInputs() {
+    var container = document.getElementById('supplierInputs');
+    container.innerHTML = SUPPLIERS.map(function (sup, i) {
+      var fields = DIMENSIONS.map(function (dim) {
+        var val = dim.defaultVal[i];
+        if (dim.key === 'payment') {
+          var opts = PAYMENT_OPTIONS.map(function (o) {
+            return '<option value="' + o + '"' + (o === val ? ' selected' : '') + '>' + o + '</option>';
+          }).join('');
+          return '<div class="sc-field"><label>' + dim.icon + ' ' + dim.name + '</label><select id="sup_' + dim.key + '_' + i + '" onchange="SC.calc()">' + opts + '</select></div>';
+        }
+        return '<div class="sc-field"><label>' + dim.icon + ' ' + dim.name + '</label><input type="number" id="sup_' + dim.key + '_' + i + '" value="' + val + '" step="' + (dim.key === 'price' ? '0.1' : '1') + '" min="0" oninput="SC.calc()"></div>';
+      }).join('');
+      return '<div class="sc-supplier-card">' +
+        '<div class="ssc-header"><span class="ssc-icon">' + sup.icon + '</span><input type="text" class="ssc-name" id="sup_name_' + i + '" value="' + sup.name + '" oninput="SC.calc()"></div>' +
+        fields +
+      '</div>';
+    }).join('');
+  }
+
+  function renderWeights() {
+    var container = document.getElementById('weightInputs');
+    container.innerHTML = DIMENSIONS.map(function (dim) {
+      return '<div class="sc-weight-item"><label>' + dim.icon + ' ' + dim.name + '</label><input type="number" id="w_' + dim.key + '" value="' + dim.weight + '" min="0" max="100" step="5" oninput="SC.calc()"> <span style="font-size:11px;color:var(--muted)">%</span></div>';
+    }).join('');
+  }
+
+  function calc() {
+    // 收集数据
+    var data = [];
+    for (var i = 0; i < 5; i++) {
+      var item = { name: document.getElementById('sup_name_' + i).value || ('供应商' + 'ABCDE'[i]) };
+      DIMENSIONS.forEach(function (dim) {
+        if (dim.key === 'payment') {
+          item[dim.key] = document.getElementById('sup_' + dim.key + '_' + i).value;
+        } else {
+          item[dim.key] = parseFloat(document.getElementById('sup_' + dim.key + '_' + i).value) || 0;
+        }
+      });
+      data.push(item);
+    }
+
+    // 收集权重
+    var weights = {}, totalWeight = 0;
+    DIMENSIONS.forEach(function (dim) {
+      weights[dim.key] = parseFloat(document.getElementById('w_' + dim.key).value) || 0;
+      totalWeight += weights[dim.key];
+    });
+
+    // 计算各维度得分
+    var minPrice = Math.min.apply(null, data.map(function (d) { return d.price; }));
+    var minMoq = Math.min.apply(null, data.map(function (d) { return d.moq; }));
+    var minLead = Math.min.apply(null, data.map(function (d) { return d.leadTime; }));
+
+    var scores = data.map(function (d) {
+      var priceScore = d.price > 0 ? (minPrice / d.price) * 100 : 0;
+      var moqScore = d.moq > 0 ? (minMoq / d.moq) * 100 : 0;
+      var leadScore = d.leadTime > 0 ? (minLead / d.leadTime) * 100 : 0;
+      var qualityScore = d.quality * 10;
+      var payScore = PAYMENT_SCORES[d.payment] || 70;
+
+      var weighted = 0;
+      if (totalWeight > 0) {
+        weighted = (priceScore * weights.price + moqScore * weights.moq + leadScore * weights.leadTime + qualityScore * weights.quality + payScore * weights.payment) / totalWeight;
+      }
+
+      return {
+        name: d.name,
+        price: d.price, moq: d.moq, leadTime: d.leadTime, quality: d.quality, payment: d.payment,
+        priceScore: priceScore, moqScore: moqScore, leadScore: leadScore, qualityScore: qualityScore, payScore: payScore,
+        totalScore: weighted
+      };
+    });
+
+    // 渲染对比表
+    renderTable(scores, minPrice, minMoq, minLead);
+    // 渲染排名
+    renderRanking(scores);
+
+    // 埋点
+    var best = scores.reduce(function (a, b) { return a.totalScore > b.totalScore ? a : b; });
+    if (window.HistoryStore) HistoryStore.save('供应商比价器', { 最优: best.name, 得分: best.totalScore.toFixed(1) });
+    if (window.EngagementTracker) EngagementTracker.calcCompleted('supplier_comparison', '最优' + best.name + ' ' + best.totalScore.toFixed(1) + '分');
+  }
+
+  function renderTable(scores, minPrice, minMoq, minLead) {
+    var table = document.getElementById('compareTable');
+    var html = '<thead><tr><th>维度</th>';
+    scores.forEach(function (s) { html += '<th>' + s.name + '</th>'; });
+    html += '</tr></thead><tbody>';
+
+    // 价格
+    html += '<tr><td>💰 单价</td>';
+    scores.forEach(function (s) {
+      var isBest = s.price === minPrice;
+      html += '<td>' + (isBest ? '<span class="best">' + s.price.toFixed(2) + '</span><span class="best-badge">最低</span>' : s.price.toFixed(2)) + '</td>';
+    });
+    html += '</tr>';
+
+    // 起订量
+    html += '<tr><td>📦 起订量</td>';
+    scores.forEach(function (s) {
+      var isBest = s.moq === minMoq;
+      html += '<td>' + (isBest ? '<span class="best">' + s.moq + '</span><span class="best-badge">最低</span>' : s.moq) + '</td>';
+    });
+    html += '</tr>';
+
+    // 交期
+    html += '<tr><td>⏱️ 交期</td>';
+    scores.forEach(function (s) {
+      var isBest = s.leadTime === minLead;
+      html += '<td>' + (isBest ? '<span class="best">' + s.leadTime + '天</span><span class="best-badge">最快</span>' : s.leadTime + '天') + '</td>';
+    });
+    html += '</tr>';
+
+    // 质量
+    var maxQuality = Math.max.apply(null, scores.map(function (s) { return s.quality; }));
+    html += '<tr><td>⭐ 质量</td>';
+    scores.forEach(function (s) {
+      var isBest = s.quality === maxQuality;
+      html += '<td>' + (isBest ? '<span class="best">' + s.quality + '/10</span><span class="best-badge">最优</span>' : s.quality + '/10') + '</td>';
+    });
+    html += '</tr>';
+
+    // 付款方式
+    html += '<tr><td>💳 付款</td>';
+    scores.forEach(function (s) {
+      html += '<td>' + s.payment + '<br><span style="font-size:11px;color:var(--muted)">得分' + s.payScore + '</span></td>';
+    });
+    html += '</tr>';
+
+    // 综合得分
+    var sorted = scores.slice().sort(function (a, b) { return b.totalScore - a.totalScore; });
+    var bestScore = sorted[0].totalScore;
+    html += '<tr class="score-row"><td>🏆 综合得分</td>';
+    scores.forEach(function (s) {
+      var isWinner = s.totalScore === bestScore;
+      html += '<td' + (isWinner ? ' class="best"' : '') + '>' + s.totalScore.toFixed(1) + (isWinner ? '<br><span style="font-size:11px">推荐</span>' : '') + '</td>';
+    });
+    html += '</tr>';
+
+    html += '</tbody>';
+    table.innerHTML = html;
+
+    // 高亮获胜供应商列
+    var winnerIdx = scores.findIndex(function (s) { return s.totalScore === bestScore; });
+    if (winnerIdx >= 0) {
+      var cells = table.querySelectorAll('tbody td:nth-child(' + (winnerIdx + 2) + ')');
+      cells.forEach(function (c) { c.style.background = 'rgba(16,185,129,0.08)'; });
+    }
+  }
+
+  function renderRanking(scores) {
+    var sorted = scores.slice().sort(function (a, b) { return b.totalScore - a.totalScore; });
+    var medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+    var rankClasses = ['rank-1','rank-2','rank-3','rank-4','rank-5'];
+
+    var html = sorted.map(function (s, i) {
+      var tags = [];
+      if (s.priceScore === 100) tags.push('最低价');
+      if (s.moqScore === 100) tags.push('最低起订');
+      if (s.leadScore === 100) tags.push('最快交期');
+      if (s.qualityScore === 100) tags.push('最高质量');
+      return '<div class="sc-rank-card ' + rankClasses[i] + '">' +
+        '<div class="src-rank">#' + (i + 1) + '</div>' +
+        '<div class="src-medal">' + medals[i] + '</div>' +
+        '<div class="src-name">' + s.name + '</div>' +
+        '<div class="src-score">' + s.totalScore.toFixed(1) + '</div>' +
+        '<div class="src-tag">' + (tags.length > 0 ? tags.join(' · ') : '综合评分') + '</div>' +
+      '</div>';
+    }).join('');
+    document.getElementById('ranking').innerHTML = html;
+  }
+
+  function saveData() {
+    try {
+      var data = { names: [], values: {}, weights: {} };
+      for (var i = 0; i < 5; i++) {
+        data.names.push(document.getElementById('sup_name_' + i).value);
+        DIMENSIONS.forEach(function (dim) {
+          if (!data.values[dim.key]) data.values[dim.key] = [];
+          data.values[dim.key].push(document.getElementById('sup_' + dim.key + '_' + i).value);
+        });
+      }
+      DIMENSIONS.forEach(function (dim) {
+        data.weights[dim.key] = parseFloat(document.getElementById('w_' + dim.key).value) || 0;
+      });
+      localStorage.setItem('jx_supplier_comp', JSON.stringify(data));
+    } catch (e) {}
+  }
+
+  function loadSaved() {
+    try {
+      var saved = localStorage.getItem('jx_supplier_comp');
+      if (!saved) return;
+      var data = JSON.parse(saved);
+      if (data.names) data.names.forEach(function (n, i) { if (document.getElementById('sup_name_' + i)) document.getElementById('sup_name_' + i).value = n; });
+      if (data.values) DIMENSIONS.forEach(function (dim) {
+        if (data.values[dim.key]) data.values[dim.key].forEach(function (v, i) {
+          var el = document.getElementById('sup_' + dim.key + '_' + i);
+          if (el) el.value = v;
+        });
+      });
+      if (data.weights) DIMENSIONS.forEach(function (dim) {
+        if (data.weights[dim.key] !== undefined) document.getElementById('w_' + dim.key).value = data.weights[dim.key];
+      });
+    } catch (e) {}
+  }
+
+  return { init: init, calc: calc, saveData: saveData };
+})();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', SC.init);
+} else {
+  SC.init();
+}
+</script>
+</body>
+</html>

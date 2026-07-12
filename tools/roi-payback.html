@@ -120,6 +120,24 @@
 .roi-loan-item.net .v{color:var(--green)}
 .roi-loan-item .s{font-size:11px;color:var(--muted)}
 @media(max-width:600px){.roi-stats-row{grid-template-columns:1fr}.roi-result-highlight{grid-template-columns:1fr}.roi-compare-grid{grid-template-columns:1fr}.roi-loan-compare{grid-template-columns:1fr}.roi-curve{height:180px}}
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
 </style>
 </head>
 <body class="tool-page" data-tool="roi_payback">
@@ -150,6 +168,25 @@
       <p class="tool-hero-desc">输入总投入和月净利润，实时计算回本月数、年化ROI和月化ROI。支持多产品投资组合对比、资金占用成本计算、增长预测模型和投资决策建议。</p>
     </div>
   </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">💰</span>
+      <span class="workflow-name">财务利润工作流</span>
+      <span class="workflow-step">第3步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="fba-calculator.html" class="step">FBA计算器</a>
+      <span class="arrow">→</span>
+      <a href="margin-markup.html" class="step">利润率</a>
+      <span class="arrow">→</span>
+      <span class="step current">ROI回本</span>
+      <span class="arrow">→</span>
+      <a href="break-even-volume.html" class="step">盈亏平衡</a>
+      <span class="arrow">→</span>
+      <a href="cash-flow-forecast.html" class="step">现金流预测</a>
+    </div>
+  </div>
 
   <section class="tool-section">
     <div class="container">
@@ -350,6 +387,12 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="margin-markup.html" class="wbn-btn prev">← 上一步：利润率</a>
+        <a href="break-even-volume.html" class="wbn-btn next">下一步：盈亏平衡 →</a>
       </div>
 
       <!-- 分享区域 -->

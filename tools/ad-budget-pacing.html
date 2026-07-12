@@ -50,6 +50,24 @@
 .pacing-legend span{display:inline-flex;align-items:center;gap:6px}
 .pacing-legend .dot{width:12px;height:12px;border-radius:3px}
 .speed-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:700}
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
 </style>
 </head>
 <body class="tool-page" data-tool="ad_budget_pacing">
@@ -80,6 +98,25 @@
       <p class="tool-hero-desc">输入月总预算、已过天数和已消耗金额，自动计算应消耗金额、偏差额、偏差率、消耗速度评估（过快/正常/过慢）和剩余日均预算建议，帮你实时管理广告投放节奏。</p>
     </div>
   </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📊</span>
+      <span class="workflow-name">广告投放工作流</span>
+      <span class="workflow-step">第4步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="break-even-cpc.html" class="step">盈亏平衡CPC</a>
+      <span class="arrow">→</span>
+      <a href="keyword-bid-matrix.html" class="step">出价矩阵</a>
+      <span class="arrow">→</span>
+      <a href="acos-calculator.html" class="step">ACoS</a>
+      <span class="arrow">→</span>
+      <span class="step current">预算追踪</span>
+      <span class="arrow">→</span>
+      <a href="ad-report-analyzer.html" class="step">报表分析</a>
+    </div>
+  </div>
 
   <section class="tool-section">
     <div class="container">
@@ -136,6 +173,12 @@
             <ul class="calc-history-list" id="historyList"></ul>
           </div>
         </div>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="acos-calculator.html" class="wbn-btn prev">← 上一步：ACoS</a>
+        <a href="ad-report-analyzer.html" class="wbn-btn next">下一步：报表分析 →</a>
       </div>
 
       <div class="share-section">

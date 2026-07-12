@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="市场进入评估器：8维度（市场规模/竞争强度/利润空间/进入门槛/供应链难度/法规风险/品牌机会/资金需求）加权评分，Go/No-Go决策，三场景对比，CSS柱状图可视化，自动生成市场进入策略建议。跨境电商战略决策必备工具。">
+<meta name="keywords" content="市场进入评估,Go No-Go决策,市场分析,竞争评估,进入门槛,战略决策,跨境电商选品,8维度评估,加权评分">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="市场进入评估器 - 8维度加权评分与Go/No-Go决策">
+<meta property="og:description" content="8维度加权评分，Go/No-Go决策，三场景对比，CSS柱状图可视化，自动生成市场进入策略建议。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/market-entry-evaluator.html">
+<title>市场进入评估器 - 8维度加权评分·Go/No-Go决策 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "市场进入评估器",
+  "description": "8维度加权评分市场进入评估工具，Go/No-Go决策，三场景对比，CSS柱状图可视化，自动生成策略建议。",
+  "url": "https://juxin-consulting.help/tools/market-entry-evaluator.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "众力聚鑫咨询", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "市场进入评估器", "item": "https://juxin-consulting.help/tools/market-entry-evaluator.html" }
+  ]
+}
+</script>
+<style>
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+/* ===== 评估器专用样式 ===== */
+.mee-section{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.mee-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+/* 维度滑块行 */
+.dim-row{display:grid;grid-template-columns:140px 1fr 60px 70px;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule-light)}
+.dim-row:last-child{border-bottom:none}
+.dim-label{font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
+.dim-label .dim-icon{font-size:18px}
+.dim-slider-wrap{display:flex;flex-direction:column;gap:4px}
+.dim-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,#ef4444 0%,#f59e0b 50%,#10b981 100%);border-radius:3px;outline:none}
+.dim-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #4f46e5;cursor:pointer;box-shadow:0 2px 8px rgba(79,70,229,.3);transition:transform .15s}
+.dim-slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.dim-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #4f46e5;cursor:pointer;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.dim-score{font-size:20px;font-weight:800;color:var(--accent);text-align:center;min-width:40px}
+.dim-weight{display:flex;align-items:center;gap:4px;justify-content:flex-end}
+.dim-weight input{width:50px;padding:6px 8px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;text-align:center;font-family:inherit}
+.dim-weight span{font-size:12px;color:var(--muted)}
+/* 综合评分卡片 */
+.mee-score-card{background:linear-gradient(135deg,#4f46e5 0%,#6366f1 100%);border-radius:var(--radius-lg);padding:32px;text-align:center;color:#fff;margin-bottom:20px;box-shadow:0 8px 32px rgba(79,70,229,.25)}
+.mee-score-card .msc-label{font-size:14px;opacity:.85;margin-bottom:8px}
+.mee-score-card .msc-value{font-size:56px;font-weight:900;line-height:1}
+.mee-score-card .msc-value small{font-size:20px;font-weight:600;opacity:.7}
+.mee-score-card .msc-badge{display:inline-block;margin-top:12px;padding:8px 24px;border-radius:20px;font-size:16px;font-weight:700}
+.mee-score-card .msc-badge.go{background:rgba(16,185,129,.25);color:#6ee7b7}
+.mee-score-card .msc-badge.caution{background:rgba(245,158,11,.25);color:#fcd34d}
+.mee-score-card .msc-badge.nogo{background:rgba(239,68,68,.25);color:#fca5a5}
+/* CSS柱状图 */
+.mee-chart{display:flex;align-items:flex-end;gap:10px;height:280px;padding:20px 10px 40px;position:relative;border-bottom:2px solid var(--rule);border-left:1px solid var(--rule)}
+.mee-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.mee-bar{width:100%;max-width:60px;border-radius:6px 6px 0 0;transition:height .6s cubic-bezier(.4,0,.2,1);min-height:4px;position:relative;cursor:pointer}
+.mee-bar-val{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap}
+.mee-bar-label{font-size:11px;color:var(--muted);font-weight:600;margin-top:8px;text-align:center;line-height:1.3}
+.mee-bar-icon{font-size:16px;margin-bottom:4px}
+/* 三场景对比 */
+.mee-scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.mee-scen-card{padding:24px;border-radius:var(--radius-md);text-align:center;border:2px solid;transition:transform .2s}
+.mee-scen-card:hover{transform:translateY(-4px)}
+.mee-scen-card.optimistic{border-color:#10b981;background:linear-gradient(135deg,#ecfdf5,#d1fae5)}
+.mee-scen-card.baseline{border-color:#4f46e5;background:linear-gradient(135deg,#eef2ff,#e0e7ff)}
+.mee-scen-card.conservative{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7)}
+.mee-scen-card .msc-name{font-size:14px;font-weight:700;margin-bottom:8px}
+.mee-scen-card.optimistic .msc-name{color:#059669}
+.mee-scen-card.baseline .msc-name{color:#4f46e5}
+.mee-scen-card.conservative .msc-name{color:#d97706}
+.mee-scen-card .msc-score{font-size:36px;font-weight:900;color:var(--ink)}
+.mee-scen-card .msc-decision{font-size:12px;font-weight:600;margin-top:4px;padding:3px 12px;border-radius:12px;display:inline-block}
+/* 策略建议 */
+.mee-strategies{margin-top:16px}
+.mee-strat-item{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:var(--radius-md);border-left:4px solid var(--accent);margin-bottom:10px}
+.mee-strat-item .msi-icon{font-size:24px;flex-shrink:0}
+.mee-strat-item .msi-body h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.mee-strat-item .msi-body p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+/* 场景输入 */
+.mee-scen-inputs{display:grid;grid-template-columns:120px repeat(3,1fr);gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule-light)}
+.mee-scen-inputs:last-child{border-bottom:none}
+.mee-scen-inputs .msi-dim{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.mee-scen-inputs input{padding:8px 10px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;text-align:center;font-family:inherit}
+.mee-scen-inputs .msi-header{font-size:13px;font-weight:700;text-align:center;padding:8px}
+@media(max-width:768px){.dim-row{grid-template-columns:100px 1fr 50px}.dim-weight{display:none}.mee-scenarios{grid-template-columns:1fr}.mee-scen-inputs{grid-template-columns:80px 1fr 1fr 1fr}.mee-chart{height:220px;overflow-x:auto}}
+</style>
+</head>
+<body class="tool-page" data-tool="market_entry_evaluator">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress-bar" id="readingProgress"></div>
+
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo">
+      <div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span>
+    </a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+    <button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 跨境电商工具 · 深度版</span>
+      <h1>市场进入<em>评估器</em></h1>
+      <p class="tool-hero-desc">8维度加权评分（市场规模/竞争强度/利润空间/进入门槛/供应链难度/法规风险/品牌机会/资金需求），Go/No-Go决策，三场景对比，CSS柱状图可视化，自动生成市场进入策略建议。</p>
+    </div>
+  </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🎯</span>
+      <span class="workflow-name">战略决策工作流</span>
+      <span class="workflow-step">第1步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <span class="step current">市场进入评估</span>
+      <span class="arrow">→</span>
+      <a href="competitive-advantage.html" class="step">竞争优势</a>
+      <span class="arrow">→</span>
+      <a href="market-share.html" class="step">市场集中度</a>
+      <span class="arrow">→</span>
+      <a href="annual-budget-planner.html" class="step">年度预算</a>
+      <span class="arrow">→</span>
+      <a href="referral-fee.html" class="step">类目佣金</a>
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <div class="container">
+
+      <!-- 综合评分卡片 -->
+      <div class="mee-score-card" id="scoreCard">
+        <div class="msc-label">综合加权评分（满分100分）</div>
+        <div class="msc-value" id="totalScore">0<small>/100</small></div>
+        <div class="msc-badge caution" id="decisionBadge">等待评估</div>
+      </div>
+
+      <!-- 8维度评分输入 -->
+      <div class="mee-section">
+        <h3>📊 8维度评分输入</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">拖动滑块为每个维度打分（1-10分），调整权重占比，综合评分实时计算。</p>
+        <div id="dimContainer"></div>
+        <div style="display:flex;gap:12px;margin-top:16px">
+          <button class="btn-calc" onclick="MEE.resetScores()">重置评分</button>
+          <button class="btn-reset" onclick="MEE.saveData()">保存方案</button>
+        </div>
+      </div>
+
+      <!-- CSS柱状图 -->
+      <div class="mee-section">
+        <h3>📈 8维度评分矩阵</h3>
+        <div class="mee-chart" id="dimChart"></div>
+      </div>
+
+      <!-- 三场景对比 -->
+      <div class="mee-section">
+        <h3>🎲 三场景对比（乐观/基准/保守）</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">为每个维度设置三种场景的分数，对比不同假设下的综合评分与决策。</p>
+        <div class="mee-scen-inputs">
+          <div></div>
+          <div class="msi-header" style="color:#059669">乐观</div>
+          <div class="msi-header" style="color:#4f46e5">基准</div>
+          <div class="msi-header" style="color:#d97706">保守</div>
+        </div>
+        <div id="scenInputs"></div>
+        <div class="mee-scenarios" id="scenResults"></div>
+      </div>
+
+      <!-- 策略建议 -->
+      <div class="mee-section">
+        <h3>💡 市场进入策略建议</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">根据评分自动生成3条策略建议。</p>
+        <div class="mee-strategies" id="strategies"></div>
+      </div>
+
+      <!-- 公式说明 -->
+      <div class="fee-rule-box">
+        <h4>📐 评估公式说明</h4>
+        <ul>
+          <li>综合评分 = Σ(各维度分数 × 权重) ÷ 10 × 100</li>
+          <li>分数含义：1-3分（弱）/4-6分（中）/7-10分（强）</li>
+          <li>Go/No-Go决策：>70分强烈推荐进入 / 50-70分谨慎进入 / <50分不推荐</li>
+          <li>权重总和建议设为100%，系统自动归一化处理</li>
+          <li>三场景对比帮助你理解不同假设下的风险与机会</li>
+        </ul>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="index.html" class="wbn-btn prev">← 工具中心</a>
+        <a href="competitive-advantage.html" class="wbn-btn next">下一步：竞争优势 →</a>
+      </div>
+
+      <!-- 分享区域 -->
+      <div class="share-section">
+        <h3>📤 分享给同事</h3>
+        <p>把这个市场进入评估器分享给你的战略团队，一起评估市场机会</p>
+        <div class="share-link-box">
+          <input type="text" class="share-link-input" id="shareLinkInput" readonly placeholder="点击生成分享链接">
+          <button class="btn-share" data-share-btn data-tool="market_entry_evaluator" data-share-target="#shareLinkInput" data-share-done="已复制" data-share-label-target="#shareCopiedLabel">复制链接</button>
+        </div>
+        <div class="share-copied-label" id="shareCopiedLabel">✓ 链接已复制到剪贴板</div>
+        <div class="share-channels">
+          <a class="share-channel-btn" href="../contact.html">💬 咨询顾问</a>
+          <a class="share-channel-btn" href="index.html">🧰 更多工具</a>
+          <a class="share-channel-btn" href="../blog.html">📖 深度文章</a>
+        </div>
+      </div>
+
+      <!-- 相关文章 -->
+      <section class="tool-related">
+        <div class="section-header" style="margin-bottom:28px;">
+          <span class="section-tag">📖 延伸阅读</span>
+          <h2>战略决策相关<em>深度文章</em></h2>
+        </div>
+        <div class="tool-related-grid">
+          <a href="../article-strategic-planning-guide.html" class="tool-related-card">
+            <div class="trc-icon">🎯</div>
+            <h4>战略规划制定指南</h4>
+            <p>从市场分析到战略落地</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-competitive-strategy.html" class="tool-related-card">
+            <div class="trc-icon">⚔️</div>
+            <h4>竞争战略制定方法</h4>
+            <p>从竞争格局到差异化定位</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-amazon-global-expansion.html" class="tool-related-card">
+            <div class="trc-icon">🌏</div>
+            <h4>亚马逊多站点全球扩张</h4>
+            <p>多国市场进入与全球布局</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>众力聚鑫咨询</h3>
+        <p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.4);">让每一家企业都拥有可持续的增长力</p>
+      </div>
+      <div class="footer-col">
+        <h4>工具中心</h4>
+        <ul>
+          <li><a href="index.html">工具首页</a></li>
+          <li><a href="fba-calculator.html">FBA利润计算器</a></li>
+          <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
+          <li><a href="currency-converter.html">汇率转换器</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>知识资源</h4>
+        <ul>
+          <li><a href="../blog.html">深度文章</a></li>
+          <li><a href="../courses.html">知识课程</a></li>
+          <li><a href="../cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <ul>
+          <li><a href="../about.html">公司介绍</a></li>
+          <li><a href="../contact.html">联系我们</a></li>
+          <li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/engagement.js"></script>
+<script>
+/* ===== 市场进入评估器 ===== */
+var MEE = (function () {
+  'use strict';
+
+  var DIMENSIONS = [
+    { key: 'market_size',     name: '市场规模',   icon: '🌍', defaultScore: 7, weight: 15, desc: '目标市场总容量与增长潜力' },
+    { key: 'competition',     name: '竞争强度',   icon: '⚔️', defaultScore: 5, weight: 15, desc: '竞争对手数量与实力（分越低竞争越激烈）' },
+    { key: 'profit_margin',   name: '利润空间',   icon: '💰', defaultScore: 6, weight: 15, desc: '预计毛利率与净利率水平' },
+    { key: 'entry_barrier',   name: '进入门槛',   icon: '🚧', defaultScore: 5, weight: 10, desc: '技术/资金/资质等壁垒（分越低门槛越高）' },
+    { key: 'supply_chain',    name: '供应链难度', icon: '🔗', defaultScore: 6, weight: 10, desc: '采购/物流/仓储的复杂程度' },
+    { key: 'regulation',      name: '法规风险',   icon: '📋', defaultScore: 7, weight: 10, desc: '税务/合规/知识产权风险（分越低风险越高）' },
+    { key: 'brand_opportunity', name: '品牌机会', icon: '⭐', defaultScore: 6, weight: 15, desc: '品牌建设与差异化空间' },
+    { key: 'capital_needed',  name: '资金需求',   icon: '🏦', defaultScore: 5, weight: 10, desc: '启动资金与运营资金需求（分越低需求越高）' }
+  ];
+
+  var BAR_COLORS = ['#4f46e5','#7c3aed','#daa520','#059669','#dc2626','#0891b2','#db2777','#ea580c'];
+
+  function init() {
+    renderDimensions();
+    renderScenInputs();
+    loadSaved();
+    calc();
+  }
+
+  function renderDimensions() {
+    var container = document.getElementById('dimContainer');
+    container.innerHTML = DIMENSIONS.map(function (dim, i) {
+      return '<div class="dim-row">' +
+        '<div class="dim-label"><span class="dim-icon">' + dim.icon + '</span>' + dim.name + '</div>' +
+        '<div class="dim-slider-wrap">' +
+          '<input type="range" class="dim-slider" id="slider_' + dim.key + '" min="1" max="10" step="1" value="' + dim.defaultScore + '" oninput="MEE.updateScore(\'' + dim.key + '\',this.value)">' +
+          '<div style="font-size:11px;color:var(--muted)">' + dim.desc + '</div>' +
+        '</div>' +
+        '<div class="dim-score" id="score_' + dim.key + '">' + dim.defaultScore + '</div>' +
+        '<div class="dim-weight"><input type="number" id="weight_' + dim.key + '" value="' + dim.weight + '" min="0" max="100" step="1" oninput="MEE.calc()"> <span>%</span></div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderScenInputs() {
+    var container = document.getElementById('scenInputs');
+    container.innerHTML = DIMENSIONS.map(function (dim) {
+      var base = dim.defaultScore;
+      return '<div class="mee-scen-inputs">' +
+        '<div class="msi-dim">' + dim.icon + ' ' + dim.name + '</div>' +
+        '<input type="number" id="scen_opt_' + dim.key + '" value="' + Math.min(base + 2, 10) + '" min="1" max="10" step="1" oninput="MEE.calc()">' +
+        '<input type="number" id="scen_base_' + dim.key + '" value="' + base + '" min="1" max="10" step="1" oninput="MEE.calc()">' +
+        '<input type="number" id="scen_con_' + dim.key + '" value="' + Math.max(base - 2, 1) + '" min="1" max="10" step="1" oninput="MEE.calc()">' +
+      '</div>';
+    }).join('');
+  }
+
+  function updateScore(key, val) {
+    document.getElementById('score_' + key).textContent = val;
+    calc();
+  }
+
+  function getScore(key) {
+    return parseInt(document.getElementById('slider_' + key).value, 10) || 0;
+  }
+  function getWeight(key) {
+    return parseFloat(document.getElementById('weight_' + key).value) || 0;
+  }
+
+  function calcWeightedScore(scoreMap) {
+    var totalWeight = 0, weightedSum = 0;
+    DIMENSIONS.forEach(function (dim) {
+      var w = getWeight(dim.key);
+      var s = scoreMap[dim.key] || 0;
+      totalWeight += w;
+      weightedSum += s * w;
+    });
+    if (totalWeight === 0) return 0;
+    return (weightedSum / totalWeight / 10) * 100;
+  }
+
+  function getDecision(score) {
+    if (score > 70) return { label: 'Go · 强烈推荐进入', class: 'go', color: '#6ee7b7' };
+    if (score >= 50) return { label: 'Caution · 谨慎进入', class: 'caution', color: '#fcd34d' };
+    return { label: 'No-Go · 不推荐进入', class: 'nogo', color: '#fca5a5' };
+  }
+
+  function calc() {
+    // 基准评分
+    var baseScores = {};
+    DIMENSIONS.forEach(function (dim) { baseScores[dim.key] = getScore(dim.key); });
+    var totalScore = calcWeightedScore(baseScores);
+    var decision = getDecision(totalScore);
+
+    // 更新评分卡片
+    document.getElementById('totalScore').innerHTML = totalScore.toFixed(1) + '<small>/100</small>';
+    var badge = document.getElementById('decisionBadge');
+    badge.textContent = decision.label;
+    badge.className = 'msc-badge ' + decision.class;
+
+    // 渲染柱状图
+    renderChart(baseScores);
+
+    // 三场景对比
+    var optScores = {}, conScores = {};
+    DIMENSIONS.forEach(function (dim) {
+      optScores[dim.key] = parseInt(document.getElementById('scen_opt_' + dim.key).value, 10) || 0;
+      conScores[dim.key] = parseInt(document.getElementById('scen_con_' + dim.key).value, 10) || 0;
+    });
+    var optScore = calcWeightedScore(optScores);
+    var conScore = calcWeightedScore(conScores);
+    renderScenarios(optScore, totalScore, conScore);
+
+    // 策略建议
+    renderStrategies(totalScore, baseScores);
+
+    // 埋点
+    if (window.HistoryStore) HistoryStore.save('市场进入评估器', { 综合评分: totalScore.toFixed(1), 决策: decision.label });
+    if (window.EngagementTracker) EngagementTracker.calcCompleted('market_entry_evaluator', '评分' + totalScore.toFixed(1) + ' ' + decision.label);
+  }
+
+  function renderChart(scores) {
+    var chart = document.getElementById('dimChart');
+    chart.innerHTML = DIMENSIONS.map(function (dim, i) {
+      var s = scores[dim.key] || 0;
+      var heightPct = (s / 10) * 100;
+      var color = s >= 7 ? '#10b981' : (s >= 4 ? '#f59e0b' : '#ef4444');
+      return '<div class="mee-bar-col">' +
+        '<div class="mee-bar" style="height:' + heightPct + '%;background:linear-gradient(180deg,' + color + ',' + color + 'cc);">' +
+          '<div class="mee-bar-val">' + s + '</div>' +
+        '</div>' +
+        '<div class="mee-bar-label"><div class="mee-bar-icon">' + dim.icon + '</div>' + dim.name + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderScenarios(optScore, baseScore, conScore) {
+    var container = document.getElementById('scenResults');
+    var scenarios = [
+      { name: '乐观场景', score: optScore, cls: 'optimistic' },
+      { name: '基准场景', score: baseScore, cls: 'baseline' },
+      { name: '保守场景', score: conScore, cls: 'conservative' }
+    ];
+    container.innerHTML = scenarios.map(function (s) {
+      var d = getDecision(s.score);
+      return '<div class="mee-scen-card ' + s.cls + '">' +
+        '<div class="msc-name">' + s.name + '</div>' +
+        '<div class="msc-score">' + s.score.toFixed(1) + '</div>' +
+        '<div class="msc-decision" style="background:rgba(255,255,255,.6);color:var(--ink)">' + d.label + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderStrategies(score, scores) {
+    var strategies = [];
+    var dims = DIMENSIONS;
+
+    if (score > 70) {
+      strategies.push({ icon: '🚀', title: '加速进入市场', desc: '综合评分' + score.toFixed(1) + '分，市场条件优越。建议快速启动，优先投入资源抢占先发优势，6个月内完成首批产品上架。' });
+      var weakest = findWeakest(scores);
+      strategies.push({ icon: '🛡️', title: '补强薄弱维度：' + weakest.name, desc: weakest.name + '评分仅' + scores[weakest.key] + '分，是最大短板。建议在进入前制定专项应对方案，降低风险敞口。' });
+      var strongest = findStrongest(scores);
+      strategies.push({ icon: '💪', title: '放大核心优势：' + strongest.name, desc: strongest.name + '评分' + scores[strongest.key] + '分，是你的核心竞争力。建议以此为切入点构建差异化壁垒。' });
+    } else if (score >= 50) {
+      strategies.push({ icon: '🔍', title: '小规模试水验证', desc: '综合评分' + score.toFixed(1) + '分，市场机会与风险并存。建议以最小可行方案（MVP）小批量试水，验证需求后再逐步加码。' });
+      var weakest2 = findWeakest(scores);
+      strategies.push({ icon: '⚠️', title: '重点管控：' + weakest2.name, desc: weakest2.name + '评分仅' + scores[weakest2.key] + '分，是最大风险点。建议制定详细的风险缓解计划，设定止损线。' });
+      strategies.push({ icon: '📊', title: '建立数据监控体系', desc: '谨慎进入阶段需密切监控关键指标（销量/转化/利润/库存），每周复盘，根据数据动态调整策略。' });
+    } else {
+      strategies.push({ icon: '🛑', title: '暂缓进入或寻找替代市场', desc: '综合评分仅' + score.toFixed(1) + '分，市场条件不成熟。建议暂缓进入，或寻找细分利基市场/替代品类。' });
+      var weakest3 = findWeakest(scores);
+      strategies.push({ icon: '🔧', title: '核心障碍：' + weakest3.name, desc: weakest3.name + '评分仅' + scores[weakest3.key] + '分，是进入的主要障碍。需从根本上解决此问题后再重新评估。' });
+      strategies.push({ icon: '🔄', title: '重新评估或调整方向', desc: '建议6个月后重新评估市场变化，或转向评分更高的品类/市场。可使用三场景对比分析改善路径。' });
+    }
+
+    document.getElementById('strategies').innerHTML = strategies.map(function (s) {
+      return '<div class="mee-strat-item">' +
+        '<div class="msi-icon">' + s.icon + '</div>' +
+        '<div class="msi-body"><h4>' + s.title + '</h4><p>' + s.desc + '</p></div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function findWeakest(scores) {
+    var weakest = DIMENSIONS[0], minScore = 10;
+    DIMENSIONS.forEach(function (dim) {
+      if (scores[dim.key] < minScore) { minScore = scores[dim.key]; weakest = dim; }
+    });
+    return weakest;
+  }
+  function findStrongest(scores) {
+    var strongest = DIMENSIONS[0], maxScore = 0;
+    DIMENSIONS.forEach(function (dim) {
+      if (scores[dim.key] > maxScore) { maxScore = scores[dim.key]; strongest = dim; }
+    });
+    return strongest;
+  }
+
+  function resetScores() {
+    DIMENSIONS.forEach(function (dim) {
+      document.getElementById('slider_' + dim.key).value = dim.defaultScore;
+      document.getElementById('score_' + dim.key).textContent = dim.defaultScore;
+      document.getElementById('weight_' + dim.key).value = dim.weight;
+    });
+    renderScenInputs();
+    calc();
+  }
+
+  function saveData() {
+    var data = {};
+    DIMENSIONS.forEach(function (dim) {
+      data[dim.key] = { score: getScore(dim.key), weight: getWeight(dim.key) };
+    });
+    try { localStorage.setItem('jx_market_entry', JSON.stringify(data)); } catch (e) {}
+  }
+
+  function loadSaved() {
+    try {
+      var saved = localStorage.getItem('jx_market_entry');
+      if (!saved) return;
+      var data = JSON.parse(saved);
+      DIMENSIONS.forEach(function (dim) {
+        if (data[dim.key]) {
+          document.getElementById('slider_' + dim.key).value = data[dim.key].score;
+          document.getElementById('score_' + dim.key).textContent = data[dim.key].score;
+          document.getElementById('weight_' + dim.key).value = data[dim.key].weight;
+        }
+      });
+    } catch (e) {}
+  }
+
+  return { init: init, calc: calc, updateScore: updateScore, resetScores: resetScores, saveData: saveData };
+})();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', MEE.init);
+} else {
+  MEE.init();
+}
+</script>
+</body>
+</html>

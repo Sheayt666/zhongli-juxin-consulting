@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="竞争优势评估器：SWOT四象限分析（优势/劣势/机会/威胁），CSS四色SWOT矩阵可视化，竞争优势指数自动计算，差异化策略建议，3竞品5维度对比矩阵。跨境电商战略决策必备工具。">
+<meta name="keywords" content="SWOT分析,竞争优势,差异化策略,竞品对比,战略分析,优势评估,四象限分析,跨境电商战略">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="竞争优势评估器 - SWOT分析与竞品对比矩阵">
+<meta property="og:description" content="SWOT四象限分析，CSS四色矩阵可视化，竞争优势指数，差异化策略建议，3竞品5维度对比。">
+<meta property="og:site_name" content="众力聚鑫咨询">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://juxin-consulting.help/tools/competitive-advantage.html">
+<title>竞争优势评估器 - SWOT分析·竞品对比矩阵 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "竞争优势评估器",
+  "description": "SWOT四象限分析，CSS四色矩阵可视化，竞争优势指数，差异化策略建议，3竞品5维度对比矩阵。",
+  "url": "https://juxin-consulting.help/tools/competitive-advantage.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "众力聚鑫咨询", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "竞争优势评估器", "item": "https://juxin-consulting.help/tools/competitive-advantage.html" }
+  ]
+}
+</script>
+<style>
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 底部导航 */
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+/* ===== SWOT矩阵 ===== */
+.swot-section{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.swot-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.swot-quadrant{border-radius:var(--radius-md);padding:20px;border:2px solid;min-height:200px}
+.swot-quadrant.strengths{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#a7f3d0}
+.swot-quadrant.weaknesses{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#fecaca}
+.swot-quadrant.opportunities{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#93c5fd}
+.swot-quadrant.threats{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fde68a}
+.swot-quadrant .sq-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.swot-quadrant .sq-icon{font-size:22px}
+.swot-quadrant .sq-title{font-size:16px;font-weight:700}
+.swot-quadrant.strengths .sq-title{color:#059669}
+.swot-quadrant.weaknesses .sq-title{color:#dc2626}
+.swot-quadrant.opportunities .sq-title{color:#2563eb}
+.swot-quadrant.threats .sq-title{color:#d97706}
+.swot-quadrant .sq-count{font-size:12px;color:var(--muted);margin-left:auto;background:rgba(255,255,255,.7);padding:2px 10px;border-radius:10px}
+.swot-input-row{display:flex;gap:8px;margin-bottom:8px}
+.swot-input-row input{flex:1;padding:8px 12px;border:1px solid rgba(0,0,0,.1);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;background:rgba(255,255,255,.8)}
+.swot-input-row input:focus{outline:none;border-color:var(--accent);background:#fff}
+.swot-input-row button{padding:6px 10px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:700;background:rgba(255,255,255,.6);color:var(--ink-soft);transition:all .2s}
+.swot-input-row button:hover{background:#fff}
+.swot-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(255,255,255,.6);border-radius:var(--radius-sm);margin-bottom:6px;font-size:13px;color:var(--ink-soft)}
+.swot-item .si-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.swot-quadrant.strengths .si-num{background:#10b981}
+.swot-quadrant.weaknesses .si-num{background:#ef4444}
+.swot-quadrant.opportunities .si-num{background:#3b82f6}
+.swot-quadrant.threats .si-num{background:#f59e0b}
+.swot-item .si-text{flex:1}
+.swot-item .si-del{cursor:pointer;color:var(--muted);font-size:16px;opacity:.5;transition:opacity .2s}
+.swot-item .si-del:hover{opacity:1;color:var(--red)}
+/* 竞争优势指数 */
+.cai-card{background:linear-gradient(135deg,#4f46e5 0%,#6366f1 100%);border-radius:var(--radius-lg);padding:32px;text-align:center;color:#fff;margin-bottom:20px;box-shadow:0 8px 32px rgba(79,70,229,.25)}
+.cai-card .cai-label{font-size:14px;opacity:.85;margin-bottom:8px}
+.cai-card .cai-value{font-size:56px;font-weight:900;line-height:1}
+.cai-card .cai-value small{font-size:20px;font-weight:600;opacity:.7}
+.cai-card .cai-badge{display:inline-block;margin-top:12px;padding:8px 24px;border-radius:20px;font-size:16px;font-weight:700;background:rgba(255,255,255,.2)}
+.cai-card .cai-formula{font-size:12px;opacity:.7;margin-top:10px}
+/* 策略建议 */
+.cai-strategies{margin-top:16px}
+.cai-strat-item{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:var(--radius-md);border-left:4px solid;margin-bottom:10px}
+.cai-strat-item.so{border-color:#10b981}.cai-strat-item.wo{border-color:#3b82f6}.cai-strat-item.st{border-color:#f59e0b}.cai-strat-item.wt{border-color:#ef4444}
+.cai-strat-item .csi-icon{font-size:24px;flex-shrink:0}
+.cai-strat-item .csi-body h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.cai-strat-item .csi-body p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+/* 竞品对比矩阵 */
+.comp-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;overflow:hidden;border-radius:var(--radius-md)}
+.comp-table th{padding:12px 14px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.comp-table th:first-child{text-align:left}
+.comp-table td{padding:12px 14px;border-bottom:1px solid var(--rule-light);text-align:center;color:var(--ink-soft)}
+.comp-table td:first-child{font-weight:600;text-align:left;color:var(--ink)}
+.comp-table tr:hover td{background:var(--accent-bg)}
+.comp-table .best{color:var(--green);font-weight:700}
+.comp-table .you{background:var(--accent-bg);font-weight:700}
+.comp-table .score-bar{display:inline-block;width:60px;height:8px;border-radius:4px;background:var(--rule-light);overflow:hidden;vertical-align:middle;margin-right:6px}
+.comp-table .score-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s}
+.comp-input-row{display:grid;grid-template-columns:120px 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;align-items:center}
+.comp-input-row input,.comp-input-row select{padding:8px 10px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;text-align:center}
+.comp-input-row label{font-size:13px;font-weight:600;color:var(--ink-soft);text-align:right}
+@media(max-width:768px){.swot-grid{grid-template-columns:1fr}.comp-input-row{grid-template-columns:1fr 1fr 1fr}.comp-input-row label{display:none}.comp-table{font-size:11px}.comp-table th,.comp-table td{padding:8px 6px}}
+</style>
+</head>
+<body class="tool-page" data-tool="competitive_advantage">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<div class="reading-progress-bar" id="readingProgress"></div>
+
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo">
+      <div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span>
+    </a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+    <button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 跨境电商工具 · 深度版</span>
+      <h1>竞争优势<em>评估器</em></h1>
+      <p class="tool-hero-desc">SWOT四象限分析（优势/劣势/机会/威胁），CSS四色矩阵可视化，竞争优势指数自动计算，差异化策略建议（SO/WO/ST/WT），3竞品5维度对比矩阵，帮你找到核心竞争力与差异化方向。</p>
+    </div>
+  </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🎯</span>
+      <span class="workflow-name">战略决策工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="market-entry-evaluator.html" class="step">市场进入评估</a>
+      <span class="arrow">→</span>
+      <span class="step current">竞争优势</span>
+      <span class="arrow">→</span>
+      <a href="market-share.html" class="step">市场集中度</a>
+      <span class="arrow">→</span>
+      <a href="annual-budget-planner.html" class="step">年度预算</a>
+      <span class="arrow">→</span>
+      <a href="referral-fee.html" class="step">类目佣金</a>
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <div class="container">
+
+      <!-- 竞争优势指数 -->
+      <div class="cai-card" id="caiCard">
+        <div class="cai-label">竞争优势指数（满分100分）</div>
+        <div class="cai-value" id="caiScore">0<small>/100</small></div>
+        <div class="cai-badge" id="caiBadge">等待评估</div>
+        <div class="cai-formula">指数 = (优势项×3 + 机会项×2 - 劣势项×2 - 威胁项×1) ÷ 最大可能值 × 100</div>
+      </div>
+
+      <!-- SWOT矩阵 -->
+      <div class="swot-section">
+        <h3>📊 SWOT四象限分析</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">每个象限最多5条，输入后点击"+"添加。基于SWOT自动计算竞争优势指数与差异化策略。</p>
+        <div class="swot-grid">
+          <div class="swot-quadrant strengths">
+            <div class="sq-header"><span class="sq-icon">💪</span><span class="sq-title">优势 Strengths</span><span class="sq-count" id="count_s">0/5</span></div>
+            <div class="swot-input-row"><input type="text" id="input_s" placeholder="如：自有工厂成本优势" maxlength="50" onkeypress="if(event.key==='Enter')CA.addSwot('s')"><button onclick="CA.addSwot('s')">+</button></div>
+            <div id="list_s"></div>
+          </div>
+          <div class="swot-quadrant weaknesses">
+            <div class="sq-header"><span class="sq-icon">⚠️</span><span class="sq-title">劣势 Weaknesses</span><span class="sq-count" id="count_w">0/5</span></div>
+            <div class="swot-input-row"><input type="text" id="input_w" placeholder="如：品牌知名度低" maxlength="50" onkeypress="if(event.key==='Enter')CA.addSwot('w')"><button onclick="CA.addSwot('w')">+</button></div>
+            <div id="list_w"></div>
+          </div>
+          <div class="swot-quadrant opportunities">
+            <div class="sq-header"><span class="sq-icon">🌟</span><span class="sq-title">机会 Opportunities</span><span class="sq-count" id="count_o">0/5</span></div>
+            <div class="swot-input-row"><input type="text" id="input_o" placeholder="如：品类增长趋势" maxlength="50" onkeypress="if(event.key==='Enter')CA.addSwot('o')"><button onclick="CA.addSwot('o')">+</button></div>
+            <div id="list_o"></div>
+          </div>
+          <div class="swot-quadrant threats">
+            <div class="sq-header"><span class="sq-icon">🔥</span><span class="sq-title">威胁 Threats</span><span class="sq-count" id="count_t">0/5</span></div>
+            <div class="swot-input-row"><input type="text" id="input_t" placeholder="如：大卖价格战" maxlength="50" onkeypress="if(event.key==='Enter')CA.addSwot('t')"><button onclick="CA.addSwot('t')">+</button></div>
+            <div id="list_t"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 差异化策略建议 -->
+      <div class="swot-section">
+        <h3>💡 差异化策略建议（SO/WO/ST/WT）</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">根据SWOT组合自动生成四类策略：SO（增长型）/WO（扭转型）/ST（防御型）/WT（生存型）。</p>
+        <div class="cai-strategies" id="strategies"></div>
+      </div>
+
+      <!-- 竞品对比矩阵 -->
+      <div class="swot-section">
+        <h3>⚔️ 竞品对比矩阵（3竞品 × 5维度）</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">对自己和3个竞品在5个维度上打分（1-10分），系统自动高亮每个维度的最优值。</p>
+        <div id="compInputs"></div>
+        <div style="overflow-x:auto;margin-top:16px">
+          <table class="comp-table" id="compTable"></table>
+        </div>
+      </div>
+
+      <!-- 公式说明 -->
+      <div class="fee-rule-box">
+        <h4>📐 评估公式说明</h4>
+        <ul>
+          <li>竞争优势指数 = (优势数×3 + 机会数×2 - 劣势数×2 - 威胁数×1) ÷ 35 × 100</li>
+          <li>SO策略（增长型）：利用优势抓住机会</li>
+          <li>WO策略（扭转型）：克服劣势抓住机会</li>
+          <li>ST策略（防御型）：利用优势规避威胁</li>
+          <li>WT策略（生存型）：减少劣势规避威胁</li>
+          <li>竞品对比：每个维度最高分自动高亮绿色</li>
+        </ul>
+      </div>
+
+      <!-- 底部工作流导航 -->
+      <div class="workflow-bottom-nav">
+        <a href="market-entry-evaluator.html" class="wbn-btn prev">← 上一步：市场进入评估</a>
+        <a href="market-share.html" class="wbn-btn next">下一步：市场集中度 →</a>
+      </div>
+
+      <!-- 分享区域 -->
+      <div class="share-section">
+        <h3>📤 分享给同事</h3>
+        <p>把这个竞争优势评估器分享给你的战略团队，一起分析核心竞争力</p>
+        <div class="share-link-box">
+          <input type="text" class="share-link-input" id="shareLinkInput" readonly placeholder="点击生成分享链接">
+          <button class="btn-share" data-share-btn data-tool="competitive_advantage" data-share-target="#shareLinkInput" data-share-done="已复制" data-share-label-target="#shareCopiedLabel">复制链接</button>
+        </div>
+        <div class="share-copied-label" id="shareCopiedLabel">✓ 链接已复制到剪贴板</div>
+        <div class="share-channels">
+          <a class="share-channel-btn" href="../contact.html">💬 咨询顾问</a>
+          <a class="share-channel-btn" href="index.html">🧰 更多工具</a>
+          <a class="share-channel-btn" href="../blog.html">📖 深度文章</a>
+        </div>
+      </div>
+
+      <!-- 相关文章 -->
+      <section class="tool-related">
+        <div class="section-header" style="margin-bottom:28px;">
+          <span class="section-tag">📖 延伸阅读</span>
+          <h2>竞争优势相关<em>深度文章</em></h2>
+        </div>
+        <div class="tool-related-grid">
+          <a href="../article-competitive-strategy.html" class="tool-related-card">
+            <div class="trc-icon">⚔️</div>
+            <h4>竞争战略制定方法</h4>
+            <p>从竞争格局到差异化定位</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-amazon-competitor-analysis.html" class="tool-related-card">
+            <div class="trc-icon">🎯</div>
+            <h4>亚马逊竞品分析方法论</h4>
+            <p>竞品拆解与差异化策略</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+          <a href="../article-brand-positioning-deep-dive.html" class="tool-related-card">
+            <div class="trc-icon">⭐</div>
+            <h4>品牌定位深度拆解</h4>
+            <p>从SWOT到品牌差异化</p>
+            <span class="trc-link">阅读文章 →</span>
+          </a>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>众力聚鑫咨询</h3>
+        <p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.4);">让每一家企业都拥有可持续的增长力</p>
+      </div>
+      <div class="footer-col">
+        <h4>工具中心</h4>
+        <ul>
+          <li><a href="index.html">工具首页</a></li>
+          <li><a href="fba-calculator.html">FBA利润计算器</a></li>
+          <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
+          <li><a href="currency-converter.html">汇率转换器</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>知识资源</h4>
+        <ul>
+          <li><a href="../blog.html">深度文章</a></li>
+          <li><a href="../courses.html">知识课程</a></li>
+          <li><a href="../cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>关于我们</h4>
+        <ul>
+          <li><a href="../about.html">公司介绍</a></li>
+          <li><a href="../contact.html">联系我们</a></li>
+          <li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/engagement.js"></script>
+<script>
+/* ===== 竞争优势评估器 ===== */
+var CA = (function () {
+  'use strict';
+
+  var swotData = { s: [], w: [], o: [], t: [] };
+  var SWOT_LABELS = { s: '优势', w: '劣势', o: '机会', t: '威胁' };
+  var SWOT_ICONS = { s: '💪', w: '⚠️', o: '🌟', t: '🔥' };
+
+  var COMP_DIMS = [
+    { key: 'price', name: '价格竞争力', icon: '💰' },
+    { key: 'quality', name: '产品质量', icon: '⭐' },
+    { key: 'brand', name: '品牌力', icon: '🏷️' },
+    { key: 'service', name: '客户服务', icon: '🤝' },
+    { key: 'logistics', name: '物流速度', icon: '📦' }
+  ];
+  var COMP_NAMES = ['我的产品', '竞品A', '竞品B', '竞品C'];
+
+  function init() {
+    renderSwotLists();
+    renderCompInputs();
+    loadSaved();
+    calc();
+  }
+
+  function addSwot(type) {
+    var input = document.getElementById('input_' + type);
+    var val = input.value.trim();
+    if (!val) return;
+    if (swotData[type].length >= 5) return;
+    swotData[type].push(val);
+    input.value = '';
+    renderSwotLists();
+    saveData();
+    calc();
+  }
+
+  function delSwot(type, idx) {
+    swotData[type].splice(idx, 1);
+    renderSwotLists();
+    saveData();
+    calc();
+  }
+
+  function renderSwotLists() {
+    ['s', 'w', 'o', 't'].forEach(function (type) {
+      document.getElementById('count_' + type).textContent = swotData[type].length + '/5';
+      document.getElementById('list_' + type).innerHTML = swotData[type].map(function (item, i) {
+        return '<div class="swot-item"><span class="si-num">' + (i + 1) + '</span><span class="si-text">' + escapeHtml(item) + '</span><span class="si-del" onclick="CA.delSwot(\'' + type + '\',' + i + ')">×</span></div>';
+      }).join('');
+    });
+  }
+
+  function calc() {
+    var sCount = swotData.s.length, wCount = swotData.w.length;
+    var oCount = swotData.o.length, tCount = swotData.t.length;
+    var maxVal = 5 * 3 + 5 * 2; // 最大可能值 = 5*3 + 5*2 = 25
+    var rawScore = sCount * 3 + oCount * 2 - wCount * 2 - tCount * 1;
+    var caiScore = Math.max(0, Math.min(100, (rawScore / maxVal) * 100 + 50)); // 偏移50使中性为50分
+
+    document.getElementById('caiScore').innerHTML = caiScore.toFixed(1) + '<small>/100</small>';
+    var badge = document.getElementById('caiBadge');
+    if (caiScore >= 70) badge.textContent = '竞争优势强 · 差异化空间大';
+    else if (caiScore >= 50) badge.textContent = '竞争优势中等 · 需强化差异化';
+    else badge.textContent = '竞争优势弱 · 需战略调整';
+
+    renderStrategies();
+    renderCompTable();
+
+    if (window.HistoryStore) HistoryStore.save('竞争优势评估器', { 优势: sCount, 劣势: wCount, 机会: oCount, 威胁: tCount, 指数: caiScore.toFixed(1) });
+    if (window.EngagementTracker) EngagementTracker.calcCompleted('competitive_advantage', 'SWOT指数' + caiScore.toFixed(1));
+  }
+
+  function renderStrategies() {
+    var strategies = [];
+    var sList = swotData.s, wList = swotData.w, oList = swotData.o, tList = swotData.t;
+
+    // SO策略（增长型）
+    if (sList.length > 0 && oList.length > 0) {
+      strategies.push({ type: 'so', icon: '🚀', title: 'SO增长型策略：利用' + sList[0] + '抓住' + oList[0], desc: '发挥核心优势（' + sList[0] + '）把握市场机会（' + oList[0] + '）。建议集中资源加速推进，建立先发优势。' + (sList.length > 1 ? '可叠加优势：' + sList.slice(1, 3).join('、') + '。' : '') });
+    }
+    // WO策略（扭转型）
+    if (wList.length > 0 && oList.length > 0) {
+      strategies.push({ type: 'wo', icon: '🔄', title: 'WO扭转型策略：克服' + wList[0] + '以抓住' + oList[0], desc: '市场存在机会（' + oList[0] + '），但受限于劣势（' + wList[0] + '）。建议通过外部合作/资源引入/技术升级等方式弥补短板，把握窗口期。' });
+    }
+    // ST策略（防御型）
+    if (sList.length > 0 && tList.length > 0) {
+      strategies.push({ type: 'st', icon: '🛡️', title: 'ST防御型策略：用' + sList[0] + '抵御' + tList[0], desc: '面对威胁（' + tList[0] + '），利用自身优势（' + sList[0] + '）构建防御壁垒。建议强化差异化定位，避免正面价格竞争。' });
+    }
+    // WT策略（生存型）
+    if (wList.length > 0 && tList.length > 0) {
+      strategies.push({ type: 'wt', icon: '⚠️', title: 'WT生存型策略：减少' + wList[0] + '规避' + tList[0], desc: '劣势（' + wList[0] + '）遇上威胁（' + tList[0] + '）是最危险组合。建议收缩战线、控制风险敞口，优先解决核心劣势。' });
+    }
+
+    if (strategies.length === 0) {
+      strategies.push({ type: 'so', icon: '📝', title: '请先填写SWOT四象限', desc: '在上方四象限中输入你的优势、劣势、机会和威胁，系统将自动生成差异化策略建议。' });
+    }
+
+    document.getElementById('strategies').innerHTML = strategies.map(function (s) {
+      return '<div class="cai-strat-item ' + s.type + '">' +
+        '<div class="csi-icon">' + s.icon + '</div>' +
+        '<div class="csi-body"><h4>' + s.title + '</h4><p>' + s.desc + '</p></div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderCompInputs() {
+    var container = document.getElementById('compInputs');
+    var html = '<div class="comp-input-row"><label>维度</label>';
+    COMP_NAMES.forEach(function (name) { html += '<label style="text-align:center">' + name + '</label>'; });
+    html += '</div>';
+    COMP_DIMS.forEach(function (dim) {
+      html += '<div class="comp-input-row"><label>' + dim.icon + ' ' + dim.name + '</label>';
+      COMP_NAMES.forEach(function (name, i) {
+        var defVal = i === 0 ? 7 : (i === 1 ? 6 : (i === 2 ? 5 : 4));
+        html += '<input type="number" id="comp_' + dim.key + '_' + i + '" value="' + defVal + '" min="1" max="10" step="1" oninput="CA.calc()">';
+      });
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function renderCompTable() {
+    var table = document.getElementById('compTable');
+    var scores = [];
+    COMP_DIMS.forEach(function (dim) {
+      var row = [];
+      COMP_NAMES.forEach(function (name, i) {
+        row.push(parseInt(document.getElementById('comp_' + dim.key + '_' + i).value, 10) || 0);
+      });
+      scores.push({ dim: dim, scores: row, max: Math.max.apply(null, row) });
+    });
+
+    var html = '<thead><tr><th>维度</th>';
+    COMP_NAMES.forEach(function (name, i) { html += '<th' + (i === 0 ? ' class="you"' : '') + '>' + name + '</th>'; });
+    html += '</tr></thead><tbody>';
+
+    var totals = [0, 0, 0, 0];
+    scores.forEach(function (row) {
+      html += '<tr><td>' + row.dim.icon + ' ' + row.dim.name + '</td>';
+      row.scores.forEach(function (s, i) {
+        totals[i] += s;
+        var isBest = s === row.max && s > 0;
+        html += '<td' + (i === 0 ? ' class="you"' : '') + '><span class="score-bar"><span class="score-bar-fill" style="width:' + (s * 10) + '%"></span></span>' + (isBest ? '<span class="best">' + s + '</span>' : s) + '</td>';
+      });
+      html += '</tr>';
+    });
+
+    // 总分行
+    var maxTotal = Math.max.apply(null, totals);
+    html += '<tr><td>总分</td>';
+    totals.forEach(function (t, i) {
+      var isBest = t === maxTotal && t > 0;
+      html += '<td' + (i === 0 ? ' class="you"' : '') + ' style="font-size:16px;font-weight:800">' + (isBest ? '<span class="best">' + t + '</span>' : t) + '</td>';
+    });
+    html += '</tr></tbody>';
+    table.innerHTML = html;
+  }
+
+  function saveData() {
+    try { localStorage.setItem('jx_comp_advantage', JSON.stringify(swotData)); } catch (e) {}
+  }
+  function loadSaved() {
+    try {
+      var saved = localStorage.getItem('jx_comp_advantage');
+      if (saved) swotData = JSON.parse(saved);
+    } catch (e) {}
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  return { init: init, addSwot: addSwot, delSwot: delSwot, calc: calc };
+})();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', CA.init);
+} else {
+  CA.init();
+}
+</script>
+</body>
+</html>

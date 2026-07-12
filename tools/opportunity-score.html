@@ -64,6 +64,27 @@
 .dim-bar-item .dbi-val{font-weight:700;color:var(--accent2)}
 .dim-bar-track{height:10px;background:var(--rule-light);border-radius:5px;overflow:hidden}
 .dim-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s}
+/* 工作流导航栏 */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+/* 上一步/下一步导航 */
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.wf-foot-nav .next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
 </style>
 </head>
 <body class="tool-page" data-tool="opportunity_score">
@@ -87,6 +108,25 @@
 </nav>
 
 <main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🔍</span>
+      <span class="workflow-name">选品调研工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="trend-analysis.html" class="step">趋势分析</a>
+      <span class="arrow">→</span>
+      <span class="step current">机会评分</span>
+      <span class="arrow">→</span>
+      <a href="keyword-score.html" class="step">关键词评分</a>
+      <span class="arrow">→</span>
+      <a href="competitor-monitor.html" class="step">竞品监控</a>
+      <span class="arrow">→</span>
+      <a href="sourcing-cost.html" class="step">采购成本</a>
+    </div>
+  </div>
+
   <header class="tool-hero">
     <div class="container">
       <span class="tool-hero-badge">📊 跨境电商工具</span>
@@ -146,6 +186,12 @@
             <ul class="calc-history-list" id="historyList"></ul>
           </div>
         </div>
+      </div>
+
+      <!-- 上一步/下一步 -->
+      <div class="wf-foot-nav">
+        <a href="trend-analysis.html" class="prev"><span class="fn-label">上一步 · 第1步</span><span class="fn-name">← 趋势分析</span></a>
+        <a href="keyword-score.html" class="next"><span class="fn-label">下一步 · 第3步</span><span class="fn-name">关键词评分 →</span></a>
       </div>
 
       <div class="share-section">
