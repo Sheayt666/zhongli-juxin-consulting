@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="产品图片分析器：评估主图/场景图/尺寸图/功能图/对比图/包装图的完整性，conic-gradient完成度可视化，CSS checklist检查清单，优化建议引擎。">
+<meta name="keywords" content="产品图片分析,主图优化,图片完整度,Listing图片,跨境电商工具">
+<title>产品图片分析器 - 图片完整度评分·优化建议 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.img-type{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-sm);border:1px solid var(--rule-light);margin-bottom:10px;background:#fff}
+.img-type-icon{font-size:28px;flex-shrink:0}
+.img-type-info{flex:1}
+.img-type-name{font-size:14px;font-weight:600;color:var(--ink)}
+.img-type-desc{font-size:11px;color:var(--muted)}
+.img-type-toggle{display:flex;gap:6px;align-items:center}
+.toggle-btn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid var(--rule);background:#fff;cursor:pointer;transition:all .2s}
+.toggle-btn.on-green{background:var(--green);color:#fff;border-color:var(--green)}
+.toggle-btn.on-gold{background:var(--gold);color:#fff;border-color:var(--gold)}
+.toggle-btn.on-red{background:var(--red);color:#fff;border-color:var(--red)}
+.completion-wrap{display:flex;align-items:center;gap:24px}
+.completion-ring{width:160px;height:160px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.completion-inner{width:120px;height:120px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.completion-num{font-size:36px;font-weight:900}
+.completion-lbl{font-size:12px;color:var(--muted)}
+.completion-info{flex:1}
+.completion-info h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.completion-info p{font-size:13px;color:var(--muted);margin-bottom:12px}
+.checklist{list-style:none;padding:0}
+.checklist li{padding:8px 0;font-size:13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--rule-light)}
+.checklist li:last-child{border-bottom:none}
+.cl-check{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.cl-check.ok{background:var(--green-bg);color:var(--green)}
+.cl-check.no{background:var(--red-bg);color:var(--red)}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.suggest-list{list-style:none;padding:0}
+.suggest-list li{padding:10px 0 10px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)}
+.suggest-list li:last-child{border-bottom:none}
+.suggest-list li::before{content:'💡';position:absolute;left:0;top:10px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.completion-wrap{flex-direction:column}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W35 广告创意工作流</div><div class="workflow-steps">
+<a href="ad-creative-scorecard.html" class="workflow-step">创意评分</a><span class="workflow-arrow">→</span>
+<a href="headline-generator.html" class="workflow-step">标题</a><span class="workflow-arrow">→</span>
+<a href="product-image-analyzer.html" class="workflow-step active">图片分析</a><span class="workflow-arrow">→</span>
+<a href="ab-test-planner.html" class="workflow-step">A/B测试</a><span class="workflow-arrow">→</span>
+<a href="ad-copy-variants.html" class="workflow-step">文案变体</a><span class="workflow-arrow">→</span>
+<a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a><span class="workflow-arrow">→</span>
+<a href="seasonal-ad-planner.html" class="workflow-step">季节规划</a><span class="workflow-arrow">→</span>
+<a href="ad-budget-splitter.html" class="workflow-step">预算拆分</a><span class="workflow-arrow">→</span>
+<a href="creative-brief-builder.html" class="workflow-step">Brief</a><span class="workflow-arrow">→</span>
+<a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W35</a><span class="sep">/</span><span class="current">图片分析</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W35 广告创意工作流</span><h1>产品图片<em>分析器</em></h1><p>评估产品主图、场景图、尺寸图、功能图、对比图、包装图6类图片完整性，conic-gradient完成度可视化，智能优化建议，让产品图片转化率最大化。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbScore" style="color:var(--indigo)">0</div><div class="sb-lbl">完整度评分</div></div>
+<div class="sb-card"><div class="sb-val" id="sbComplete" style="color:var(--green)">0</div><div class="sb-lbl">已完善图片</div></div>
+<div class="sb-card"><div class="sb-val" id="sbMissing" style="color:var(--red)">0</div><div class="sb-lbl">缺失图片</div></div>
+<div class="sb-card"><div class="sb-val" id="sbLevel" style="color:var(--gold)">-</div><div class="sb-lbl">图片等级</div></div>
+</div>
+<div class="grid-2">
+<div class="card">
+<h3>📸 图片类型与质量自评</h3>
+<p style="font-size:13px;color:var(--muted);margin-bottom:16px">点击按钮标注每种图片的状态：已有优秀 / 已有一般 / 缺失</p>
+<div id="imgTypeContainer"></div>
+</div>
+<div>
+<div class="card">
+<h3>📊 图片完整度</h3>
+<div class="completion-wrap">
+<div class="completion-ring" id="completionRing">
+<div class="completion-inner"><span class="completion-num" id="completionNum">0%</span><span class="completion-lbl">完成度</span></div>
+</div>
+<div class="completion-info">
+<h4 id="completionTitle">开始评估</h4>
+<p id="completionDesc">请在左侧标注各图片类型的状态</p>
+</div>
+</div>
+</div>
+<div class="card">
+<h3>✅ Checklist检查清单</h3>
+<ul class="checklist" id="checklist"></ul>
+</div>
+<div class="card">
+<h3>💡 优化建议</h3>
+<ul class="suggest-list" id="suggestList"></ul>
+</div>
+</div>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="ad-creative-scorecard.html" class="rt-card"><span class="rt-icon">🎯</span><div class="rt-content"><h5>创意综合评分卡</h5><p>10维度评分诊断</p></div></a>
+<a href="listing-optimizer.html" class="rt-card"><span class="rt-icon">📝</span><div class="rt-content"><h5>Listing优化器</h5><p>Listing全要素优化</p></div></a>
+<a href="ab-test-planner.html" class="rt-card"><span class="rt-icon">🧪</span><div class="rt-content"><h5>A/B测试规划器</h5><p>图片A/B测试</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+const imgTypes=[
+{name:'主图',icon:'🖼️',desc:'白底主图，第一张决定点击率',weight:25},
+{name:'场景图',icon:'🏠',desc:'产品使用场景图，帮助用户想象',weight:20},
+{name:'尺寸图',icon:'📐',desc:'标注产品尺寸规格的图片',weight:15},
+{name:'功能图',icon:'⚙️',desc:'展示产品核心功能的图解',weight:15},
+{name:'对比图',icon:'⚖️',desc:'与竞品或使用前后的对比',weight:15},
+{name:'包装图',icon:'📦',desc:'包装与配件展示图',weight:10}
+];
+const states=[{key:'good',label:'优秀',cls:'on-green',color:'var(--green)'},{key:'ok',label:'一般',cls:'on-gold',color:'var(--gold)'},{key:'no',label:'缺失',cls:'on-red',color:'var(--red)'}];
+let imgStates={};
+imgTypes.forEach((t,i)=>imgStates[i]='no');
+const container=document.getElementById('imgTypeContainer');
+imgTypes.forEach((t,i)=>{
+const div=document.createElement('div');div.className='img-type';
+div.innerHTML=`<span class="img-type-icon">${t.icon}</span><div class="img-type-info"><div class="img-type-name">${t.name} <span style="font-size:11px;color:var(--muted);font-weight:400">(权重${t.weight}%)</span></div><div class="img-type-desc">${t.desc}</div></div><div class="img-type-toggle" id="toggle${i}"></div>`;
+container.appendChild(div);
+states.forEach(s=>{
+const btn=document.createElement('button');btn.className='toggle-btn';btn.textContent=s.label;btn.dataset.state=s.key;btn.dataset.idx=i;
+btn.onclick=()=>{imgStates[i]=s.key;analyze()};
+document.getElementById('toggle'+i).appendChild(btn);
+});
+});
+function analyze(){
+let totalScore=0,complete=0,missing=0;
+imgTypes.forEach((t,i)=>{
+const st=imgStates[i];
+const btns=document.querySelectorAll(`#toggle${i} .toggle-btn`);
+btns.forEach(b=>{b.className='toggle-btn';if(b.dataset.state===st){const stateObj=states.find(s=>s.key===st);b.classList.add(stateObj.cls)}});
+if(st==='good'){totalScore+=t.weight;complete++}
+else if(st==='ok'){totalScore+=t.weight*0.6;complete++}
+else{missing++}
+});
+totalScore=Math.round(totalScore);
+document.getElementById('sbScore').textContent=totalScore+'%';
+document.getElementById('sbComplete').textContent=complete;
+document.getElementById('sbMissing').textContent=missing;
+let level=totalScore>=85?'A优':totalScore>=70?'B良':totalScore>=50?'C中':'D差';
+document.getElementById('sbLevel').textContent=level;
+// Conic gradient
+const ring=document.getElementById('completionRing');
+let color=totalScore>=70?'var(--green)':totalScore>=40?'var(--gold)':'var(--red)';
+ring.style.background=`conic-gradient(${color} ${totalScore*3.6}deg, var(--rule) ${totalScore*3.6}deg)`;
+document.getElementById('completionNum').textContent=totalScore+'%';
+document.getElementById('completionNum').style.color=color;
+let title=totalScore>=85?'图片体系完善':totalScore>=70?'图片基本完整':totalScore>=50?'图片需要补充':'图片严重不足';
+let desc=totalScore>=85?'图片覆盖全面，继续保持高质量更新':totalScore>=70?'已有基本图片，建议补充缺失类型':totalScore>=50?'多个关键图片缺失，影响转化率':'图片严重不足，急需补充核心图片';
+document.getElementById('completionTitle').textContent=title;
+document.getElementById('completionDesc').textContent=desc;
+// Checklist
+const cl=document.getElementById('checklist');
+const checks=[
+{text:'主图白底，产品占比≥60%',ok:imgStates[0]!=='no'},
+{text:'至少1张生活场景图',ok:imgStates[1]!=='no'},
+{text:'包含尺寸标注信息图',ok:imgStates[2]!=='no'},
+{text:'功能卖点信息图',ok:imgStates[3]!=='no'},
+{text:'竞品/前后对比图',ok:imgStates[4]!=='no'},
+{text:'包装及配件展示图',ok:imgTypes[5]?imgStates[5]!=='no':false},
+{text:'所有图片分辨率≥1000px',ok:totalScore>=50},
+{text:'图片数量≥6张（Amazon上限）',ok:complete>=5},
+{text:'视频内容已添加',ok:false},
+{text:'图片Alt文本已优化',ok:false}
+];
+cl.innerHTML=checks.map(c=>`<li><span class="cl-check ${c.ok?'ok':'no'}">${c.ok?'✓':'✗'}</span>${c.text}</li>`).join('');
+// Suggestions
+const sl=document.getElementById('suggestList');
+const sugs=[];
+if(imgStates[0]==='no')sugs.push('主图是点击率的核心，必须添加高质量白底主图，产品占比60%以上');
+if(imgStates[0]==='ok')sugs.push('主图质量一般，建议重新拍摄，提升光线和清晰度');
+if(imgStates[1]==='no')sugs.push('添加场景图，帮助用户想象产品使用环境，提升购买欲望');
+if(imgStates[2]==='no')sugs.push('添加尺寸图，减少因尺寸不符导致的退货');
+if(imgStates[3]==='no')sugs.push('添加功能信息图，用图标+文字展示核心卖点');
+if(imgStates[4]==='no')sugs.push('添加对比图，直观展示产品优势，提升转化');
+if(imgStates[5]==='no')sugs.push('添加包装图，展示配件清单，增强信任感');
+if(complete>=6)sugs.push('图片数量充足，建议测试主图A/B版本，持续优化点击率');
+sugs.push('考虑添加产品视频，Amazon数据显示有视频的Listing转化率提升35%');
+sugs.push('确保所有图片在不同设备上加载速度<2秒，使用WebP格式压缩');
+sl.innerHTML=sugs.map(s=>`<li>${s}</li>`).join('');
+try{localStorage.setItem('jx_img_analyzer',JSON.stringify(imgStates))}catch(e){}
+}
+try{const saved=JSON.parse(localStorage.getItem('jx_img_analyzer'));if(saved)imgStates={...imgStates,...saved}}catch(e){}
+analyze();
+</script>
+</body>
+</html>

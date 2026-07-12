@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="同期群分析工具：CSS三角矩阵热力图，留存率趋势，同期群对比。免费在线数据分析工具。">
+<title>同期群分析工具 - 留存矩阵·趋势·对比 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:14px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}.btn-primary:hover{transform:translateY(-1px)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* 热力矩阵 */
+.cohort-matrix{overflow-x:auto;margin-top:16px}
+.cohort-table{border-collapse:collapse;font-size:12px;min-width:600px}
+.cohort-table th{padding:10px 14px;background:var(--t-bg-soft);color:var(--t-ink-soft);font-weight:700;border:1px solid var(--t-rule);text-align:center;white-space:nowrap}
+.cohort-table td{padding:0;border:1px solid var(--t-rule);text-align:center}
+.cohort-cell{width:70px;height:44px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;position:relative}
+.cohort-label{padding:10px 14px;background:var(--t-bg-soft);font-weight:700;color:var(--t-ink);text-align:left;white-space:nowrap}
+.cohort-size{font-weight:600;color:var(--t-muted)}
+.cohort-empty{background:var(--t-bg-soft);color:var(--t-muted-light)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--t-bg-soft);border:1px solid var(--t-rule-light);border-radius:var(--t-radius);padding:20px;text-align:center}.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--t-primary)}.stat-card .stat-lbl{font-size:12px;color:var(--t-muted);margin-top:2px}
+/* 留存趋势 */
+.retention-trend{margin-top:24px}.trend-line{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--t-rule-light)}
+.trend-label{font-size:13px;font-weight:600;color:var(--t-ink-soft);width:100px;flex-shrink:0}
+.trend-bars{flex:1;display:flex;gap:3px;align-items:center}
+.trend-bar{height:24px;border-radius:4px;min-width:30px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:600}
+.trend-val{font-size:13px;font-weight:700;color:var(--t-primary);width:50px;text-align:right}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+<a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step active">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step">趋势分解</a><a href="anomaly-detector.html" class="workflow-step">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W40 数据分析</a><span class="sep">/</span><span class="current">同期群分析工具</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W40 · 数据分析工作流</span><h1>同期群<em>分析工具</em></h1><p class="tool-header-desc">CSS三角矩阵热力图展示用户留存率，留存率趋势分析，同期群对比，帮助理解用户粘性与复购行为。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>分析参数</h2>
+    <p class="section-sub">设置同期群分析参数</p>
+    <div class="form-grid">
+      <div class="form-field"><label>起始月份</label><input type="month" id="inpStart" value="2025-01" onchange="COH.render()"></div>
+      <div class="form-field"><label>群组数量</label><select id="inpCohorts" onchange="COH.render()"><option value="6">6个群组</option><option value="8" selected>8个群组</option><option value="12">12个群组</option></select></div>
+      <div class="form-field"><label>分析周期</label><select id="inpPeriods" onchange="COH.render()"><option value="6">6个月</option><option value="8" selected>8个月</option><option value="12">12个月</option></select></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>留存率总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-val" id="statM1">0%</div><div class="stat-lbl">首月平均留存</div></div>
+      <div class="stat-card"><div class="stat-val" id="statM3">0%</div><div class="stat-lbl">3月平均留存</div></div>
+      <div class="stat-card"><div class="stat-val" id="statM6">0%</div><div class="stat-lbl">6月平均留存</div></div>
+      <div class="stat-card"><div class="stat-val" id="statDecay">0%</div><div class="stat-lbl">月均衰减率</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>同期群留存矩阵</h2>
+    <p class="section-sub">颜色越深表示留存率越高（三角矩阵热力图）</p>
+    <div class="cohort-matrix"><table class="cohort-table" id="cohortMatrix"></table></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:16px;font-size:12px;color:var(--t-muted)">
+      <span>0%</span>
+      <span style="width:24px;height:16px;background:#eef2ff;border-radius:3px"></span>
+      <span style="width:24px;height:16px;background:#c7d2fe;border-radius:3px"></span>
+      <span style="width:24px;height:16px;background:#818cf8;border-radius:3px"></span>
+      <span style="width:24px;height:16px;background:#4f46e5;border-radius:3px"></span>
+      <span style="width:24px;height:16px;background:#3730a3;border-radius:3px"></span>
+      <span>100%</span>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>留存率趋势对比</h2>
+    <p class="section-sub">各同期群的留存率衰减曲线</p>
+    <div class="retention-trend" id="retentionTrend"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="rfm-segmentation.html" class="related-card"><div class="related-card-icon">🎯</div><div class="related-card-content"><h5>RFM客户分群</h5><p>客户价值分析</p></div></a>
+      <a href="sales-data-explorer.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>销售数据探索器</h5><p>多维销售分析</p></div></a>
+      <a href="benchmark-dashboard.html" class="related-card"><div class="related-card-icon">📋</div><div class="related-card-content"><h5>基准看板</h5><p>行业基准对比</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var COH = {
+  render: function(){
+    var startStr = document.getElementById('inpStart').value || '2025-01';
+    var numCohorts = parseInt(document.getElementById('inpCohorts').value);
+    var numPeriods = parseInt(document.getElementById('inpPeriods').value);
+    var startYear = parseInt(startStr.split('-')[0]);
+    var startMonth = parseInt(startStr.split('-')[1]);
+    var cohorts = [];
+    for(var c=0; c<numCohorts; c++){
+      var m = (startMonth + c - 1) % 12 + 1;
+      var y = startYear + Math.floor((startMonth + c - 1) / 12);
+      var size = 800 + Math.floor(Math.random()*600);
+      var retention = [100];
+      for(var p=1; p<numPeriods; p++){
+        var decay = 0.15 + Math.random()*0.1;
+        var prev = retention[p-1];
+        var val = Math.max(5, Math.round(prev * (1 - decay) * 10) / 10);
+        if(p > c + 3) val = -1;
+        retention.push(val);
+      }
+      cohorts.push({label: y+'-'+String(m).padStart(2,'0'), size:size, retention:retention});
+    }
+    this.renderMatrix(cohorts);
+    this.renderStats(cohorts);
+    this.renderTrend(cohorts);
+  },
+  getColor: function(val){
+    if(val < 0) return 'cohort-empty';
+    if(val >= 80) return '#3730a3';
+    if(val >= 60) return '#4f46e5';
+    if(val >= 40) return '#6366f1';
+    if(val >= 25) return '#818cf8';
+    if(val >= 15) return '#a5b4fc';
+    if(val >= 5) return '#c7d2fe';
+    return '#eef2ff';
+  },
+  renderMatrix: function(cohorts){
+    var maxPeriods = cohorts[0].retention.length;
+    var html = '<thead><tr><th>同期群</th><th>用户数</th>';
+    for(var p=0; p<maxPeriods; p++) html += '<th>第'+p+'月</th>';
+    html += '</tr></thead><tbody>';
+    cohorts.forEach(function(c){
+      html += '<tr><td class="cohort-label">'+c.label+'</td><td class="cohort-size">'+c.size.toLocaleString()+'</td>';
+      c.retention.forEach(function(r){
+        if(r < 0){
+          html += '<td class="cohort-empty"></td>';
+        } else {
+          var color = COH.getColor(r);
+          var textColor = r >= 40 ? '#fff' : '#3730a3';
+          html += '<td><div class="cohort-cell" style="background:'+color+';color:'+textColor+'">'+r+'%</div></td>';
+        }
+      });
+      html += '</tr>';
+    });
+    html += '</tbody>';
+    document.getElementById('cohortMatrix').innerHTML = html;
+  },
+  renderStats: function(cohorts){
+    var m1Vals = [], m3Vals = [], m6Vals = [];
+    cohorts.forEach(function(c){
+      if(c.retention[1] >= 0) m1Vals.push(c.retention[1]);
+      if(c.retention[3] >= 0) m3Vals.push(c.retention[3]);
+      if(c.retention[6] >= 0) m6Vals.push(c.retention[6]);
+    });
+    var avg = function(arr){ return arr.length > 0 ? Math.round(arr.reduce(function(a,b){return a+b},0)/arr.length*10)/10 : 0; };
+    document.getElementById('statM1').textContent = avg(m1Vals)+'%';
+    document.getElementById('statM3').textContent = avg(m3Vals)+'%';
+    document.getElementById('statM6').textContent = avg(m6Vals)+'%';
+    var decay = m1Vals.length > 0 ? Math.round((100 - avg(m1Vals)) * 10) / 10 : 0;
+    document.getElementById('statDecay').textContent = decay+'%';
+  },
+  renderTrend: function(cohorts){
+    var html = '';
+    cohorts.slice(0, 6).forEach(function(c){
+      html += '<div class="trend-line"><div class="trend-label">'+c.label+'</div><div class="trend-bars">';
+      c.retention.forEach(function(r, i){
+        if(r >= 0){
+          var color = COH.getColor(r);
+          html += '<div class="trend-bar" style="width:50px;background:'+color+';color:'+(r>=40?'#fff':'#3730a3')+'">'+r+'%</div>';
+        }
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('retentionTrend').innerHTML = html;
+  }
+};
+COH.render();
+</script>
+</body>
+</html>

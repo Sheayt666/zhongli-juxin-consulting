@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FDA标签合规检查器：食品/化妆品/保健品/医疗器械4类产品标签必需要素清单，缺失项标注，CSS合规检查表。免费在线合规工具。">
+<title>FDA标签合规检查器 - 必需要素清单·缺失项标注 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select,.form-field textarea{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card .stat-val{font-size:32px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.check-table{width:100%;border-collapse:collapse;font-size:13px}.check-table th{padding:12px 14px;text-align:left;font-weight:700;background:var(--t-bg-soft);border-bottom:2px solid var(--t-rule)}.check-table td{padding:12px 14px;border-bottom:1px solid var(--t-rule-light);color:var(--t-ink-soft)}.check-table tr:hover td{background:var(--t-primary-bg)}
+.req-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}.req-must{background:#fee2e2;color:#991b1b}.req-should{background:#fef3c7;color:#92400e}.req-optional{background:#dbeafe;color:#1e40af}
+.status-yes{color:var(--t-success);font-weight:700}.status-no{color:var(--t-danger);font-weight:700}
+.checkbox-input{width:20px;height:20px;cursor:pointer;accent-color:var(--t-primary)}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--t-radius);padding:16px;margin-top:16px}.alert-box h4{font-size:14px;font-weight:700;color:var(--t-danger);margin:0 0 8px}.alert-box ul{margin:0;padding-left:20px}.alert-box li{font-size:13px;color:#991b1b;margin-bottom:4px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+<a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step active">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W41 合规深度</a><span class="sep">/</span><span class="current">FDA标签检查器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W41 · 合规深度工作流</span><h1>FDA标签<em>合规检查器</em></h1><p class="tool-header-desc">支持食品/化妆品/保健品/医疗器械4类产品FDA标签合规检查，必需要素清单，缺失项自动标注，合规评分实时计算。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>产品信息</h2>
+    <p class="section-sub">选择产品类别，实时生成FDA标签合规检查表</p>
+    <div class="form-field"><label>产品类别</label>
+      <select id="inpCategory" onchange="FDA.compute()">
+        <option value="food">食品 (Food)</option>
+        <option value="cosmetics">化妆品 (Cosmetics)</option>
+        <option value="supplement">保健品/膳食补充剂 (Dietary Supplement)</option>
+        <option value="medical">医疗器械 (Medical Device)</option>
+      </select>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>合规总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">检查要素总数</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statPass">0</div><div class="stat-lbl">已满足要素</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statFail">0</div><div class="stat-lbl">缺失要素</div></div>
+    </div>
+    <div style="margin-top:16px;font-size:14px;font-weight:700" id="scoreText">合规评分：0%</div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>FDA标签合规检查表</h2>
+    <p class="section-sub">勾选已满足的要素，红色=必需(缺失则不合规)，黄色=建议，蓝色=可选</p>
+    <table class="check-table" id="checkTable"></table>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>缺失项预警</h2>
+    <div class="alert-box" id="alertBox"><h4>需补充的标签要素</h4><ul id="alertList"></ul></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="product-compliance-matrix.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>产品合规矩阵</h5><p>多市场合规热力图</p></div></a>
+      <a href="label-translation-verifier.html" class="related-card"><div class="related-card-icon">🌐</div><div class="related-card-content"><h5>标签翻译验证器</h5><p>多语言标签检查</p></div></a>
+      <a href="packaging-compliance-checker.html" class="related-card"><div class="related-card-icon">📦</div><div class="related-card-content"><h5>包装合规检查器</h5><p>包装法规检查</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var FDA = (function(){
+  'use strict';
+  var DATA = {
+    food:[
+      {req:'产品名称 (Statement of Identity)',type:'must',desc:'21 CFR 101.3 — 标签主展示面必须标明产品通用或常用名称'},
+      {req:'净含量声明 (Net Quantity)',type:'must',desc:'21 CFR 101.105 — 主展示面底部标注净含量（英制+公制）'},
+      {req:'成分列表 (Ingredient List)',type:'must',desc:'21 CFR 101.4 — 按重量降序排列，使用通用名称'},
+      {req:'营养成分表 (Nutrition Facts)',type:'must',desc:'21 CFR 101.9 — 标准格式营养成分表，含热量/脂肪/钠等'},
+      {req:'过敏原声明 (Allergen Declaration)',type:'must',desc:'FALCPA — 8大过敏原（牛奶/蛋/鱼/甲壳/坚果/小麦/花生/大豆）声明'},
+      {req:'制造商/分销商信息 (Manufacturer Info)',type:'must',desc:'21 CFR 101.5 — 名称、完整地址'},
+      {req:'原产国标签 (Country of Origin)',type:'must',desc:'CBP要求 — 标注"Product of [国家]"'},
+      {req:'保质期/批次码 (Lot/Batch Code)',type:'should',desc:'建议标注批次码便于追溯'},
+      {req:'使用说明 (Directions for Use)',type:'should',desc:'如适用，标注使用/储存说明'},
+      {req:'营养成分声明 (Nutrient Content Claims)',type:'optional',desc:'如标注"低脂""高纤"等需符合21 CFR 101.13'},
+      {req:'健康声明 (Health Claims)',type:'optional',desc:'如标注健康功效需经FDA授权或符合21 CFR 101.14'},
+      {req:'字体大小合规 (Type Size)',type:'must',desc:'主展示面净含量字体需符合最小高度要求'}
+    ],
+    cosmetics:[
+      {req:'产品名称 (Product Name)',type:'must',desc:'标签主展示面标明产品描述性名称'},
+      {req:'净含量声明 (Net Quantity)',type:'must',desc:'21 CFR 701.35 — 主展示面标注净含量（oz/g）'},
+      {req:'成分声明 (Ingredient Declaration)',type:'must',desc:'21 CFR 701.3 — 按重量降序排列，色素单独列在末尾'},
+      {req:'过敏原/警示语 (Warning Statements)',type:'must',desc:'21 CFR 740 — 特定产品需标注警示语（如未充分测试）'},
+      {req:'制造商/分销商信息 (Manufacturer Info)',type:'must',desc:'21 CFR 701.12 — 名称、街道地址、城市/州/邮编'},
+      {req:'原产国标签 (Country of Origin)',type:'must',desc:'CBP要求 — 标注原产国'},
+      {req:'FDA设施注册号 (Facility Registration)',type:'must',desc:'MoCRA要求 — 化妆品设施需FDA注册'},
+      {req:'产品通报 (Product Listing)',type:'must',desc:'MoCRA要求 — 每款产品需向FDA通报'},
+      {req:'批次码 (Batch/Lot Code)',type:'should',desc:'MoCRA要求追溯 — 建议标注批次码'},
+      {req:'使用说明 (Directions)',type:'should',desc:'如适用，标注使用方法'},
+      {req:'保质期 (Expiration Date)',type:'should',desc:'MoCRA要求 — 标注保质期（如适用）'},
+      {req:'专业安全评估 (Safety Substantiation)',type:'must',desc:'MoCRA要求 — 保留产品安全评估记录'}
+    ],
+    supplement:[
+      {req:'产品名称含"Dietary Supplement"',type:'must',desc:'21 CFR 101.3(g) — 标签必须含"dietary supplement"字样'},
+      {req:'补充剂成分表 (Supplement Facts)',type:'must',desc:'21 CFR 101.36 — 标准格式补充剂成分表'},
+      {req:'成分列表 (Other Ingredients)',type:'must',desc:'21 CFR 101.4 — 非活性成分列在补充剂成分表下方'},
+      {req:'净含量声明 (Net Quantity)',type:'must',desc:'21 CFR 101.105 — 主展示面标注净含量'},
+      {req:'Serving Size (食用份量)',type:'must',desc:'21 CFR 101.36(b) — 标注每次食用量和每包装份数'},
+      {req:'制造商/分销商信息 (Manufacturer Info)',type:'must',desc:'21 CFR 101.5 — 名称和地址'},
+      {req:'原产国标签 (Country of Origin)',type:'must',desc:'CBP要求 — 标注原产国'},
+      {req:'免责声明 (Disclaimer)',type:'must',desc:'21 CFR 101.93 — "This statement has not been evaluated by FDA..."'},
+      {req:'过敏原声明 (Allergen Declaration)',type:'must',desc:'FALCPA — 含过敏原成分需声明'},
+      {req:'警示语 (Warning Statements)',type:'should',desc:'21 CFR 101.9(g) — 如含铁需儿童警示'},
+      {req:'结构/功能声明 (Structure/Function Claims)',type:'should',desc:'21 CFR 101.93(f) — 需FDA备案且含免责声明'},
+      {req:'批次码+保质期 (Lot + Expiry)',type:'should',desc:'建议标注批次码和保质期便于追溯'}
+    ],
+    medical:[
+      {req:'器械名称 (Device Name)',type:'must',desc:'21 CFR 801.1 — 标签主展示面标明器械通用名称'},
+      {req:'制造商/分销商信息 (Manufacturer Info)',type:'must',desc:'21 CFR 801.1 — 名称、地址、邮编'},
+      {req:'净含量声明 (Net Quantity)',type:'must',desc:'21 CFR 801.5 — 如适用，标注数量/重量'},
+      {req:'器械标识码 (UDI)',type:'must',desc:'21 CFR 830 — Unique Device Identifier（唯一器械标识）'},
+      {req:'Rx Only / OTC标识',type:'must',desc:'21 CFR 801.109 — 处方器械标注"Rx Only"'},
+      {req:'使用说明 (Directions for Use)',type:'must',desc:'21 CFR 801.5 — 标注使用方法和目的'},
+      {req:'警示语/禁忌 (Warnings/Contraindications)',type:'must',desc:'21 CFR 801.5 — 标注安全警示和禁忌症'},
+      {req:'灭菌标识 (Sterility)',type:'must',desc:'如适用 — 标注灭菌状态和方法'},
+      {req:'510(k)许可号 (510(k) Number)',type:'should',desc:'建议标注510(k)许可号'},
+      {req:'原产国标签 (Country of Origin)',type:'must',desc:'CBP要求 — 标注原产国'},
+      {req:'批次/序列号 (Lot/Serial Number)',type:'should',desc:'建议标注便于追溯'},
+      {req:'法规符号 (Regulatory Symbols)',type:'optional',desc:'可使用ISO 15223符号替代文字'}
+    ]
+  };
+  var checked = {};
+  var typeLabel = {must:'必需',should:'建议',optional:'可选'};
+  var typeClass = {must:'req-must',should:'req-should',optional:'req-optional'};
+
+  function compute(){
+    var cat = document.getElementById('inpCategory').value;
+    var items = DATA[cat];
+    var total=0,passN=0,failN=0;
+    var mustTotal=0,mustPass=0;
+    var alerts=[];
+
+    var html = '<thead><tr><th>状态</th><th>标签要素</th><th>要求级别</th><th>法规依据与说明</th></tr></thead><tbody>';
+    items.forEach(function(item,idx){
+      var key = cat+'_'+idx;
+      var isChecked = checked[key];
+      total++;
+      if(item.type==='must') mustTotal++;
+      if(isChecked){ passN++; if(item.type==='must') mustPass++; }
+      else {
+        failN++;
+        if(item.type==='must') alerts.push(item.req+' — '+item.desc);
+      }
+      html += '<tr>';
+      html += '<td><input type="checkbox" class="checkbox-input" '+(isChecked?'checked':'')+' onchange="FDA.toggle(\''+cat+'\','+idx+')"></td>';
+      html += '<td><strong>'+item.req+'</strong></td>';
+      html += '<td><span class="req-badge '+typeClass[item.type]+'">'+typeLabel[item.type]+'</span></td>';
+      html += '<td style="font-size:12px;color:var(--t-muted)">'+item.desc+'</td>';
+      html += '</tr>';
+    });
+    html += '</tbody>';
+    document.getElementById('checkTable').innerHTML = html;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statPass').textContent = passN;
+    document.getElementById('statFail').textContent = failN;
+
+    var score = total>0?Math.round(passN/total*100):0;
+    var mustScore = mustTotal>0?Math.round(mustPass/mustTotal*100):100;
+    var color = mustScore>=100?(score>=80?'#10b981':'#f59e0b'):'#ef4444';
+    var level = mustScore<100?'不合规（必需项缺失）':(score>=80?'合规优秀':(score>=50?'部分合规':'合规不足'));
+    document.getElementById('scoreText').innerHTML = '合规评分：<span style="color:'+color+'">'+score+'%</span> （必需项 '+mustPass+'/'+mustTotal+'）<span style="margin-left:12px;font-size:13px;color:'+color+'">'+level+'</span>';
+
+    var al = '';
+    if(alerts.length===0){ al = '<li>所有标签要素已满足</li>'; }
+    else { alerts.forEach(function(a){ al += '<li>'+a+'</li>'; }); }
+    document.getElementById('alertList').innerHTML = al;
+  }
+
+  function toggle(cat,idx){
+    var key = cat+'_'+idx;
+    checked[key] = !checked[key];
+    compute();
+  }
+
+  return { compute:compute, toggle:toggle };
+})();
+FDA.compute();
+</script>
+</body>
+</html>

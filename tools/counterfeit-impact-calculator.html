@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="假货影响计算器：正品售价，假货售价，估计假货销量，品牌溢价，收入损失，品牌价值损失，CSS影响瀑布图，维权ROI。免费在线品牌保护工具。">
+<title>假货影响计算器 - 收入损失·品牌价值损失·维权ROI | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card.s2{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.stat-card.s3{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card .stat-val{font-size:24px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+/* 瀑布图 */
+.waterfall{display:flex;align-items:flex-end;gap:8px;height:260px;padding:20px 0;border-bottom:2px solid var(--t-rule);margin-top:16px;overflow-x:auto}.wf-bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:80px;flex:1;position:relative}.wf-rect{width:100%;border-radius:6px 6px 0 0;transition:height .5s;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-size:11px;font-weight:700;color:#fff;min-height:20px}.wf-rect.positive{background:linear-gradient(180deg,#10b981,#34d399)}.wf-rect.negative{background:linear-gradient(180deg,#ef4444,#f87171)}.wf-rect.total{background:linear-gradient(180deg,#4f46e5,#6366f1)}.wf-label{font-size:11px;color:var(--t-muted);margin-top:6px;text-align:center;line-height:1.3}
+.breakdown-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}.breakdown-table th{padding:10px 14px;text-align:left;font-weight:700;background:var(--t-bg-soft);border-bottom:2px solid var(--t-rule)}.breakdown-table td{padding:10px 14px;border-bottom:1px solid var(--t-rule-light)}.breakdown-table .total-row{font-weight:800;background:var(--t-primary-bg);color:var(--t-primary)}
+.roi-box{background:linear-gradient(135deg,#eef2ff,#f8fafc);border:1px solid #c7d2fe;border-radius:12px;padding:24px;text-align:center;margin-top:16px}.roi-value{font-size:36px;font-weight:800;color:var(--t-primary)}.roi-label{font-size:14px;color:var(--t-muted);margin-top:4px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护深度工作流</div><div class="workflow-steps">
+<a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step active">假货影响</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W42 品牌保护</a><span class="sep">/</span><span class="current">假货影响计算器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W42 · 品牌保护深度工作流</span><h1>假货影响<em>计算器</em></h1><p class="tool-header-desc">正品售价×假货售价×假货销量×品牌溢价，收入损失+品牌价值损失，CSS影响瀑布图，维权ROI计算。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>影响参数输入</h2>
+    <p class="section-sub">输入正品和假货相关数据，实时计算假货对品牌的影响</p>
+    <div class="form-row2">
+      <div class="form-field"><label>正品售价 ($)</label><input type="number" id="inpAuthPrice" value="49.99" min="0" step="0.01" oninput="CIC.compute()"></div>
+      <div class="form-field"><label>正品月销量（件）</label><input type="number" id="inpAuthVol" value="3000" min="0" oninput="CIC.compute()"></div>
+    </div>
+    <div class="form-row2">
+      <div class="form-field"><label>假货售价 ($)</label><input type="number" id="inpFakePrice" value="19.99" min="0" step="0.01" oninput="CIC.compute()"></div>
+      <div class="form-field"><label>估计假货月销量（件）</label><input type="number" id="inpFakeVol" value="800" min="0" oninput="CIC.compute()"></div>
+    </div>
+    <div class="form-row2">
+      <div class="form-field"><label>品牌溢价比例 (%)</label><input type="number" id="inpPremium" value="40" min="0" max="100" oninput="CIC.compute()"></div>
+      <div class="form-field"><label>月维权成本 ($)</label><input type="number" id="inpCost" value="500" min="0" oninput="CIC.compute()"></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>损失总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statRevenue">$0</div><div class="stat-lbl">月收入损失</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statBrand">$0</div><div class="stat-lbl">月品牌价值损失</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statTotal">$0</div><div class="stat-lbl">月总损失</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>影响瀑布图</h2>
+    <p class="section-sub">从正品月收入到净收入的损失分解</p>
+    <div class="waterfall" id="waterfall"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>损失分解明细</h2>
+    <table class="breakdown-table" id="breakdownTable"></table>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>维权ROI</h2>
+    <div class="roi-box">
+      <div class="roi-value" id="roiValue">0x</div>
+      <div class="roi-label" id="roiLabel">维权投资回报率</div>
+    </div>
+    <div style="margin-top:16px;padding:14px;border-radius:10px;background:var(--t-bg-soft);font-size:13px;color:var(--t-ink-soft)" id="roiConclusion"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="counterfeit-detection-guide.html" class="related-card"><div class="related-card-icon">🔍</div><div class="related-card-content"><h5>假货检测指南</h5><p>假货概率评分</p></div></a>
+      <a href="transparency-program-guide.html" class="related-card"><div class="related-card-icon">🔍</div><div class="related-card-content"><h5>Transparency项目</h5><p>产品溯源防伪</p></div></a>
+      <a href="brand-protection-strategy.html" class="related-card"><div class="related-card-icon">🛡️</div><div class="related-card-content"><h5>品牌保护策略</h5><p>6维度评估</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var CIC = (function(){
+  'use strict';
+  function fmt(n){return '$'+Math.round(n).toLocaleString();}
+
+  function compute(){
+    var authPrice=parseFloat(document.getElementById('inpAuthPrice').value)||0;
+    var authVol=parseInt(document.getElementById('inpAuthVol').value)||0;
+    var fakePrice=parseFloat(document.getElementById('inpFakePrice').value)||0;
+    var fakeVol=parseInt(document.getElementById('inpFakeVol').value)||0;
+    var premium=parseFloat(document.getElementById('inpPremium').value)||0;
+    var cost=parseFloat(document.getElementById('inpCost').value)||0;
+
+    // 计算
+    var authRevenue=authPrice*authVol; // 正品月收入
+    var directLoss=fakeVol*(authPrice-fakePrice); // 直接收入损失（假货侵蚀的销量×单价差）
+    var cannibalLoss=fakeVol*authPrice*0.3; // 销量蚕食损失（假货导致正品销量下降约30%）
+    var brandLoss=fakeVol*authPrice*premium/100; // 品牌价值损失（品牌溢价侵蚀）
+    var customerLoss=fakeVol*authPrice*0.1; // 客户流失损失（假货买家不再购买正品）
+    var totalLoss=directLoss+cannibalLoss+brandLoss+customerLoss;
+    var netRevenue=authRevenue-totalLoss;
+    var annualLoss=totalLoss*12;
+    var annualCost=cost*12;
+    var roi=annualCost>0?annualLoss/annualCost:0;
+
+    // 统计
+    document.getElementById('statRevenue').textContent=fmt(directLoss+cannibalLoss);
+    document.getElementById('statBrand').textContent=fmt(brandLoss+customerLoss);
+    document.getElementById('statTotal').textContent=fmt(totalLoss);
+
+    // 瀑布图
+    var maxVal=authRevenue;
+    var bars=[
+      {label:'正品月收入',value:authRevenue,type:'positive'},
+      {label:'直接收入损失',value:-directLoss,type:'negative'},
+      {label:'销量蚕食损失',value:-cannibalLoss,type:'negative'},
+      {label:'品牌价值损失',value:-brandLoss,type:'negative'},
+      {label:'客户流失损失',value:-customerLoss,type:'negative'},
+      {label:'净月收入',value:netRevenue,type:'total'}
+    ];
+    var wh='';
+    var cumulative=0;
+    bars.forEach(function(b,i){
+      var height,offset=0;
+      if(b.type==='positive'||b.type==='total'){
+        height=Math.max(b.value/maxVal*200,4);
+        cumulative=b.value;
+      } else {
+        var prev=i>0?bars[i-1].value:authRevenue;
+        var prevVal=i===1?authRevenue:(authRevenue+bars[1].value+bars[2].value+bars[3].value);
+        // 计算前一个累计值
+        if(i===1) prevVal=authRevenue;
+        else if(i===2) prevVal=authRevenue+bars[1].value;
+        else if(i===3) prevVal=authRevenue+bars[1].value+bars[2].value;
+        else if(i===4) prevVal=authRevenue+bars[1].value+bars[2].value+bars[3].value;
+        height=Math.max(Math.abs(b.value)/maxVal*200,4);
+        offset=(prevVal/Math.max(maxVal,1))*200-height;
+        if(offset<0) offset=0;
+      }
+      var displayVal=b.value>=0?'+'+fmt(b.value):'-'+fmt(Math.abs(b.value));
+      if(b.type==='total') displayVal=fmt(b.value);
+      wh+='<div class="wf-bar">';
+      if(b.type==='negative'){
+        wh+='<div style="height:'+(200-offset-height)+'px;width:100%"></div>';
+      }
+      wh+='<div class="wf-rect '+b.type+'" style="height:'+height+'px">'+displayVal+'</div>';
+      wh+='<div class="wf-label">'+b.label+'</div></div>';
+    });
+    document.getElementById('waterfall').innerHTML=wh;
+
+    // 明细表
+    var bh='<thead><tr><th>损失类别</th><th>计算方式</th><th>月损失</th><th>年损失</th></tr></thead><tbody>';
+    bh+='<tr><td><strong>直接收入损失</strong></td><td>'+fakeVol+'件 × ($'+authPrice+'-$'+fakePrice+')</td><td style="color:#ef4444;font-weight:700">'+fmt(directLoss)+'</td><td>'+fmt(directLoss*12)+'</td></tr>';
+    bh+='<tr><td><strong>销量蚕食损失</strong></td><td>'+fakeVol+'件 × $'+authPrice+' × 30%</td><td style="color:#ef4444;font-weight:700">'+fmt(cannibalLoss)+'</td><td>'+fmt(cannibalLoss*12)+'</td></tr>';
+    bh+='<tr><td><strong>品牌价值损失</strong></td><td>'+fakeVol+'件 × $'+authPrice+' × '+premium+'%</td><td style="color:#f59e0b;font-weight:700">'+fmt(brandLoss)+'</td><td>'+fmt(brandLoss*12)+'</td></tr>';
+    bh+='<tr><td><strong>客户流失损失</strong></td><td>'+fakeVol+'件 × $'+authPrice+' × 10%</td><td style="color:#f59e0b;font-weight:700">'+fmt(customerLoss)+'</td><td>'+fmt(customerLoss*12)+'</td></tr>';
+    bh+='<tr class="total-row"><td>合计总损失</td><td>-</td><td>'+fmt(totalLoss)+'</td><td>'+fmt(annualLoss)+'</td></tr>';
+    bh+='</tbody>';
+    document.getElementById('breakdownTable').innerHTML=bh;
+
+    // ROI
+    document.getElementById('roiValue').textContent=roi.toFixed(1)+'x';
+    var conclusion;
+    if(roi>=10){
+      conclusion='<strong style="color:#10b981">维权紧迫性极高</strong> — 维权ROI达到'+roi.toFixed(1)+'倍，年损失$'+fmt(annualLoss)+'远超维权成本$'+fmt(annualCost)+'，建议立即加大维权投入。';
+    } else if(roi>=3){
+      conclusion='<strong style="color:#f59e0b">维权紧迫性高</strong> — 维权ROI为'+roi.toFixed(1)+'倍，投入维权资金可以有效减少假货损失。';
+    } else if(roi>=1){
+      conclusion='<strong style="color:#4f46e5">维权值得投入</strong> — 维权ROI为'+roi.toFixed(1)+'倍，投入产出比合理。';
+    } else {
+      conclusion='<strong style="color:#ef4444">需重新评估</strong> — 维权ROI仅'+roi.toFixed(1)+'倍，建议优化维权策略或聚焦高影响ASIN。';
+    }
+    document.getElementById('roiConclusion').innerHTML=conclusion;
+  }
+
+  return{compute:compute};
+})();
+CIC.compute();
+</script>
+</body>
+</html>

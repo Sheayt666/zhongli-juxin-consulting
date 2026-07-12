@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="达人邀约模板器：首次邀约/跟进/合作确认/产品寄送/内容确认5种邮件模板，输入品牌/产品/达人名自动生成，可复制到剪贴板。免费达人营销工具。">
+<meta name="keywords" content="达人邀约,邮件模板,达人合作,网红邀约,KOL邮件,合作确认,产品寄送">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-outreach-template.html">
+<title>达人邀约模板器 - 5种邮件模板自动生成 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .template-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .template-tab{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+  .template-tab.active{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none}
+  .template-output{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:24px;margin-top:16px;font-size:14px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;min-height:300px}
+  .btn-copy{padding:10px 24px;border-radius:10px;border:none;background:linear-gradient(135deg,#10b981,#34d399);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px}
+  .btn-copy:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(16,185,129,.3)}
+  .copied-msg{display:none;padding:8px 16px;background:#ecfdf5;color:#10b981;border-radius:8px;font-size:13px;margin-top:8px}
+  .copied-msg.show{display:inline-block}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"达人邀约模板器","description":"达人邀约模板器：首次邀约/跟进/合作确认/产品寄送/内容确认5种邮件模板，输入品牌/产品/达人名自动生成，可复制到剪贴板。免费达人营销工具。","url":"https://juxin-consulting.help/tools/influencer-outreach-template.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="influencer_outreach_template">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第6步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">→</span><a href="influencer-commission-calc.html" class="step">佣金计算</a><span class="arrow">→</span><a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">→</span><a href="influencer-sample-tracker.html" class="step">样品寄送</a><span class="arrow">→</span><a href="influencer-database.html" class="step">达人资源库</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具 · 标准版</span>
+      <h1>达人邀约<em>模板器</em></h1>
+      <p class="tool-hero-desc">首次邀约/跟进/合作确认/产品寄送/内容确认5种邮件模板，输入品牌名/产品名/达人名自动生成专业邀约文案，一键复制到剪贴板。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 邀约信息输入</h2>
+      <p class="calc-form-subtitle">填写品牌和产品信息，自动生成邀约模板</p>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>品牌名称</label><input type="text" id="brandName" value="GlowBeauty" oninput="OT.gen()"></div>
+        <div class="calc-field"><label>达人名称</label><input type="text" id="infName" value="BeautyQueen" oninput="OT.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>产品名称</label><input type="text" id="productName" value="维C亮肤精华液" oninput="OT.gen()"></div>
+        <div class="calc-field"><label>产品售价 ($)</label><input type="number" id="productPrice" value="29.99" step="0.01" oninput="OT.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>佣金率 (%)</label><input type="number" id="commissionRate" value="20" step="0.5" oninput="OT.gen()"></div>
+        <div class="calc-field"><label>折扣码</label><input type="text" id="discountCode" value="QUEEN20" oninput="OT.gen()"></div>
+      </div>
+      <div class="calc-field"><label>寄送地址（选填）</label><input type="text" id="address" value="[待填写达人寄送地址]" oninput="OT.gen()"></div>
+      <div class="template-tabs" style="margin-top:20px">
+        <div class="template-tab active" data-tpl="0" onclick="OT.setTpl(0)">📧 首次邀约</div>
+        <div class="template-tab" data-tpl="1" onclick="OT.setTpl(1)">🔄 跟进邮件</div>
+        <div class="template-tab" data-tpl="2" onclick="OT.setTpl(2)">✅ 合作确认</div>
+        <div class="template-tab" data-tpl="3" onclick="OT.setTpl(3)">📦 产品寄送</div>
+        <div class="template-tab" data-tpl="4" onclick="OT.setTpl(4)">🎬 内容确认</div>
+      </div>
+    </div>
+    <div class="calc-results">
+      <div class="result-card">
+        <h3>📝 邮件模板</h3>
+        <div class="template-output" id="tplOutput"></div>
+        <button class="btn-copy" onclick="OT.copy()">📋 复制到剪贴板</button>
+        <span class="copied-msg" id="copiedMsg">✓ 已复制！</span>
+      </div>
+    </div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="influencer-tier-manager.html" class="prev"><span class="fn-label">上一步 · 第5步</span><span class="fn-name">← 达人分级</span></a><a href="influencer-content-brief.html" class="next"><span class="fn-label">下一步 · 第7步</span><span class="fn-name">内容Brief →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-match-score.html">达人匹配评分器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var OT=(function(){
+  'use strict';
+  var tpl=0;
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+
+  function setTpl(t){tpl=t;document.querySelectorAll('.template-tab').forEach(function(e){e.classList.toggle('active',parseInt(e.dataset.tpl)===t);});gen();}
+
+  function gen(){
+    var brand=v('brandName'),inf=v('infName'),prod=v('productName'),price=v('productPrice'),comm=v('commissionRate'),code=v('discountCode'),addr=v('address');
+    var templates=[
+      // 0: 首次邀约
+      'Subject: '+brand+' × '+inf+' 合作邀约 — '+prod+'\n\n'+
+      'Hi '+inf+',\n\n'+
+      'Hope this message finds you well! \n\n'+
+      'My name is [Your Name] from '+brand+'. We have been following your content for a while and absolutely love your authentic style and the engagement you have with your audience.\n\n'+
+      'We recently launched our '+prod+' (retail price $'+price+'), and we believe it would be a perfect fit for your audience. The product [brief product highlight - e.g. "is formulated with 20% Vitamin C for brightening and anti-aging"].\n\n'+
+      'We would love to explore a collaboration with you. Here is what we can offer:\n'+
+      '• '+comm+'% commission on all sales through your exclusive link\n'+
+      '• Custom discount code "'+code+'" for your followers (20% off)\n'+
+      '• Free product samples for you to try\n'+
+      '• Potential for long-term partnership\n\n'+
+      'If you are interested, please reply to this email and we can send you more details and samples.\n\n'+
+      'Looking forward to hearing from you!\n\n'+
+      'Best regards,\n[Your Name]\n'+brand+' Team\n[Email] | [Website]',
+
+      // 1: 跟进
+      'Subject: Re: '+brand+' × '+inf+' 合作邀约 — Quick Follow-up\n\n'+
+      'Hi '+inf+',\n\n'+
+      'I wanted to follow up on my previous email regarding a potential collaboration between '+brand+' and you.\n\n'+
+      'I understand you may be busy, so I just wanted to highlight a few key points:\n'+
+      '• We are offering '+comm+'% commission + exclusive discount code "'+code+'"\n'+
+      '• Free samples of our '+prod+' ($'+price+' value)\n'+
+      '• Flexible content format - we want you to create authentically\n\n'+
+      'If you are interested but need more information, I am happy to jump on a quick call or answer any questions via email.\n\n'+
+      'No pressure at all - if the timing is not right, we completely understand and would love to keep in touch for future opportunities.\n\n'+
+      'Best,\n[Your Name]\n'+brand+' Team',
+
+      // 2: 合作确认
+      'Subject: ✅ 合作确认 — '+brand+' × '+inf+'\n\n'+
+      'Hi '+inf+',\n\n'+
+      'Fantastic! We are thrilled to confirm our collaboration. Here is a summary of our partnership terms:\n\n'+
+      '【合作详情】\n'+
+      '• 品牌：'+brand+'\n'+
+      '• 产品：'+prod+' ($'+price+')\n'+
+      '• 佣金：'+comm+'% CPS\n'+
+      '• 粉丝折扣码：'+code+' (20% off)\n'+
+      '• 合作周期：[开始日期] - [结束日期]\n'+
+      '• 内容形式：[视频/图文/直播]\n'+
+      '• 内容数量：[X]条\n\n'+
+      '【下一步】\n'+
+      '1. We will ship the product samples to your address (please confirm: '+addr+')\n'+
+      '2. You will receive your exclusive affiliate link and discount code within 24 hours\n'+
+      '3. Content brief will be sent separately for your reference\n\n'+
+      'Please reply to confirm the above details are correct, and we will proceed with shipping.\n\n'+
+      'Excited to work together!\n\n'+
+      'Best,\n[Your Name]\n'+brand+' Team',
+
+      // 3: 产品寄送
+      'Subject: 📦 产品已寄送 — '+prod+' | '+brand+'\n\n'+
+      'Hi '+inf+',\n\n'+
+      'Great news! Your product samples have been shipped.\n\n'+
+      '【物流信息】\n'+
+      '• 产品：'+prod+' × [数量]\n'+
+      '• 物流公司：[物流公司名称]\n'+
+      '• 追踪单号：[物流单号]\n'+
+      '• 预计到达：[预计日期]\n'+
+      '• 寄送地址：'+addr+'\n\n'+
+      '【注意事项】\n'+
+      '• Please inspect the product upon arrival\n'+
+      '• Store in a cool, dry place\n'+
+      '• A content brief will follow in a separate email\n\n'+
+      'Once you receive the package, please let us know so we can proceed with the next steps.\n\n'+
+      'If you have any questions about the product, feel free to reach out anytime.\n\n'+
+      'Best,\n[Your Name]\n'+brand+' Team',
+
+      // 4: 内容确认
+      'Subject: 🎬 内容确认 — '+brand+' × '+inf+'\n\n'+
+      'Hi '+inf+',\n\n'+
+      'Thank you for creating the content for our collaboration! Before you publish, we would like to do a quick review to ensure everything looks great.\n\n'+
+      '【内容确认清单】\n'+
+      '☐ Brand name "'+brand+'" spelled correctly\n'+
+      '☐ Product name "'+prod+'" mentioned clearly\n'+
+      '☐ Discount code "'+code+'" displayed prominently\n'+
+      '☐ Affiliate link in bio / description\n'+
+      '☐ Key product benefits highlighted\n'+
+      '☐ No competitor products featured\n'+
+      '☐ Content aligns with brief guidelines\n\n'+
+      '【关键信息】\n'+
+      '• 产品售价：$'+price+'\n'+
+      '• 粉丝折扣码：'+code+' (20% off)\n'+
+      '• 佣金率：'+comm+'%\n'+
+      '• 建议发布时间：[建议日期]\n\n'+
+      'Please send us the draft for review before publishing. Once approved, you are good to go live!\n\n'+
+      'Thank you for your collaboration!\n\n'+
+      'Best,\n[Your Name]\n'+brand+' Team'
+    ];
+    $('tplOutput').textContent=templates[tpl];
+  }
+
+  function copy(){
+    var text=$('tplOutput').textContent;
+    if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){$('copiedMsg').classList.add('show');setTimeout(function(){$('copiedMsg').classList.remove('show');},2000);});}
+    else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);$('copiedMsg').classList.add('show');setTimeout(function(){$('copiedMsg').classList.remove('show');},2000);}
+  }
+
+  function init(){gen();}
+  return{setTpl:setTpl,gen:gen,copy:copy,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',OT.init);}else{OT.init();}
+  
+</script>
+</body>
+</html>

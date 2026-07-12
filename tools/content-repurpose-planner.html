@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="内容复用规划器：输入原始内容，生成10种复用方案（短视频/图文/博客/邮件/播客等），CSS复用树状图，效率评分。免费在线内容营销工具。">
+<title>内容复用规划器 - 一鱼多吃·复用树状图·效率评分 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-dark:#4338ca;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-success-bg:#ecfdf5;--t-warning:#f59e0b;--t-warning-bg:#fffbeb;--t-danger:#ef4444;--t-danger-bg:#fef2f2;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-muted-light:#94a3b8;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#ffffff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-card h3{font-size:15px;font-weight:700;margin:0 0 12px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select,.form-field textarea{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:14px;color:var(--t-ink);background:#fff;font-family:inherit;transition:all .2s}.form-field textarea{resize:vertical;min-height:100px}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+/* 树状图 */
+.repurpose-tree{text-align:center;padding:20px 0}
+.tree-root{display:inline-block;padding:16px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:16px;font-size:16px;font-weight:700;box-shadow:0 8px 24px rgba(79,70,229,0.3);margin-bottom:24px}
+.tree-connector{width:2px;height:24px;background:var(--t-rule);margin:0 auto}
+.tree-branches{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;position:relative}
+.tree-branch{background:#fff;border:1px solid var(--t-rule);border-radius:12px;padding:16px;text-align:center;transition:all .2s;position:relative}
+.tree-branch:hover{transform:translateY(-4px);box-shadow:var(--t-shadow-md);border-color:var(--t-primary)}
+.tree-branch-icon{font-size:28px;margin-bottom:8px}
+.tree-branch-name{font-size:13px;font-weight:700;color:var(--t-ink);margin-bottom:4px}
+.tree-branch-platform{font-size:11px;color:var(--t-muted)}
+.tree-branch-effort{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-top:6px}
+.effort-low{background:var(--t-success-bg);color:var(--t-success)}.effort-mid{background:var(--t-warning-bg);color:var(--t-warning)}.effort-high{background:var(--t-danger-bg);color:var(--t-danger)}
+/* 效率评分 */
+.efficiency-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.efficiency-ring{width:180px;height:180px;border-radius:50%;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center}
+.efficiency-ring::before{content:'';position:absolute;inset:14px;border-radius:50%;background:#fff}
+.efficiency-ring-val{position:relative;z-index:1;text-align:center}
+.efficiency-ring-val .er-num{font-size:36px;font-weight:800;color:var(--t-primary)}.efficiency-ring-val .er-lbl{font-size:12px;color:var(--t-muted)}
+.efficiency-stats{display:flex;flex-direction:column;gap:12px}
+.eff-stat{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--t-bg-soft);border-radius:10px}
+.eff-stat .es-lbl{font-size:13px;color:var(--t-muted)}.eff-stat .es-val{font-size:18px;font-weight:800;color:var(--t-primary)}
+/* 方案列表 */
+.plan-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.plan-item{display:grid;grid-template-columns:50px 1fr 100px 80px;gap:16px;align-items:center;padding:14px 16px;background:var(--t-bg-soft);border-radius:10px;border-left:4px solid}
+.plan-item:nth-child(odd){border-left-color:var(--t-primary)}.plan-item:nth-child(even){border-left-color:var(--t-success)}
+.plan-item:nth-child(3n){border-left-color:var(--t-warning)}
+.plan-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.plan-content .pc-title{font-size:14px;font-weight:700;color:var(--t-ink)}.plan-content .pc-desc{font-size:12px;color:var(--t-muted)}
+.plan-platform{font-size:12px;font-weight:600;color:var(--t-ink-soft);text-align:center}
+.plan-time{font-size:12px;color:var(--t-muted);text-align:center}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.tree-branches{grid-template-columns:repeat(2,1fr)}.efficiency-grid{grid-template-columns:1fr}.plan-item{grid-template-columns:36px 1fr}.plan-platform,.plan-time{display:none}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W39 内容营销工作流</div><div class="workflow-steps">
+<a href="content-calendar-planner.html" class="workflow-step">日历规划</a><a href="social-post-scheduler.html" class="workflow-step">发布排期</a><a href="content-pillar-builder.html" class="workflow-step">内容支柱</a><a href="video-script-optimizer.html" class="workflow-step">视频脚本</a><a href="hashtag-research-tool.html" class="workflow-step">标签研究</a><a href="content-repurpose-planner.html" class="workflow-step active">内容复用</a><a href="engagement-rate-predictor.html" class="workflow-step">互动预测</a><a href="content-audit-checklist.html" class="workflow-step">内容审计</a><a href="brand-voice-guide-generator.html" class="workflow-step">品牌语音</a><a href="content-roi-tracker.html" class="workflow-step">ROI追踪</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W39 内容营销</a><span class="sep">/</span><span class="current">内容复用规划器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W39 · 内容营销工作流</span><h1>内容<em>复用规划器</em></h1><p class="tool-header-desc">输入一条原始内容，智能生成10种跨平台复用方案，CSS树状图可视化，效率评分量化一鱼多吃效果。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>原始内容输入</h2>
+    <p class="section-sub">描述你的原始内容，选择内容类型</p>
+    <div class="form-field" style="margin-bottom:16px"><label>内容类型</label><select id="inpType" onchange="REP.render()"><option value="video">长视频</option><option value="blog">博客文章</option><option value="podcast">播客</option><option value="product">产品素材</option></select></div>
+    <div class="form-field"><label>原始内容描述</label><textarea id="inpContent" oninput="REP.render()">30分钟产品深度评测视频，包含开箱、性能测试、对比竞品、使用场景展示</textarea></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>内容复用树状图</h2>
+    <p class="section-sub">从原始内容延伸出的10种复用形态</p>
+    <div class="repurpose-tree">
+      <div class="tree-root" id="treeRoot">原始内容</div>
+      <div class="tree-connector"></div>
+      <div class="tree-branches" id="treeBranches"></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>复用效率评分</h2>
+    <p class="section-sub">量化内容复用的投入产出效率</p>
+    <div class="efficiency-grid">
+      <div class="efficiency-ring" id="effRing"></div>
+      <div class="efficiency-stats" id="effStats"></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>10种复用方案详情</h2>
+    <p class="section-sub">每种方案含制作说明、目标平台、预估耗时</p>
+    <div class="plan-list" id="planList"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="content-pillar-builder.html" class="related-card"><div class="related-card-icon">🏛</div><div class="related-card-content"><h5>内容支柱构建器</h5><p>内容体系规划</p></div></a>
+      <a href="content-calendar-planner.html" class="related-card"><div class="related-card-icon">📅</div><div class="related-card-content"><h5>内容日历规划器</h5><p>排期发布管理</p></div></a>
+      <a href="content-roi-tracker.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>内容ROI追踪器</h5><p>复用效果追踪</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var REP = {
+  plans: {
+    video: [
+      {icon:'📱',name:'短视频精剪',platform:'TikTok/Reels',effort:'low',time:'30min',desc:'从长视频提取3-5个高光片段，裁剪为15-60秒竖版短视频'},
+      {icon:'📸',name:'图文卡片',platform:'Instagram',effort:'low',time:'20min',desc:'提取视频中的关键信息点，制作5-8张轮播图文'},
+      {icon:'✍',name:'博客文章',platform:'官网/SEO',effort:'mid',time:'2h',desc:'将视频内容改写为1500字深度博客文章，优化SEO关键词'},
+      {icon:'📧',name:'EDM邮件',platform:'Email',effort:'low',time:'45min',desc:'提炼3个核心要点，制作产品推荐邮件 newsletter'},
+      {icon:'🎙',name:'播客音频',platform:'Podcast',effort:'mid',time:'1h',desc:'提取音频轨道，剪辑为15分钟播客片段'},
+      {icon:'🐦',name:'推文串',platform:'X/Twitter',effort:'low',time:'30min',desc:'将评测要点拆解为8-10条推文串'},
+      {icon:'📌',name:'Pin图集',platform:'Pinterest',effort:'low',time:'40min',desc:'制作5张产品展示Pin图，链接回视频'},
+      {icon:'📖',name:'教程文档',platform:'GitHub/Notion',effort:'high',time:'3h',desc:'将使用教程部分整理为图文教程文档'},
+      {icon:'🎬',name:'YouTube Shorts',platform:'YouTube',effort:'low',time:'20min',desc:'裁剪竖版短视频上传YouTube Shorts'},
+      {icon:'💬',name:'社区帖',platform:'Reddit/Facebook',effort:'low',time:'30min',desc:'撰写社区讨论帖，引导用户参与互动'}
+    ],
+    blog: [
+      {icon:'📱',name:'短视频脚本',platform:'TikTok',effort:'mid',time:'1h',desc:'将文章核心观点改编为短视频拍摄脚本'},
+      {icon:'📸',name:'信息图',platform:'Instagram/Pinterest',effort:'mid',time:'1.5h',desc:'将数据与要点制作为可视化信息图'},
+      {icon:'🎙',name:'播客朗读',platform:'Podcast',effort:'low',time:'30min',desc:'将文章朗读录制为播客音频'},
+      {icon:'📧',name:'邮件摘要',platform:'Email',effort:'low',time:'20min',desc:'提取核心观点制作为邮件摘要+CTA'},
+      {icon:'🐦',name:'推文串',platform:'X/Twitter',effort:'low',time:'30min',desc:'拆解为推文串，每条一个要点'},
+      {icon:'📌',name:'Pin图集',platform:'Pinterest',effort:'low',time:'40min',desc:'制作主题Pin图集引流'},
+      {icon:'🎬',name:'YouTube视频',platform:'YouTube',effort:'high',time:'4h',desc:'扩展为10分钟YouTube讲解视频'},
+      {icon:'💬',name:'社区讨论',platform:'Reddit/Quora',effort:'low',time:'30min',desc:'在相关社区发起主题讨论'},
+      {icon:'📑',name:'PDF白皮书',platform:'官网/Gated',effort:'high',time:'3h',desc:'扩展为PDF白皮书用于获客'},
+      {icon:'🔄',name:'系列内容',platform:'多平台',effort:'high',time:'2h',desc:'拆解为5篇子主题系列内容'}
+    ],
+    podcast: [
+      {icon:'✍',name:'博客文章',platform:'官网/SEO',effort:'mid',time:'2h',desc:'将播客内容转录整理为博客文章'},
+      {icon:'📱',name:'短视频片段',platform:'TikTok/Reels',effort:'low',time:'40min',desc:'提取金句片段制作短视频'},
+      {icon:'📸',name:'金句卡片',platform:'Instagram',effort:'low',time:'30min',desc:'制作5张金句图文卡片'},
+      {icon:'📧',name:'邮件推荐',platform:'Email',effort:'low',time:'20min',desc:'制作播客推荐邮件'},
+      {icon:'🐦',name:'金句推文',platform:'X/Twitter',effort:'low',time:'20min',desc:'提取5-8条金句发布推文'},
+      {icon:'📌',name:'节目笔记',platform:'Notion/官网',effort:'mid',time:'1h',desc:'整理节目笔记与时间戳'},
+      {icon:'🎬',name:'YouTube视频',platform:'YouTube',effort:'mid',time:'1h',desc:'添加静态画面上传YouTube'},
+      {icon:'💬',name:'社区讨论',platform:'Reddit',effort:'low',time:'30min',desc:'发起话题讨论'},
+      {icon:'📑',name:'播客摘要',platform:'Apple/Spotify',effort:'low',time:'30min',desc:'优化播客描述与章节标记'},
+      {icon:'🔄',name:'系列拆解',platform:'多平台',effort:'mid',time:'1.5h',desc:'拆解为3期短播客'}
+    ],
+    product: [
+      {icon:'📱',name:'产品短视频',platform:'TikTok/Reels',effort:'mid',time:'1h',desc:'制作15-30秒产品展示短视频'},
+      {icon:'📸',name:'场景图文',platform:'Instagram',effort:'low',time:'40min',desc:'制作使用场景轮播图'},
+      {icon:'✍',name:'产品博客',platform:'官网/SEO',effort:'mid',time:'2h',desc:'撰写产品故事博客文章'},
+      {icon:'🎬',name:'YouTube评测',platform:'YouTube',effort:'high',time:'4h',desc:'制作5分钟产品评测视频'},
+      {icon:'📧',name:'新品邮件',platform:'Email',effort:'low',time:'30min',desc:'制作新品推荐邮件'},
+      {icon:'📌',name:'产品Pin图',platform:'Pinterest',effort:'low',time:'30min',desc:'制作产品展示Pin图'},
+      {icon:'🐦',name:'产品推文',platform:'X/Twitter',effort:'low',time:'20min',desc:'制作产品特色推文串'},
+      {icon:'💬',name:'社区种草',platform:'Reddit/Facebook',effort:'low',time:'40min',desc:'在社区发布产品体验帖'},
+      {icon:'📑',name:'Listing素材',platform:'Amazon',effort:'mid',time:'2h',desc:'制作A+页面素材与主图'},
+      {icon:'🔄',name:'UGC征集',platform:'多平台',effort:'mid',time:'1h',desc:'发起UGC征集活动引导用户创作'}
+    ]
+  },
+
+  render: function(){
+    var type = document.getElementById('inpType').value;
+    var content = document.getElementById('inpContent').value.trim() || '原始内容';
+    var plans = this.plans[type] || this.plans.video;
+    var typeNames = {video:'长视频',blog:'博客文章',podcast:'播客',product:'产品素材'};
+    document.getElementById('treeRoot').textContent = typeNames[type]+'：'+(content.length>20?content.slice(0,20)+'...':content);
+    this.renderTree(plans);
+    this.renderEfficiency(plans);
+    this.renderPlans(plans);
+  },
+
+  renderTree: function(plans){
+    var html = '';
+    plans.forEach(function(p){
+      var effortClass = p.effort==='low'?'effort-low':p.effort==='mid'?'effort-mid':'effort-high';
+      var effortLabel = p.effort==='low'?'低':p.effort==='mid'?'中':'高';
+      html += '<div class="tree-branch"><div class="tree-branch-icon">'+p.icon+'</div><div class="tree-branch-name">'+p.name+'</div><div class="tree-branch-platform">'+p.platform+'</div><span class="tree-branch-effort '+effortClass+'">制作'+effortLabel+'</span></div>';
+    });
+    document.getElementById('treeBranches').innerHTML = html;
+  },
+
+  renderEfficiency: function(plans){
+    var totalMin = plans.reduce(function(s,p){return s+parseInt(p.time)},0);
+    var totalHours = (totalMin/60).toFixed(1);
+    var lowEffort = plans.filter(function(p){return p.effort==='low'}).length;
+    var score = Math.round((lowEffort/plans.length)*40 + (plans.length/10)*40 + 20);
+    var deg = score*3.6;
+    var color = score>=70?'#10b981':score>=50?'#f59e0b':'#ef4444';
+    var ring = document.getElementById('effRing');
+    ring.style.background = 'conic-gradient('+color+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)';
+    ring.innerHTML = '<div class="efficiency-ring-val"><div class="er-num" style="color:'+color+'">'+score+'</div><div class="er-lbl">效率评分</div></div>';
+    document.getElementById('effStats').innerHTML =
+      '<div class="eff-stat"><span class="es-lbl">复用形态数</span><span class="es-val">'+plans.length+'种</span></div>'+
+      '<div class="eff-stat"><span class="es-lbl">总制作耗时</span><span class="es-val">'+totalHours+'小时</span></div>'+
+      '<div class="eff-stat"><span class="es-lbl">低制作成本方案</span><span class="es-val">'+lowEffort+'个</span></div>'+
+      '<div class="eff-stat"><span class="es-lbl">平均单件耗时</span><span class="es-val">'+Math.round(totalMin/plans.length)+'分钟</span></div>'+
+      '<div class="eff-stat"><span class="es-lbl">内容杠杆倍数</span><span class="es-val">10x</span></div>';
+  },
+
+  renderPlans: function(plans){
+    var html = '';
+    plans.forEach(function(p,i){
+      var effortLabel = p.effort==='low'?'低':p.effort==='mid'?'中':'高';
+      html += '<div class="plan-item"><div class="plan-num">'+(i+1)+'</div><div class="plan-content"><div class="pc-title">'+p.icon+' '+p.name+'</div><div class="pc-desc">'+p.desc+'</div></div><div class="plan-platform">'+p.platform+'</div><div class="plan-time">~'+p.time+'</div></div>';
+    });
+    document.getElementById('planList').innerHTML = html;
+  }
+};
+REP.render();
+</script>
+</body>
+</html>

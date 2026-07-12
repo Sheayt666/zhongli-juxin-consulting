@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播准备清单：直播前24小时/前1小时/直播中/直播后检查清单，每项可勾选，CSS进度条，完成度评分，localStorage保存。免费直播运营工具。">
+<meta name="keywords" content="直播清单,直播准备,直播检查,直播流程,进度追踪,localStorage,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-checklist.html">
+<title>直播准备清单 - 4阶段检查·进度条·localStorage | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .checklist-phase{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow-md)}
+  .checklist-phase h3{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--rule-light)}
+  .check-item{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;font-size:14px;color:var(--ink-soft);transition:all .2s}
+  .check-item:hover{color:var(--ink)}
+  .check-box{width:20px;height:20px;border:2px solid var(--rule);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+  .check-item.done .check-box{background:#10b981;border-color:#10b981}
+  .check-item.done .check-box::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+  .check-item.done .check-text{text-decoration:line-through;color:var(--muted)}
+  .progress-bar-wrap{background:var(--rule-light);border-radius:10px;height:12px;overflow:hidden;margin:16px 0}
+  .progress-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#4f46e5,#6366f1);transition:width .5s}
+  .progress-label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播准备清单","description":"直播准备清单：直播前24小时/前1小时/直播中/直播后检查清单，每项可勾选，CSS进度条，完成度评分，localStorage保存。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-checklist.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_checklist">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第10步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><span class="step current">直播清单</span></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 标准版</span>
+      <h1>直播准备<em>清单</em></h1>
+      <p class="tool-hero-desc">直播前24小时/前1小时/直播中/直播后4阶段检查清单，每项可勾选，CSS进度条可视化，完成度评分，localStorage持久化保存。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap" style="display:block">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:48px;font-weight:800;color:#4f46e5" id="overallScore">0%</div>
+      <div style="font-size:14px;color:var(--muted)">整体完成度</div>
+      <div class="progress-bar-wrap" style="max-width:400px;margin:12px auto"><div class="progress-bar-fill" id="overallBar" style="width:0%"></div></div>
+    </div>
+    <div id="checklistContainer"></div>
+    <div style="text-align:center;margin-top:24px">
+      <button onclick="CL.reset()" style="padding:10px 24px;border-radius:10px;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);font-size:14px;cursor:pointer">🔄 重置清单</button>
+    </div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="live-competitor-analysis.html" class="prev"><span class="fn-label">上一步 · 第9步</span><span class="fn-name">← 竞品分析</span></a><a href="index.html" class="next"><span class="fn-label">完成</span><span class="fn-name">工作流结束 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var CL=(function(){
+  'use strict';
+  var KEY='jx_live_checklist';
+  var checklist={
+    'before24h':{title:'📅 直播前24小时',icon:'📅',items:[
+      '确认直播主题和主推产品',
+      '完成直播预告文案发布（TikTok/抖音/小红书）',
+      '检查直播设备：手机/摄像头/补光灯/麦克风',
+      '确认网络连接稳定，测试直播推流',
+      '准备产品样品并检查库存',
+      '设置直播间背景和布置',
+      '确认直播排品表和讲解话术',
+      '提前通知团队人员各自职责'
+    ]},
+    'before1h':{title:'⏰ 直播前1小时',icon:'⏰',items:[
+      '再次检查设备电量和网络',
+      '测试麦克风音量和画面清晰度',
+      '整理产品摆放顺序，方便取用',
+      '检查优惠券、折扣码设置是否正确',
+      '准备好水和其他个人物品',
+      '做最后的话术复习和流程确认',
+      '提前15分钟进入直播间暖场',
+      '确认团队成员就位'
+    ]},
+    'during':{title:'🎬 直播中',icon:'🎬',items:[
+      '开场介绍直播主题和福利',
+      '按排品表顺序讲解产品',
+      '每10分钟进行一次互动引导',
+      '实时关注评论区并回复',
+      '定时提醒关注和分享',
+      '爆款产品重点讲解和逼单',
+      '关注GMV和转化数据，调整策略',
+      '直播中保持活力和热情'
+    ]},
+    'after':{title:'📝 直播后',icon:'📝',items:[
+      '整理直播数据和复盘表',
+      '统计GMV/订单/转化率等核心指标',
+      '导出直播回放并剪辑精华片段',
+      '回复直播中未回复的评论',
+      '跟进订单发货和客服',
+      '向直播团队反馈和总结',
+      '发布直播精华片段到社交媒体',
+      '规划下一场直播主题和选品'
+    ]}
+  };
+  var state={};
+
+  function $(id){return document.getElementById(id);}
+
+  function load(){try{var s=localStorage.getItem(KEY);if(s)state=JSON.parse(s)||{};}catch(e){state={};}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+  function toggle(phase,idx){
+    var key=phase+'_'+idx;
+    state[key]=!state[key];
+    save();render();
+  }
+  function reset(){state={};save();render();}
+
+  function render(){
+    var total=0,done=0;
+    var html='';
+    Object.keys(checklist).forEach(function(phaseKey){
+      var phase=checklist[phaseKey];
+      var phaseDone=0;
+      phase.items.forEach(function(item,idx){
+        var key=phaseKey+'_'+idx;
+        var isChecked=state[key]||false;
+        if(isChecked){done++;phaseDone++;}
+        total++;
+      });
+      var phasePct=Math.round(phaseDone/phase.items.length*100);
+      html+='<div class="checklist-phase"><h3>'+phase.icon+' '+phase.title+'</h3>';
+      html+='<div class="progress-label"><span>完成进度</span><span>'+phaseDone+'/'+phase.items.length+' ('+phasePct+'%)</span></div>';
+      html+='<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:'+phasePct+'%;background:'+(phasePct===100?'linear-gradient(90deg,#10b981,#34d399)':'linear-gradient(90deg,#4f46e5,#6366f1)')+'"></div></div>';
+      phase.items.forEach(function(item,idx){
+        var key=phaseKey+'_'+idx;
+        var isChecked=state[key]||false;
+        html+='<div class="check-item'+(isChecked?' done':'')+'" onclick="CL.toggle(''+phaseKey+'','+idx+')"><div class="check-box"></div><span class="check-text">'+item+'</span></div>';
+      });
+      html+='</div>';
+    });
+    $('checklistContainer').innerHTML=html;
+    var overallPct=Math.round(done/total*100);
+    $('overallScore').textContent=overallPct+'%';
+    $('overallBar').style.width=overallPct+'%';
+    $('overallScore').style.color=overallPct===100?'#10b981':overallPct>=50?'#4f46e5':'#f59e0b';
+  }
+
+  function init(){load();render();}
+  return{toggle:toggle,reset:reset,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CL.init);}else{CL.init();}
+  
+</script>
+</body>
+</html>

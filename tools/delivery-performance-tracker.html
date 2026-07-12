@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="交付绩效追踪器：记录各订单预计交期与实际交期，计算准时率、平均延迟天数，CSS绩效趋势图，供应商交付排名，localStorage保存。">
+<title>交付绩效追踪器 - 准时率·延迟分析·供应商排名 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.order-table{width:100%;border-collapse:collapse;font-size:13px}
+.order-table th{padding:10px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px;white-space:nowrap}
+.order-table td{padding:9px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.order-table tr:hover td{background:var(--accent-bg)}
+.status-tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.status-tag.ontime{background:#dcfce7;color:#059669}
+.status-tag.late{background:#fee2e2;color:#dc2626}
+.status-tag.pending{background:#fef3c7;color:#d97706}
+.add-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;box-shadow:0 3px 10px rgba(79,70,229,.25);transition:all .2s}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(79,70,229,.35)}
+.del-btn{padding:4px 10px;border-radius:6px;background:#fef2f2;color:#dc2626;font-size:11px;border:1px solid #fecaca;cursor:pointer;font-family:inherit;transition:all .2s}
+.del-btn:hover{background:#dc2626;color:#fff}
+.trend-chart{height:200px;display:flex;align-items:flex-end;gap:4px;padding:16px 8px 0;border-bottom:2px solid var(--rule);overflow-x:auto;position:relative}
+.trend-bar{flex:1;min-width:30px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.trend-bar-fill{width:70%;border-radius:4px 4px 0 0;min-height:2px;transition:height .3s}
+.trend-bar-fill.ontime{background:linear-gradient(180deg,#34d399,#10b981)}
+.trend-bar-fill.late{background:linear-gradient(180deg,#f87171,#ef4444)}
+.trend-bar-label{font-size:9px;color:var(--muted);margin-top:4px;white-space:nowrap;transform:rotate(-45deg);transform-origin:center}
+.rank-table{width:100%;border-collapse:collapse;font-size:13px}
+.rank-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.rank-table th.num{text-align:right}
+.rank-table td{padding:10px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.rank-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.rank-table tr.best td{background:#ecfdf5;font-weight:700}
+.rank-table tr.worst td{background:#fef2f2}
+.ontime-gauge{width:200px;height:100px;border-radius:100px 100px 0 0;position:relative;overflow:hidden;margin:0 auto}
+.ontime-gauge-mask{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:140px;height:70px;border-radius:140px 140px 0 0;background:var(--surface)}
+.ontime-gauge-value{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);text-align:center;z-index:3}
+.ontime-gauge-value .ogv-num{font-size:28px;font-weight:800;color:var(--ink)}
+.ontime-gauge-value .ogv-lbl{font-size:11px;color:var(--muted)}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.order-table{font-size:11px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step active">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">交付绩效</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🚚</span>交付绩效追踪器 Delivery Performance Tracker</h1>
+  <p>记录各订单的预计交期与实际交期，自动计算准时率、平均延迟天数，CSS 趋势图展示交付绩效走势，供应商交付排名一目了然，支持 localStorage 数据持久化。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card success"><div class="mc-label">准时率</div><div class="mc-value" id="mOnTime">0%</div></div>
+    <div class="metric-card warn"><div class="mc-label">平均延迟天数</div><div class="mc-value" id="mAvgDelay">0天</div></div>
+    <div class="metric-card"><div class="mc-label">总订单数</div><div class="mc-value" id="mTotal">0</div></div>
+    <div class="metric-card danger"><div class="mc-label">延迟订单数</div><div class="mc-value" id="mLate">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>➕ 添加新订单</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>订单号</label><input type="text" id="newOrderNo" placeholder="如 PO-20260712-001"></div>
+      <div class="jx-field"><label>供应商</label><input type="text" id="newSupplier" placeholder="如 供应商A"></div>
+      <div class="jx-field"><label>数量</label><input type="number" id="newQty" placeholder="如 1000" min="0"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>预计交期</label><input type="date" id="newExpected"></div>
+      <div class="jx-field"><label>实际交期 <span style="font-weight:400;color:var(--muted);font-size:12px">(留空=待交付)</span></label><input type="date" id="newActual"></div>
+      <div class="jx-field" style="display:flex;align-items:flex-end"><button class="add-btn" onclick="DPT.addOrder()">+ 添加订单</button></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 订单交付记录</h2>
+    <div style="overflow-x:auto"><table class="order-table" id="orderTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 准时率仪表盘</h2>
+    <div style="display:flex;justify-content:center;padding:20px 0 40px">
+      <div class="ontime-gauge" id="gauge">
+        <div class="ontime-gauge-mask"></div>
+        <div class="ontime-gauge-value"><div class="ogv-num" id="gaugeVal">0%</div><div class="ogv-lbl">准时率</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📈 交付绩效趋势</h2>
+    <div class="trend-chart" id="trendChart"></div>
+    <div style="display:flex;gap:20px;margin-top:16px;font-size:13px;justify-content:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;color:var(--muted)"><div style="width:14px;height:14px;border-radius:4px;background:linear-gradient(180deg,#34d399,#10b981)"></div>准时交付</div>
+      <div style="display:flex;align-items:center;gap:6px;color:var(--muted)"><div style="width:14px;height:14px;border-radius:4px;background:linear-gradient(180deg,#f87171,#ef4444)"></div>延迟交付</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏆 供应商交付排名</h2>
+    <div style="overflow-x:auto"><table class="rank-table" id="rankTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">🏆</div><div><h5>供应商评分卡</h5><p>8维度评分</p></div></a>
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📄</div><div><h5>采购订单构建</h5><p>格式化PO</p></div></a>
+      <a href="multi-supplier-allocator.html" class="rt-card"><div class="rt-icon">🔀</div><div><h5>多供应商分配</h5><p>最优分配方案</p></div></a>
+      <a href="supplier-risk-assessment.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>风险评估</h5><p>6维度风险矩阵</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="delivery-performance-tracker.html">交付绩效追踪</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var DPT=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt0n(n){return isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0'}
+  var orders=[
+    {id:1,no:'PO-20260601-001',supplier:'供应商A 华东工厂',qty:3000,expected:'2026-06-20',actual:'2026-06-19'},
+    {id:2,no:'PO-20260605-002',supplier:'供应商B 华南工厂',qty:2000,expected:'2026-06-25',actual:'2026-06-28'},
+    {id:3,no:'PO-20260610-003',supplier:'供应商A 华东工厂',qty:5000,expected:'2026-07-05',actual:'2026-07-04'},
+    {id:4,no:'PO-20260615-004',supplier:'供应商C 越南工厂',qty:8000,expected:'2026-07-15',actual:'2026-07-22'},
+    {id:5,no:'PO-20260620-005',supplier:'供应商B 华南工厂',qty:3000,expected:'2026-07-10',actual:'2026-07-09'},
+    {id:6,no:'PO-20260625-006',supplier:'供应商D 台湾工厂',qty:1500,expected:'2026-07-08',actual:''},
+    {id:7,no:'PO-20260701-007',supplier:'供应商A 华东工厂',qty:4000,expected:'2026-07-25',actual:''}
+  ];
+  var nextId=8;
+
+  function daysDiff(d1,d2){
+    if(!d1||!d2)return null;
+    var date1=new Date(d1),date2=new Date(d2);
+    return Math.round((date2-date1)/(1000*60*60*24));
+  }
+
+  function addOrder(){
+    var no=$('newOrderNo').value.trim();
+    var sup=$('newSupplier').value.trim();
+    var qty=parseInt($('newQty').value)||0;
+    var exp=$('newExpected').value;
+    var act=$('newActual').value;
+    if(!no||!sup||!exp){alert('请填写订单号、供应商和预计交期');return}
+    orders.push({id:nextId++,no:no,supplier:sup,qty:qty,expected:exp,actual:act});
+    $('newOrderNo').value='';$('newSupplier').value='';$('newQty').value='';$('newExpected').value='';$('newActual').value='';
+    calc();save();
+  }
+
+  function delOrder(id){
+    var idx=orders.findIndex(function(o){return o.id===id});
+    if(idx>=0){orders.splice(idx,1);calc();save()}
+  }
+
+  function calc(){
+    var completed=orders.filter(function(o){return o.actual&&o.expected});
+    var pending=orders.filter(function(o){return !o.actual});
+    var onTime=completed.filter(function(o){var d=daysDiff(o.expected,o.actual);return d!==null&&d<=0});
+    var late=completed.filter(function(o){var d=daysDiff(o.expected,o.actual);return d!==null&&d>0});
+    var onTimeRate=completed.length>0?onTime.length/completed.length*100:0;
+    var totalDelay=late.reduce(function(a,o){return a+daysDiff(o.expected,o.actual)},0);
+    var avgDelay=late.length>0?totalDelay/late.length:0;
+
+    $('mOnTime').textContent=onTimeRate.toFixed(1)+'%';
+    $('mAvgDelay').textContent=avgDelay.toFixed(1)+'天';
+    $('mTotal').textContent=fmt0n(orders.length);
+    $('mLate').textContent=fmt0n(late.length);
+
+    // Gauge - conic gradient
+    var gaugeColor;
+    if(onTimeRate>=90)gaugeColor='linear-gradient(from 270deg,#10b981 0deg '+onTimeRate*1.8+'deg,#e2e8f0 '+onTimeRate*1.8+'deg 180deg,transparent 180deg 360deg)';
+    else if(onTimeRate>=70)gaugeColor='linear-gradient(from 270deg,#f59e0b 0deg '+onTimeRate*1.8+'deg,#e2e8f0 '+onTimeRate*1.8+'deg 180deg,transparent 180deg 360deg)';
+    else gaugeColor='linear-gradient(from 270deg,#ef4444 0deg '+onTimeRate*1.8+'deg,#e2e8f0 '+onTimeRate*1.8+'deg 180deg,transparent 180deg 360deg)';
+    $('gauge').style.background=gaugeColor;
+    $('gaugeVal').textContent=onTimeRate.toFixed(0)+'%';
+
+    // Order table
+    var h='<thead><tr><th>订单号</th><th>供应商</th><th class="num">数量</th><th>预计交期</th><th>实际交期</th><th class="num">偏差</th><th>状态</th><th>操作</th></tr></thead><tbody>';
+    orders.forEach(function(o){
+      var diff=daysDiff(o.expected,o.actual);
+      var status,diffText;
+      if(!o.actual){status='<span class="status-tag pending">待交付</span>';diffText='-'}
+      else if(diff<=0){status='<span class="status-tag ontime">准时</span>';diffText=diff===0?'准时':diff+'天'}
+      else{status='<span class="status-tag late">延迟'+diff+'天</span>';diffText='+'diff+'天'}
+      h+='<tr><td>'+o.no+'</td><td>'+o.supplier+'</td><td class="num">'+fmt0n(o.qty)+'</td><td>'+o.expected+'</td><td>'+(o.actual||'-')+'</td><td class="num">'+diffText+'</td><td>'+status+'</td><td><button class="del-btn" onclick="DPT.delOrder('+o.id+')">删除</button></td></tr>';
+    });
+    if(orders.length===0)h+='<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">暂无订单记录</td></tr>';
+    h+='</tbody>';
+    $('orderTable').innerHTML=h;
+
+    // Trend chart - show completed orders chronologically
+    var sortedCompleted=completed.slice().sort(function(a,b){return new Date(a.actual)-new Date(b.actual)});
+    var maxQty=Math.max.apply(null,sortedCompleted.map(function(o){return o.qty}).concat([1]));
+    var tcH='';
+    sortedCompleted.forEach(function(o){
+      var diff=daysDiff(o.expected,o.actual);
+      var isLate=diff>0;
+      var heightPct=o.qty/maxQty*100;
+      tcH+='<div class="trend-bar"><div class="trend-bar-fill '+(isLate?'late':'ontime')+'" style="height:'+heightPct+'%"></div><div class="trend-bar-label">'+o.no.substr(-6)+'</div></div>';
+    });
+    if(sortedCompleted.length===0)tcH='<div style="width:100%;text-align:center;color:var(--muted);padding:40px 0">暂无已交付订单数据</div>';
+    $('trendChart').innerHTML=tcH;
+
+    // Supplier ranking
+    var supMap={};
+    orders.forEach(function(o){
+      if(!supMap[o.supplier])supMap[o.supplier]={name:o.supplier,total:0,onTime:0,late:0,pending:0,totalDelay:0,qty:0};
+      supMap[o.supplier].total++;
+      supMap[o.supplier].qty+=o.qty;
+      if(!o.actual){supMap[o.supplier].pending++}
+      else{
+        var diff=daysDiff(o.expected,o.actual);
+        if(diff<=0)supMap[o.supplier].onTime++;
+        else{supMap[o.supplier].late++;supMap[o.supplier].totalDelay+=diff}
+      }
+    });
+    var supList=Object.values(supMap).map(function(s){
+      var completed=s.onTime+s.late;
+      s.rate=completed>0?s.onTime/completed*100:0;
+      s.avgDelay=s.late>0?s.totalDelay/s.late:0;
+      return s;
+    }).sort(function(a,b){return b.rate-a.rate});
+
+    var rh='<thead><tr><th>排名</th><th>供应商</th><th class="num">总订单</th><th class="num">准时</th><th class="num">延迟</th><th class="num">待交付</th><th class="num">准时率</th><th class="num">平均延迟</th></tr></thead><tbody>';
+    supList.forEach(function(s,i){
+      var cls=i===0?'best':(i===supList.length-1&&supList.length>1?'worst':'');
+      rh+='<tr class="'+cls+'"><td>'+(i+1)+'</td><td>'+s.name+'</td><td class="num">'+s.total+'</td><td class="num" style="color:#059669">'+s.onTime+'</td><td class="num" style="color:#dc2626">'+s.late+'</td><td class="num">'+s.pending+'</td><td class="num" style="font-weight:800">'+s.rate.toFixed(1)+'%</td><td class="num">'+s.avgDelay.toFixed(1)+'天</td></tr>';
+    });
+    if(supList.length===0)rh+='<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">暂无数据</td></tr>';
+    rh+='</tbody>';
+    $('rankTable').innerHTML=rh;
+  }
+
+  function save(){try{localStorage.setItem('jx_dpt_data',JSON.stringify({orders:orders,nextId:nextId}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_dpt_data'));if(d&&d.orders){orders=d.orders;nextId=d.nextId||orders.length+1}}catch(e){}}
+  return {addOrder:addOrder,delOrder:delOrder,calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',DPT.init)}else{DPT.init()}
+</script>
+</body>
+</html>

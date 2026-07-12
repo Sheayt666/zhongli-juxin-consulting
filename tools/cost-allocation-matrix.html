@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="成本分摊矩阵：将间接成本按销量/收入/面积/自定义权重规则分摊到SKU与渠道，输出分摊结果矩阵表与占比可视化。">
+<title>成本分摊矩阵 - 间接成本分摊器 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.alloc-table{width:100%;border-collapse:collapse;font-size:13px}
+.alloc-table th{padding:11px 12px;text-align:right;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.alloc-table th:first-child{text-align:left}
+.alloc-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft);text-align:right;font-variant-numeric:tabular-nums}
+.alloc-table td:first-child{text-align:left;font-weight:600}
+.alloc-table tr.total td{background:linear-gradient(90deg,#eef2ff,#f5f3ff);font-weight:800;color:#4f46e5}
+.alloc-table tr.cost-row:hover td{background:#f8fafc}
+.rule-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.rule-tab{padding:8px 18px;border-radius:50px;font-size:13px;font-weight:600;border:1px solid var(--rule);background:#fff;color:var(--muted);cursor:pointer;transition:all .2s;font-family:inherit}
+.rule-tab.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.rule-tab:hover:not(.active){border-color:#c7d2fe;color:#4f46e5}
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:240px;padding:16px 8px;border-bottom:2px solid var(--rule);overflow-x:auto}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:60px;flex:1}
+.bar-fill{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#6366f1,#4f46e5);transition:height .4s ease;min-height:4px;position:relative}
+.bar-fill.alt1{background:linear-gradient(180deg,#34d399,#10b981)}
+.bar-fill.alt2{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.bar-fill.alt3{background:linear-gradient(180deg,#f87171,#ef4444)}
+.bar-fill.alt4{background:linear-gradient(180deg,#a78bfa,#7c3aed)}
+.bar-val{font-size:12px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted);text-align:center;max-width:70px;word-break:break-word}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.alloc-table{font-size:11px}.alloc-table th,.alloc-table td{padding:7px 8px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav">
+  <div class="workflow-nav-inner">
+    <div class="workflow-label">W33 财务核算深度工作流</div>
+    <div class="workflow-steps">
+      <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+      <a href="cost-allocation-matrix.html" class="workflow-step active">成本分摊</a>
+      <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+      <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+      <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+      <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+      <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+      <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+      <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+      <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+    </div>
+  </div>
+</div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">成本分摊矩阵</span></div></div>
+
+<div class="container">
+  <div class="tool-title-area">
+    <h1><span class="tt-icon">📐</span>成本分摊矩阵 Cost Allocation Matrix</h1>
+    <p>将仓储费、管理费、平台服务费等间接成本，按销量 / 收入 / 面积 / 自定义权重四种规则分摊到各 SKU 或渠道，输出完整分摊矩阵与占比可视化，让间接成本归因清晰透明。</p>
+  </div>
+</div>
+
+<section class="tool-section">
+  <div class="container">
+    <div class="metric-grid">
+      <div class="metric-card"><div class="mc-label">间接成本总额</div><div class="mc-value" id="mTotal">$0</div></div>
+      <div class="metric-card success"><div class="mc-label">分摊目标数</div><div class="mc-value" id="mCount">0</div></div>
+      <div class="metric-card warn"><div class="mc-label">当前分摊规则</div><div class="mc-value" id="mRule" style="font-size:16px">按销量</div></div>
+      <div class="metric-card"><div class="mc-label">最大分摊占比</div><div class="mc-value" id="mMax">0%</div></div>
+    </div>
+
+    <div class="jx-card">
+      <h2>💰 间接成本项输入</h2>
+      <div class="jx-row">
+        <div class="jx-field"><label>仓储费 Storage <span class="hint">($)</span></label><input type="number" id="cost1" value="8000" step="100" min="0" oninput="CAM.calc()"></div>
+        <div class="jx-field"><label>管理费 Admin <span class="hint">($)</span></label><input type="number" id="cost2" value="6000" step="100" min="0" oninput="CAM.calc()"></div>
+      </div>
+      <div class="jx-row">
+        <div class="jx-field"><label>平台服务费 Platform Service <span class="hint">($)</span></label><input type="number" id="cost3" value="5000" step="100" min="0" oninput="CAM.calc()"></div>
+        <div class="jx-field"><label>其他间接费 Other Overhead <span class="hint">($)</span></label><input type="number" id="cost4" value="3000" step="100" min="0" oninput="CAM.calc()"></div>
+      </div>
+    </div>
+
+    <div class="jx-card">
+      <h2>⚖️ 分摊规则选择</h2>
+      <div class="rule-tabs">
+        <button class="rule-tab active" onclick="CAM.setRule('volume',this)">按销量 By Volume</button>
+        <button class="rule-tab" onclick="CAM.setRule('revenue',this)">按收入 By Revenue</button>
+        <button class="rule-tab" onclick="CAM.setRule('area',this)">按面积 By Area</button>
+        <button class="rule-tab" onclick="CAM.setRule('weight',this)">自定义权重 By Weight</button>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:0" id="ruleDesc">按销量分摊：根据各 SKU 的销售数量占比分摊间接成本，适用于与出货量相关的成本（如仓储、物流管理）。</p>
+    </div>
+
+    <div class="jx-card">
+      <h2>📦 分摊目标（SKU / 渠道）</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px" id="basisLabel">请填写各 SKU 的月销量作为分摊基数：</p>
+      <div id="targetRows"></div>
+    </div>
+
+    <div class="jx-card">
+      <h2>📊 分摊结果矩阵</h2>
+      <div style="overflow-x:auto"><table class="alloc-table" id="matrixTable"></table></div>
+    </div>
+
+    <div class="jx-card">
+      <h2>📈 各目标分摊金额对比</h2>
+      <div class="bar-chart" id="barChart"></div>
+    </div>
+
+    <div class="jx-card">
+      <h2>💡 分摊建议</h2>
+      <ul id="tips" style="list-style:none;padding:0;margin:0"></ul>
+    </div>
+
+    <div class="jx-card">
+      <h2>🧰 相关工具推荐</h2>
+      <div class="related-tools">
+        <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>多维度损益表构建</p></div></a>
+        <a href="amazon-fee-deep-dive.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>Amazon费用拆解</h5><p>15+费用项深度拆解</p></div></a>
+        <a href="budget-vs-actual.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>预算vs实际</h5><p>差异分析对比</p></div></a>
+        <a href="profit-waterfall.html" class="rt-card"><div class="rt-icon">🌊</div><div><h5>利润瀑布图</h5><p>利润逐项拆解</p></div></a>
+      </div>
+    </div>
+    <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="cost-allocation-matrix.html">成本分摊矩阵</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CAM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var rule='volume';
+  var targets=[
+    {name:'SKU-A001 旗舰款',volume:3500,revenue:42000,area:120,weight:30},
+    {name:'SKU-B002 标准款',volume:2800,revenue:28000,area:80,weight:25},
+    {name:'SKU-C003 入门款',volume:2000,revenue:16000,area:60,weight:20},
+    {name:'SKU-D004 配件',volume:1200,revenue:8000,area:40,weight:25}
+  ];
+  var ruleDescs={
+    volume:'按销量分摊：根据各 SKU 的销售数量占比分摊间接成本，适用于与出货量相关的成本（如仓储、物流管理）。',
+    revenue:'按收入分摊：根据各 SKU 的销售收入占比分摊间接成本，适用于与营收规模相关的成本（如平台服务费、市场推广）。',
+    area:'按面积分摊：根据各 SKU 占用仓储面积占比分摊间接成本，适用于仓储租金、库管人工等空间相关成本。',
+    weight:'自定义权重分摊：根据自定义权重比例分摊，适用于需要综合考量多因素的复杂分摊场景。'
+  };
+  var basisLabels={
+    volume:'请填写各 SKU 的月销量作为分摊基数：',
+    revenue:'请填写各 SKU 的月收入（$）作为分摊基数：',
+    area:'请填写各 SKU 占用仓储面积（m²）作为分摊基数：',
+    weight:'请填写各 SKU 的自定义权重（1-100）作为分摊基数：'
+  };
+
+  function renderRows(){
+    var h='';
+    targets.forEach(function(t,i){
+      h+='<div class="jx-row" style="margin-bottom:10px"><div class="jx-field" style="margin:0"><label>'+(i===0?'目标名称':'')+'</label><input type="text" value="'+t.name+'" oninput="CAM.updateName('+i+',this.value)"></div><div class="jx-field" style="margin:0"><label>'+(i===0?'分摊基数':'')+'</label><input type="number" value="'+t[rule]+'" step="1" min="0" oninput="CAM.updateBasis('+i+',this.value)"></div></div>';
+    });
+    $('targetRows').innerHTML=h;
+    $('basisLabel').textContent=basisLabels[rule];
+  }
+
+  function calc(){
+    var costs=[parseFloat($('cost1').value)||0,parseFloat($('cost2').value)||0,parseFloat($('cost3').value)||0,parseFloat($('cost4').value)||0];
+    var costNames=['仓储费','管理费','平台服务费','其他间接费'];
+    var total=costs.reduce(function(a,b){return a+b},0);
+    var basis=targets.map(function(t){return Math.max(0,parseFloat(t[rule])||0)});
+    var basisTotal=basis.reduce(function(a,b){return a+b},0);
+    $('mTotal').textContent=fmt(total);
+    $('mCount').textContent=targets.length;
+    $('mRule').textContent={volume:'按销量',revenue:'按收入',area:'按面积',weight:'自定义权重'}[rule];
+
+    // matrix
+    var h='<thead><tr><th>成本项</th>';
+    targets.forEach(function(t){h+='<th>'+t.name+'</th>'});
+    h+='<th>合计</th></tr></thead><tbody>';
+    var skuTotals=targets.map(function(){return 0});
+    costs.forEach(function(c,ci){
+      h+='<tr class="cost-row"><td>'+costNames[ci]+'<br><span style="font-size:11px;color:var(--muted);font-weight:400">'+fmt(c)+'</span></td>';
+      var rowTotal=0;
+      targets.forEach(function(t,i){
+        var alloc=basisTotal>0?c*basis[i]/basisTotal:0;
+        rowTotal+=alloc;skuTotals[i]+=alloc;
+        h+='<td>'+fmt(alloc)+'<br><span style="font-size:10px;color:var(--muted)">'+(basisTotal>0?(basis[i]/basisTotal*100).toFixed(1):'0')+'%</span></td>';
+      });
+      h+='<td style="font-weight:700">'+fmt(rowTotal)+'</td></tr>';
+    });
+    h+='<tr class="total"><td>分摊合计</td>';
+    var maxPct=0;
+    skuTotals.forEach(function(s){var p=total>0?s/total*100:0;if(p>maxPct)maxPct=p;h+='<td>'+fmt(s)+'</td>'});
+    h+='<td>'+fmt(total)+'</td></tr>';
+    h+='<tr class="total"><td>占比</td>';
+    skuTotals.forEach(function(s){h+='<td>'+(total>0?(s/total*100).toFixed(1):'0')+'%</td>'});
+    h+='<td>100%</td></tr>';
+    h+='</tbody>';
+    $('matrixTable').innerHTML=h;
+    $('mMax').textContent=maxPct.toFixed(1)+'%';
+
+    // bar chart
+    var maxVal=Math.max.apply(null,skuTotals.concat([1]));
+    var colors=['','alt1','alt2','alt3','alt4'];
+    var bh='';
+    skuTotals.forEach(function(s,i){
+      var ht=maxVal>0?(s/maxVal*100):0;
+      bh+='<div class="bar-col"><div class="bar-val">'+fmt(s)+'</div><div class="bar-fill '+(colors[(i%4)+1]||'')+'" style="height:'+ht+'%"></div><div class="bar-label">'+targets[i].name+'</div></div>';
+    });
+    $('barChart').innerHTML=bh;
+
+    // tips
+    var tips=[];
+    var topIdx=0;topPct=0;skuTotals.forEach(function(s,i){var p=total>0?s/total*100:0;if(p>topPct){topPct=p;topIdx=i}});
+    tips.push('分摊比例最高的目标为「'+targets[topIdx].name+'」，承担 '+topPct.toFixed(1)+'% 的间接成本（'+fmt(skuTotals[topIdx])+'）。');
+    if(topPct>50)tips.push('单一目标分摊占比超过 50%，间接成本过于集中。建议核查该 SKU 是否存在效率瓶颈，或调整分摊规则。');
+    if(basisTotal===0)tips.push('分摊基数为 0，无法计算。请填写各目标的分摊基数。');
+    var lowIdx=0,lowPct=999;skuTotals.forEach(function(s,i){var p=total>0?s/total*100:0;if(p<lowPct){lowPct=p;lowIdx=i}});
+    tips.push('分摊比例最低的目标为「'+targets[lowIdx].name+'」，仅承担 '+lowPct.toFixed(1)+'% 的间接成本。');
+    tips.push('建议根据成本动因选择分摊规则：仓储相关成本按面积/销量，平台费用按收入，综合成本用自定义权重。');
+    $('tips').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;color:#4f46e5;font-weight:700">›</span>'+t+'</li>'}).join('');
+    save();
+  }
+  var topPct=0,lowPct=0;
+  function setRule(r,btn){rule=r;document.querySelectorAll('.rule-tab').forEach(function(t){t.classList.remove('active')});btn.classList.add('active');$('ruleDesc').textContent=ruleDescs[r];renderRows();calc()}
+  function updateName(i,v){targets[i].name=v;calc()}
+  function updateBasis(i,v){targets[i][rule]=parseFloat(v)||0;calc()}
+  function save(){try{var d={cost1:$('cost1').value,cost2:$('cost2').value,cost3:$('cost3').value,cost4:$('cost4').value,rule:rule,targets:targets};localStorage.setItem('jx_cam_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_cam_data'));if(d){if(d.cost1)$('cost1').value=d.cost1;if(d.cost2)$('cost2').value=d.cost2;if(d.cost3)$('cost3').value=d.cost3;if(d.cost4)$('cost4').value=d.cost4;if(d.targets)targets=d.targets;if(d.rule){rule=d.rule;document.querySelectorAll('.rule-tab').forEach(function(t,i){var rules=['volume','revenue','area','weight'];if(rules[i]===rule)t.classList.add('active');else t.classList.remove('active')});$('ruleDesc').textContent=ruleDescs[rule]}}}catch(e){}}
+  return {calc:calc,setRule:setRule,updateName:updateName,updateBasis:updateBasis,init:function(){load();renderRows();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CAM.init)}else{CAM.init()}
+</script>
+</body>
+</html>

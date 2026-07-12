@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播预告文案生成器：悬念型/福利型/新品型/限时型4种文案模板，输入直播信息自动生成预告文案，字数统计，多平台适配TikTok/抖音/小红书。免费直播运营工具。">
+<meta name="keywords" content="直播预告,预告文案,直播预热,悬念文案,福利文案,新品文案,限时文案,多平台">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-promo-text.html">
+<title>直播预告文案生成器 - 4种模板·多平台适配 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .promo-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .promo-tab{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+  .promo-tab.active{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none}
+  .platform-tabs{display:flex;gap:8px;margin-bottom:16px}
+  .platform-tab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft)}
+  .platform-tab.active{background:#10b981;color:#fff;border:none}
+  .promo-output{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:20px;margin-top:12px;font-size:14px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;min-height:200px}
+  .btn-copy{padding:8px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#10b981,#34d399);color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+  .char-count{font-size:12px;color:var(--muted);margin-top:8px}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播预告文案生成器","description":"直播预告文案生成器：悬念型/福利型/新品型/限时型4种文案模板，输入直播信息自动生成预告文案，字数统计，多平台适配TikTok/抖音/小红书。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-promo-text.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_promo_text">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第7步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 标准版</span>
+      <h1>直播预告<em>文案生成器</em></h1>
+      <p class="tool-hero-desc">文案模板：悬念型/福利型/新品型/限时型4种，输入直播信息自动生成预告文案，字数统计，多平台适配（TikTok/抖音/小红书）。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 直播信息</h2>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>直播主题</label><input type="text" id="topic" value="夏季护肤大作战" oninput="PT.gen()"></div>
+        <div class="calc-field"><label>直播时间</label><input type="text" id="time" value="7月15日 20:00" oninput="PT.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>主推产品</label><input type="text" id="product" value="维C亮肤精华液" oninput="PT.gen()"></div>
+        <div class="calc-field"><label>直播福利</label><input type="text" id="benefit" value="全场8折+前100名送面膜" oninput="PT.gen()"></div>
+      </div>
+      <div class="calc-field"><label>亮点/卖点</label><input type="text" id="highlight" value="20%高浓度维C，7天提亮肤色" oninput="PT.gen()"></div>
+      <div class="promo-tabs" style="margin-top:16px">
+        <div class="promo-tab active" data-t="0" onclick="PT.setTab(0)">🤔 悬念型</div>
+        <div class="promo-tab" data-t="1" onclick="PT.setTab(1)">🎁 福利型</div>
+        <div class="promo-tab" data-t="2" onclick="PT.setTab(2)">🆕 新品型</div>
+        <div class="promo-tab" data-t="3" onclick="PT.setTab(3)">⏰ 限时型</div>
+      </div>
+      <div class="platform-tabs">
+        <div class="platform-tab active" data-p="tiktok" onclick="PT.setPlatform('tiktok')">TikTok</div>
+        <div class="platform-tab" data-p="douyin" onclick="PT.setPlatform('douyin')">抖音</div>
+        <div class="platform-tab" data-p="xiaohongshu" onclick="PT.setPlatform('xiaohongshu')">小红书</div>
+      </div>
+    </div>
+    <div class="calc-results">
+      <div class="result-card">
+        <h3>📝 预告文案</h3>
+        <div class="promo-output" id="promoOutput"></div>
+        <div class="char-count" id="charCount"></div>
+        <button class="btn-copy" onclick="PT.copy()">📋 复制文案</button>
+      </div>
+    </div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="live-replay-analyzer.html" class="prev"><span class="fn-label">上一步 · 第6步</span><span class="fn-name">← 直播复盘</span></a><a href="live-gmv-forecast.html" class="next"><span class="fn-label">下一步 · 第8步</span><span class="fn-name">GMV预测 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var PT=(function(){
+  'use strict';
+  var tab=0,platform='tiktok';
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+
+  function setTab(t){tab=t;document.querySelectorAll('.promo-tab').forEach(function(e){e.classList.toggle('active',parseInt(e.dataset.t)===t);});gen();}
+  function setPlatform(p){platform=p;document.querySelectorAll('.platform-tab').forEach(function(e){e.classList.toggle('active',e.dataset.p===p);});gen();}
+
+  function gen(){
+    var topic=v('topic'),time=v('time'),product=v('product'),benefit=v('benefit'),highlight=v('highlight');
+    if(!topic){$('promoOutput').textContent='请输入直播主题';return;}
+    var hashtags={tiktok:'#livestream #skincare #beauty #sale #'+product, douyin:'#直播 #护肤 #好物推荐 #'+topic+' #福利', xiaohongshu:'#直播预告 #护肤好物 #'+topic+' #'+product+' #种草'};
+    var suffix={tiktok:'\n'+hashtags.tiktok, douyin:'\n'+hashtags.douyin, xiaohongshu:'\n'+hashtags.xiaohongshu};
+
+    var templates=[
+      // 悬念型
+      '🤔 你知道为什么你的护肤品总是没效果吗？\n\n因为浓度不够！\n\n'+time+'，我将在直播间揭秘"7天提亮肤色"的秘密武器——'+product+'！\n\n'+highlight+'，效果真实可见！\n\n'+benefit+'，仅限直播间！\n\n锁定直播，不见不散！'+suffix[platform],
+      // 福利型
+      '🎁 福利来了！超级大福利来了！\n\n'+time+'，'+topic+'直播！\n\n全场'+benefit+'！\n\n主推'+product+'，'+highlight+'！\n\n错过这次，再等半年！\n\n关注+预约，开播不迷路！'+suffix[platform],
+      // 新品型
+      '🆕 全新升级！重磅首发！\n\n'+product+'终于来了！\n\n'+highlight+'，经过1000+用户测试，满意度98%！\n\n'+time+'直播间首发，'+benefit+'！\n\n想要第一时间体验的姐妹，赶紧预约！'+suffix[platform],
+      // 限时型
+      '⏰ 仅限'+time.split(' ')[1]||time+'！倒计时开始！\n\n'+topic+'直播即将开始！\n\n'+product+' '+benefit+'！\n\n'+highlight+'！\n\n仅限前100名，抢完即止！\n\n现在关注，开播第一时间通知你！'+suffix[platform]
+    ];
+
+    var text=templates[tab];
+    $('promoOutput').textContent=text;
+    $('charCount').textContent='字数：'+text.length+' 字'+(platform==='tiktok'?'（建议150字以内）':platform==='douyin'?'（建议100字以内）':'（建议300字以内）');
+  }
+
+  function copy(){var text=$('promoOutput').textContent;if(navigator.clipboard){navigator.clipboard.writeText(text);}else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
+
+  function init(){gen();}
+  return{setTab:setTab,setPlatform:setPlatform,gen:gen,copy:copy,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PT.init);}else{PT.init();}
+  
+</script>
+</body>
+</html>

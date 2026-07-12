@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CE认证指南：产品类型选择，适用指令（LVD/EMC/RoHS/REACH等），认证流程步骤，所需测试项目，CSS流程图，费用估算。免费在线合规工具。">
+<title>CE认证指南 - 流程步骤·测试项目·费用估算 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+/* 流程图 */
+.flow-chart{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:8px}.flow-step{flex:1;min-width:140px;background:linear-gradient(135deg,#eef2ff,#f8fafc);border:1px solid #c7d2fe;border-radius:12px;padding:16px 12px;text-align:center;position:relative}.flow-step-num{width:28px;height:28px;border-radius:50%;background:var(--t-primary);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}.flow-step-title{font-size:13px;font-weight:700;color:var(--t-ink);margin-bottom:4px}.flow-step-desc{font-size:11px;color:var(--t-muted);line-height:1.5}.flow-arrow{display:flex;align-items:center;padding:0 4px;color:var(--t-primary);font-size:18px;flex-shrink:0}
+/* 指令卡片 */
+.directive-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}.directive-card{border:1px solid var(--t-rule);border-radius:10px;padding:14px;transition:all .2s}.directive-card.active{border-color:var(--t-primary);background:var(--t-primary-bg)}.directive-card h4{font-size:13px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.directive-card p{font-size:12px;color:var(--t-muted);margin:0}
+/* 测试表 */
+.test-table{width:100%;border-collapse:collapse;font-size:13px}.test-table th{padding:10px 14px;text-align:left;font-weight:700;background:var(--t-bg-soft);border-bottom:2px solid var(--t-rule)}.test-table td{padding:10px 14px;border-bottom:1px solid var(--t-rule-light)}
+.cost-breakdown{background:var(--t-bg-soft);border-radius:10px;padding:20px;margin-top:16px}.cost-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--t-rule-light);font-size:13px}.cost-row:last-child{border-bottom:none;font-weight:700;font-size:15px;color:var(--t-primary)}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row2{grid-template-columns:1fr}.directive-grid{grid-template-columns:1fr}.flow-chart{flex-direction:column}.flow-arrow{transform:rotate(90deg);justify-content:center;padding:4px 0}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+<a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step active">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W41 合规深度</a><span class="sep">/</span><span class="current">CE认证指南</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W41 · 合规深度工作流</span><h1>CE认证<em>指南</em></h1><p class="tool-header-desc">根据产品类型自动匹配适用指令（LVD/EMC/RoHS/REACH/RED等），认证流程步骤图，所需测试项目清单，费用估算。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>产品信息</h2>
+    <p class="section-sub">选择产品类型和特征，自动匹配CE认证要求</p>
+    <div class="form-row2">
+      <div class="form-field"><label>产品类型</label>
+        <select id="inpProduct" onchange="CE.compute()">
+          <option value="electronics">电子产品（一般电器）</option>
+          <option value="wireless">无线产品（蓝牙/WiFi）</option>
+          <option value="toy">玩具</option>
+          <option value="machinery">机械产品</option>
+          <option value="medical">医疗器械</option>
+          <option value="ppe">个人防护装备 (PPE)</option>
+        </select>
+      </div>
+      <div class="form-field"><label>认证模块选择</label>
+        <select id="inpModule" onchange="CE.compute()">
+          <option value="A">Module A（内部生产控制·自我声明）</option>
+          <option value="B">Module B+D（型式检验+质量保证）</option>
+          <option value="G">Module G（逐批验证）</option>
+          <option value="H">Module H（全面质量保证）</option>
+        </select>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>认证概览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statDirectives">0</div><div class="stat-lbl">适用指令数</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statTests">0</div><div class="stat-lbl">所需测试数</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statCost">€0</div><div class="stat-lbl">预估费用</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>适用指令</h2>
+    <p class="section-sub">根据产品类型自动匹配的CE指令（高亮=适用）</p>
+    <div class="directive-grid" id="directiveGrid"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>认证流程</h2>
+    <p class="section-sub">CE认证完整步骤流程图</p>
+    <div class="flow-chart" id="flowChart"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>所需测试项目</h2>
+    <table class="test-table" id="testTable"></table>
+    <div class="cost-breakdown" id="costBreakdown"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="product-compliance-matrix.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>产品合规矩阵</h5><p>多市场合规热力图</p></div></a>
+      <a href="product-safety-assessment.html" class="related-card"><div class="related-card-icon">🛡️</div><div class="related-card-content"><h5>产品安全评估</h5><p>5维度风险评估</p></div></a>
+      <a href="restricted-substance-checker.html" class="related-card"><div class="related-card-icon">⚗️</div><div class="related-card-content"><h5>限制物质检查器</h5><p>REACH/RoHS检查</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var CE = (function(){
+  'use strict';
+  var ALL_DIRECTIVES = [
+    {code:'LVD',name:'低电压指令 2014/35/EU',desc:'电压50-1000V交流/75-1500V直流的电气设备',cost:2000},
+    {code:'EMC',name:'电磁兼容指令 2014/30/EU',desc:'电气电子设备电磁兼容性要求',cost:1500},
+    {code:'RED',name:'无线电设备指令 2014/53/EU',desc:'无线通信设备（蓝牙/WiFi/射频）',cost:4000},
+    {code:'RoHS',name:'RoHS 2指令 2011/65/EU',desc:'电子设备有害物质限制',cost:800},
+    {code:'REACH',name:'REACH法规 EC 1907/2006',desc:'化学品注册/评估/授权/限制',cost:600},
+    {code:'Toy',name:'玩具安全指令 2009/48/EC',desc:'14岁以下儿童玩具安全要求',cost:2500},
+    {code:'MD',name:'机械指令 2006/42/EC',desc:'机械设备安全与健康要求',cost:3000},
+    {code:'MDR',name:'医疗器械法规 2017/745',desc:'医疗器械安全与性能要求',cost:8000},
+    {code:'PPE',name:'PPE法规 2016/425',desc:'个人防护装备安全要求',cost:3500},
+    {code:'ErP',name:'生态设计指令 2009/125/EC',desc:'能源相关产品生态设计要求',cost:1000}
+  ];
+  var PRODUCT_MAP = {
+    electronics:{directives:['LVD','EMC','RoHS','REACH','ErP'],tests:[
+      {name:'LVD安全测试',std:'EN 60335-1/EN 62368-1',cost:2000,days:'3-4周',desc:'电气安全、绝缘、温升、机械强度'},
+      {name:'EMC测试',std:'EN 55014/EN 61000',cost:1500,days:'2-3周',desc:'电磁辐射、抗干扰、静电放电'},
+      {name:'RoHS测试',std:'EN 62321',cost:800,days:'1-2周',desc:'铅/汞/镉/六价铬/PBB/PBDE'},
+      {name:'REACH SVHC',std:'EC 1907/2006',cost:600,days:'1-2周',desc:'高度关注物质筛查'},
+      {name:'能效测试',std:'EN 62301',cost:1000,days:'1-2周',desc:'待机功耗/能效等级'}
+    ]},
+    wireless:{directives:['RED','RoHS','REACH'],tests:[
+      {name:'RED射频测试',std:'EN 300 328/EN 301 489',cost:4000,days:'4-6周',desc:'频率/功率/频谱/杂散发射'},
+      {name:'EMC测试',std:'EN 301 489',cost:1500,days:'2-3周',desc:'无线设备电磁兼容'},
+      {name:'安全测试',std:'EN 62368-1',cost:2000,days:'2-3周',desc:'IT/AV设备安全'},
+      {name:'RoHS测试',std:'EN 62321',cost:800,days:'1-2周',desc:'有害物质限制'},
+      {name:'REACH SVHC',std:'EC 1907/2006',cost:600,days:'1-2周',desc:'高度关注物质'},
+      {name:'SAR测试',std:'EN 62209',cost:3000,days:'3-4周',desc:'比吸收率（便携式设备）'}
+    ]},
+    toy:{directives:['Toy','RoHS','REACH'],tests:[
+      {name:'EN 71-1物理机械',std:'EN 71-1',cost:1200,days:'2-3周',desc:'物理机械性能、小零件、尖点锐边'},
+      {name:'EN 71-2阻燃',std:'EN 71-2',cost:800,days:'1-2周',desc:'阻燃性能测试'},
+      {name:'EN 71-3化学迁移',std:'EN 71-3',cost:1500,days:'2-3周',desc:'19种重金属迁移限值'},
+      {name:'邻苯二甲酸盐',std:'REACH Annex XVII',cost:600,days:'1-2周',desc:'邻苯二甲酸酯含量'},
+      {name:'REACH SVHC',std:'EC 1907/2006',cost:600,days:'1-2周',desc:'高度关注物质'}
+    ]},
+    machinery:{directives:['MD','EMC','RoHS'],tests:[
+      {name:'机械安全测试',std:'EN ISO 12100',cost:3000,days:'4-6周',desc:'风险评估、安全防护、紧急停止'},
+      {name:'EMC测试',std:'EN 61000',cost:1500,days:'2-3周',desc:'电磁兼容性'},
+      {name:'噪音测试',std:'EN ISO 3744',cost:1000,days:'1-2周',desc:'噪音水平测量'},
+      {name:'RoHS测试',std:'EN 62321',cost:800,days:'1-2周',desc:'有害物质'}
+    ]},
+    medical:{directives:['MDR','LVD','EMC','RoHS','REACH'],tests:[
+      {name:'MDR合规评估',std:'EN ISO 13485',cost:8000,days:'8-12周',desc:'质量体系+技术文件+临床评估'},
+      {name:'生物相容性',std:'EN ISO 10993',cost:3000,days:'4-6周',desc:'细胞毒性/致敏/刺激'},
+      {name:'LVD安全测试',std:'EN 60601-1',cost:3000,days:'3-4周',desc:'医疗电气设备安全'},
+      {name:'EMC测试',std:'EN 60601-1-2',cost:2000,days:'2-3周',desc:'医疗设备电磁兼容'},
+      {name:'灭菌验证',std:'EN ISO 11135/11137',cost:2500,days:'3-4周',desc:'EO/辐照灭菌验证'}
+    ]},
+    ppe:{directives:['PPE','RoHS','REACH'],tests:[
+      {name:'PPE型式检验',std:'EN 166/EN 388等',cost:3500,days:'4-6周',desc:'防护性能型式检验'},
+      {name:'材料化学测试',std:'REACH',cost:600,days:'1-2周',desc:'化学物质限制'},
+      {name:'人体工效学',std:'EN 13921',cost:1000,days:'1-2周',desc:'人体工效学评估'}
+    ]}
+  };
+  var FLOW_STEPS = [
+    {t:'确认指令',d:'识别产品适用的CE指令'},
+    {t:'风险评估',d:'按照协调标准进行风险评估'},
+    {t:'技术文件',d:'编制技术构造文件(TCF)'},
+    {t:'测试送检',d:'送实验室进行合规测试'},
+    {t:'欧盟授权代表',d:'指定欧盟授权代表(EC REP)'},
+    {t:'签署DoC',d:'签署符合性声明(Declaration of Conformity)'},
+    {t:'加贴CE标志',d:'产品加贴CE标志和进口商信息'},
+    {t:'市场监督',d:'保留技术文件至少10年'}
+  ];
+  var MODULE_COST = {A:0,B:3000,G:2000,H:5000};
+
+  function compute(){
+    var prod = document.getElementById('inpProduct').value;
+    var mod = document.getElementById('inpModule').value;
+    var prodData = PRODUCT_MAP[prod];
+    var activeDirs = prodData.directives;
+
+    // 指令卡片
+    var dh = '';
+    ALL_DIRECTIVES.forEach(function(d){
+      var isActive = activeDirs.indexOf(d.code)>=0;
+      dh += '<div class="directive-card'+(isActive?' active':'')+'">';
+      dh += '<h4>'+d.code+(isActive?' ✓':'')+'</h4>';
+      dh += '<p>'+d.name+'</p>';
+      dh += '<p style="margin-top:4px;font-size:11px;color:var(--t-muted)">'+d.desc+'</p>';
+      dh += '</div>';
+    });
+    document.getElementById('directiveGrid').innerHTML = dh;
+
+    // 流程图
+    var fh = '';
+    FLOW_STEPS.forEach(function(s,i){
+      fh += '<div class="flow-step"><div class="flow-step-num">'+(i+1)+'</div><div class="flow-step-title">'+s.t+'</div><div class="flow-step-desc">'+s.d+'</div></div>';
+      if(i<FLOW_STEPS.length-1) fh += '<div class="flow-arrow">→</div>';
+    });
+    document.getElementById('flowChart').innerHTML = fh;
+
+    // 测试表
+    var totalCost = 0;
+    var th = '<thead><tr><th>测试项目</th><th>标准</th><th>费用</th><th>周期</th><th>测试内容</th></tr></thead><tbody>';
+    prodData.tests.forEach(function(t){
+      totalCost += t.cost;
+      th += '<tr><td><strong>'+t.name+'</strong></td><td>'+t.std+'</td><td>€'+t.cost.toLocaleString()+'</td><td>'+t.days+'</td><td style="font-size:12px;color:var(--t-muted)">'+t.desc+'</td></tr>';
+    });
+    th += '</tbody>';
+    document.getElementById('testTable').innerHTML = th;
+
+    // 费用分解
+    var moduleCost = MODULE_COST[mod];
+    var notifiedFee = mod!=='A' ? moduleCost : 0;
+    var ecRepFee = 800;
+    var grandTotal = totalCost + notifiedFee + ecRepFee;
+    var ch = '<div class="cost-row"><span>测试费用</span><span>€'+totalCost.toLocaleString()+'</span></div>';
+    if(notifiedFee>0) ch += '<div class="cost-row"><span>公告机构介入费 (Module '+mod+')</span><span>€'+notifiedFee.toLocaleString()+'</span></div>';
+    ch += '<div class="cost-row"><span>欧盟授权代表年费</span><span>€'+ecRepFee.toLocaleString()+'</span></div>';
+    ch += '<div class="cost-row"><span>预估总费用</span><span>€'+grandTotal.toLocaleString()+'</span></div>';
+    document.getElementById('costBreakdown').innerHTML = ch;
+
+    // 统计
+    document.getElementById('statDirectives').textContent = activeDirs.length;
+    document.getElementById('statTests').textContent = prodData.tests.length;
+    document.getElementById('statCost').textContent = '€'+grandTotal.toLocaleString();
+  }
+
+  return { compute:compute };
+})();
+CE.compute();
+</script>
+</body>
+</html>

@@ -61,6 +61,30 @@
 .history-item .hi-score{font-weight:700}
 @media(max-width:768px){.dim-grid{grid-template-columns:1fr}.health-gauge-wrap{flex-direction:column;gap:16px}}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "账号健康监控器",
+  "description": "8维度检查（ODR/迟发率/取消率/有效追踪率/知识产权/政策合规/客服指标/账户指标），CSS健康仪表盘conic-gradient 0-100分，风险等级判断，改善建议引擎，历史趋势记录。免费在线亚马逊账号健康监控工具。",
+  "url": "https://juxin-consulting.help/tools/account-health.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "众力聚鑫咨询", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "账号健康监控器", "item": "https://juxin-consulting.help/tools/account-health.html" }
+  ]
+}
+</script>
 </head>
 <body class="tool-page" data-tool="account_health">
 <nav class="tool-nav" role="navigation" aria-label="主导航">
@@ -246,7 +270,7 @@ var AH = (function(){
     } else {
       var html = '';
       history.slice(-5).reverse().forEach(function(h){
-        var color = h.score>=85?'#10b981':(h.score>=60?'#f59e0b':(h.score>=35?'#f97316':'#ef4444');
+        var color = h.score>=85?'#10b981':(h.score>=60?'#f59e0b':(h.score>=35?'#f97316':'#ef4444'));
         html += '<div class="history-item"><span class="hi-date">'+h.date+'</span><span style="color:var(--muted)">'+h.level+'</span><span class="hi-score" style="color:'+color+'">'+h.score+'分</span></div>';
       });
       document.getElementById('historyWrap').innerHTML = html;

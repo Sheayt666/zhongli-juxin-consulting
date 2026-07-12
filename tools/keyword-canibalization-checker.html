@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="关键词蚕食检查器：输入多个ASIN的排名关键词，识别同一关键词被多个自有ASIN抢占的蚕食词，CSS对比表与影响评估，输出去重建议。">
+<meta name="keywords" content="关键词蚕食,cannibalization,多ASIN,关键词去重,亚马逊SEO">
+<title>关键词蚕食检查器 - 多ASIN词重叠·影响评估 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--indigo:#4f46e5;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--success:#10b981;--warn:#f59e0b;--danger:#ef4444}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f8fafc}
+.wf-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;top:64px;z-index:90;height:48px;display:flex;align-items:center}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%;overflow-x:auto}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:#475569;text-decoration:none;white-space:nowrap;transition:all .2s}
+.workflow-step:hover{background:#e0e7ff;color:var(--indigo)}.workflow-step.active{background:var(--indigo);color:#fff;font-weight:600}
+.workflow-arrow{color:#cbd5e1;font-size:11px;flex-shrink:0}
+.crumb{max-width:1152px;margin:0 auto;padding:12px 24px;font-size:13px;color:#64748b}.crumb a{color:#64748b}.crumb a:hover{color:var(--indigo)}.crumb .cur{color:#0f172a;font-weight:600}
+.tool-head{max-width:1152px;margin:0 auto;padding:8px 24px 24px}.tool-head h1{font-size:32px;font-weight:800;color:#0f172a;letter-spacing:-.5px}.tool-head h1 em{font-style:normal;color:var(--indigo)}.tool-head p{font-size:15px;color:#64748b;margin-top:8px;max-width:680px;line-height:1.7}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #f1f5f9}
+.card h3{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px}
+.asin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.asin-box{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}
+.asin-head{padding:10px 14px;font-weight:700;color:#fff;font-size:13px;display:flex;align-items:center;gap:8px}
+.asin-head input{flex:1;background:rgba(255,255,255,.2);border:none;border-radius:6px;padding:5px 10px;color:#fff;font-size:12px;font-family:inherit}
+.asin-head input::placeholder{color:rgba(255,255,255,.7)}
+.asin-box textarea{width:100%;border:none;padding:12px 14px;font-size:12px;color:#0f172a;font-family:inherit;resize:vertical;min-height:90px;line-height:1.6}
+.asin-box textarea:focus{outline:none;background:#f8fafc}
+.a0{background:linear-gradient(135deg,#4f46e5,#6366f1)}.a1{background:linear-gradient(135deg,#10b981,#059669)}.a2{background:linear-gradient(135deg,#f59e0b,#d97706)}.a3{background:linear-gradient(135deg,#ef4444,#f87171)}
+.btn{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn-ghost{background:#fff;border:1px solid #e2e8f0;color:#475569}
+.result-note{font-size:12px;color:#64748b;line-height:1.6;padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--indigo);margin-top:14px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.sum-card{padding:18px;border-radius:12px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0}.sum-card .v{font-size:22px;font-weight:800}.sum-card .l{font-size:12px;color:#64748b;margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:left;font-weight:700;color:#334155;background:#f8fafc;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#475569}
+tr:hover td{background:#f8fafc}
+.cani-level{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;color:#fff}
+.lv-high{background:#ef4444}.lv-mid{background:#f59e0b}.lv-low{background:#10b981}
+.asin-mark{display:inline-block;width:22px;height:22px;border-radius:5px;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:22px;margin:0 2px}
+.impact-bar{height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden;min-width:60px}
+.impact-bar i{display:block;height:100%;border-radius:4px}
+.advice-list{list-style:none;padding:0;margin:0}.advice-list li{padding:10px 0 10px 28px;font-size:14px;color:#334155;position:relative;line-height:1.6;border-bottom:1px solid #f1f5f9}.advice-list li:last-child{border-bottom:none}.advice-list li::before{content:'';position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--indigo)}.advice-list li.ok::before{background:var(--success)}.advice-list li.warn::before{background:var(--warn)}.advice-list li.danger::before{background:var(--danger)}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel-card{display:flex;gap:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;transition:all .2s}.rel-card:hover{border-color:var(--indigo);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.rel-ic{font-size:22px;flex-shrink:0}.rel-card h4{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}.rel-card p{font-size:12px;color:#64748b}
+.back-link{text-align:center;padding:24px}.back-link a{display:inline-block;padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.empty{text-align:center;padding:40px;color:#94a3b8;font-size:14px}
+@media(max-width:768px){.summary-grid,.asin-grid{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="keyword_canibalization_checker">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner">
+<a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+<a href="index.html" class="tool-nav-back">← 工具中心</a></div></nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W37 关键词深度工作流</div><div class="workflow-steps">
+<a href="keyword-research-matrix.html" class="workflow-step">研究矩阵</a><span class="workflow-arrow">›</span>
+<a href="search-volume-estimator.html" class="workflow-step">搜索量</a><span class="workflow-arrow">›</span>
+<a href="keyword-difficulty-scorer.html" class="workflow-step">难度评分</a><span class="workflow-arrow">›</span>
+<a href="long-tail-keyword-finder.html" class="workflow-step">长尾词</a><span class="workflow-arrow">›</span>
+<a href="keyword-cluster-builder.html" class="workflow-step">聚类构建</a><span class="workflow-arrow">›</span>
+<a href="competitor-keyword-intersection.html" class="workflow-step">竞品交集</a><span class="workflow-arrow">›</span>
+<a href="keyword-trend-forecaster.html" class="workflow-step">趋势预测</a><span class="workflow-arrow">›</span>
+<a href="ppc-keyword-mapper.html" class="workflow-step">PPC映射</a><span class="workflow-arrow">›</span>
+<a href="search-term-report-analyzer.html" class="workflow-step">搜索词报告</a><span class="workflow-arrow">›</span>
+<a href="keyword-canibalization-checker.html" class="workflow-step active">蚕食检查</a>
+</div></div></div>
+<div class="crumb"><a href="../index.html">首页</a> › <a href="index.html">实用工具</a> › <a href="keyword-canibalization-checker.html">W37</a> › <span class="cur">关键词蚕食检查器</span></div>
+<div class="tool-head"><h1>关键词蚕食<em>检查器</em></h1><p>输入多个自有ASIN的排名关键词，识别被多个ASIN同时抢占的"蚕食词"，评估内耗影响，输出差异化分工建议，避免自己跟自己竞争。</p></div>
+<div class="wf-container">
+  <div class="card">
+    <h2>📋 输入各ASIN排名关键词</h2>
+    <div class="asin-grid">
+      <div class="asin-box"><div class="asin-head a0">ASIN 1 <input type="text" id="a0name" value="B08X1 主款" placeholder="ASIN编号/名称"></div><textarea id="a0">bluetooth speaker
+portable speaker
+wireless speaker
+waterproof speaker
+mini speaker</textarea></div>
+      <div class="asin-box"><div class="asin-head a1">ASIN 2 <input type="text" id="a1name" value="B09Y2 升级款" placeholder="ASIN编号/名称"></div><textarea id="a1">bluetooth speaker
+premium speaker
+wireless speaker
+outdoor speaker
+speaker with light</textarea></div>
+      <div class="asin-box"><div class="asin-head a2">ASIN 3 <input type="text" id="a2name" value="B0BG3 低价款" placeholder="ASIN编号/名称"></div><textarea id="a2">cheap speaker
+mini speaker
+bluetooth speaker
+budget speaker
+small speaker</textarea></div>
+      <div class="asin-box"><div class="asin-head a3">ASIN 4 <input type="text" id="a3name" value="" placeholder="ASIN编号/名称（可选）"></div><textarea id="a3" placeholder="每行一个关键词（可选）"></textarea></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" onclick="KCC.check()">检查蚕食</button><button class="btn btn-ghost" onclick="KCC.sample()">载入示例</button></div>
+    <div class="result-note">💡 蚕食（Cannibalization）：同一关键词被多个自有ASIN同时排名，导致广告自相竞价、自然流量分散。重叠ASIN越多、关键词越核心，蚕食影响越大。</div>
+  </div>
+  <div class="card"><h2>🔬 蚕食分析结果</h2><div id="result" class="empty">点击"检查蚕食"查看结果</div></div>
+  <div class="card"><h2>🧰 相关工具推荐</h2><div class="rel-grid">
+    <a class="rel-card" href="keyword-cluster-builder.html"><span class="rel-ic">🗂️</span><div><h4>关键词聚类构建器</h4><p>按ASIN分配主题簇</p></div></a>
+    <a class="rel-card" href="ppc-keyword-mapper.html"><span class="rel-ic">📐</span><div><h4>PPC关键词映射器</h4><p>差异化投放分配</p></div></a>
+    <a class="rel-card" href="keyword-research-matrix.html"><span class="rel-ic">🔑</span><div><h4>关键词研究矩阵</h4><p>评估各ASIN主词</p></div></a>
+  </div></div>
+  <div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<script>
+var KCC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function esc(s){return (s||'').replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c]})}
+  var COLORS=['#4f46e5','#10b981','#f59e0b','#ef4444'];
+  function getData(){
+    var asins=[];
+    for(var i=0;i<4;i++){
+      var name=$('a'+i+'name').value.trim();var kw=$('a'+i).value;
+      if(!kw.trim())continue;
+      if(!name)name='ASIN '+(i+1);
+      var set=kw.split(/[\n,]/).map(function(s){return s.trim().toLowerCase()}).filter(Boolean);
+      if(set.length)asins.push({name:name,color:COLORS[i],idx:i,words:set});
+    }
+    return asins;
+  }
+  function check(){
+    var asins=getData();
+    if(asins.length<2){$('result').className='empty';$('result').innerHTML='请至少填写2个ASIN的关键词';return}
+    // 统计每个词被哪些ASIN覆盖
+    var wordMap={};
+    asins.forEach(function(a){a.words.forEach(function(w){if(!wordMap[w])wordMap[w]=[];wordMap[w].push(a)})});
+    var cani=[],unique=[];
+    Object.keys(wordMap).forEach(function(w){
+      if(wordMap[w].length>=2)cani.push({word:w,asins:wordMap[w],count:wordMap[w].length});
+      else unique.push({word:w,asin:wordMap[w][0]});
+    });
+    cani.sort(function(a,b){return b.count-a.count});
+    var totalWords=Object.keys(wordMap).length;
+    var caniRate=totalWords>0?cani.length/totalWords*100:0;
+    var html='<div class="summary-grid"><div class="sum-card"><div class="v" style="color:#4f46e5">'+asins.length+'</div><div class="l">ASIN数量</div></div><div class="sum-card"><div class="v" style="color:#4f46e5">'+totalWords+'</div><div class="l">去重关键词总数</div></div><div class="sum-card"><div class="v" style="color:#ef4444">'+cani.length+'</div><div class="l">蚕食词数量</div></div><div class="sum-card"><div class="v" style="color:'+(caniRate>40?'#ef4444':caniRate>20?'#f59e0b':'#10b981')+'">'+caniRate.toFixed(0)+'%</div><div class="l">蚕食率</div></div></div>';
+    // 蚕食词表
+    html+='<h3>⚠️ 蚕食词对比表</h3>';
+    if(!cani.length){html+='<div class="empty">未发现蚕食词，各ASIN关键词无重叠</div>'}
+    else{
+      html+='<div style="overflow-x:auto"><table><thead><tr><th>关键词</th><th>重叠ASIN数</th><th>涉及ASIN</th><th>蚕食等级</th><th>内耗影响</th></tr></thead><tbody>';
+      cani.forEach(function(c){
+        var level=c.count>=3?{cls:'lv-high',t:'高',color:'#ef4444'}:c.count===2?{cls:'lv-mid',t:'中',color:'#f59e0b'}:{cls:'lv-low',t:'低',color:'#10b981'};
+        var marks=c.asins.map(function(a){return '<span class="asin-mark" style="background:'+a.color+'">'+(a.idx+1)+'</span>'}).join('');
+        var impact=c.count>=3?100:c.count===2?60:30;
+        html+='<tr><td><b>'+esc(c.word)+'</b></td><td>'+c.count+'</td><td>'+marks+'</td><td><span class="cani-level '+level.cls+'">'+level.t+'</span></td><td><div class="impact-bar"><i style="width:'+impact+'%;background:'+level.color+'"></i></div></td></tr>';
+      });
+      html+='</tbody></table></div>';
+    }
+    // 各ASIN词概况
+    html+='<h3 style="margin-top:20px">各ASIN关键词概况</h3><div style="overflow-x:auto"><table><thead><tr><th>ASIN</th><th>总词数</th><th>独有词</th><th>蚕食词</th><th>独有率</th></tr></thead><tbody>';
+    asins.forEach(function(a){
+      var own=0,cw=0;
+      a.words.forEach(function(w){if(wordMap[w].length===1)own++;else cw++});
+      var rate=a.words.length>0?own/a.words.length*100:0;
+      html+='<tr><td><span class="asin-mark" style="background:'+a.color+'">'+(a.idx+1)+'</span> '+esc(a.name)+'</td><td>'+a.words.length+'</td><td style="color:#10b981;font-weight:700">'+own+'</td><td style="color:#ef4444;font-weight:700">'+cw+'</td><td><div class="impact-bar" style="display:inline-block;vertical-align:middle"><i style="width:'+rate+'%;background:#10b981"></i></div> '+rate.toFixed(0)+'%</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    // 建议
+    html+='<h3 style="margin-top:20px">🧭 去重与分工建议</h3><ul class="advice-list">';
+    if(caniRate>40)html+='<li class="danger">蚕食率高达'+caniRate.toFixed(0)+'%，'+cani.length+'个词被多ASIN抢占，内耗严重，急需差异化分工。</li>';
+    else if(caniRate>20)html+='<li class="warn">蚕食率'+caniRate.toFixed(0)+'%，存在一定内耗，建议优化关键词分配。</li>';
+    else html+='<li class="ok">蚕食率仅'+caniRate.toFixed(0)+'%，各ASIN关键词分工较清晰，内耗可控。</li>';
+    if(cani.length){
+      var topCani=cani.filter(function(c){return c.count>=3});
+      if(topCani.length)html+='<li class="danger">有 '+topCani.length+' 个词被3个以上ASIN同时抢占（如"'+esc(topCani[0].word)+'"），建议明确指定主推ASIN，其余ASIN从该词广告中剔除或否定。</li>';
+      html+='<li class="warn">对'+cani.length+'个蚕食词，建议：① 按ASIN定位分配主词（主款攻通用词、升级款攻高端词、低价款攻低价词）；② 广告层面为每个ASIN设定专属关键词组，避免同词竞价；③ 自然排名层面通过差异化Listing标题/后台词引导各ASIN索引不同词。</li>';
+    }
+    html+='<li>各ASIN独有词是差异化流量来源，建议巩固。独有率低的ASIN（<50%）应补充专属长尾词，减少对共有词的依赖。</li>';
+    html+='<li>定期（每月）复查蚕食情况，新品上架时优先分配未被现有ASIN覆盖的关键词。</li>';
+    html+='</ul>';
+    $('result').className='';$('result').innerHTML=html;
+  }
+  function sample(){
+    $('a0name').value='B08X1 主款';$('a0').value='bluetooth speaker\nportable speaker\nwireless speaker\nwaterproof speaker\nmini speaker';
+    $('a1name').value='B09Y2 升级款';$('a1').value='bluetooth speaker\npremium speaker\nwireless speaker\noutdoor speaker\nspeaker with light';
+    $('a2name').value='B0BG3 低价款';$('a2').value='cheap speaker\nmini speaker\nbluetooth speaker\nbudget speaker\nsmall speaker';
+    $('a3name').value='';$('a3').value='';
+    check();
+  }
+  function init(){var bt=$('backToTop');window.addEventListener('scroll',function(){bt.classList.toggle('visible',window.scrollY>300)});bt.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})}}
+  return{check:check,sample:sample,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',KCC.init)}else{KCC.init()}
+</script>
+</body>
+</html>

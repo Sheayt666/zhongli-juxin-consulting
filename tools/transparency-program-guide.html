@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Amazon Transparency项目指南：项目介绍，参与流程，费用估算，CSS成本效益分析。免费在线品牌保护工具。">
+<title>Amazon Transparency项目指南 - 流程·费用·成本效益 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.stat-card .stat-val{font-size:24px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.flow-chart{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:8px}.flow-step{flex:1;min-width:160px;background:linear-gradient(135deg,#eef2ff,#f8fafc);border:1px solid #c7d2fe;border-radius:12px;padding:16px 12px;text-align:center}.flow-step-num{width:28px;height:28px;border-radius:50%;background:var(--t-primary);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}.flow-step-title{font-size:13px;font-weight:700;margin-bottom:4px}.flow-step-desc{font-size:11px;color:var(--t-muted)}.flow-arrow{display:flex;align-items:center;padding:0 4px;color:var(--t-primary);font-size:18px;flex-shrink:0}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}.cost-table th{padding:10px 14px;text-align:left;font-weight:700;background:var(--t-bg-soft);border-bottom:2px solid var(--t-rule)}.cost-table td{padding:10px 14px;border-bottom:1px solid var(--t-rule-light)}.cost-table .total{font-weight:800;color:var(--t-primary);font-size:15px}
+.benefit-bar{height:30px;border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:12px;font-weight:700;color:#fff;margin-bottom:8px}.benefit-cost{background:linear-gradient(90deg,#ef4444,#f87171)}.benefit-gain{background:linear-gradient(90deg,#10b981,#34d399)}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row2{grid-template-columns:1fr}.flow-chart{flex-direction:column}.flow-arrow{transform:rotate(90deg);justify-content:center}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护深度工作流</div><div class="workflow-steps">
+<a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step active">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W42 品牌保护</a><span class="sep">/</span><span class="current">Transparency项目指南</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W42 · 品牌保护深度工作流</span><h1>Amazon Transparency<em>项目指南</em></h1><p class="tool-header-desc">Transparency项目介绍，参与流程，费用估算，CSS成本效益分析。每件产品唯一二维码实现全链路防伪溯源。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>产品信息输入</h2>
+    <p class="section-sub">输入ASIN数量和月销量，估算Transparency项目费用</p>
+    <div class="form-row2">
+      <div class="form-field"><label>参与ASIN数量</label><input type="number" id="inpAsin" value="10" min="1" oninput="TPG.compute()"></div>
+      <div class="form-field"><label>月总销量（件）</label><input type="number" id="inpVolume" value="5000" min="1" oninput="TPG.compute()"></div>
+    </div>
+    <div class="form-row2">
+      <div class="form-field"><label>预估假货损失/月（$）</label><input type="number" id="inpLoss" value="3000" min="0" oninput="TPG.compute()"></div>
+      <div class="form-field"><label>正品平均售价（$）</label><input type="number" id="inpPrice" value="25" min="1" oninput="TPG.compute()"></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>费用概览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statMonthly">$0</div><div class="stat-lbl">月费用估算</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statAnnual">$0</div><div class="stat-lbl">年费用估算</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statROI">0x</div><div class="stat-lbl">维权ROI</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>参与流程</h2>
+    <div class="flow-chart">
+      <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-title">Brand Registry</div><div class="flow-step-desc">完成Amazon Brand Registry注册</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-title">申请加入</div><div class="flow-step-desc">在Transparency页面提交申请</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-title">提交产品信息</div><div class="flow-step-desc">提供产品图片和溯源信息</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-title">获取二维码</div><div class="flow-step-desc">Amazon为每件产品生成唯一二维码</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-title">工厂贴码</div><div class="flow-step-desc">在工厂为每件产品贴上二维码</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">6</div><div class="flow-step-title">入仓验证</div><div class="flow-step-desc">FBA入仓时自动扫码验证真伪</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>费用明细</h2>
+    <table class="cost-table" id="costTable"></table>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>成本效益分析</h2>
+    <p class="section-sub">Transparency项目年费用 vs 假货年损失对比</p>
+    <div id="benefitChart"></div>
+    <div style="margin-top:16px;padding:14px;border-radius:10px;background:var(--t-bg-soft);font-size:13px;color:var(--t-ink-soft)" id="benefitConclusion"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="project-zero-enrollment.html" class="related-card"><div class="related-card-icon">🛡️</div><div class="related-card-content"><h5>Project Zero</h5><p>自助打假工具</p></div></a>
+      <a href="counterfeit-impact-calculator.html" class="related-card"><div class="related-card-icon">📉</div><div class="related-card-content"><h5>假货影响计算器</h5><p>收入损失计算</p></div></a>
+      <a href="brand-protection-strategy.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>品牌保护策略</h5><p>6维度评估</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var TPG = (function(){
+  'use strict';
+  function compute(){
+    var asin=parseInt(document.getElementById('inpAsin').value)||1;
+    var volume=parseInt(document.getElementById('inpVolume').value)||1;
+    var loss=parseInt(document.getElementById('inpLoss').value)||0;
+    var price=parseFloat(document.getElementById('inpPrice').value)||1;
+
+    // 费用: 每个二维码$0.05-$0.15，取$0.05
+    var codeCost=0.05;
+    var monthlyCodeCost=Math.round(volume*codeCost);
+    var setupFee=0; // 无设置费
+    var monthlyTotal=monthlyCodeCost;
+    var annualTotal=monthlyTotal*12;
+    var annualLoss=loss*12;
+
+    document.getElementById('statMonthly').textContent='$'+monthlyTotal.toLocaleString();
+    document.getElementById('statAnnual').textContent='$'+annualTotal.toLocaleString();
+
+    var roi = annualTotal>0 ? (annualLoss/annualTotal) : 0;
+    document.getElementById('statROI').textContent = roi.toFixed(1)+'x';
+
+    // 费用表
+    var ch='<thead><tr><th>费用项目</th><th>单价</th><th>数量</th><th>月费用</th><th>年费用</th></tr></thead><tbody>';
+    ch+='<tr><td>Transparency二维码贴标</td><td>$0.05/件</td><td>'+volume.toLocaleString()+'件/月</td><td>$'+monthlyCodeCost.toLocaleString()+'</td><td>$'+(monthlyCodeCost*12).toLocaleString()+'</td></tr>';
+    ch+='<tr><td>设置费/注册费</td><td>$0</td><td>-</td><td>$0</td><td>$0</td></tr>';
+    ch+='<tr class="total"><td>合计</td><td>-</td><td>-</td><td>$'+monthlyTotal.toLocaleString()+'</td><td>$'+annualTotal.toLocaleString()+'</td></tr>';
+    ch+='</tbody>';
+    document.getElementById('costTable').innerHTML=ch;
+
+    // 成本效益
+    var maxVal=Math.max(annualTotal,annualLoss,1);
+    var bh='';
+    bh+='<div style="font-size:13px;font-weight:700;margin-bottom:8px">年度成本</div>';
+    bh+='<div class="benefit-bar benefit-cost" style="width:'+Math.round(annualTotal/maxVal*100)+'%">$'+annualTotal.toLocaleString()+' /年</div>';
+    bh+='<div style="font-size:13px;font-weight:700;margin:12px 0 8px">假货年度损失（预估）</div>';
+    bh+='<div class="benefit-bar benefit-gain" style="width:'+Math.round(annualLoss/maxVal*100)+'%">$'+annualLoss.toLocaleString()+' /年</div>';
+    document.getElementById('benefitChart').innerHTML=bh;
+
+    var conclusion;
+    if(roi>=3){
+      conclusion='<strong style="color:#10b981">强烈推荐加入</strong> — 维权ROI达到'+roi.toFixed(1)+'倍，Transparency年费用$'+annualTotal.toLocaleString()+'远低于假货年损失$'+annualLoss.toLocaleString()+'，投入产出比优秀。';
+    } else if(roi>=1){
+      conclusion='<strong style="color:#f59e0b">建议加入</strong> — 维权ROI为'+roi.toFixed(1)+'倍，投入产出比合理，建议优先为核心ASIN加入。';
+    } else {
+      conclusion='<strong style="color:#ef4444">需评估</strong> — 维权ROI仅'+roi.toFixed(1)+'倍，建议先扩大销量规模或针对高假货风险ASIN加入。';
+    }
+    document.getElementById('benefitConclusion').innerHTML=conclusion;
+  }
+
+  return{compute:compute};
+})();
+TPG.compute();
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播数据看板：输入观看人数/点赞/评论/分享/商品点击/下单/GMV，CSS数据卡片实时GMV/转化率/互动率/客单价，直播漏斗曝光→观看→互动→点击→购买，CSS漏斗图可视化，各产品销量排行。免费直播运营工具。">
+<meta name="keywords" content="直播数据看板,直播GMV,转化率,互动率,客单价,直播漏斗,产品排行,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-data-dashboard.html">
+<title>直播数据看板 - 实时GMV·漏斗图·产品排行 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .funnel-chart{display:flex;flex-direction:column;align-items:center;gap:4px;margin:20px 0}
+  .funnel-stage{display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;transition:all .5s}
+  .fs-1{width:100%;height:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);clip-path:polygon(5% 0,95% 0,90% 100%,10% 100%)}
+  .fs-2{width:85%;height:45px;background:linear-gradient(135deg,#6366f1,#818cf8);clip-path:polygon(5% 0,95% 0,90% 100%,10% 100%)}
+  .fs-3{width:70%;height:40px;background:linear-gradient(135deg,#818cf8,#a5b4fc);clip-path:polygon(5% 0,95% 0,90% 100%,10% 100%)}
+  .fs-4{width:55%;height:35px;background:linear-gradient(135deg,#a5b4fc,#c7d2fe);clip-path:polygon(5% 0,95% 0,90% 100%,10% 100%)}
+  .fs-5{width:40%;height:30px;background:linear-gradient(135deg,#10b981,#34d399);clip-path:polygon(5% 0,95% 0,90% 100%,10% 100%)}
+  .funnel-label{display:flex;justify-content:space-between;width:100%;font-size:13px;color:var(--ink-soft);padding:0 20px;margin-bottom:2px}
+  .funnel-label .fl-val{font-weight:700;color:#4f46e5}
+  .product-rank-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light)}
+  .pr-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#4f46e5;flex-shrink:0}
+  .pr-bar{flex:1;height:8px;background:var(--rule-light);border-radius:4px;overflow:hidden}
+  .pr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#4f46e5,#6366f1)}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播数据看板","description":"直播数据看板：输入观看人数/点赞/评论/分享/商品点击/下单/GMV，CSS数据卡片实时GMV/转化率/互动率/客单价，直播漏斗曝光→观看→互动→点击→购买，CSS漏斗图可视化，各产品销量排行。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-data-dashboard.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_data_dashboard">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第4步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><span class="step current">数据看板</span><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 深度版</span>
+      <h1>直播数据<em>看板</em></h1>
+      <p class="tool-hero-desc">数据输入：观看人数/点赞/评论/分享/商品点击/下单/GMV，CSS数据卡片：实时GMV/转化率/互动率/客单价，直播漏斗：曝光→观看→互动→点击→购买CSS漏斗图可视化，各产品销量排行。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 直播数据输入</h2>
+      <p class="calc-form-subtitle">输入直播间核心数据，实时生成数据看板</p>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>曝光人数</label><input type="number" id="impressions" value="50000" step="100" oninput="DD.calc()"></div>
+        <div class="calc-field"><label>观看人数</label><input type="number" id="viewers" value="12000" step="100" oninput="DD.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>点赞数</label><input type="number" id="likes" value="35000" step="100" oninput="DD.calc()"></div>
+        <div class="calc-field"><label>评论数</label><input type="number" id="comments" value="2800" step="10" oninput="DD.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>分享数</label><input type="number" id="shares" value="450" step="10" oninput="DD.calc()"></div>
+        <div class="calc-field"><label>关注新增</label><input type="number" id="follows" value="320" step="10" oninput="DD.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>商品点击数</label><input type="number" id="clicks" value="3600" step="10" oninput="DD.calc()"></div>
+        <div class="calc-field"><label>下单数</label><input type="number" id="orders" value="580" step="10" oninput="DD.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>总GMV ($)</label><input type="number" id="gmv" value="17400" step="100" oninput="DD.calc()"></div>
+        <div class="calc-field"><label>直播时长 (分钟)</label><input type="number" id="liveDuration" value="120" step="10" oninput="DD.calc()"></div>
+      </div>
+      <div class="calc-field"><label>产品销量排行（格式：名称|销量）</label>
+        <textarea id="productRanking" rows="4" style="width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit" oninput="DD.calc()">维C精华液|280
+防晒霜SPF50|120
+洁面泡沫|90
+黄金面霜|50
+湿巾便携装|40</textarea>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  <div id="extraSections"></div>
+  
+      <div class="wf-foot-nav"><a href="live-script-generator.html" class="prev"><span class="fn-label">上一步 · 第3步</span><span class="fn-name">← 话术生成</span></a><a href="live-interaction-calc.html" class="next"><span class="fn-label">下一步 · 第5步</span><span class="fn-name">互动率计算 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var DD=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function v(id){return $(id).value||'';}
+  function fmt(v){return '$'+(isFinite(v)?v.toFixed(2):'0.00');}
+
+  function calc(){
+    var imp=n('impressions'),viewers=n('viewers'),likes=n('likes'),comments=n('comments'),shares=n('shares'),follows=n('follows'),clicks=n('clicks'),orders=n('orders'),gmv=n('gmv'),dur=n('liveDuration');
+    if(viewers<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">📊</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入直播数据</p>';$('extraSections').innerHTML='';return;}
+
+    var viewRate=imp>0?(viewers/imp*100):0;
+    var interactionRate=viewers>0?((likes+comments+shares)/viewers*100):0;
+    var clickRate=viewers>0?(clicks/viewers*100):0;
+    var conversionRate=clicks>0?(orders/clicks*100):0;
+    var overallConv=viewers>0?(orders/viewers*100):0;
+    var avgPrice=orders>0?gmv/orders:0;
+    var gmvPerMin=dur>0?gmv/dur:0;
+
+    $('resultCard').innerHTML=
+      '<h3>📊 直播数据看板</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+fmt(gmv)+'</div><div class="rsb-lbl">实时GMV</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+overallConv.toFixed(1)+'%</div><div class="rsb-lbl">整体转化率</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+interactionRate.toFixed(1)+'%</div><div class="rsb-lbl">互动率</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+fmt(avgPrice)+'</div><div class="rsb-lbl">客单价</div></div>'+
+      '</div>'+
+      '<div class="result-grid">'+
+        '<div class="result-item"><div class="ri-label">观看转化率</div><div class="ri-value">'+viewRate.toFixed(1)+'%</div></div>'+
+        '<div class="result-item"><div class="ri-label">点击率</div><div class="ri-value">'+clickRate.toFixed(1)+'%</div></div>'+
+        '<div class="result-item"><div class="ri-label">下单转化率</div><div class="ri-value">'+conversionRate.toFixed(1)+'%</div></div>'+
+        '<div class="result-item"><div class="ri-label">每分钟GMV</div><div class="ri-value">'+fmt(gmvPerMin)+'</div></div>'+
+        '<div class="result-item"><div class="ri-label">新增粉丝</div><div class="ri-value">'+follows+'</div></div>'+
+        '<div class="result-item"><div class="ri-label">人均互动</div><div class="ri-value">'+(viewers>0?((likes+comments+shares)/viewers).toFixed(1):0)+'</div></div>'+
+      '</div>';
+
+    // 漏斗图
+    var funnelStages=[
+      {name:'曝光',value:imp,cls:'fs-1',rate:'100%'},
+      {name:'观看',value:viewers,cls:'fs-2',rate:viewRate.toFixed(1)+'%'},
+      {name:'互动',value:likes+comments+shares,cls:'fs-3',rate:viewers>0?((likes+comments+shares)/viewers*100).toFixed(1)+'%':'0%'},
+      {name:'点击',value:clicks,cls:'fs-4',rate:clickRate.toFixed(1)+'%'},
+      {name:'购买',value:orders,cls:'fs-5',rate:overallConv.toFixed(1)+'%'}
+    ];
+
+    var funnelHtml='<div class="section-block"><h3>🔻 直播转化漏斗</h3><div class="funnel-chart">'+
+      funnelStages.map(function(s){return '<div class="funnel-label"><span>'+s.name+'</span><span class="fl-val">'+s.value.toLocaleString()+' ('+s.rate+')</span></div><div class="funnel-stage '+s.cls+'">'+s.name+' '+s.value.toLocaleString()+'</div>';}).join('')+
+      '</div><div class="result-note">💡 漏斗分析：曝光→观看转化率'+viewRate.toFixed(1)+'%'+(viewRate<20?'，偏低，需优化封面和标题':'，正常')+'；观看→购买转化率'+overallConv.toFixed(1)+'%'+(overallConv<3?'，偏低，需优化产品和话术':'，良好')+'。</div></div>';
+
+    // 产品排行
+    var ranking=v('productRanking').trim().split('\n').filter(Boolean).map(function(line){var p=line.split('|');return{name:p[0].trim(),sales:parseInt(p[1])||0};}).sort(function(a,b){return b.sales-a.sales;});
+    var maxSales=ranking.length?ranking[0].sales:1;
+    var rankHtml='<div class="section-block"><h3>🏆 产品销量排行</h3>'+
+      ranking.map(function(r,i){return '<div class="product-rank-item"><div class="pr-num" style="'+(i===0?'background:#f59e0b':i===1?'background:#94a3b8':i===2?'background:#cd7f32':'')+'">'+(i+1)+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600">'+r.name+'</div><div class="pr-bar"><div class="pr-fill" style="width:'+(r.sales/maxSales*100)+'%"></div></div></div><div style="font-size:14px;font-weight:700;color:#4f46e5">'+r.sales+'单</div></div>';}).join('')+
+      '</div>';
+
+    // 优化建议
+    var advice='<div class="section-block"><h3>🧠 数据优化建议</h3><ul class="opt-tips" style="list-style:none;padding:0;margin:0">'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📊 曝光→观看率'+viewRate.toFixed(1)+'%'+(viewRate<15?'，建议优化直播封面、标题和开播时间':'，表现良好')+'</li>'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">💬 互动率'+interactionRate.toFixed(1)+'%'+(interactionRate<200?'，建议增加互动环节和话术引导':'，表现优秀')+'</li>'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">🖱️ 点击率'+clickRate.toFixed(1)+'%'+(clickRate<20?'，建议优化商品展示和讲解节奏':'，表现良好')+'</li>'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">💰 下单转化率'+conversionRate.toFixed(1)+'%'+(conversionRate<10?'，建议加强逼单话术和限时优惠':'，表现优秀')+'</li>'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative">💵 客单价'+fmt(avgPrice)+(avgPrice<25?'，建议增加套餐搭配和关联推荐':'，表现良好')+'</li>'+
+      '</ul></div>';
+
+    $('extraSections').innerHTML=funnelHtml+rankHtml+advice;
+  }
+
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',DD.init);}else{DD.init();}
+  
+</script>
+</body>
+</html>

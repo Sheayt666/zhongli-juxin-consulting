@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FBA赔付追踪器：记录和管理所有FBA赔付申请（丢失/损坏/退货问题/费用多收），赔付汇总看板，状态进度条，CSS时间线，localStorage自动保存。">
+<title>FBA赔付追踪器 - 赔付申请管理·时间线·进度追踪 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.btn-add{padding:12px 24px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.claim-table{width:100%;border-collapse:collapse;font-size:13px}
+.claim-table th{padding:11px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.claim-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft);vertical-align:middle}
+.claim-table tr:hover td{background:#f8fafc}
+.status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.status-badge.submitted{background:#eff6ff;color:#2563eb}
+.status-badge.reviewing{background:#fffbeb;color:#d97706}
+.status-badge.approved{background:#ecfdf5;color:#059669}
+.status-badge.paid{background:#f0fdf4;color:#16a34a}
+.status-badge.denied{background:#fef2f2;color:#dc2626}
+.type-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.type-badge.lost{background:#fef2f2;color:#dc2626}.type-badge.damaged{background:#fffbeb;color:#d97706}
+.type-badge.return{background:#eff6ff;color:#2563eb}.type-badge.overcharge{background:#f5f3ff;color:#7c3aed}
+.btn-del{padding:4px 10px;border-radius:6px;border:1px solid var(--rule);background:#fff;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit}
+.btn-del:hover{border-color:#dc2626;color:#dc2626}
+.btn-status{padding:4px 10px;border-radius:6px;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);font-size:12px;cursor:pointer;font-family:inherit}
+.btn-status:hover{border-color:#4f46e5;color:#4f46e5}
+.progress-track{display:flex;gap:0;margin:20px 0;border-radius:10px;overflow:hidden;height:28px}
+.progress-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:all .3s}
+.progress-seg.submitted{background:#60a5fa}.progress-seg.reviewing{background:#fbbf24}
+.progress-seg.approved{background:#34d399}.progress-seg.paid{background:#10b981}.progress-seg.denied{background:#ef4444}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#4f46e5,#e2e8f0)}
+.tl-item{position:relative;padding:0 0 18px 0}
+.tl-item::before{content:'';position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid #4f46e5}
+.tl-item.done::before{background:#10b981;border-color:#10b981}
+.tl-item .tl-date{font-size:11px;color:var(--muted)}
+.tl-item .tl-title{font-size:14px;font-weight:600;color:var(--ink);margin:2px 0}
+.tl-item .tl-desc{font-size:13px;color:var(--muted)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-state .es-icon{font-size:48px;opacity:.4;margin-bottom:12px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.claim-table{font-size:11px}.claim-table th,.claim-table td{padding:7px 8px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step active">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">FBA赔付追踪</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">💰</span>FBA 赔付追踪器 Reimbursement Tracker</h1>
+  <p>记录和管理所有 FBA 赔付申请（库存丢失 / 损坏 / 退货问题 / 费用多收），赔付汇总看板实时更新，状态进度条可视化整体进度，CSS 时间线追踪每笔申请流转，数据自动保存到本地。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">申请总数</div><div class="mc-value" id="mTotal">0</div></div>
+    <div class="metric-card warn"><div class="mc-label">待处理金额</div><div class="mc-value" id="mPending">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">已赔付金额</div><div class="mc-value" id="mPaid">$0</div></div>
+    <div class="metric-card danger"><div class="mc-label">已拒绝金额</div><div class="mc-value" id="mDenied">$0</div></div>
+    <div class="metric-card"><div class="mc-label">赔付成功率</div><div class="mc-value" id="mRate">0%</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 状态进度总览</h2>
+    <div class="progress-track" id="progressTrack"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted)">
+      <span>已提交 Submitted</span><span>审核中 Reviewing</span><span>已批准 Approved</span><span>已赔付 Paid</span><span>已拒绝 Denied</span>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>➕ 新增赔付申请</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>赔付类型 Type</label><select id="fType"><option value="lost">库存丢失 Lost</option><option value="damaged">仓库损坏 Damaged</option><option value="return">退货问题 Return Issue</option><option value="overcharge">费用多收 Fee Overcharge</option></select></div>
+      <div class="jx-field"><label>ASIN</label><input type="text" id="fAsin" placeholder="如 B08XXX1234"></div>
+      <div class="jx-field"><label>数量 Qty</label><input type="number" id="fQty" placeholder="如 10" min="0"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>索赔金额 Amount <span class="hint">($)</span></label><input type="number" id="fAmount" placeholder="如 150.00" step="0.01" min="0"></div>
+      <div class="jx-field"><label>申请日期 Date</label><input type="date" id="fDate"></div>
+      <div class="jx-field" style="display:flex;align-items:flex-end"><button class="btn-add" onclick="RMB.add()">添加申请</button></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 赔付申请清单</h2>
+    <div id="claimList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🕐 赔付流转时间线</h2>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 赔付管理建议</h2>
+    <ul id="tips" style="list-style:none;padding:0;margin:0"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="amazon-fee-deep-dive.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>Amazon费用拆解</h5><p>15+费用项深度拆解</p></div></a>
+      <a href="account-health.html" class="rt-card"><div class="rt-icon">🏥</div><div><h5>账户健康检查</h5><p>账号绩效监控</p></div></a>
+      <a href="refund-report-generator.html" class="rt-card"><div class="rt-icon">📄</div><div><h5>退款报告生成</h5><p>退款数据汇总</p></div></a>
+      <a href="rma-tracker.html" class="rt-card"><div class="rt-icon">📦</div><div><h5>RMA追踪器</h5><p>退货授权管理</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="reimbursement-claim-tracker.html">FBA赔付追踪</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var RMB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt0(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var claims=[];
+  var statuses=['submitted','reviewing','approved','paid','denied'];
+  var statusLabels={submitted:'已提交',reviewing:'审核中',approved:'已批准',paid:'已赔付',denied:'已拒绝'};
+  var typeLabels={lost:'库存丢失',damaged:'仓库损坏',return:'退货问题',overcharge:'费用多收'};
+
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_rmb_data'));if(d&&Array.isArray(d))claims=d}catch(e){}}
+  function save(){try{localStorage.setItem('jx_rmb_data',JSON.stringify(claims))}catch(e){}}
+
+  function add(){
+    var type=$('fType').value,asin=$('fAsin').value.trim(),qty=parseInt($('fQty').value)||0,amount=parseFloat($('fAmount').value)||0,date=$('fDate').value||new Date().toISOString().slice(0,10);
+    if(!asin||amount<=0){alert('请填写 ASIN 和索赔金额');return}
+    claims.unshift({id:Date.now(),type:type,asin:asin,qty:qty,amount:amount,date:date,status:'submitted',history:[{date:date,action:'提交申请'}]});
+    $('fAsin').value='';$('fQty').value='';$('fAmount').value='';
+    save();render();
+  }
+
+  function advance(id){
+    var c=claims.find(function(x){return x.id===id});if(!c)return;
+    var idx=statuses.indexOf(c.status);
+    if(idx<3){c.status=statuses[idx+1];c.history.push({date:new Date().toISOString().slice(0,10),action:'状态更新为 '+statusLabels[c.status]});save();render();}
+  }
+  function deny(id){var c=claims.find(function(x){return x.id===id});if(!c)return;c.status='denied';c.history.push({date:new Date().toISOString().slice(0,10),action:'申请被拒绝'});save();render();}
+  function del(id){if(!confirm('确认删除此申请？'))return;claims=claims.filter(function(x){return x.id!==id});save();render();}
+
+  function render(){
+    var total=claims.length;
+    var pending=0,paid=0,denied=0;
+    var counts={submitted:0,reviewing:0,approved:0,paid:0,denied:0};
+    claims.forEach(function(c){counts[c.status]=(counts[c.status]||0)+1;if(c.status==='paid')paid+=c.amount;else if(c.status==='denied')denied+=c.amount;else pending+=c.amount;});
+    $('mTotal').textContent=total;
+    $('mPending').textContent=fmt0(pending);
+    $('mPaid').textContent=fmt0(paid);
+    $('mDenied').textContent=fmt0(denied);
+    var closed=counts.paid+counts.denied;var rate=closed>0?counts.paid/closed*100:0;
+    $('mRate').textContent=rate.toFixed(0)+'%';
+
+    // progress bar
+    var pt='';
+    statuses.forEach(function(s){if(counts[s]>0){var w=total>0?counts[s]/total*100:0;pt+='<div class="progress-seg '+s+'" style="flex:'+w+'">'+counts[s]+'</div>';}});
+    $('progressTrack').innerHTML=pt||'<div style="width:100%;text-align:center;color:var(--muted);font-size:13px;line-height:28px">暂无数据</div>';
+
+    // claim list
+    if(claims.length===0){
+      $('claimList').innerHTML='<div class="empty-state"><div class="es-icon">📭</div><p>暂无赔付申请，请在上方添加</p></div>';
+    }else{
+      var h='<div style="overflow-x:auto"><table class="claim-table"><thead><tr><th>类型</th><th>ASIN</th><th>数量</th><th>金额</th><th>申请日期</th><th>状态</th><th>操作</th></tr></thead><tbody>';
+      claims.forEach(function(c){
+        h+='<tr><td><span class="type-badge '+c.type+'">'+typeLabels[c.type]+'</span></td><td>'+c.asin+'</td><td>'+c.qty+'</td><td style="font-weight:700">'+fmt0(c.amount)+'</td><td>'+c.date+'</td><td><span class="status-badge '+c.status+'">'+statusLabels[c.status]+'</span></td><td>';
+        if(c.status!=='paid'&&c.status!=='denied'){h+='<button class="btn-status" onclick="RMB.advance('+c.id+')">推进</button> '}
+        if(c.status!=='denied'&&c.status!=='paid'){h+='<button class="btn-status" onclick="RMB.deny('+c.id+')">拒绝</button> '}
+        h+='<button class="btn-del" onclick="RMB.del('+c.id+')">删除</button></td></tr>';
+      });
+      h+='</tbody></table></div>';
+      $('claimList').innerHTML=h;
+    }
+
+    // timeline
+    if(claims.length===0){
+      $('timeline').innerHTML='<div class="empty-state"><div class="es-icon">🕐</div><p>添加申请后将展示流转时间线</p></div>';
+    }else{
+      var th='';
+      claims.slice(0,8).forEach(function(c){
+        var done=c.status==='paid';
+        th+='<div class="tl-item '+(done?'done':'')+'"><div class="tl-date">'+c.date+' · '+typeLabels[c.type]+'</div><div class="tl-title">'+c.asin+' · '+fmt0(c.amount)+'</div><div class="tl-desc">';
+        c.history.forEach(function(hh,i){th+=(i>0?' → ':'')+hh.action});
+        th+=' · 当前：<strong>'+statusLabels[c.status]+'</strong></div></div>';
+      });
+      $('timeline').innerHTML=th;
+    }
+
+    // tips
+    var tips=[];
+    if(total===0)tips.push('尚未添加任何赔付申请。建议每月定期盘点 FBA 库存差异，及时提交赔付申请。');
+    else{
+      tips.push('共有 '+total+' 笔申请，待处理金额 '+fmt0(pending)+'，已赔付 '+fmt0(paid)+'，赔付成功率 '+rate.toFixed(0)+'%。');
+      if(counts.reviewing>0)tips.push('有 '+counts.reviewing+' 笔申请审核中，建议关注 Amazon 后台 Case 状态，及时补充证据。');
+      if(rate<70&&closed>0)tips.push('赔付成功率 '+rate.toFixed(0)+'% 偏低，建议完善索赔证据（库存报告、照片、退货记录）。');
+      if(denied>0)tips.push('有 '+counts.denied+' 笔申请被拒绝，金额 '+fmt0(denied)+'。可分析拒绝原因后重新提交或申诉。');
+      tips.push('Amazon FBA 赔付时效：库存丢失建议 30 天内提交，仓库损坏建议收货后 6 个月内提交，超期将无法索赔。');
+    }
+    $('tips').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;color:#4f46e5;font-weight:700">›</span>'+t+'</li>'}).join('');
+  }
+
+  return {add:add,advance:advance,deny:deny,del:del,init:function(){load();$('fDate').value=new Date().toISOString().slice(0,10);render()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',RMB.init)}else{RMB.init()}
+</script>
+</body>
+</html>

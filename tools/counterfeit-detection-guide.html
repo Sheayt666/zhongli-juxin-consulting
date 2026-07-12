@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="假货检测指南：可疑产品特征（价格/卖家/图片/包装/评论），假货概率评分，CSS检测决策树，证据收集清单。免费在线品牌保护工具。">
+<title>假货检测指南 - 概率评分·决策树·证据清单 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.score-ring{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto}
+.score-ring-val{font-size:32px;font-weight:800;color:#fff}.score-ring-lbl{font-size:12px;color:rgba(255,255,255,0.85)}
+/* 决策树 */
+.tree-node{border:1px solid var(--t-rule);border-radius:10px;padding:14px;margin:8px 0;font-size:13px}.tree-q{font-weight:700;color:var(--t-ink);margin-bottom:6px}.tree-branch{display:flex;align-items:center;gap:8px;padding:4px 0}.tree-label{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px}.tree-yes{background:#fee2e2;color:#991b1b}.tree-no{background:#d1fae5;color:#065f46}
+.evidence-list{list-style:none;padding:0;margin:0}.evidence-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--t-rule-light)}.evidence-item:last-child{border-bottom:none}.evidence-check{width:22px;height:22px;border:2px solid var(--t-rule);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}.evidence-check.checked{background:var(--t-success);border-color:var(--t-success);color:#fff;font-size:14px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护深度工作流</div><div class="workflow-steps">
+<a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step active">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W42 品牌保护</a><span class="sep">/</span><span class="current">假货检测指南</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W42 · 品牌保护深度工作流</span><h1>假货检测<em>指南</em></h1><p class="tool-header-desc">可疑产品特征（价格/卖家/图片/包装/评论）5维度分析，假货概率评分，CSS检测决策树，证据收集清单。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>可疑产品特征输入</h2>
+    <p class="section-sub">选择各维度可疑特征，实时计算假货概率</p>
+    <div class="form-field"><label>价格异常程度</label>
+      <select id="inpPrice" onchange="CDG.compute()">
+        <option value="0">正品价格±10%以内（正常）</option>
+        <option value="15">低于正品15-30%（可疑）</option>
+        <option value="30">低于正品30-50%（高度可疑）</option>
+        <option value="50">低于正品50%以上（极可能假货）</option>
+      </select>
+    </div>
+    <div class="form-field"><label>卖家特征</label>
+      <select id="inpSeller" onchange="CDG.compute()">
+        <option value="0">品牌官方或授权卖家</option>
+        <option value="10">新注册卖家（<6个月）</option>
+        <option value="20">非授权卖家，无品牌授权</option>
+        <option value="25">卖家名称含品牌名但非官方</option>
+        <option value="30">多账号同一IP关联卖家</option>
+      </select>
+    </div>
+    <div class="form-field"><label>产品图片</label>
+      <select id="inpImage" onchange="CDG.compute()">
+        <option value="0">官方图片或高清实物图</option>
+        <option value="10">图片模糊或像素低</option>
+        <option value="15">盗用官方图片但有水印</option>
+        <option value="20">图片与描述不符</option>
+        <option value="25">明显PS痕迹或拼接图</option>
+      </select>
+    </div>
+    <div class="form-field"><label>包装特征</label>
+      <select id="inpPackage" onchange="CDG.compute()">
+        <option value="0">正规包装，含防伪标识</option>
+        <option value="10">包装简陋或无品牌标识</option>
+        <option value="15">无防伪码或防伪码无法验证</option>
+        <option value="20">包装印刷质量明显差异</option>
+        <option value="25">无原厂封条或二次封装痕迹</option>
+      </select>
+    </div>
+    <div class="form-field"><label>评论特征</label>
+      <select id="inpReview" onchange="CDG.compute()">
+        <option value="0">真实评论，含使用体验</option>
+        <option value="10">评论集中在短时间，疑似刷单</option>
+        <option value="15">评论提及"非正品""假货"</option>
+        <option value="20">五星好评但内容空泛</option>
+        <option value="25">大量带图好评但图片重复</option>
+      </select>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>假货概率评分</h2>
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div class="score-ring" id="scoreRing"><div class="score-ring-val" id="scoreVal">0%</div><div class="score-ring-lbl">假货概率</div></div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:18px;font-weight:800;margin-bottom:4px" id="riskLevel">待评估</div>
+        <div style="font-size:13px;color:var(--t-muted)" id="riskDesc">选择可疑特征后自动计算假货概率</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>检测决策树</h2>
+    <p class="section-sub">基于5维度特征的假货判定逻辑</p>
+    <div id="decisionTree"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>证据收集清单</h2>
+    <p class="section-sub">Test Buy前需收集的证据（点击勾选）</p>
+    <ul class="evidence-list" id="evidenceList"></ul>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="unauthorized-seller-tracker.html" class="related-card"><div class="related-card-icon">👥</div><div class="related-card-content"><h5>未授权卖家追踪器</h5><p>追踪Test Buy计划</p></div></a>
+      <a href="ip-complaint-builder.html" class="related-card"><div class="related-card-icon">⚖️</div><div class="related-card-content"><h5>IP投诉构建器</h5><p>投诉信生成</p></div></a>
+      <a href="counterfeit-impact-calculator.html" class="related-card"><div class="related-card-icon">📉</div><div class="related-card-content"><h5>假货影响计算器</h5><p>收入损失计算</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var CDG = (function(){
+  'use strict';
+  var EVIDENCE = [
+    '截图保存可疑listing（含价格/卖家/图片）',
+    '保存产品页面URL和ASIN',
+    '记录卖家名称和卖家ID',
+    '截图可疑评论和评价',
+    '保存卖家店铺信息截图',
+    '下单Test Buy并保留订单号',
+    '收到产品后拍摄开箱视频',
+    '对比正品和可疑产品包装差异',
+    '保留产品实物和所有包装材料',
+    '记录防伪码验证结果',
+    '整理产品质检报告（如有）',
+    '保存所有沟通记录和证据链'
+  ];
+  var checked={};
+
+  function compute(){
+    var price=parseInt(document.getElementById('inpPrice').value);
+    var seller=parseInt(document.getElementById('inpSeller').value);
+    var image=parseInt(document.getElementById('inpImage').value);
+    var pkg=parseInt(document.getElementById('inpPackage').value);
+    var review=parseInt(document.getElementById('inpReview').value);
+    var total=price+seller+image+pkg+review;
+    var pct=Math.min(total,100);
+
+    var ring=document.getElementById('scoreRing');
+    var color=pct>=70?'#ef4444':pct>=40?'#f59e0b':'#10b981';
+    ring.style.background='conic-gradient('+color+' '+pct+'%, #e2e8f0 '+pct+'%)';
+    document.getElementById('scoreVal').textContent=pct+'%';
+
+    var level,desc;
+    if(pct>=70){level='极高风险';desc='综合特征高度符合假货模式，强烈建议立即Test Buy并准备投诉';}
+    else if(pct>=40){level='中高风险';desc='存在多个可疑特征，建议进一步调查并考虑Test Buy验证';}
+    else if(pct>=20){level:'低中风险';desc='存在部分可疑特征，建议持续监控并收集更多证据';}
+    else{level='低风险';desc='特征基本正常，建议定期复查即可';}
+    document.getElementById('riskLevel').textContent=level;
+    document.getElementById('riskLevel').style.color=color;
+    document.getElementById('riskDesc').textContent=desc;
+
+    // 决策树
+    var th='<div class="tree-node"><div class="tree-q">Q1: 价格是否低于正品30%以上？</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(price>=30?'tree-yes':'tree-no')+'">是</span> → 假货概率+'+price+'分，高度可疑</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(price<30?'tree-no':'')+'">否</span> → 继续检查其他特征</div></div>';
+    th+='<div class="tree-node"><div class="tree-q">Q2: 卖家是否为非授权或新注册？</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(seller>=20?'tree-yes':'tree-no')+'">是</span> → 假货概率+'+seller+'分，需验证授权</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(seller<20?'tree-no':'')+'">否</span> → 卖家可信度较高</div></div>';
+    th+='<div class="tree-node"><div class="tree-q">Q3: 图片是否存在盗用/模糊/PS痕迹？</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(image>=15?'tree-yes':'tree-no')+'">是</span> → 假货概率+'+image+'分，图片可疑</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(image<15?'tree-no':'')+'">否</span> → 图片正常</div></div>';
+    th+='<div class="tree-node"><div class="tree-q">Q4: 包装是否无防伪码或质量差？</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(pkg>=15?'tree-yes':'tree-no')+'">是</span> → 假货概率+'+pkg+'分，包装可疑</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(pkg<15?'tree-no':'')+'">否</span> → 包装正常</div></div>';
+    th+='<div class="tree-node"><div class="tree-q">Q5: 评论是否存在刷单或假货投诉？</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(review>=15?'tree-yes':'tree-no')+'">是</span> → 假货概率+'+review+'分，评论可疑</div>';
+    th+='<div class="tree-branch"><span class="tree-label '+(review<15?'tree-no':'')+'">否</span> → 评论正常</div></div>';
+    document.getElementById('decisionTree').innerHTML=th;
+
+    // 证据清单
+    var eh='';
+    EVIDENCE.forEach(function(e,i){
+      var isChecked=checked[i];
+      eh+='<li class="evidence-item"><div class="evidence-check'+(isChecked?' checked':'')+'" onclick="CDG.toggle('+i+')">'+(isChecked?'✓':'')+'</div><div style="font-size:13px;color:var(--t-ink-soft);'+(isChecked?'text-decoration:line-through;color:var(--t-muted)':'')+'">'+e+'</div></li>';
+    });
+    document.getElementById('evidenceList').innerHTML=eh;
+  }
+
+  function toggle(i){checked[i]=!checked[i];compute();}
+
+  return{compute:compute,toggle:toggle};
+})();
+CDG.compute();
+</script>
+</body>
+</html>

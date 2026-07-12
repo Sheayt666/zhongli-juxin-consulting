@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="需求趋势分析器：输入12月搜索量/销量数据，自动判断趋势方向（上升/平稳/下降/季节性），计算同比增长率，SVG折线图+移动平均线可视化。">
+<meta name="keywords" content="需求趋势分析,搜索量趋势,移动平均,同比增长,跨境电商工具">
+<title>需求趋势分析器 - SVG折线图·移动平均·趋势判断 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.input-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+.input-month{text-align:center}
+.input-month label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.input-month input{width:100%;padding:8px;border:1px solid var(--rule);border-radius:8px;font-size:13px;text-align:center}
+.input-month input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.preset-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.preset-btn{padding:6px 14px;border-radius:8px;border:1px solid var(--rule);background:#fff;font-size:12px;cursor:pointer;font-weight:600;transition:all .2s}
+.preset-btn:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.chart-wrap{background:var(--bg);border-radius:var(--radius-sm);padding:20px;border:1px solid var(--rule-light);margin-top:16px}
+.chart-svg{width:100%;height:auto}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.trend-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:700}
+.trend-up{background:var(--green-bg);color:var(--green)}
+.trend-down{background:var(--red-bg);color:var(--red)}
+.trend-flat{background:var(--gold-bg);color:var(--gold)}
+.trend-seasonal{background:var(--indigo-bg);color:var(--indigo)}
+.insight-list{list-style:none;padding:0}
+.insight-list li{padding:10px 0 10px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)}
+.insight-list li:last-child{border-bottom:none}
+.insight-list li::before{content:'📊';position:absolute;left:0;top:10px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.input-grid{grid-template-columns:repeat(3,1fr)}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+<a href="product-research-scorecard.html" class="workflow-step">选品评分</a><span class="workflow-arrow">→</span>
+<a href="market-gap-finder.html" class="workflow-step">市场空白</a><span class="workflow-arrow">→</span>
+<a href="demand-trend-analyzer.html" class="workflow-step active">需求趋势</a><span class="workflow-arrow">→</span>
+<a href="competition-density-mapper.html" class="workflow-step">竞争密度</a><span class="workflow-arrow">→</span>
+<a href="product-differentiation-planner.html" class="workflow-step">差异化</a><span class="workflow-arrow">→</span>
+<a href="seasonality-checker.html" class="workflow-step">季节性</a><span class="workflow-arrow">→</span>
+<a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a><span class="workflow-arrow">→</span>
+<a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a><span class="workflow-arrow">→</span>
+<a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a><span class="workflow-arrow">→</span>
+<a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W36</a><span class="sep">/</span><span class="current">需求趋势</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W36 选品深度工作流</span><h1>需求趋势<em>分析器</em></h1><p>输入12个月搜索量或销量数据，自动判断趋势方向（上升/平稳/下降/季节性），计算同比增长率和移动平均线，SVG折线图可视化趋势走向。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbTrend" style="color:var(--indigo)">-</div><div class="sb-lbl">趋势方向</div></div>
+<div class="sb-card"><div class="sb-val" id="sbYoY" style="color:var(--green)">0%</div><div class="sb-lbl">同比增长率</div></div>
+<div class="sb-card"><div class="sb-val" id="sbAvg" style="color:var(--gold)">0</div><div class="sb-lbl">月均需求量</div></div>
+<div class="sb-card"><div class="sb-val" id="sbVolatility" style="color:var(--red)">0%</div><div class="sb-lbl">波动系数</div></div>
+</div>
+<div class="card">
+<h3>📈 12月需求数据输入</h3>
+<div class="preset-btns">
+<span style="font-size:12px;color:var(--muted);line-height:32px;margin-right:8px">快速预设：</span>
+<button class="preset-btn" onclick="loadPreset('up')">上升趋势</button>
+<button class="preset-btn" onclick="loadPreset('down')">下降趋势</button>
+<button class="preset-btn" onclick="loadPreset('seasonal')">季节性</button>
+<button class="preset-btn" onclick="loadPreset('flat')">平稳趋势</button>
+</div>
+<div class="input-grid" id="inputGrid"></div>
+</div>
+<div class="card">
+<h3>📊 趋势折线图 + 移动平均线</h3>
+<div class="chart-wrap">
+<svg class="chart-svg" id="chartSvg" viewBox="0 0 800 320"></svg>
+</div>
+<div style="display:flex;gap:20px;justify-content:center;margin-top:12px;font-size:12px">
+<span style="display:flex;align-items:center;gap:4px"><span style="width:20px;height:3px;background:var(--indigo);border-radius:2px"></span>原始数据</span>
+<span style="display:flex;align-items:center;gap:4px"><span style="width:20px;height:3px;background:var(--gold);border-radius:2px;border-top:2px dashed var(--gold)"></span>3月移动平均</span>
+</div>
+</div>
+<div class="card">
+<h3>💡 趋势洞察</h3>
+<ul class="insight-list" id="insightList"></ul>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="seasonality-checker.html" class="rt-card"><span class="rt-icon">📅</span><div class="rt-content"><h5>季节性检查器</h5><p>季节性指数分析</p></div></a>
+<a href="product-research-scorecard.html" class="rt-card"><span class="rt-icon">📋</span><div class="rt-content"><h5>选品评分卡</h5><p>12维度选品评估</p></div></a>
+<a href="keyword-opportunity-finder.html" class="rt-card"><span class="rt-icon">🔑</span><div class="rt-content"><h5>关键词机会发现器</h5><p>关键词机会矩阵</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+const presets={
+up:[800,950,1100,1250,1400,1600,1800,2000,2200,2500,2800,3100],
+down:[3000,2800,2600,2300,2000,1800,1500,1300,1100,950,800,650],
+seasonal:[500,480,600,800,1200,1500,1800,1600,1000,700,900,1500],
+flat:[1000,1050,980,1020,990,1010,1000,1030,990,1010,1000,1020]
+};
+const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+let data=[...presets.up];
+const grid=document.getElementById('inputGrid');
+months.forEach((m,i)=>{
+const div=document.createElement('div');div.className='input-month';
+div.innerHTML=`<label>${m}</label><input type="number" id="m${i}" value="${data[i]}" min="0" oninput="data[${i}]=+this.value||0;analyze()">`;
+grid.appendChild(div);
+});
+function loadPreset(type){data=[...presets[type]];data.forEach((v,i)=>document.getElementById('m'+i).value=v);analyze()}
+function analyze(){
+const w=800,h=320,pad={l:50,r:20,t:20,b:40};
+const cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;
+const max=Math.max(...data,1);const min=Math.min(...data,0);
+const range=max-min||1;
+// Moving average
+const ma=data.map((_,i)=>{const s=Math.max(0,i-1),e=Math.min(12,i+2);return data.slice(s,e).reduce((a,b)=>a+b,0)/(e-s)});
+// Trend
+const firstHalf=data.slice(0,6).reduce((a,b)=>a+b,0)/6;
+const secondHalf=data.slice(6).reduce((a,b)=>a+b,0)/6;
+const change=(secondHalf-firstHalf)/firstHalf;
+const std=Math.sqrt(data.reduce((s,v)=>s+Math.pow(v-data.reduce((a,b)=>a+b,0)/12,2),0)/12);
+const volatility=Math.round(std/(data.reduce((a,b)=>a+b,0)/12)*100);
+let trend,trendCls;
+if(volatility>25){trend='季节性';trendCls='trend-seasonal'}
+else if(change>0.1){trend='上升';trendCls='trend-up'}
+else if(change<-0.1){trend='下降';trendCls='trend-down'}
+else{trend='平稳';trendCls='trend-flat'}
+const yoy=Math.round((data[11]-data[0])/data[0]*100);
+const avg=Math.round(data.reduce((a,b)=>a+b,0)/12);
+document.getElementById('sbTrend').innerHTML=`<span class="trend-badge ${trendCls}">${trend}</span>`;
+document.getElementById('sbYoY').textContent=(yoy>0?'+':'')+yoy+'%';
+document.getElementById('sbYoY').style.color=yoy>=0?'var(--green)':'var(--red)';
+document.getElementById('sbAvg').textContent=avg.toLocaleString();
+document.getElementById('sbVolatility').textContent=volatility+'%';
+// SVG chart
+const svg=document.getElementById('chartSvg');
+const xScale=i=>pad.l+(i/11)*cw;
+const yScale=v=>pad.t+ch-((v-min)/range)*ch;
+let html='';
+// Grid lines
+for(let i=0;i<=4;i++){
+const y=pad.t+(ch/4)*i;const val=Math.round(max-(range/4)*i);
+html+=`<line x1="${pad.l}" y1="${y}" x2="${w-pad.r}" y2="${y}" stroke="#f1f5f9" stroke-width="1"/>`;
+html+=`<text x="${pad.l-8}" y="${y+4}" text-anchor="end" font-size="10" fill="#94a3b8">${val}</text>`;
+}
+// X labels
+months.forEach((m,i)=>{html+=`<text x="${xScale(i)}" y="${h-pad.b+18}" text-anchor="middle" font-size="10" fill="#94a3b8">${m}</text>`});
+// Area fill
+let areaPts=data.map((v,i)=>`${xScale(i)},${yScale(v)}`).join(' ');
+html+=`<polygon points="${pad.l},${pad.t+ch} ${areaPts} ${w-pad.r},${pad.t+ch}" fill="url(#grad)" opacity="0.15"/>`;
+html+=`<defs><linearGradient id="grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>`;
+// Moving average line (dashed)
+let maPath=ma.map((v,i)=>`${i===0?'M':'L'}${xScale(i)},${yScale(v)}`).join(' ');
+html+=`<path d="${maPath}" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4"/>`;
+// Data line
+let dataPath=data.map((v,i)=>`${i===0?'M':'L'}${xScale(i)},${yScale(v)}`).join(' ');
+html+=`<path d="${dataPath}" fill="none" stroke="#4f46e5" stroke-width="2.5"/>`;
+// Data points
+data.forEach((v,i)=>{
+html+=`<circle cx="${xScale(i)}" cy="${yScale(v)}" r="4" fill="#fff" stroke="#4f46e5" stroke-width="2"/>`;
+html+=`<text x="${xScale(i)}" y="${yScale(v)-10}" text-anchor="middle" font-size="9" fill="#475569" font-weight="600">${v}</text>`;
+});
+svg.innerHTML=html;
+// Insights
+const insights=[];
+insights.push(`趋势方向：<strong>${trend}</strong>，上下半年变化${(change*100).toFixed(1)}%`);
+insights.push(`同比增长率：<strong>${yoy>0?'+':''}${yoy}%</strong>，${yoy>20?'增长强劲':yoy>0?'温和增长':yoy>-20?'小幅下滑':'显著下滑'}`);
+insights.push(`月均需求量：<strong>${avg.toLocaleString()}</strong>，峰值${Math.max(...data).toLocaleString()}（${months[data.indexOf(Math.max(...data))]}），谷值${Math.min(...data).toLocaleString()}（${months[data.indexOf(Math.min(...data))]}）`);
+insights.push(`波动系数：<strong>${volatility}%</strong>，${volatility>25?'季节性波动大，需按季节调整库存和预算':volatility>15?'有一定波动，关注季节性变化':'需求稳定，适合长期稳定备货'}`);
+if(trend==='上升')insights.push('需求呈上升趋势，建议加大投入、提前备货，抓住增长窗口');
+if(trend==='下降')insights.push('需求呈下降趋势，建议谨慎备货、控制库存，或考虑产品迭代');
+if(trend==='季节性')insights.push('季节性明显，建议旺季前2个月开始备货备广告预算，淡季控制成本');
+if(trend==='平稳')insights.push('需求平稳，适合稳定运营，重点优化利润率和转化率');
+insights.push(`3月移动平均线显示${ma[11]>ma[0]?'整体上升趋势':'整体下降趋势'}，当前MA值${Math.round(ma[11])}`);
+document.getElementById('insightList').innerHTML=insights.map(s=>`<li>${s}</li>`).join('');
+try{localStorage.setItem('jx_demand_trend',JSON.stringify(data))}catch(e){}
+}
+try{const s=JSON.parse(localStorage.getItem('jx_demand_trend'));if(s&&s.length===12){data=s;data.forEach((v,i)=>document.getElementById('m'+i).value=v)}}catch(e){}
+analyze();
+</script>
+</body>
+</html>

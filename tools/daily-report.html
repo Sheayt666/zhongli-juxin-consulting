@@ -139,7 +139,7 @@ var DR = (function(){
   'use strict';
   function v(id){ return parseFloat(document.getElementById(id).value)||0; }
   function change(t,y){
-    if(y===0) return {pct:0,cls:'change-flat',text:'- };
+    if(y===0) return {pct:0,cls:'change-flat',text:'-'};
     var p = ((t-y)/y*100);
     var cls = p>0?'change-up':(p<0?'change-down':'change-flat');
     var arrow = p>0?'↑':(p<0?'↓':'→');

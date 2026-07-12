@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="达人合同生成器：合作内容/佣金/时间/交付物/版权/违约条款模板，输入合作信息自动生成合同文本，关键条款检查清单。免费达人营销工具。">
+<meta name="keywords" content="达人合同,合作合同,达人合作协议,佣金条款,版权条款,违约条款,合同生成">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-contract-generator.html">
+<title>达人合同生成器 - 合作条款自动生成 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .contract-output{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:28px;margin-top:16px;font-size:14px;line-height:1.9;color:var(--ink-soft);white-space:pre-wrap}
+  .checklist-item{padding:8px 0 8px 28px;font-size:14px;position:relative;border-bottom:1px solid var(--rule-light)}
+  .checklist-item::before{content:'☐';position:absolute;left:0;top:8px;font-size:16px;color:#4f46e5}
+  .btn-copy{padding:10px 24px;border-radius:10px;border:none;background:linear-gradient(135deg,#10b981,#34d399);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"达人合同生成器","description":"达人合同生成器：合作内容/佣金/时间/交付物/版权/违约条款模板，输入合作信息自动生成合同文本，关键条款检查清单。免费达人营销工具。","url":"https://juxin-consulting.help/tools/influencer-contract-generator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="influencer_contract_generator">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第9步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">→</span><a href="influencer-commission-calc.html" class="step">佣金计算</a><span class="arrow">→</span><a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">→</span><a href="influencer-sample-tracker.html" class="step">样品寄送</a><span class="arrow">→</span><a href="influencer-database.html" class="step">达人资源库</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具 · 标准版</span>
+      <h1>达人合同<em>生成器</em></h1>
+      <p class="tool-hero-desc">合同模板包含合作内容/佣金/时间/交付物/版权/违约六大条款，输入合作信息自动生成专业合同文本，附关键条款检查清单。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 合作信息输入</h2>
+      <p class="calc-form-subtitle">填写合作信息，自动生成达人合作协议</p>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>甲方（品牌方）</label><input type="text" id="partyA" value="GlowBeauty Inc." oninput="CG.gen()"></div>
+        <div class="calc-field"><label>乙方（达人）</label><input type="text" id="partyB" value="BeautyQueen" oninput="CG.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>合作产品</label><input type="text" id="product" value="维C亮肤精华液" oninput="CG.gen()"></div>
+        <div class="calc-field"><label>合作平台</label><input type="text" id="platform" value="TikTok / Instagram" oninput="CG.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>合作开始日期</label><input type="text" id="startDate" value="2026-01-15" oninput="CG.gen()"></div>
+        <div class="calc-field"><label>合作结束日期</label><input type="text" id="endDate" value="2026-04-15" oninput="CG.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>佣金模式</label><select id="commMode" onchange="CG.gen()"><option value="CPS 20%">CPS 20%</option><option value="固定佣金 $3/单">固定佣金 $3/单</option><option value="混合：固定$500+15%CPS">混合：固定$500+15%CPS</option></select></div>
+        <div class="calc-field"><label>交付物</label><input type="text" id="deliverables" value="2条短视频+1场直播" oninput="CG.gen()"></div>
+      </div>
+      <div class="calc-field"><label>折扣码</label><input type="text" id="code" value="QUEEN20" oninput="CG.gen()"></div>
+    </div>
+    <div class="calc-results">
+      <div class="result-card" id="resultCard"></div>
+    </div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="influencer-sample-tracker.html" class="prev"><span class="fn-label">上一步 · 第8步</span><span class="fn-name">← 样品寄送</span></a><a href="influencer-database.html" class="next"><span class="fn-label">下一步 · 第10步</span><span class="fn-name">达人资源库 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-match-score.html">达人匹配评分器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var CG=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+
+  function gen(){
+    var a=v('partyA'),b=v('partyB'),prod=v('product'),plat=v('platform'),sd=v('startDate'),ed=v('endDate'),cm=v('commMode'),dl=v('deliverables'),code=v('code');
+    if(!a||!b){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">📄</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入合作信息</p>';return;}
+
+    var contract=
+      '达人合作协议\n\n'+
+      '合同编号：'+Date.now().toString(36).toUpperCase()+'\n'+
+      '签订日期：'+new Date().toISOString().slice(0,10)+'\n\n'+
+      '甲方（品牌方）：'+a+'\n'+
+      '乙方（达人）：'+b+'\n\n'+
+      '甲乙双方本着平等自愿、互惠互利的原则，就达人营销合作事宜达成如下协议：\n\n'+
+      '第一条 合作内容\n'+
+      '1.1 乙方在'+plat+'平台为甲方产品"'+prod+'"创作推广内容。\n'+
+      '1.2 交付物：'+dl+'。\n'+
+      '1.3 内容需经甲方审核确认后方可发布。\n\n'+
+      '第二条 合作期限\n'+
+      '2.1 合作期：'+sd+' 至 '+ed+'。\n'+
+      '2.2 如需延期，双方应提前7个工作日书面协商。\n\n'+
+      '第三条 佣金与结算\n'+
+      '3.1 佣金模式：'+cm+'。\n'+
+      '3.2 乙方专属折扣码：'+code+'。\n'+
+      '3.3 结算周期：每月15日结算上月佣金，甲方于5个工作日内支付。\n'+
+      '3.4 乙方需提供收款账户信息及税务相关文件。\n\n'+
+      '第四条 交付物要求\n'+
+      '4.1 视频内容时长不少于30秒，图文不少于3张图片。\n'+
+      '4.2 内容须自然植入产品，不得生硬广告。\n'+
+      '4.3 须展示产品名称、核心卖点及折扣码'+code+'。\n'+
+      '4.4 发布后48小时内不得删除或修改。\n\n'+
+      '第五条 知识产权\n'+
+      '5.1 乙方创作内容的著作权归乙方所有。\n'+
+      '5.2 甲方有权在自有渠道使用乙方发布的内容进行二次传播，需注明出处。\n'+
+      '5.3 乙方不得在合作期内为竞品创作同类推广内容。\n\n'+
+      '第六条 违约责任\n'+
+      '6.1 乙方未按约定时间交付内容，每延期1天扣减佣金5%。\n'+
+      '6.2 乙方发布虚假信息或恶意差评竞品，甲方有权终止合作并追回已付佣金。\n'+
+      '6.3 甲方未按时支付佣金，每延期1天支付应付金额0.5%的违约金。\n'+
+      '6.4 任何一方提前终止合作，需提前15天书面通知对方。\n\n'+
+      '第七条 保密条款\n'+
+      '7.1 双方对合作细节及商业信息负有保密义务。\n'+
+      '7.2 保密期限自合同签订之日起至合作结束后2年。\n\n'+
+      '第八条 争议解决\n'+
+      '8.1 本协议适用中华人民共和国法律。\n'+
+      '8.2 因本协议产生的争议，双方应友好协商解决；协商不成的，提交甲方所在地法院诉讼解决。\n\n'+
+      '第九条 其他\n'+
+      '9.1 本协议一式两份，甲乙双方各执一份。\n'+
+      '9.2 本协议自双方签字盖章之日起生效。\n\n'+
+      '甲方（盖章）：_________________  乙方（签字）：_________________\n'+
+      '日期：'+new Date().toISOString().slice(0,10)+'          日期：'+new Date().toISOString().slice(0,10);
+
+    var checklist=[
+      '合作产品、平台、交付物明确具体',
+      '合作期限有明确起止日期',
+      '佣金模式、结算周期、支付方式清晰',
+      '折扣码和专属链接已约定',
+      '内容审核流程已约定',
+      '知识产权归属和使用范围明确',
+      '竞品排他条款已约定',
+      '违约责任对双方对等',
+      '保密条款包含保密期限',
+      '争议解决方式和管辖法院已约定'
+    ];
+
+    $('resultCard').innerHTML=
+      '<h3>📄 达人合作协议</h3>'+
+      '<button class="btn-copy" onclick="CG.copy()" style="margin-bottom:16px">📋 复制合同文本</button>'+
+      '<div class="contract-output">'+contract+'</div>'+
+      '<div class="section-block" style="margin-top:24px"><h3>✅ 关键条款检查清单</h3>'+
+      checklist.map(function(c){return '<div class="checklist-item">'+c+'</div>';}).join('')+
+      '</div>';
+  }
+
+  function copy(){var text=document.querySelector('.contract-output').textContent;if(navigator.clipboard){navigator.clipboard.writeText(text);}else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
+
+  function init(){gen();}
+  return{gen:gen,copy:copy,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CG.init);}else{CG.init();}
+  
+</script>
+</body>
+</html>

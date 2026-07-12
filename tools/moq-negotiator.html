@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="MOQ最小起订量谈判计算器：不同MOQ下的总成本对比，含采购成本、仓储成本、资金成本，CSS柱状图，最优MOQ建议。">
+<title>MOQ谈判计算器 - 最小起订量成本对比·最优建议 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.moq-table{width:100%;border-collapse:collapse;font-size:13px}
+.moq-table th{padding:11px 12px;text-align:right;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.moq-table th:first-child{text-align:left}
+.moq-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft);text-align:right;font-variant-numeric:tabular-nums}
+.moq-table td:first-child{text-align:left;font-weight:600}
+.moq-table tr.optimal td{background:#ecfdf5;font-weight:700}
+.moq-table tr.optimal td:first-child{color:#059669}
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:280px;padding:16px 8px;border-bottom:2px solid var(--rule);overflow-x:auto}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:80px;flex:1}
+.bar-stack{display:flex;flex-direction:column-reverse;width:100%;max-width:60px;margin:0 auto;align-items:center}
+.bar-seg{width:100%;transition:height .4s;min-height:2px}
+.bar-seg.purchase{background:linear-gradient(180deg,#6366f1,#4f46e5);border-radius:0 0 0 0}
+.bar-seg.storage{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.bar-seg.capital{background:linear-gradient(180deg,#f87171,#ef4444);border-radius:6px 6px 0 0}
+.bar-val{font-size:12px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted);text-align:center}
+.chart-legend{display:flex;gap:16px;margin-top:12px;font-size:12px;justify-content:center;flex-wrap:wrap}
+.chart-legend .lg-item{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.chart-legend .lg-dot{width:14px;height:14px;border-radius:4px}
+.recommend-box{background:linear-gradient(135deg,#ecfdf5,#f0fdf4);border:1px solid #a7f3d0;border-radius:12px;padding:20px;font-size:14px;color:var(--ink-soft);line-height:1.7}
+.recommend-box strong{color:#059669}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step active">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">MOQ谈判</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🤝</span>MOQ 谈判计算器 MOQ Negotiator</h1>
+  <p>对比不同最小起订量（MOQ）下的总成本（采购成本 + 仓储成本 + 资金占用成本），CSS 堆叠柱状图直观展示成本结构，自动推荐最优 MOQ，为谈判提供数据支撑。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">当前MOQ总成本</div><div class="mc-value" id="mCurCost">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">最优MOQ总成本</div><div class="mc-value" id="mOptCost">$0</div></div>
+    <div class="metric-card warn"><div class="mc-label">可节省金额</div><div class="mc-value" id="mSave">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">推荐MOQ</div><div class="mc-value" id="mOptMoq" style="font-size:18px">--</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 参数输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>当前MOQ <span class="hint">(件)</span></label><input type="number" id="curMoq" value="2000" step="100" min="1" oninput="MOQ.calc()"></div>
+      <div class="jx-field"><label>目标MOQ <span class="hint">(件)</span></label><input type="number" id="targetMoq" value="500" step="100" min="1" oninput="MOQ.calc()"></div>
+      <div class="jx-field"><label>年用量 Annual Usage <span class="hint">(件)</span></label><input type="number" id="annualUsage" value="12000" step="500" min="1" oninput="MOQ.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>当前单价 <span class="hint">($/件)</span></label><input type="number" id="curPrice" value="7.50" step="0.1" min="0" oninput="MOQ.calc()"></div>
+      <div class="jx-field"><label>仓储成本 <span class="hint">($/件/月)</span></label><input type="number" id="storageCost" value="0.15" step="0.01" min="0" oninput="MOQ.calc()"></div>
+      <div class="jx-field"><label>资金成本率 <span class="hint">(%/年)</span></label><input type="number" id="capitalRate" value="12" step="0.5" min="0" max="100" oninput="MOQ.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>MOQ降低后单价 <span class="hint">($/件, 可选)</span></label><input type="number" id="targetPrice" value="8.20" step="0.1" min="0" oninput="MOQ.calc()"></div>
+      <div class="jx-field"><label>单价折扣梯度 <span class="hint">(%/MOQ每翻倍)</span></label><input type="number" id="discountStep" value="3" step="0.5" min="0" oninput="MOQ.calc()"></div>
+      <div class="jx-field"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 不同MOQ下的总成本对比</h2>
+    <div style="overflow-x:auto"><table class="moq-table" id="moqTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📈 成本结构堆叠柱状图</h2>
+    <div class="bar-chart" id="barChart"></div>
+    <div class="chart-legend">
+      <div class="lg-item"><div class="lg-dot" style="background:#4f46e5"></div>采购成本</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#f59e0b"></div>仓储成本</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#ef4444"></div>资金占用成本</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 最优MOQ建议</h2>
+    <div class="recommend-box" id="recommendBox"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>采购订单构建</h5><p>PO生成器</p></div></a>
+      <a href="cost-reduction-planner.html" class="rt-card"><div class="rt-icon">📉</div><div><h5>降本规划器</h5><p>降本路径规划</p></div></a>
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">🏆</div><div><h5>供应商评分卡</h5><p>8维度评分</p></div></a>
+      <a href="reorder-point.html" class="rt-card"><div class="rt-icon">📦</div><div><h5>库存补货计算</h5><p>补货策略</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="moq-negotiator.html">MOQ谈判计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var MOQ=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt0(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  function fmt2(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:2}):'0')}
+
+  function calc(){
+    var curMoq=parseInt($('curMoq').value)||1;
+    var targetMoq=parseInt($('targetMoq').value)||1;
+    var annual=parseInt($('annualUsage').value)||1;
+    var curPrice=parseFloat($('curPrice').value)||0;
+    var storage=parseFloat($('storageCost').value)||0;
+    var capRate=parseFloat($('capitalRate').value)||0;
+    var targetPrice=parseFloat($('targetPrice').value)||curPrice;
+    var discountStep=parseFloat($('discountStep').value)||0;
+
+    // Generate MOQ levels to compare
+    var levels=[targetMoq];
+    if(curMoq!==targetMoq)levels.push(curMoq);
+    // Add intermediate levels
+    var mid=Math.round((curMoq+targetMoq)/2/100)*100;
+    if(mid!==curMoq&&mid!==targetMoq&&mid>0)levels.push(mid);
+    // Add a larger MOQ for volume discount
+    var bigMoq=curMoq*2;
+    levels.push(bigMoq);
+    levels.sort(function(a,b){return a-b});
+
+    var results=[];
+    levels.forEach(function(moq){
+      // Price based on MOQ: larger MOQ = discount
+      var basePrice=moq>=curMoq?curPrice:targetPrice;
+      // discount for doubling: each doubling from curMoq gives discountStep% off
+      var doublings=moq>=curMoq?Math.log2(moq/curMoq):0;
+      var price=basePrice*(1-discountStep/100*Math.max(0,doublings));
+      price=Math.max(price,curPrice*0.7);
+      // Orders per year
+      var ordersPerYear=Math.ceil(annual/moq);
+      var actualAnnual=ordersPerYear*moq;
+      // Purchase cost
+      var purchaseCost=actualAnnual*price;
+      // Average inventory = moq/2, storage cost per month
+      var avgInv=moq/2;
+      var storageCostAnnual=avgInv*storage*12;
+      // Capital cost = avg inventory value * capRate
+      var capitalCost=avgInv*price*capRate/100;
+      var total=purchaseCost+storageCostAnnual+capitalCost;
+      results.push({moq:moq,price:price,orders:ordersPerYear,purchase:purchaseCost,storage:storageCostAnnual,capital:capitalCost,total:total});
+    });
+    // Find optimal (min total)
+    var optimal=results.slice().sort(function(a,b){return a.total-b.total})[0];
+    var curResult=results.find(function(r){return r.moq===curMoq})||results[0];
+
+    $('mCurCost').textContent=fmt0(curResult.total);
+    $('mOptCost').textContent=fmt0(optimal.total);
+    $('mSave').textContent=fmt0(curResult.total-optimal.total);
+    $('mOptMoq').textContent=optimal.moq+' 件';
+
+    // table
+    var h='<thead><tr><th>MOQ (件)</th><th>单价</th><th>年订货次数</th><th>采购成本</th><th>仓储成本</th><th>资金成本</th><th>总成本</th><th>vs当前</th></tr></thead><tbody>';
+    results.forEach(function(r){
+      var isOpt=r.moq===optimal.moq;
+      var vsCur=r.total-curResult.total;
+      h+='<tr class="'+(isOpt?'optimal':'')+'"><td>'+r.moq+(isOpt?' ✓':'')+'</td><td>'+fmt2(r.price)+'</td><td>'+r.orders+'次</td><td>'+fmt0(r.purchase)+'</td><td>'+fmt0(r.storage)+'</td><td>'+fmt0(r.capital)+'</td><td style="font-weight:800;color:'+(isOpt?'#059669':'var(--ink)')+'">'+fmt0(r.total)+'</td><td style="color:'+(vsCur<=0?'#059669':'#dc2626')+'">'+(vsCur<=0?'-':'+')+fmt0(Math.abs(vsCur))+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('moqTable').innerHTML=h;
+
+    // bar chart (stacked)
+    var maxTotal=Math.max.apply(null,results.map(function(r){return r.total}).concat([1]));
+    var bh='';
+    results.forEach(function(r){
+      var purHt=maxTotal>0?r.purchase/maxTotal*100:0;
+      var stoHt=maxTotal>0?r.storage/maxTotal*100:0;
+      var capHt=maxTotal>0?r.capital/maxTotal*100:0;
+      var isOpt=r.moq===optimal.moq;
+      bh+='<div class="bar-col"><div class="bar-val" style="color:'+(isOpt?'#059669':'var(--ink)')+'">'+fmt0(r.total)+'</div><div class="bar-stack" style="height:220px;justify-content:flex-end"><div class="bar-seg purchase" style="height:'+purHt*2.2+'px"></div><div class="bar-seg storage" style="height:'+stoHt*2.2+'px"></div><div class="bar-seg capital" style="height:'+capHt*2.2+'px"></div></div><div class="bar-label">MOQ\n'+r.moq+(isOpt?' ✓':'')+'</div></div>';
+    });
+    $('barChart').innerHTML=bh;
+
+    // recommendation
+    var savings=curResult.total-optimal.total;
+    var savingsPct=curResult.total>0?savings/curResult.total*100:0;
+    var rh='<p><strong>推荐最优 MOQ：'+optimal.moq+' 件</strong></p>';
+    rh+='<p style="margin-top:8px">在 MOQ = '+optimal.moq+' 件时，年总成本最低为 '+fmt0(optimal.total)+'，相比当前 MOQ（'+curMoq+'件）可节省 '+fmt0(savings)+'（'+savingsPct.toFixed(1)+'%）。</p>';
+    rh+='<p style="margin-top:8px"><strong>成本结构分析：</strong>采购成本 '+fmt0(optimal.purchase)+'（占 '+(optimal.total>0?optimal.purchase/optimal.total*100:0).toFixed(0)+'%），仓储成本 '+fmt0(optimal.storage)+'（占 '+(optimal.total>0?optimal.storage/optimal.total*100:0).toFixed(0)+'%），资金成本 '+fmt0(optimal.capital)+'（占 '+(optimal.total>0?optimal.capital/optimal.total*100:0).toFixed(0)+'%）。</p>';
+    if(optimal.moq<curMoq){
+      rh+='<p style="margin-top:8px"><strong>谈判策略：</strong>建议以 '+optimal.moq+' 件为目标与供应商谈判降低 MOQ。虽然单价可能从 '+fmt2(curPrice)+' 升至 '+fmt2(optimal.price)+'，但仓储和资金成本的大幅下降使总成本更低。可用本表数据作为谈判依据。</p>';
+    }else if(optimal.moq>curMoq){
+      rh+='<p style="margin-top:8px"><strong>谈判策略：</strong>建议主动提高 MOQ 至 '+optimal.moq+' 件以获取量价折扣（单价降至 '+fmt2(optimal.price)+'）。需确保年用量足够消化库存，避免滞销风险。</p>';
+    }else{
+      rh+='<p style="margin-top:8px"><strong>谈判策略：</strong>当前 MOQ 已接近最优，建议维持现有 MOQ 并尝试在不增加 MOQ 的前提下争取价格优惠。</p>';
+    }
+    rh+='<p style="margin-top:8px"><strong>注意：</strong>MOQ 过低会增加订货频率和物流成本（未计入），MOQ 过高会增加库存积压和资金压力。建议结合销售预测和资金情况综合决策。</p>';
+    $('recommendBox').innerHTML=rh;
+    save();
+  }
+
+  function save(){var d={};['curMoq','targetMoq','annualUsage','curPrice','storageCost','capitalRate','targetPrice','discountStep'].forEach(function(id){d[id]=$(id).value});try{localStorage.setItem('jx_moq_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_moq_data'));if(d)Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MOQ.init)}else{MOQ.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="评论速度分析器：输入上架天数、当前评论数和竞品评论数，计算日均评论率，CSS对比柱状图，预估达到100评论所需天数。">
+<meta name="keywords" content="评论速度,评论增长,review velocity,评论积累,跨境电商工具">
+<title>评论速度分析器 - 日均评论率·对比图·100评论预估 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+.input-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.input-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;font-family:inherit}
+.input-field input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.comp-input{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.comp-input label{font-size:13px;font-weight:600;min-width:80px}
+.comp-input input{flex:1;padding:8px 12px;border:1px solid var(--rule);border-radius:8px;font-size:13px}
+.comp-input .del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px}
+.compare-chart{display:flex;align-items:flex-end;gap:24px;height:200px;padding:16px;margin-top:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--rule);justify-content:center}
+.cc-col{display:flex;flex-direction:column;align-items:center;gap:6px;width:80px;height:100%;justify-content:flex-end}
+.cc-val{font-size:13px;font-weight:700}
+.cc-bar{width:50px;border-radius:8px 8px 0 0;transition:height .3s;min-height:4px}
+.cc-label{font-size:11px;font-weight:600;color:var(--muted);text-align:center}
+.milestone-box{padding:20px;border-radius:var(--radius);background:linear-gradient(135deg,var(--indigo-bg),#fff);border:2px solid var(--indigo);text-align:center;margin-top:16px}
+.milestone-val{font-size:36px;font-weight:900;color:var(--indigo)}
+.milestone-label{font-size:13px;color:var(--muted);margin-top:4px}
+.milestone-progress{height:12px;border-radius:6px;background:var(--rule);margin:12px auto;max-width:260px;overflow:hidden}
+.milestone-fill{height:100%;border-radius:6px;background:var(--indigo);transition:width .3s}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.suggest-list{list-style:none;padding:0}
+.suggest-list li{padding:10px 0 10px 28px;font-size:13px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)}
+.suggest-list li:last-child{border-bottom:none}
+.suggest-list li::before{content:'⚡';position:absolute;left:0;top:10px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.grid-2,.input-row{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+<a href="product-research-scorecard.html" class="workflow-step">选品评分</a><span class="workflow-arrow">→</span>
+<a href="market-gap-finder.html" class="workflow-step">市场空白</a><span class="workflow-arrow">→</span>
+<a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a><span class="workflow-arrow">→</span>
+<a href="competition-density-mapper.html" class="workflow-step">竞争密度</a><span class="workflow-arrow">→</span>
+<a href="product-differentiation-planner.html" class="workflow-step">差异化</a><span class="workflow-arrow">→</span>
+<a href="seasonality-checker.html" class="workflow-step">季节性</a><span class="workflow-arrow">→</span>
+<a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a><span class="workflow-arrow">→</span>
+<a href="review-velocity-analyzer.html" class="workflow-step active">评论速度</a><span class="workflow-arrow">→</span>
+<a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a><span class="workflow-arrow">→</span>
+<a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W36</a><span class="sep">/</span><span class="current">评论速度</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W36 选品深度工作流</span><h1>评论速度<em>分析器</em></h1><p>输入上架天数和当前评论数，计算日均评论率，与竞品评论增长速度对比，预估达到50/100/500评论所需天数，提供评论加速策略。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbDaily" style="color:var(--indigo)">0</div><div class="sb-lbl">日均评论率</div></div>
+<div class="sb-card"><div class="sb-val" id="sbWeekly" style="color:var(--green)">0</div><div class="sb-lbl">周均评论数</div></div>
+<div class="sb-card"><div class="sb-val" id="sbTo100" style="color:var(--gold)">0</div><div class="sb-lbl">达100评论天数</div></div>
+<div class="sb-card"><div class="sb-val" id="sbRank" style="color:var(--red)">-</div><div class="sb-lbl">竞品中排名</div></div>
+</div>
+<div class="grid-2">
+<div class="card">
+<h3>📝 产品数据输入</h3>
+<div class="input-row">
+<div class="input-field"><label>上架天数</label><input type="number" id="days" value="45" min="1" oninput="calc()"></div>
+<div class="input-field"><label>当前评论数</label><input type="number" id="reviews" value="28" min="0" oninput="calc()"></div>
+</div>
+<div class="input-field"><label>当前日均销量</label><input type="number" id="dailySales" value="12" min="0" oninput="calc()"></div>
+<h4 style="font-size:14px;font-weight:700;margin:16px 0 10px">竞品评论数据</h4>
+<div id="compContainer"></div>
+<button style="padding:8px 16px;border-radius:8px;border:1px dashed var(--indigo);background:var(--indigo-bg);color:var(--indigo);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px" onclick="addComp()">+ 添加竞品</button>
+</div>
+<div>
+<div class="card">
+<h3>📊 评论增长对比图</h3>
+<div class="compare-chart" id="compareChart"></div>
+</div>
+<div class="milestone-box">
+<div class="milestone-label">达到100条评论预计还需</div>
+<div class="milestone-val" id="milestone100">0 天</div>
+<div class="milestone-progress"><div class="milestone-fill" id="milestoneFill" style="width:0%"></div></div>
+<div class="milestone-label" id="milestoneProgress">当前进度：0/100</div>
+</div>
+<div class="card">
+<h3>⚡ 评论加速建议</h3>
+<ul class="suggest-list" id="suggestList"></ul>
+</div>
+</div>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="product-research-scorecard.html" class="rt-card"><span class="rt-icon">📋</span><div class="rt-content"><h5>选品评分卡</h5><p>12维度评估</p></div></a>
+<a href="product-launch-timeline.html" class="rt-card"><span class="rt-icon">📅</span><div class="rt-content"><h5>上线时间线</h5><p>甘特图规划</p></div></a>
+<a href="competition-density-mapper.html" class="rt-card"><span class="rt-icon">🔥</span><div class="rt-content"><h5>竞争密度图</h5><p>竞争分析</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+let comps=[
+{name:'竞品A',days:180,reviews:450},
+{name:'竞品B',days:120,reviews:210},
+{name:'竞品C',days:90,reviews:85}
+];
+const compContainer=document.getElementById('compContainer');
+function renderComps(){
+compContainer.innerHTML=comps.map((c,i)=>`<div class="comp-input"><label>${c.name}</label><input type="number" value="${c.days}" placeholder="天数" oninput="comps[${i}].days=+this.value||0;calc()" style="width:70px"><input type="number" value="${c.reviews}" placeholder="评论数" oninput="comps[${i}].reviews=+this.value||0;calc()" style="width:70px"><button class="del-btn" onclick="comps.splice(${i},1);renderComps();calc()">✕</button></div>`).join('');
+}
+function addComp(){comps.push({name:'竞品'+String.fromCharCode(65+comps.length),days:60,reviews:30});renderComps();calc()}
+function calc(){
+const days=parseFloat(document.getElementById('days').value)||1;
+const reviews=parseFloat(document.getElementById('reviews').value)||0;
+const dailySales=parseFloat(document.getElementById('dailySales').value)||0;
+const dailyRate=reviews/days;
+const weeklyRate=dailyRate*7;
+const to100=reviews>=100?0:Math.ceil((100-reviews)/dailyRate);
+document.getElementById('sbDaily').textContent=dailyRate.toFixed(2);
+document.getElementById('sbWeekly').textContent=weeklyRate.toFixed(1);
+document.getElementById('sbTo100').textContent=to100===0?'已达成':to100+'天';
+document.getElementById('milestone100').textContent=to100===0?'已达成':to100+' 天';
+const progress=Math.min(100,reviews/100*100);
+document.getElementById('milestoneFill').style.width=progress+'%';
+document.getElementById('milestoneProgress').textContent=`当前进度：${reviews}/100 (${progress.toFixed(0)}%)`;
+// Comparison
+const allData=[{name:'我们',days,reviews,dailyRate,color:'var(--indigo)'},...comps.map((c,i)=>({...c,dailyRate:c.days>0?c.reviews/c.days:0,color:['var(--green)','var(--gold)','var(--red)','#8b5cf6'][i%4]}))];
+allData.sort((a,b)=>b.dailyRate-a.dailyRate);
+const myRank=allData.findIndex(d=>d.name==='我们')+1;
+document.getElementById('sbRank').textContent=myRank+'/'+allData.length;
+const maxRate=Math.max(...allData.map(d=>d.dailyRate),0.01);
+document.getElementById('compareChart').innerHTML=allData.map(d=>{
+const h=Math.max(5,d.dailyRate/maxRate*80);
+return`<div class="cc-col"><div class="cc-val" style="color:${d.color}">${d.dailyRate.toFixed(2)}</div><div class="cc-bar" style="height:${h}%;background:${d.color}"></div><div class="cc-label">${d.name}<br>${d.reviews}评/${d.days}天</div></div>`;
+}).join('');
+// Suggestions
+const sugs=[];
+sugs.push(`日均评论率：<strong>${dailyRate.toFixed(2)}条/天</strong>，周均${weeklyRate.toFixed(1)}条，${dailyRate>2?'评论增长良好':dailyRate>1?'评论增长正常':'评论增长偏慢，需加速'}`);
+sugs.push(`预计${to100===0?'已达到':`还需${to100}天`}达到100条评论里程碑`);
+sugs.push(`在${allData.length}个竞品中评论增速排名第<strong>${myRank}</strong>，${myRank===1?'领先竞品！':myRank<=2?'中上水平':'需要加速评论积累'}`);
+if(dailySales>0){
+const reviewRate=dailyRate/dailySales*100;
+sugs.push(`评论转化率：${reviewRate.toFixed(1)}%（每${Math.round(1/(reviewRate/100))}单获得1条评论），${reviewRate>8?'转化率优秀':reviewRate>5?'转化率正常':'转化率偏低，建议优化售后跟进'}`);
+}
+sugs.push('开启Amazon Vine计划，快速获取前30条合规评论');
+sugs.push('在包装内放置售后卡片，引导满意客户留评（注意合规）');
+sugs.push('使用Amazon "Request a Review"按钮，主动向购买客户请求评价');
+sugs.push('优化产品品质和开箱体验，自然提升评论意愿');
+sugs.push('关注差评并及时响应，将差评转化为改进机会');
+if(myRank>2)sugs.push('评论增速低于竞品，建议加大Vine和售后跟进力度，否则将在评论数上处于劣势');
+document.getElementById('suggestList').innerHTML=sugs.map(s=>`<li>${s}</li>`).join('');
+try{localStorage.setItem('jx_review_velocity',JSON.stringify({days,reviews,dailySales,comps}))}catch(e){}
+}
+try{const s=JSON.parse(localStorage.getItem('jx_review_velocity'));if(s){document.getElementById('days').value=s.days;document.getElementById('reviews').value=s.reviews;document.getElementById('dailySales').value=s.dailySales;if(s.comps)comps=s.comps}}catch(e){}
+renderComps();calc();
+</script>
+</body>
+</html>

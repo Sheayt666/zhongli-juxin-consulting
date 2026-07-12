@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="达人佣金计算器：支持固定佣金/比例佣金/阶梯佣金/CPS四种模式，输入售价/佣金率/销量计算达人收入和卖家成本，多模式对比与佣金谈判底线计算。免费达人营销工具。">
+<meta name="keywords" content="达人佣金计算,佣金模式,CPS佣金,阶梯佣金,达人收入,卖家成本,佣金谈判">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-commission-calc.html">
+<title>达人佣金计算器 - 固定/比例/阶梯/CPS四种模式对比 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.mode-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.mode-tab{padding:10px 20px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+.mode-tab.active{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.mode-tab:hover:not(.active){border-color:#4f46e5;color:#4f46e5}
+.compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.compare-table th{padding:12px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.compare-table td{padding:12px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.compare-table tr:hover td{background:#f8f9ff}
+.compare-table .best{background:#ecfdf5!important;font-weight:700;color:#10b981}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.bottom-line-card{padding:20px;border-radius:12px;background:linear-gradient(135deg,#fef2f2,#fef9c3);border:1px solid #fecaca;margin-top:16px}
+.bottom-line-card .blc-val{font-size:28px;font-weight:800;color:#ef4444}
+.bottom-line-card .blc-lbl{font-size:13px;color:var(--muted)}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.tier-input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.tier-input-row input{flex:1}
+.tier-remove{width:32px;height:32px;border-radius:8px;border:1px solid var(--rule);background:#fff;cursor:pointer;font-size:16px;color:#ef4444;flex-shrink:0}
+.tier-remove:hover{background:#fef2f2}
+</style>
+</head>
+<body class="tool-page" data-tool="influencer_commission_calc">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第3步 / 共10步</span></div>
+    <div class="workflow-nav-steps">
+      <a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">→</span>
+      <span class="step current">佣金计算</span><span class="arrow">→</span>
+      <a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">→</span>
+      <a href="influencer-sample-tracker.html" class="step">样品寄送</a><span class="arrow">→</span>
+      <a href="influencer-database.html" class="step">达人资源库</a>
+    </div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具 · 标准版</span>
+      <h1>达人佣金<em>计算器</em></h1>
+      <p class="tool-hero-desc">支持固定佣金、比例佣金、阶梯佣金、CPS四种佣金模式，输入售价/佣金率/销量实时计算达人收入和卖家成本，多模式横向对比，内置佣金谈判底线计算器。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 佣金计算</h2>
+          <p class="calc-form-subtitle">选择佣金模式，输入参数实时计算</p>
+          <div class="mode-tabs">
+            <div class="mode-tab active" data-mode="fixed" onclick="CC.setMode('fixed')">💵 固定佣金</div>
+            <div class="mode-tab" data-mode="percent" onclick="CC.setMode('percent')">📊 比例佣金</div>
+            <div class="mode-tab" data-mode="tiered" onclick="CC.setMode('tiered')">📐 阶梯佣金</div>
+            <div class="mode-tab" data-mode="cps" onclick="CC.setMode('cps')">🔄 CPS佣金</div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品售价 <span class="hint">($)</span></label><input type="number" id="price" placeholder="如 29.99" step="0.01" min="0" value="29.99" oninput="CC.calc()"></div>
+            <div class="calc-field"><label>预计销量 <span class="hint">(单)</span></label><input type="number" id="sales" placeholder="如 500" step="1" min="0" value="500" oninput="CC.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>产品成本 <span class="hint">($)</span></label><input type="number" id="cost" placeholder="如 8.00" step="0.01" min="0" value="8.00" oninput="CC.calc()"></div>
+            <div class="calc-field"><label>其他费用/单 <span class="hint">($)</span></label><input type="number" id="otherFee" placeholder="如 5.00" step="0.01" min="0" value="5.00" oninput="CC.calc()"></div>
+          </div>
+          <div id="modeParams"></div>
+          <div class="fee-rule-box">
+            <h4>📐 佣金模式说明</h4>
+            <ul>
+              <li>固定佣金：每单支付固定金额给达人</li>
+              <li>比例佣金：按售价的百分比支付佣金</li>
+              <li>阶梯佣金：按销量区间设置不同佣金率，销量越高佣金率越高</li>
+              <li>CPS佣金：按实际销售额分佣，达人承担库存风险</li>
+            </ul>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+      <div id="extraSections"></div>
+      <div class="wf-foot-nav">
+        <a href="influencer-profile-analyzer.html" class="prev"><span class="fn-label">上一步 · 第2步</span><span class="fn-name">← 达人画像</span></a>
+        <a href="influencer-roi-tracker.html" class="next"><span class="fn-label">下一步 · 第4步</span><span class="fn-name">ROI追踪 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-commission-calc.html">达人佣金计算器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+var CC=(function(){
+  'use strict';
+  var mode='fixed';
+  var tiers=[{min:0,max:100,rate:10},{min:101,max:300,rate:15},{min:301,max:9999,rate:20}];
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function fmt(v){return '$'+(isFinite(v)?v.toFixed(2):'0.00');}
+
+  function setMode(m){mode=m;document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.toggle('active',t.dataset.mode===m);});renderModeParams();calc();}
+
+  function renderModeParams(){
+    var html='';
+    if(mode==='fixed'){
+      html='<div class="calc-field"><label>每单固定佣金 <span class="hint">($)</span></label><input type="number" id="fixedAmount" placeholder="如 3.00" step="0.01" min="0" value="3.00" oninput="CC.calc()"></div>';
+    }else if(mode==='percent'){
+      html='<div class="calc-field"><label>佣金比例 <span class="hint">(%)</span></label><input type="number" id="percentRate" placeholder="如 15" step="0.5" min="0" max="100" value="15" oninput="CC.calc()"></div>';
+    }else if(mode==='tiered'){
+      html='<div id="tierRows">'+tiers.map(function(t,i){return '<div class="tier-input-row"><input type="number" placeholder="起" value="'+t.min+'" oninput="CC.updateTier('+i+',\'min\',this.value)" style="max-width:80px"><input type="number" placeholder="止" value="'+t.max+'" oninput="CC.updateTier('+i+',\'max\',this.value)" style="max-width:80px"><input type="number" placeholder="%" value="'+t.rate+'" oninput="CC.updateTier('+i+',\'rate\',this.value)" style="max-width:80px"><span style="font-size:12px;color:var(--muted)">佣金率</span></div>';}).join('')+'</div><button onclick="CC.addTier()" style="margin-top:8px;padding:6px 16px;border-radius:8px;border:1px solid #4f46e5;background:#fff;color:#4f46e5;font-size:13px;cursor:pointer">+ 添加阶梯</button>';
+    }else if(mode==='cps'){
+      html='<div class="calc-row-2"><div class="calc-field"><label>CPS分佣比例 <span class="hint">(%)</span></label><input type="number" id="cpsRate" placeholder="如 20" step="0.5" min="0" max="100" value="20" oninput="CC.calc()"></div><div class="calc-field"><label>退货率 <span class="hint">(%)</span></label><input type="number" id="returnRate" placeholder="如 5" step="0.5" min="0" max="100" value="5" oninput="CC.calc()"></div></div>';
+    }
+    $('modeParams').innerHTML=html;
+  }
+
+  function addTier(){tiers.push({min:0,max:9999,rate:10});renderModeParams();calc();}
+  function updateTier(i,field,val){tiers[i][field]=parseFloat(val)||0;calc();}
+
+  function calc(){
+    var price=n('price'),sales=n('sales'),cost=n('cost'),otherFee=n('otherFee');
+    if(price<=0||sales<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">💰</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入售价和销量</p>';$('extraSections').innerHTML='';return;}
+
+    var commission=0,modeLabel='';
+    if(mode==='fixed'){
+      var fa=n('fixedAmount');commission=fa*sales;modeLabel='固定佣金 $'+fmt(fa)+'/单';
+    }else if(mode==='percent'){
+      var pr=n('percentRate');commission=price*sales*(pr/100);modeLabel='比例佣金 '+pr+'%';
+    }else if(mode==='tiered'){
+      var cumulative=0;var remaining=sales;
+      tiers.forEach(function(t){
+        if(remaining<=0)return;
+        var tierSales=Math.min(remaining,t.max-t.min);
+        if(tierSales>0){cumulative+=tierSales*price*(t.rate/100);remaining-=tierSales;}
+      });
+      commission=cumulative;modeLabel='阶梯佣金（'+tiers.length+'档）';
+    }else if(mode==='cps'){
+      var cr=n('cpsRate'),rr=n('returnRate');
+      var netSales=price*sales*(1-rr/100);commission=netSales*(cr/100);modeLabel='CPS佣金 '+cr+'%（扣退货'+rr+'%）';
+    }
+
+    var totalRevenue=price*sales;
+    var totalCost=cost*sales+otherFee*sales;
+    var sellerNetProfit=totalRevenue-totalCost-commission;
+    var commissionPerUnit=commission/sales;
+    var commissionRate=(totalRevenue>0?commission/totalRevenue*100:0);
+    var profitMargin=(totalRevenue>0?sellerNetProfit/totalRevenue*100:0);
+
+    $('resultCard').innerHTML=
+      '<h3>💰 佣金计算结果</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+fmt(commission)+'</div><div class="rsb-lbl">达人总收入</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+fmt(commissionPerUnit)+'</div><div class="rsb-lbl">每单佣金</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+fmt(commissionRate)+'%</div><div class="rsb-lbl">综合佣金率</div></div>'+
+      '</div>'+
+      '<div class="result-grid">'+
+        '<div class="result-item"><div class="ri-label">总销售额</div><div class="ri-value">'+fmt(totalRevenue)+'</div></div>'+
+        '<div class="result-item"><div class="ri-label">产品+其他成本</div><div class="ri-value">'+fmt(totalCost)+'</div></div>'+
+        '<div class="result-item"><div class="ri-label">卖家净利润</div><div class="ri-value '+(sellerNetProfit>0?'pos':'neg')+'">'+fmt(sellerNetProfit)+'</div></div>'+
+        '<div class="result-item"><div class="ri-label">卖家利润率</div><div class="ri-value '+(profitMargin>0?'pos':'neg')+'">'+profitMargin.toFixed(1)+'%</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 当前模式：'+modeLabel+'。达人总收入'+fmt(commission)+'，卖家净利润'+fmt(sellerNetProfit)+'（利润率'+profitMargin.toFixed(1)+'%）。</div>';
+
+    // 多模式对比
+    var compareHtml='<div class="section-block"><h3>📊 四模式佣金对比</h3><div style="overflow-x:auto"><table class="compare-table"><thead><tr><th>模式</th><th>达人收入</th><th>每单佣金</th><th>综合佣金率</th><th>卖家利润</th><th>利润率</th></tr></thead><tbody>';
+    var modes=[
+      {name:'固定佣金($3/单)',comm:3*sales},
+      {name:'比例佣金(15%)',comm:price*sales*0.15},
+      {name:'阶梯佣金',comm:commission},
+      {name:'CPS(20%扣退货5%)',comm:price*sales*0.95*0.20}
+    ];
+    var bestProfit=-Infinity,bestIdx=0;
+    modes.forEach(function(m,i){var p=totalRevenue-totalCost-m.comm;if(p>bestProfit){bestProfit=p;bestIdx=i;}});
+    modes.forEach(function(m,i){
+      var cpu=m.comm/sales;var cr=m.comm/totalRevenue*100;var sp=totalRevenue-totalCost-m.comm;var sm=sp/totalRevenue*100;
+      compareHtml+='<tr class="'+(i===bestIdx?'best':'')+'"><td>'+m.name+'</td><td>'+fmt(m.comm)+'</td><td>'+fmt(cpu)+'</td><td>'+cr.toFixed(1)+'%</td><td>'+fmt(sp)+'</td><td>'+sm.toFixed(1)+'%</td></tr>';
+    });
+    compareHtml+='</tbody></table></div><div class="result-note" style="margin-top:12px">绿色行为利润最高的模式。建议根据达人带货能力和产品利润率选择最优佣金方案。</div></div>';
+
+    // 谈判底线
+    var breakEvenCommission=totalRevenue-totalCost;
+    var maxCommRate=totalRevenue>0?breakEvenCommission/totalRevenue*100:0;
+    var maxCommPerUnit=breakEvenCommission/sales;
+    compareHtml+='<div class="section-block"><h3>⚖️ 佣金谈判底线</h3><div class="bottom-line-card"><div class="blc-val">'+fmt(maxCommPerUnit)+'/单</div><div class="blc-lbl">每单最高可支付佣金（盈亏平衡线）</div></div><div class="result-grid" style="margin-top:16px"><div class="result-item"><div class="ri-label">最高佣金总额</div><div class="ri-value">'+fmt(breakEvenCommission)+'</div></div><div class="result-item"><div class="ri-label">最高佣金率</div><div class="ri-value" style="color:#ef4444">'+maxCommRate.toFixed(1)+'%</div></div><div class="result-item"><div class="ri-label">当前佣金率</div><div class="ri-value">'+commissionRate.toFixed(1)+'%</div></div><div class="result-item"><div class="ri-label">安全边际</div><div class="ri-value '+(maxCommRate-commissionRate>5?'pos':'neg')+'">'+(maxCommRate-commissionRate).toFixed(1)+'%</div></div></div><div class="result-note">⚠️ 谈判底线：佣金率不应超过'+maxCommRate.toFixed(1)+'%，否则卖家亏损。建议保留至少5%安全边际，即佣金率控制在'+(maxCommRate-5).toFixed(1)+'%以内。</div></div>';
+
+    $('extraSections').innerHTML=compareHtml;
+  }
+
+  function init(){renderModeParams();calc();}
+  return{setMode:setMode,calc:calc,addTier:addTier,updateTier:updateTier,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CC.init);}else{CC.init();}
+</script>
+</body>
+</html>

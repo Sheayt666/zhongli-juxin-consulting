@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="店铺绩效对比器：对比2-5个店铺各项指标，CSS对比表最佳/最差高亮，SVG雷达图叠加对比，差距分析与改进建议。">
+<meta name="keywords" content="店铺绩效对比,雷达图,差距分析,多店管理,跨境电商">
+<title>店铺绩效对比器 - 雷达图叠加·差距分析 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--indigo:#4f46e5;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--success:#10b981;--warn:#f59e0b;--danger:#ef4444}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f8fafc}
+.wf-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;top:64px;z-index:90;height:48px;display:flex;align-items:center}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%;overflow-x:auto}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:#475569;text-decoration:none;white-space:nowrap;transition:all .2s}
+.workflow-step:hover{background:#e0e7ff;color:var(--indigo)}.workflow-step.active{background:var(--indigo);color:#fff;font-weight:600}
+.workflow-arrow{color:#cbd5e1;font-size:11px;flex-shrink:0}
+.crumb{max-width:1152px;margin:0 auto;padding:12px 24px;font-size:13px;color:#64748b}.crumb a{color:#64748b}.crumb a:hover{color:var(--indigo)}.crumb .cur{color:#0f172a;font-weight:600}
+.tool-head{max-width:1152px;margin:0 auto;padding:8px 24px 24px}.tool-head h1{font-size:32px;font-weight:800;color:#0f172a;letter-spacing:-.5px}.tool-head h1 em{font-style:normal;color:var(--indigo)}.tool-head p{font-size:15px;color:#64748b;margin-top:8px;max-width:680px;line-height:1.7}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #f1f5f9}
+.card h3{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:center;font-weight:700;color:#334155;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+th:first-child,td:first-child{text-align:left}
+td{padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#475569;text-align:center}
+.store-head{font-weight:700;color:#0f172a;display:flex;align-items:center;gap:6px;justify-content:center}
+.store-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.best{background:#f0fdf4;color:#059669;font-weight:700}.worst{background:#fef2f2;color:#dc2626;font-weight:700}
+.metric-input{width:75px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;text-align:center;font-family:inherit;color:#0f172a}
+.metric-input:focus{outline:none;border-color:var(--indigo)}
+.name-input{width:90px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;color:#0f172a}
+.name-input:focus{outline:none;border-color:var(--indigo)}
+.btn{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn-ghost{background:#fff;border:1px solid #e2e8f0;color:#475569}
+.result-note{font-size:12px;color:#64748b;line-height:1.6;padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--indigo);margin-top:14px}
+.radar-wrap{display:flex;justify-content:center;padding:10px}
+.legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:12px;color:#64748b;margin-top:8px}
+.legend span{display:flex;align-items:center;gap:5px}.legend i{width:14px;height:3px;display:inline-block;border-radius:2px}
+.gap-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.gap-item{display:grid;grid-template-columns:120px 1fr 80px;align-items:center;gap:12px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:13px}
+.gap-name{font-weight:600;color:#334155}
+.gap-range{font-size:12px;color:#64748b;text-align:right}
+.advice-list{list-style:none;padding:0;margin:0}.advice-list li{padding:10px 0 10px 28px;font-size:14px;color:#334155;position:relative;line-height:1.6;border-bottom:1px solid #f1f5f9}.advice-list li:last-child{border-bottom:none}.advice-list li::before{content:'';position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--indigo)}.advice-list li.ok::before{background:var(--success)}.advice-list li.warn::before{background:var(--warn)}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel-card{display:flex;gap:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;transition:all .2s}.rel-card:hover{border-color:var(--indigo);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.rel-ic{font-size:22px;flex-shrink:0}.rel-card h4{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}.rel-card p{font-size:12px;color:#64748b}
+.back-link{text-align:center;padding:24px}.back-link a{display:inline-block;padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.rel-grid{grid-template-columns:1fr}.metric-input{width:55px}.gap-item{grid-template-columns:80px 1fr 60px}}
+</style>
+</head>
+<body class="tool-page" data-tool="store_performance_comparison">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner">
+<a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+<a href="index.html" class="tool-nav-back">← 工具中心</a></div></nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W38 多店铺管理工作流</div><div class="workflow-steps">
+<a href="multi-store-dashboard.html" class="workflow-step">综合看板</a><span class="workflow-arrow">›</span>
+<a href="store-performance-comparison.html" class="workflow-step active">绩效对比</a><span class="workflow-arrow">›</span>
+<a href="cross-store-inventory.html" class="workflow-step">跨店库存</a><span class="workflow-arrow">›</span>
+<a href="unified-profit-report.html" class="workflow-step">统一利润</a><span class="workflow-arrow">›</span>
+<a href="store-segmentation-matrix.html" class="workflow-step">店铺分层</a><span class="workflow-arrow">›</span>
+<a href="multi-store-sku-mapper.html" class="workflow-step">SKU映射</a><span class="workflow-arrow">›</span>
+<a href="region-performance-analyzer.html" class="workflow-step">区域绩效</a><span class="workflow-arrow">›</span>
+<a href="store-launch-checklist.html" class="workflow-step">上线清单</a><span class="workflow-arrow">›</span>
+<a href="multi-store-risk-monitor.html" class="workflow-step">风险监控</a><span class="workflow-arrow">›</span>
+<a href="centralized-listing-manager.html" class="workflow-step">Listing管理</a>
+</div></div></div>
+<div class="crumb"><a href="../index.html">首页</a> › <a href="index.html">实用工具</a> › <a href="store-performance-comparison.html">W38</a> › <span class="cur">店铺绩效对比器</span></div>
+<div class="tool-head"><h1>店铺绩效<em>对比器</em></h1><p>对比2-5个店铺的6项核心指标，CSS对比表自动高亮最佳与最差，SVG雷达图叠加直观呈现各店强弱，差距分析量化店铺间差距并给出改进方向。</p></div>
+<div class="wf-container">
+  <div class="card">
+    <h2>📋 输入各店铺指标</h2>
+    <div style="overflow-x:auto"><table id="cmpTable"><thead id="cmpHead"></thead><tbody id="cmpBody"></tbody></table></div>
+    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-ghost" onclick="SPC.sample()">载入示例</button></div>
+    <div class="result-note">💡 指标归一化到0-100后绘制雷达图：销售额/利润/转化率/流量越大越好，ACoS/退货率越小越好。最佳值绿色高亮，最差值红色高亮。</div>
+  </div>
+  <div class="card"><h2>🔬 雷达图叠加对比</h2><div id="radarResult"></div></div>
+  <div class="card"><h2>📊 差距分析</h2><div id="gapResult"></div></div>
+  <div class="card"><h2>🧰 相关工具推荐</h2><div class="rel-grid">
+    <a class="rel-card" href="multi-store-dashboard.html"><span class="rel-ic">📈</span><div><h4>多店铺综合看板</h4><p>6店×8指标矩阵</p></div></a>
+    <a class="rel-card" href="store-segmentation-matrix.html"><span class="rel-ic">🎯</span><div><h4>店铺分层管理器</h4><p>明星/金牛/问题/瘦狗</p></div></a>
+    <a class="rel-card" href="unified-profit-report.html"><span class="rel-ic">💰</span><div><h4>统一利润报告</h4><p>合并利润表</p></div></a>
+  </div></div>
+  <div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<script>
+var SPC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var COLORS=['#4f46e5','#10b981','#f59e0b','#ef4444','#7c3aed'];
+  var DIMS=[{k:'sales',n:'销售额',u:'$',inv:0},{k:'profit',n:'利润率',u:'%',inv:0},{k:'acos',n:'ACoS',u:'%',inv:1},{k:'cvrt',n:'转化率',u:'%',inv:0},{k:'return',n:'退货率',u:'%',inv:1},{k:'traffic',n:'流量',u:'',inv:0}];
+  // profit存为利润率(%)
+  var SAMPLE=[
+    {name:'US店',sales:85000,profit:24.7,acos:28,cvrt:12,return:6.5,traffic:58000},
+    {name:'UK店',sales:52000,profit:28.5,acos:24,cvrt:14,return:5.2,traffic:36000},
+    {name:'DE店',sales:64000,profit:15.0,acos:35,cvrt:9,return:8.1,traffic:42000}
+  ];
+  var data=[];
+  function buildTable(){
+    var cols=data.length;
+    var hh='<tr><th>指标</th>';data.forEach(function(s,i){hh+='<th><div class="store-head"><span class="store-dot" style="background:'+COLORS[i]+'"></span><input class="name-input" value="'+esc(s.name)+'" oninput="SPC.setName('+i+',this.value)"></div></th>'});hh+='</tr>';
+    $('cmpHead').innerHTML=hh;
+    var hb='';
+    DIMS.forEach(function(d){
+      hb+='<tr><td><b>'+d.n+(d.u?' ('+d.u+')':'')+'</b></td>';
+      var vals=data.map(function(s){return s[d.k]});
+      var best,worst;
+      if(d.inv){best=Math.min.apply(null,vals);worst=Math.max.apply(null,vals)}
+      else{best=Math.max.apply(null,vals);worst=Math.min.apply(null,vals)}
+      data.forEach(function(s,i){
+        var v=s[d.k];var cls=v===best?'best':v===worst?'worst':'';
+        hb+='<td class="'+cls+'"><input class="metric-input" type="number" value="'+v+'" step="0.1" oninput="SPC.set('+i+',\''+d.k+'\',this.value)"></td>';
+      });
+      hb+='</tr>';
+    });
+    $('cmpBody').innerHTML=hb;
+  }
+  function esc(s){return (s||'').replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]})}
+  function set(i,k,v){data[i][k]=parseFloat(v)||0;render()}
+  function setName(i,v){data[i].name=v;render()}
+  function norm(vals,inv){
+    var min=Math.min.apply(null,vals),max=Math.max.apply(null,vals),rng=max-min||1;
+    return vals.map(function(v){var s=(v-min)/rng*100;return inv?100-s:s});
+  }
+  function render(){
+    buildTable();
+    // 雷达图
+    var cx=200,cy=200,R=140,n=DIMS.length;
+    var html='<div class="radar-wrap"><svg width="400" height="400" viewBox="0 0 400 400">';
+    // 网格
+    for(var lv=2;lv<=10;lv+=2){var r=R*lv/10;var gp=[];for(i=0;i<n;i++){var a=-Math.PI/2+i*2*Math.PI/n;gp.push(cx+r*Math.cos(a)+','+(cy+r*Math.sin(a)))}html+='<polygon points="'+gp.join(' ')+'" fill="none" stroke="#e2e8f0" stroke-width="1"/>'}
+    for(i=0;i<n;i++){var a=-Math.PI/2+i*2*Math.PI/n;html+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+R*Math.cos(a))+'" y2="'+(cy+R*Math.sin(a))+'" stroke="#e2e8f0" stroke-width="1"/>';var lx=cx+(R+22)*Math.cos(a),ly=cy+(R+22)*Math.sin(a);html+='<text x="'+lx+'" y="'+ly+'" font-size="11" fill="#475569" text-anchor="middle" dominant-baseline="middle">'+DIMS[i].n+'</text>'}
+    // 各店多边形
+    data.forEach(function(s,i){
+      var vals=DIMS.map(function(d){return s[d.k]});
+      var nv=norm(vals.map(function(v,vi){return v}),DIMS.map(function(d){return d.inv}));
+      var pts=[];nv.forEach(function(v,pi){var a=-Math.PI/2+pi*2*Math.PI/n;pts.push(cx+R*v/100*Math.cos(a)+','+(cy+R*v/100*Math.sin(a)))});
+      html+='<polygon points="'+pts.join(' ')+'" fill="'+COLORS[i]+'33" stroke="'+COLORS[i]+'" stroke-width="2"/>';
+      pts.forEach(function(p){var xy=p.split(',');html+='<circle cx="'+xy[0]+'" cy="'+xy[1]+'" r="3" fill="'+COLORS[i]+'" />'});
+    });
+    html+='</svg></div>';
+    var lh='<div class="legend">';
+    data.forEach(function(s,i){lh+='<span><i style="background:'+COLORS[i]+'"></i>'+esc(s.name)+'</span>'});
+    lh+='</div>';
+    $('radarResult').innerHTML=html+lh;
+    // 差距分析
+    var gh='<div class="gap-grid">';
+    DIMS.forEach(function(d){
+      var vals=data.map(function(s){return s[d.k]});
+      var min=Math.min.apply(null,vals),max=Math.max.apply(null,vals);
+      var gap=max-min;var gapPct=min!==0?gap/min*100:0;
+      var bestIdx=d.inv?vals.indexOf(min):vals.indexOf(max);
+      var worstIdx=d.inv?vals.indexOf(max):vals.indexOf(min);
+      var bars=vals.map(function(v){var pct=d.inv?(min>0?min/v*100:100):(max>0?v/max*100:0);return '<div style="display:flex;align-items:center;gap:4px;flex:1"><span style="font-size:10px;color:#64748b;width:40px">'+esc(data[vals.indexOf(v)].name)+'</span><div style="flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+COLORS[vals.indexOf(v)]+';border-radius:4px"></div></div><span style="font-size:10px;color:#334155;width:50px;text-align:right">'+v+d.u+'</span></div>'}).join('');
+      gh+='<div class="gap-item"><div class="gap-name">'+d.n+'</div><div>'+bars+'</div><div class="gap-range">差距 '+gapPct.toFixed(0)+'%<br>最佳:'+esc(data[bestIdx].name)+'</div></div>';
+    });
+    gh+='</div>';
+    // 建议
+    gh+='<h3 style="margin-top:20px">🧭 差距改进建议</h3><ul class="advice-list">';
+    // 找最弱店铺
+    var scores=data.map(function(s){return DIMS.reduce(function(sum,d){var vals=data.map(function(x){return x[d.k]});var nv=norm(vals,d.inv);return sum+nv[data.indexOf(s)]},0)});
+    var weakIdx=scores.indexOf(Math.min.apply(null,scores));
+    var strongIdx=scores.indexOf(Math.max.apply(null,scores));
+    gh+='<li class="ok">'+esc(data[strongIdx].name)+'综合表现最佳，可作为标杆店铺，其运营经验可复制到其他店。</li>';
+    gh+='<li class="warn">'+esc(data[weakIdx].name)+'综合表现最弱，建议重点诊断。其短板集中在：'+DIMS.filter(function(d){var vals=data.map(function(x){return x[d.k]});var v=data[weakIdx][d.k];var worst=d.inv?Math.max:Math.min;return v===worst.apply(null,vals)}).map(function(d){return d.n}).join('、')+'。</li>';
+    gh+='<li>建议弱店对标强店，逐项缩小差距。差距最大的指标优先改进，投入产出比最高。</li>';
+    gh+='<li>雷达图面积越大代表综合实力越强。各店若形成互补形状（某店强在流量、某店强在转化），可考虑差异化分工。</li>';
+    gh+='</ul>';
+    $('gapResult').innerHTML=gh;
+  }
+  function sample(){data=JSON.parse(JSON.stringify(SAMPLE));render()}
+  function init(){data=JSON.parse(JSON.stringify(SAMPLE));render();var bt=$('backToTop');window.addEventListener('scroll',function(){bt.classList.toggle('visible',window.scrollY>300)});bt.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})}}
+  return{set:set,setName:setName,sample:sample,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SPC.init)}else{SPC.init()}
+</script>
+</body>
+</html>

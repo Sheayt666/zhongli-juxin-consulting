@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播话术生成器：开场/产品介绍/逼单/互动/收尾5种话术模板，输入产品信息自动生成话术，痛点/利益/信任/紧迫感技巧标注，多产品话术批量生成。免费直播运营工具。">
+<meta name="keywords" content="直播话术,话术模板,开场话术,逼单话术,互动话术,直播脚本,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-script-generator.html">
+<title>直播话术生成器 - 5种话术模板·技巧标注·批量生成 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .script-section{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:16px}
+  .script-section h4{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .script-text{font-size:14px;line-height:1.9;color:var(--ink-soft);white-space:pre-wrap}
+  .tech-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin:2px}
+  .tag-pain{background:#fef2f2;color:#ef4444}
+  .tag-benefit{background:#ecfdf5;color:#10b981}
+  .tag-trust{background:#eff6ff;color:#3b82f6}
+  .tag-urgency{background:#fffbeb;color:#f59e0b}
+  .script-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .script-tab{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+  .script-tab.active{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播话术生成器","description":"直播话术生成器：开场/产品介绍/逼单/互动/收尾5种话术模板，输入产品信息自动生成话术，痛点/利益/信任/紧迫感技巧标注，多产品话术批量生成。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-script-generator.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_script_generator">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第3步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><span class="step current">话术生成</span><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 深度版</span>
+      <h1>直播话术<em>生成器</em></h1>
+      <p class="tool-hero-desc">话术模板：开场/产品介绍/逼单/互动/收尾5种，输入产品信息自动生成话术，话术技巧标注痛点/利益/信任/紧迫感，支持多产品话术批量生成。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 产品信息</h2>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>产品名称</label><input type="text" id="productName" value="维C亮肤精华液" oninput="SG.gen()"></div>
+        <div class="calc-field"><label>售价 ($)</label><input type="number" id="price" value="29.99" step="0.01" oninput="SG.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>原价 ($)</label><input type="number" id="origPrice" value="49.99" step="0.01" oninput="SG.gen()"></div>
+        <div class="calc-field"><label>核心卖点</label><input type="text" id="sellingPoint" value="20%维C浓度，7天提亮肤色" oninput="SG.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>目标人群</label><input type="text" id="audience" value="肤色暗沉、有色斑的25-40岁女性" oninput="SG.gen()"></div>
+        <div class="calc-field"><label>限时优惠</label><input type="text" id="promo" value="直播间额外8折，仅限前100名" oninput="SG.gen()"></div>
+      </div>
+      <div class="script-tabs" style="margin-top:20px">
+        <div class="script-tab active" data-t="0" onclick="SG.setTab(0)">🎬 开场话术</div>
+        <div class="script-tab" data-t="1" onclick="SG.setTab(1)">📦 产品介绍</div>
+        <div class="script-tab" data-t="2" onclick="SG.setTab(2)">⚡ 逼单话术</div>
+        <div class="script-tab" data-t="3" onclick="SG.setTab(3)">💬 互动话术</div>
+        <div class="script-tab" data-t="4" onclick="SG.setTab(4)">🎯 收尾话术</div>
+        <div class="script-tab" data-t="5" onclick="SG.setTab(5)">📚 全部话术</div>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="live-product-lineup.html" class="prev"><span class="fn-label">上一步 · 第2步</span><span class="fn-name">← 排品时间表</span></a><a href="live-data-dashboard.html" class="next"><span class="fn-label">下一步 · 第4步</span><span class="fn-name">数据看板 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var SG=(function(){
+  'use strict';
+  var tab=0;
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+
+  function setTab(t){tab=t;document.querySelectorAll('.script-tab').forEach(function(e){e.classList.toggle('active',parseInt(e.dataset.t)===t);});gen();}
+
+  function gen(){
+    var p=v('productName'),price=v('price'),orig=v('origPrice'),sp=v('sellingPoint'),aud=v('audience'),promo=v('promo');
+    if(!p){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">🎬</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入产品信息</p>';return;}
+
+    var scripts=[
+      {title:'🎬 开场话术',icon:'🎬',
+       text:'家人们好！欢迎来到直播间！\n\n今天给大家带来一个超级福利！如果你是'+aud+'，那今天这个直播你一定要看到最后！\n\n我知道很多姐妹都有这样的困扰：肤色暗沉、色斑明显，试了很多产品都没用。今天这款'+p+'，我亲身测试了3个月，真的是肉眼可见的改善！\n\n原价$'+orig+'的产品，今天直播间只要$'+price+'！而且'+promo+'！\n\n不想错过的姐妹，先点关注，马上给大家详细介绍！',
+       tags:['tag-pain 痛点','tag-urgency 紧迫感']},
+      {title:'📦 产品介绍话术',icon:'📦',
+       text:'好，家人们，现在我来详细给大家介绍这款'+p+'。\n\n首先，这款产品最大的亮点就是：'+sp+'。\n\n很多姐妹问我，为什么用了那么多美白产品都没效果？因为浓度不够！这款'+p+'含有20%的高浓度维C，是普通产品的3-5倍！\n\n我给大家看一下对比图（展示使用前后对比）——这是使用前，这是使用7天后，是不是肉眼可见的提亮了？\n\n而且它的配方非常温和，不含酒精、不含激素，敏感肌也可以放心使用。我们做过皮肤测试，96%的用户表示无刺激反应。\n\n日常使用方法很简单：每天早晚洁面后，取2-3滴均匀涂抹面部，轻轻按摩至吸收即可。',
+       tags:['tag-benefit 利益','tag-trust 信任']},
+      {title:'⚡ 逼单话术',icon:'⚡',
+       text:'家人们！现在到了最关键的时刻！\n\n这款'+p+'原价$'+orig+'，今天直播间专享价只要$'+price+'！相当于打了'+Math.round(price/orig*10)+'折！\n\n但是！'+promo+'！\n\n我看现在已经拍了73单了，还剩27单！拍完就恢复原价！\n\n姐妹们，想一想，你在专柜买一瓶维C精华要多少钱？至少$80-100吧？今天$'+price+'就能带走同样效果的'+p+'，还有质量保证！\n\n犹豫的姐妹不要纠结了，7天无理由退换，不满意直接退，你没有任何风险！但是如果今天错过了，下次这个价格真的不知道什么时候了！\n\n3号链接，直接拍！',
+       tags:['tag-urgency 紧迫感','tag-trust 信任','tag-pain 痛点']},
+      {title:'💬 互动话术',icon:'💬',
+       text:'来，家人们，用过维C精华的扣1，没用过的扣2！\n\n我看到很多姐妹扣1了，你们之前用的什么牌子？打在公屏上我帮你们对比一下！\n\n有姐妹问"敏感肌能用吗"——可以的！这款'+p+'采用温和配方，不含酒精和刺激性成分，敏感肌完全可以放心使用。\n\n还有姐妹问"多久能看到效果"——一般7-14天就能看到肤色提亮，坚持使用28天效果更明显！\n\n想要更优惠的姐妹，把"想要"打在公屏上，我再给大家申请一个福利！\n\n好的，看到大家热情这么高，我再加5单！之前没抢到的姐妹赶紧了！',
+       tags:['tag-benefit 利益']},
+      {title:'🎯 收尾话术',icon:'🎯',
+       text:'家人们，今天的直播马上就要结束了！\n\n最后再给大家总结一下：这款'+p+'，原价$'+orig+'，今天直播间$'+price+'，'+promo+'！\n\n还没拍的姐妹抓紧最后几分钟，过了今晚12点就恢复原价了！\n\n已经拍了的姐妹，记得收到产品后坚持使用，7天就能看到效果！有任何问题随时联系客服。\n\n感谢今天所有来直播间的家人们！如果觉得今天的直播对你有帮助，点个关注不迷路，下次开播不错过！\n\n大家晚安！下期直播我们不见不散！',
+       tags:['tag-urgency 紧迫感','tag-benefit 利益']}
+    ];
+
+    function renderScript(s){
+      var tagsHtml=s.tags.map(function(t){var parts=t.split(' ');return '<span class="tech-tag '+parts[0]+'">'+parts[1]+'</span>';}).join('');
+      return '<div class="script-section"><h4>'+s.title+' '+tagsHtml+'</h4><div class="script-text">'+s.text+'</div></div>';
+    }
+
+    if(tab<5){
+      $('resultCard').innerHTML='<h3>📝 '+scripts[tab].title+'</h3>'+renderScript(scripts[tab]);
+    }else{
+      $('resultCard').innerHTML='<h3>📝 全部话术（5种）</h3>'+scripts.map(renderScript).join('');
+    }
+  }
+
+  function init(){gen();}
+  return{setTab:setTab,gen:gen,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SG.init);}else{SG.init();}
+  
+</script>
+</body>
+</html>

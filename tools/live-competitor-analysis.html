@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="竞品直播分析器：输入竞品直播数据观看/GMV/产品数/时长，CSS对比表，差距分析，学习点提炼。免费直播运营工具。">
+<meta name="keywords" content="竞品分析,直播竞品,竞品对比,差距分析,直播数据对比,竞品研究,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-competitor-analysis.html">
+<title>竞品直播分析器 - CSS对比表·差距分析 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .compare-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:0;margin-bottom:0}
+  .compare-row>div{padding:12px 16px;border-bottom:1px solid var(--rule-light);font-size:13px}
+  .compare-row.cr-header>div{font-weight:700;background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+  .compare-row .cr-metric{font-weight:600;color:var(--ink-soft)}
+  .compare-row .cr-ours{text-align:center;font-weight:700;color:#4f46e5}
+  .compare-row .cr-comp{text-align:center;color:var(--ink-soft)}
+  .compare-row .cr-gap{text-align:center;font-weight:600}
+  .gap-good{color:#10b981}.gap-bad{color:#ef4444}.gap-neutral{color:#f59e0b}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"竞品直播分析器","description":"竞品直播分析器：输入竞品直播数据观看/GMV/产品数/时长，CSS对比表，差距分析，学习点提炼。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-competitor-analysis.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_competitor_analysis">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第9步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 标准版</span>
+      <h1>竞品直播<em>分析器</em></h1>
+      <p class="tool-hero-desc">输入竞品直播数据：观看人数/GMV/产品数/时长，CSS对比表直观展示，差距分析，学习点提炼。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 数据输入</h2>
+      <p class="calc-form-subtitle">输入我方和竞品的直播数据进行对比分析</p>
+      <div style="background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-bottom:12px">
+        <h4 style="margin-bottom:10px">🟦 我方数据</h4>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>观看人数</label><input type="number" id="ourViewers" value="12000" step="500" oninput="CA.calc()"></div>
+          <div class="calc-field"><label>GMV ($)</label><input type="number" id="ourGmv" value="17400" step="100" oninput="CA.calc()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>产品数</label><input type="number" id="ourProducts" value="8" step="1" oninput="CA.calc()"></div>
+          <div class="calc-field"><label>直播时长 (分钟)</label><input type="number" id="ourDuration" value="120" step="10" oninput="CA.calc()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>下单数</label><input type="number" id="ourOrders" value="580" step="10" oninput="CA.calc()"></div>
+          <div class="calc-field"><label>互动数（点赞+评论）</label><input type="number" id="ourInteraction" value="37800" step="100" oninput="CA.calc()"></div>
+        </div>
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:12px;padding:16px">
+        <h4 style="margin-bottom:10px">🟨 竞品数据</h4>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>观看人数</label><input type="number" id="compViewers" value="25000" step="500" oninput="CA.calc()"></div>
+          <div class="calc-field"><label>GMV ($)</label><input type="number" id="compGmv" value="45000" step="100" oninput="CA.calc()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>产品数</label><input type="number" id="compProducts" value="12" step="1" oninput="CA.calc()"></div>
+          <div class="calc-field"><label>直播时长 (分钟)</label><input type="number" id="compDuration" value="180" step="10" oninput="CA.calc()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>下单数</label><input type="number" id="compOrders" value="1500" step="10" oninput="CA.calc()"></div>
+          <div class="calc-field"><label>互动数</label><input type="number" id="compInteraction" value="82000" step="100" oninput="CA.calc()"></div>
+        </div>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  <div id="extraSections"></div>
+  
+      <div class="wf-foot-nav"><a href="live-gmv-forecast.html" class="prev"><span class="fn-label">上一步 · 第8步</span><span class="fn-name">← GMV预测</span></a><a href="live-checklist.html" class="next"><span class="fn-label">下一步 · 第10步</span><span class="fn-name">直播清单 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var CA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function fmt(v){return '$'+(isFinite(v)?v.toFixed(2):'0.00');}
+
+  function calc(){
+    var ov=n('ourViewers'),og=n('ourGmv'),op=n('ourProducts'),od=n('ourDuration'),oo=n('ourOrders'),oi=n('ourInteraction');
+    var cv=n('compViewers'),cg=n('compGmv'),cp=n('compProducts'),cd=n('compDuration'),co=n('compOrders'),ci=n('compInteraction');
+    if(ov<=0||cv<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">🔍</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入双方数据</p>';$('extraSections').innerHTML='';return;}
+
+    // 计算衍生指标
+    var ourConvRate=ov>0?oo/ov*100:0;
+    var compConvRate=cv>0?co/cv*100:0;
+    var ourAvgPrice=oo>0?og/oo:0;
+    var compAvgPrice=co>0?cg/co:0;
+    var ourGmvPerMin=od>0?og/od:0;
+    var compGmvPerMin=cd>0?cg/cd:0;
+    var ourInteractRate=ov>0?oi/ov*100:0;
+    var compInteractRate=cv>0?ci/cv*100:0;
+
+    var metrics=[
+      {name:'观看人数',ours:ov,comp:cv,fmt:function(v){return v.toLocaleString();}},
+      {name:'GMV',ours:og,comp:cg,fmt:function(v){return fmt(v);}},
+      {name:'下单数',ours:oo,comp:co,fmt:function(v){return v.toLocaleString();}},
+      {name:'产品数',ours:op,comp:cp,fmt:function(v){return v;}},
+      {name:'直播时长(分钟)',ours:od,comp:cd,fmt:function(v){return v;}},
+      {name:'转化率(%)',ours:ourConvRate,comp:compConvRate,fmt:function(v){return v.toFixed(1)+'%';}},
+      {name:'客单价',ours:ourAvgPrice,comp:compAvgPrice,fmt:function(v){return fmt(v);}},
+      {name:'每分钟GMV',ours:ourGmvPerMin,comp:compGmvPerMin,fmt:function(v){return fmt(v);}},
+      {name:'互动率(%)',ours:ourInteractRate,comp:compInteractRate,fmt:function(v){return v.toFixed(0)+'%';}}
+    ];
+
+    var tableHtml='<div class="section-block"><h3>📊 数据对比表</h3><div class="compare-row cr-header"><div>指标</div><div>我方</div><div>竞品</div><div>差距</div></div>';
+    metrics.forEach(function(m){
+      var gap=m.ours-m.comp;
+      var gapPct=m.comp>0?(gap/m.comp*100):0;
+      var gapCls=gap>0?'gap-good':gap<0?'gap-bad':'gap-neutral';
+      var gapText=gap>0?'+'+m.fmt(gap)+' ('+gapPct.toFixed(0)+'%)':gap<0?m.fmt(gap)+' ('+gapPct.toFixed(0)+'%)':'持平';
+      tableHtml+='<div class="compare-row"><div class="cr-metric">'+m.name+'</div><div class="cr-ours">'+m.fmt(m.ours)+'</div><div class="cr-comp">'+m.fmt(m.comp)+'</div><div class="cr-gap '+gapCls+'">'+gapText+'</div></div>';
+    });
+    tableHtml+='</div>';
+
+    // 差距分析
+    var gaps=[];
+    if(ov<cv)gaps.push('观看人数仅为竞品'+(ov/cv*100).toFixed(0)+'%，需优化直播引流和封面标题');
+    if(og<cg)gaps.push('GMV为竞品'+(og/cg*100).toFixed(0)+'%，需提升转化率和客单价');
+    if(ourConvRate<compConvRate)gaps.push('转化率低于竞品'+(compConvRate-ourConvRate).toFixed(1)+'个百分点，需优化逼单话术和产品讲解');
+    if(ourAvgPrice<compAvgPrice)gaps.push('客单价低于竞品'+fmt(compAvgPrice-ourAvgPrice)+'，建议增加套餐搭配和关联推荐');
+    if(op<cp)gaps.push('产品数少于竞品'+(cp-op)+'个，建议丰富产品线覆盖更多需求');
+    if(od<cd)gaps.push('直播时长短于竞品'+(cd-od)+'分钟，可考虑适当延长直播时间');
+    if(ourInteractRate<compInteractRate)gaps.push('互动率低于竞品，需加强互动引导和抽奖福利');
+
+    var learnings=[];
+    if(cv>ov*1.5)learnings.push('竞品观看人数大幅领先，学习其引流策略：预告文案、开播时间、封面设计');
+    if(compConvRate>ourConvRate)learnings.push('竞品转化率更高，学习其逼单话术和产品展示方式');
+    if(cp>op)learnings.push('竞品产品更丰富，学习其选品策略和产品组合搭配');
+    if(cd>od)learnings.push('竞品直播时长更长，学习其节奏控制和内容规划');
+    if(compAvgPrice>ourAvgPrice)learnings.push('竞品客单价更高，学习其套餐设计和 upsell 策略');
+
+    var gapHtml='<div class="section-block"><h3>🔍 差距分析</h3>'+gaps.map(function(g){return '<div style="padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">⚠️ '+g+'</div>';}).join('')+'</div>';
+    var learnHtml='<div class="section-block"><h3>💡 学习点提炼</h3>'+learnings.map(function(l){return '<div style="padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📌 '+l+'</div>';}).join('')+'<div class="result-note" style="margin-top:12px">建议：优先弥补观看人数和转化率差距，这是影响GMV的核心因素。其次优化产品组合和直播时长。</div></div>';
+
+    $('resultCard').innerHTML='<h3>📊 对比总览</h3><div class="result-summary-bar"><div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+fmt(og)+'</div><div class="rsb-lbl">我方GMV</div></div><div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+fmt(cg)+'</div><div class="rsb-lbl">竞品GMV</div></div><div class="rsb-card"><div class="rsb-val '+(og>=cg?'pos':'neg')+'">'+(og>=cg?'+':'')+(og/cg*100-100).toFixed(0)+'%</div><div class="rsb-lbl">GMV差距</div></div></div>';
+    $('extraSections').innerHTML=tableHtml+gapHtml+learnHtml;
+  }
+
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CA.init);}else{CA.init();}
+  
+</script>
+</body>
+</html>

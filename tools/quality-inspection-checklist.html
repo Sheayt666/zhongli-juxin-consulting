@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="品质检验清单：AQL抽样方案生成，检验项目清单，CSS检查表，合格/不合格判定。">
+<title>品质检验清单 - AQL抽样·检验项目·合格判定 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.judge-box{text-align:center;padding:30px;border-radius:16px;margin-bottom:20px}
+.judge-box.pass{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:2px solid #10b981}
+.judge-box.fail{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:2px solid #ef4444}
+.judge-box .jb-icon{font-size:48px;margin-bottom:8px}
+.judge-box .jb-text{font-size:24px;font-weight:800}
+.judge-box.pass .jb-text{color:#059669}.judge-box.fail .jb-text{color:#dc2626}
+.aql-table{width:100%;border-collapse:collapse;font-size:13px}
+.aql-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.aql-table td{padding:10px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.aql-table tr.highlight td{background:#eef2ff;font-weight:700;color:#4f46e5}
+.inspect-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-light)}
+.inspect-item:last-child{border-bottom:none}
+.inspect-item .ii-cat{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:700;flex-shrink:0;min-width:50px;text-align:center}
+.inspect-item .ii-cat.critical{background:#fef2f2;color:#dc2626}
+.inspect-item .ii-cat.major{background:#fffbeb;color:#d97706}
+.inspect-item .ii-cat.minor{background:#eff6ff;color:#2563eb}
+.inspect-item .ii-name{flex:1;font-size:14px;color:var(--ink);font-weight:500}
+.inspect-item .ii-defects{display:flex;align-items:center;gap:8px}
+.inspect-item .ii-defects input{width:60px;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;font-size:13px;font-family:inherit;text-align:center}
+.inspect-item .ii-defects input:focus{outline:none;border-color:#4f46e5}
+.inspect-item .ii-status{font-size:12px;font-weight:700;min-width:50px;text-align:center}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step active">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">品质检验</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔬</span>品质检验清单 Quality Inspection Checklist</h1>
+  <p>基于 AQL（可接受质量限）抽样标准，输入批量与检验等级自动生成抽样方案，逐项录入缺陷数，实时判定合格 / 不合格，覆盖关键 / 主要 / 次要三类缺陷分级。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="jx-card">
+    <h2>📋 检验参数设置</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>批量 Lot Size <span class="hint">(件)</span></label><input type="number" id="lotSize" value="5000" step="100" min="1" oninput="QIC.calc()"></div>
+      <div class="jx-field"><label>检验水平 Inspection Level</label><select id="level" onchange="QIC.calc()"><option value="I">Level I（放宽）</option><option value="II" selected>Level II（正常）</option><option value="III">Level III（加严）</option></select></div>
+      <div class="jx-field"><label>产品类型 Product Type</label><select id="productType" onchange="QIC.calc()"><option>3C 电子</option><option>家居用品</option><option>服装鞋帽</option><option>美妆个护</option><option>食品保健</option></select></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>AQL - Critical 关键缺陷</label><select id="aqlCritical" onchange="QIC.calc()"><option value="0">0</option><option value="0.65">0.65</option><option value="1.0">1.0</option></select></div>
+      <div class="jx-field"><label>AQL - Major 主要缺陷</label><select id="aqlMajor" onchange="QIC.calc()"><option value="1.0">1.0</option><option value="1.5">1.5</option><option value="2.5" selected>2.5</option><option value="4.0">4.0</option></select></div>
+      <div class="jx-field"><label>AQL - Minor 次要缺陷</label><select id="aqlMinor" onchange="QIC.calc()"><option value="2.5">2.5</option><option value="4.0" selected>4.0</option><option value="6.5">6.5</option></select></div>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">抽样数量 Sample Size</div><div class="mc-value" id="mSample">0</div></div>
+    <div class="metric-card warn"><div class="mc-label">抽样比例</div><div class="mc-value" id="mRate">0%</div></div>
+    <div class="metric-card danger"><div class="mc-label">关键缺陷 Ac/Re</div><div class="mc-value" id="mCritical" style="font-size:18px">0/1</div></div>
+    <div class="metric-card warn"><div class="mc-label">主要缺陷 Ac/Re</div><div class="mc-value" id="mMajor" style="font-size:18px">0/1</div></div>
+    <div class="metric-card"><div class="mc-label">次要缺陷 Ac/Re</div><div class="mc-value" id="mMinor" style="font-size:18px">0/1</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📝 检验项目清单（录入缺陷数）</h2>
+    <div id="inspectList"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>⚖️ 合格判定结果</h2>
+    <div class="judge-box pass" id="judgeBox">
+      <div class="jb-icon">✅</div>
+      <div class="jb-text">合格 PASS</div>
+    </div>
+    <div style="overflow-x:auto"><table class="aql-table" id="judgeTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">🏆</div><div><h5>供应商评分卡</h5><p>8维度评分</p></div></a>
+      <a href="supplier-risk-assessment.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>供应商风险评估</h5><p>风险矩阵</p></div></a>
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>采购订单构建</h5><p>PO生成器</p></div></a>
+      <a href="delivery-performance-tracker.html" class="rt-card"><div class="rt-icon">🚚</div><div><h5>交付绩效追踪</h5><p>准时率分析</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="quality-inspection-checklist.html">品质检验清单</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var QIC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  // Simplified AQL table: code letter -> sample size, then Ac/Re for AQL levels
+  // Code letters by lot size range and inspection level
+  var codeLetters={
+    I:[[8,16,'B'],[17,32,'C'],[33,50,'D'],[51,90,'E'],[91,150,'F'],[151,280,'G'],[281,500,'H'],[501,1200,'J'],[1201,3200,'K'],[3201,10000,'L'],[10001,35000,'M'],[35001,150000,'N']],
+    II:[[2,8,'A'],[9,15,'B'],[16,25,'C'],[26,50,'D'],[51,90,'E'],[91,150,'F'],[151,280,'G'],[281,500,'H'],[501,1200,'J'],[1201,3200,'K'],[3201,10000,'L'],[10001,35000,'M'],[35001,150000,'N']],
+    III:[[2,8,'B'],[9,15,'C'],[16,25,'D'],[26,50,'E'],[51,90,'F'],[91,150,'G'],[151,280,'H'],[281,500,'J'],[501,1200,'K'],[1201,3200,'L'],[3201,10000,'M'],[10001,35000,'N'],[35001,150000,'P']]
+  };
+  var sampleSizes={A:2,B:3,C:5,D:8,E:13,F:20,G:32,H:50,J:80,K:125,L:200,M:315,N:500,P:800};
+  // Ac/Re table: code letter -> { aql: [Ac, Re] }
+  var acReTable={
+    A:{0:[0,1],0.65:[0,1],1.0:[0,1],1.5:[0,1],2.5:[0,1],4.0:[0,1],6.5:[1,2]},
+    B:{0:[0,1],0.65:[0,1],1.0:[0,1],1.5:[0,1],2.5:[0,1],4.0:[0,1],6.5:[1,2]},
+    C:{0:[0,1],0.65:[0,1],1.0:[0,1],1.5:[0,1],2.5:[0,1],4.0:[1,2],6.5:[1,2]},
+    D:{0:[0,1],0.65:[0,1],1.0:[0,1],1.5:[0,1],2.5:[1,2],4.0:[1,2],6.5:[2,3]},
+    E:{0:[0,1],0.65:[0,1],1.0:[0,1],1.5:[1,2],2.5:[1,2],4.0:[2,3],6.5:[3,4]},
+    F:{0:[0,1],0.65:[0,1],1.0:[1,2],1.5:[1,2],2.5:[2,3],4.0:[3,4],6.5:[5,6]},
+    G:{0:[0,1],0.65:[1,2],1.0:[1,2],1.5:[2,3],2.5:[3,4],4.0:[5,6],6.5:[7,8]},
+    H:{0:[0,1],0.65:[1,2],1.0:[2,3],1.5:[3,4],2.5:[5,6],4.0:[7,8],6.5:[10,11]},
+    J:{0:[1,2],0.65:[2,3],1.0:[3,4],1.5:[5,6],2.5:[7,8],4.0:[10,11],6.5:[14,15]},
+    K:{0:[1,2],0.65:[3,4],1.0:[5,6],1.5:[7,8],2.5:[10,11],4.0:[14,15],6.5:[21,22]},
+    L:{0:[1,2],0.65:[5,6],1.0:[7,8],1.5:[10,11],2.5:[14,15],4.0:[21,22],6.5:[21,22]},
+    M:{0:[2,3],0.65:[7,8],1.0:[10,11],1.5:[14,15],2.5:[21,22],4.0:[21,22],6.5:[21,22]},
+    N:{0:[3,4],0.65:[10,11],1.0:[14,15],1.5:[21,22],2.5:[21,22],4.0:[21,22],6.5:[21,22]},
+    P:{0:[5,6],0.65:[10,11],1.0:[14,15],1.5:[21,22],2.5:[21,22],4.0:[21,22],6.5:[21,22]}
+  };
+
+  var inspectItems=[
+    {cat:'critical',name:'电气安全 / 漏电测试',defects:0},
+    {cat:'critical',name:'有害物质 / RoHS 合规',defects:0},
+    {cat:'major',name:'外观缺陷（划痕/变形/色差）',defects:0},
+    {cat:'major',name:'尺寸偏差（超公差）',defects:0},
+    {cat:'major',name:'功能测试（开关机/配对/充电）',defects:0},
+    {cat:'major',name:'包装完整性（破损/变形）',defects:0},
+    {cat:'major',name:'标签/条码正确性',defects:0},
+    {cat:'minor',name:'表面微小瑕疵（不影响功能）',defects:0},
+    {cat:'minor',name:'印刷/丝印轻微偏移',defects:0},
+    {cat:'minor',name:'包装外观（盒角轻微压痕）',defects:0},
+    {cat:'minor',name:'说明书/配件完整性',defects:0}
+  ];
+
+  function getCodeLetter(lotSize,level){
+    var ranges=codeLetters[level]||codeLetters.II;
+    for(var i=0;i<ranges.length;i++){if(lotSize>=ranges[i][0]&&lotSize<=ranges[i][1])return ranges[i][2]}
+    return ranges[ranges.length-1][2];
+  }
+
+  function renderItems(){
+    var h='';
+    inspectItems.forEach(function(it,i){
+      h+='<div class="inspect-item"><span class="ii-cat '+it.cat+'">'+({critical:'关键',major:'主要',minor:'次要'})[it.cat]+'</span><span class="ii-name">'+it.name+'</span><div class="ii-defects"><span style="font-size:12px;color:var(--muted)">缺陷数:</span><input type="number" value="'+it.defects+'" step="1" min="0" oninput="QIC.updateDefect('+i+',this.value)"></div><span class="ii-status" id="status_'+i+'">--</span></div>';
+    });
+    $('inspectList').innerHTML=h;
+  }
+
+  function updateDefect(i,v){inspectItems[i].defects=Math.max(0,parseInt(v)||0);calc()}
+
+  function calc(){
+    var lotSize=parseInt($('lotSize').value)||1;
+    var level=$('level').value;
+    var aqlC=parseFloat($('aqlCritical').value)||0;
+    var aqlM=parseFloat($('aqlMajor').value)||2.5;
+    var aqlMi=parseFloat($('aqlMinor').value)||4.0;
+    var code=getCodeLetter(lotSize,level);
+    var sample=sampleSizes[code]||2;
+    var acC=acReTable[code]?acReTable[code][aqlC]||[0,1]:[0,1];
+    var acM=acReTable[code]?acReTable[code][aqlM]||[0,1]:[0,1];
+    var acMi=acReTable[code]?acReTable[code][aqlMi]||[0,1]:[0,1];
+
+    $('mSample').textContent=sample;
+    $('mRate').textContent=(lotSize>0?sample/lotSize*100:0).toFixed(1)+'%';
+    $('mCritical').textContent=acC[0]+'/'+acC[1];
+    $('mMajor').textContent=acM[0]+'/'+acM[1];
+    $('mMinor').textContent=acMi[0]+'/'+acMi[1];
+
+    var critDef=0,majDef=0,minDef=0;
+    inspectItems.forEach(function(it,i){
+      if(it.cat==='critical')critDef+=it.defects;
+      else if(it.cat==='major')majDef+=it.defects;
+      else minDef+=it.defects;
+      var ac=it.cat==='critical'?acC:it.cat==='major'?acM:acMi;
+      var pass=it.defects<=ac[0];
+      var el=$('status_'+i);
+      if(el){el.textContent=pass?'合格':'不合格';el.style.color=pass?'#059669':'#dc2626'}
+    });
+
+    var critPass=critDef<=acC[0];
+    var majPass=majDef<=acM[0];
+    var minPass=minDef<=acMi[0];
+    var overallPass=critPass&&majPass&&minPass;
+
+    var jb=$('judgeBox');
+    jb.className='judge-box '+(overallPass?'pass':'fail');
+    jb.innerHTML='<div class="jb-icon">'+(overallPass?'✅':'❌')+'</div><div class="jb-text">'+(overallPass?'合格 PASS':'不合格 FAIL')+'</div><div style="font-size:14px;color:var(--muted);margin-top:8px">'+(overallPass?'该批次符合 AQL 标准，可接收':'该批次不符合 AQL 标准，需拒收或返工')+'</div>';
+
+    var h='<thead><tr><th>缺陷类别</th><th>AQL</th><th>Ac (接收数)</th><th>Re (拒收数)</th><th>实际缺陷数</th><th>判定</th></tr></thead><tbody>';
+    var rows=[
+      {name:'Critical 关键缺陷',aql:aqlC,ac:acC,def:critDef},
+      {name:'Major 主要缺陷',aql:aqlM,ac:acM,def:majDef},
+      {name:'Minor 次要缺陷',aql:aqlMi,ac:acMi,def:minDef}
+    ];
+    rows.forEach(function(r){
+      var pass=r.def<=r.ac[0];
+      h+='<tr class="'+(pass?'':'highlight')+'"><td>'+r.name+'</td><td>'+r.aql+'</td><td>'+r.ac[0]+'</td><td>'+r.ac[1]+'</td><td style="font-weight:800;color:'+(pass?'#059669':'#dc2626')+'">'+r.def+'</td><td><span style="color:'+(pass?'#059669':'#dc2626')+';font-weight:700">'+(pass?'合格':'不合格')+'</span></td></tr>';
+    });
+    h+='</tbody>';
+    $('judgeTable').innerHTML=h;
+    save();
+  }
+
+  function save(){var d={lotSize:$('lotSize').value,level:$('level').value,productType:$('productType').value,aqlCritical:$('aqlCritical').value,aqlMajor:$('aqlMajor').value,aqlMinor:$('aqlMinor').value,items:inspectItems};try{localStorage.setItem('jx_qic_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_qic_data'));if(d){['lotSize','level','productType','aqlCritical','aqlMajor','aqlMinor'].forEach(function(k){if(d[k]!==undefined)$(k).value=d[k]});if(d.items)inspectItems=d.items}}catch(e){}}
+  return {calc:calc,updateDefect:updateDefect,init:function(){load();renderItems();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',QIC.init)}else{QIC.init()}
+</script>
+</body>
+</html>

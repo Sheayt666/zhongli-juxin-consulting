@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="达人内容Brief生成器：产品卖点/核心信息/CTA/标签/注意事项模板，输入产品信息自动生成Brief，内容方向建议。免费达人营销工具。">
+<meta name="keywords" content="达人内容Brief,Brief模板,内容方向,产品卖点,CTA,标签建议,达人合作">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-content-brief.html">
+<title>达人内容Brief生成器 - 自动生成内容方向建议 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .brief-section{background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;padding:20px;margin-bottom:16px}
+  .brief-section h4{font-size:15px;font-weight:700;margin-bottom:12px;color:#4f46e5;display:flex;align-items:center;gap:6px}
+  .brief-section p{font-size:14px;color:var(--ink-soft);line-height:1.7}
+  .brief-tag{display:inline-block;padding:4px 12px;background:#e0e7ff;color:#4f46e5;border-radius:20px;font-size:12px;font-weight:500;margin:4px 4px 4px 0}
+  .btn-copy{padding:10px 24px;border-radius:10px;border:none;background:linear-gradient(135deg,#10b981,#34d399);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"达人内容Brief生成器","description":"达人内容Brief生成器：产品卖点/核心信息/CTA/标签/注意事项模板，输入产品信息自动生成Brief，内容方向建议。免费达人营销工具。","url":"https://juxin-consulting.help/tools/influencer-content-brief.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="influencer_content_brief">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第7步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">→</span><a href="influencer-commission-calc.html" class="step">佣金计算</a><span class="arrow">→</span><a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">→</span><a href="influencer-sample-tracker.html" class="step">样品寄送</a><span class="arrow">→</span><a href="influencer-database.html" class="step">达人资源库</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具 · 标准版</span>
+      <h1>达人内容<em>Brief生成器</em></h1>
+      <p class="tool-hero-desc">Brief模板包含产品卖点/核心信息/CTA/标签/注意事项，输入产品信息自动生成专业内容Brief，附内容方向建议和发布策略。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 产品信息输入</h2>
+      <p class="calc-form-subtitle">填写产品信息，自动生成达人内容Brief</p>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>品牌名称</label><input type="text" id="brand" value="GlowBeauty" oninput="CB.gen()"></div>
+        <div class="calc-field"><label>产品名称</label><input type="text" id="product" value="维C亮肤精华液" oninput="CB.gen()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>产品售价 ($)</label><input type="number" id="price" value="29.99" step="0.01" oninput="CB.gen()"></div>
+        <div class="calc-field"><label>目标受众</label><input type="text" id="audience" value="18-35岁关注护肤的女性" oninput="CB.gen()"></div>
+      </div>
+      <div class="calc-field"><label>核心卖点（逗号分隔）</label><input type="text" id="sellingPoints" value="20%维C浓度,提亮肤色,淡化色斑,温和不刺激,无酒精配方" oninput="CB.gen()"></div>
+      <div class="calc-field"><label>使用场景（逗号分隔）</label><input type="text" id="useCases" value="日常护肤,熬夜急救,妆前打底,晒后修复" oninput="CB.gen()"></div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>折扣码</label><input type="text" id="code" value="QUEEN20" oninput="CB.gen()"></div>
+        <div class="calc-field"><label>佣金率 (%)</label><input type="number" id="comm" value="20" step="0.5" oninput="CB.gen()"></div>
+      </div>
+      <div class="calc-field"><label>注意事项（逗号分隔）</label><input type="text" id="warnings" value="避免接触眼睛,使用后需防晒,敏感肌先做皮试,孕妇请咨询医生" oninput="CB.gen()"></div>
+    </div>
+    <div class="calc-results">
+      <div class="result-card" id="resultCard"></div>
+    </div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="influencer-outreach-template.html" class="prev"><span class="fn-label">上一步 · 第6步</span><span class="fn-name">← 达人邀约</span></a><a href="influencer-sample-tracker.html" class="next"><span class="fn-label">下一步 · 第8步</span><span class="fn-name">样品寄送 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-match-score.html">达人匹配评分器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var CB=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+  function split(id){return v(id).split(/[,，]/).map(function(s){return s.trim();}).filter(Boolean);}
+
+  function gen(){
+    var brand=v('brand'),product=v('product'),price=v('price'),audience=v('audience'),code=v('code'),comm=v('comm');
+    var sp=split('sellingPoints'),uc=split('useCases'),wn=split('warnings');
+    if(!brand||!product){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">📝</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入产品信息</p>';return;}
+
+    var tags=['#'+brand,'#'+product,'#护肤好物','#美白精华','#维C精华','#护肤日常','#好物推荐','#达人同款','#平价护肤','#护肤分享'];
+
+    $('resultCard').innerHTML=
+      '<h3>📝 内容Brief</h3>'+
+      '<div style="margin-bottom:16px"><button class="btn-copy" onclick="CB.copy()">📋 复制完整Brief</button></div>'+
+      '<div class="brief-section"><h4>📦 产品核心信息</h4><p><strong>品牌：</strong>'+brand+'<br><strong>产品：</strong>'+product+'<br><strong>售价：</strong>$'+price+'<br><strong>目标受众：</strong>'+audience+'<br><strong>折扣码：</strong>'+code+'（粉丝专享20% off）<br><strong>佣金：</strong>'+comm+'% CPS</p></div>'+
+      '<div class="brief-section"><h4>🎯 产品卖点（必须提及）</h4><p>'+sp.map(function(s,i){return (i+1)+'. '+s;}).join('<br>')+'</p></div>'+
+      '<div class="brief-section"><h4>💡 使用场景建议</h4><p>'+uc.map(function(s){return '• '+s;}).join('<br>')+'</p></div>'+
+      '<div class="brief-section"><h4>📢 CTA（行动号召）</h4><p>• "点击链接购买，使用折扣码 <strong>'+code+'</strong> 享8折优惠"<br>• "限时折扣，手慢无！"<br>• "评论区告诉我你的护肤困扰"<br>• "关注我了解更多护肤好物"</p></div>'+
+      '<div class="brief-section"><h4>🏷️ 推荐标签</h4><div>'+tags.map(function(t){return '<span class="brief-tag">'+t+'</span>';}).join('')+'</div></div>'+
+      '<div class="brief-section"><h4>⚠️ 注意事项</h4><p>'+wn.map(function(w){return '• '+w;}).join('<br>')+'</p></div>'+
+      '<div class="brief-section"><h4>🎬 内容方向建议</h4><p>'+
+        '• <strong>开箱测评型：</strong>真实开箱体验，展示包装质感，第一印象分享<br>'+
+        '• <strong>使用对比型：</strong>使用前后对比，突出产品效果<br>'+
+        '• <strong>教程型：</strong>护肤步骤教学，产品融入日常护肤流程<br>'+
+        '• <strong>故事型：</strong>个人护肤困扰+产品解决方案+效果分享<br>'+
+        '• <strong>清单型：</strong>"我的护肤好物清单"中自然植入'+
+      '</p></div>'+
+      '<div class="brief-section"><h4>📅 发布策略建议</h4><p>• 最佳发布时间：'+(audience.indexOf('女')>=0?'晚上8-10点':'晚上7-9点')+'<br>• 建议内容时长：短视频30-60秒 / 图文6-9张<br>• 发布后2小时内积极回复评论<br>• 折扣码有效期建议7-14天</p></div>';
+  }
+
+  function copy(){
+    var text=$('resultCard').innerText;
+    if(navigator.clipboard){navigator.clipboard.writeText(text);}else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  }
+
+  function init(){gen();}
+  return{gen:gen,copy:copy,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CB.init);}else{CB.init();}
+  
+</script>
+</body>
+</html>

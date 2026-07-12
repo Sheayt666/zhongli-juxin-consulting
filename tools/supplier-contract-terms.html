@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="供应商合同条款生成器：7大条款（价格/质量/交货/付款/违约/知识产权/保密），输入双方信息与关键参数，自动生成完整合同文本，可复制。">
+<title>供应商合同条款生成器 - 7大条款·完整合同·可复制 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select,.jx-field textarea{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field textarea{resize:vertical;min-height:60px}
+.jx-field input:focus,.jx-field select:focus,.jx-field textarea:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:22px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.clause-section{margin-bottom:24px;padding:20px;border-radius:12px;background:var(--bg-soft);border-left:4px solid #4f46e5}
+.clause-section h3{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.clause-section h3 .cs-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:#4f46e5;color:#fff;font-size:12px}
+.clause-body{font-size:14px;color:var(--ink-soft);line-height:1.8;white-space:pre-wrap}
+.clause-body .highlight{color:#4f46e5;font-weight:600}
+.contract-preview{background:#fff;border:2px solid var(--rule);border-radius:12px;padding:32px;font-size:14px;line-height:1.9;color:var(--ink);max-height:600px;overflow-y:auto}
+.contract-preview h2{font-size:18px;font-weight:800;text-align:center;margin-bottom:20px;color:var(--ink)}
+.contract-preview h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:#4f46e5}
+.contract-preview p{margin-bottom:10px;text-indent:2em}
+.contract-preview .cp-meta{text-align:center;margin-bottom:24px;color:var(--muted);font-size:13px}
+.copy-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(79,70,229,.3);transition:all .2s}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.copy-btn.copied{background:linear-gradient(135deg,#10b981,#059669)}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step active">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">合同条款</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">📝</span>供应商合同条款生成器 Supplier Contract Terms</h1>
+  <p>输入双方信息与关键参数，自动生成涵盖7大核心条款（价格、质量标准、交货、付款、违约责任、知识产权、保密）的完整采购合同文本，支持一键复制使用。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">合同条款数</div><div class="mc-value" id="mClauses">7</div></div>
+    <div class="metric-card success"><div class="mc-label">合同总金额</div><div class="mc-value" id="mAmount">$0</div></div>
+    <div class="metric-card warn"><div class="mc-label">交货周期</div><div class="mc-value" id="mLead">0天</div></div>
+    <div class="metric-card"><div class="mc-label">付款方式</div><div class="mc-value" id="mPay" style="font-size:16px">-</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 合同基础信息</h2>
+    <div class="jx-row">
+      <div class="jx-field"><label>采购方（甲方）名称</label><input type="text" id="buyerName" value="众力聚鑫咨询有限公司" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>供应方（乙方）名称</label><input type="text" id="supplierName" value="深圳市XX电子科技有限公司" oninput="SCT.calc()"></div>
+    </div>
+    <div class="jx-row">
+      <div class="jx-field"><label>采购产品名称</label><input type="text" id="productName" value="蓝牙耳机 Model X1" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>合同编号 <span class="hint">(留空自动生成)</span></label><input type="text" id="contractNo" value="" oninput="SCT.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>采购数量</label><input type="number" id="quantity" value="5000" step="100" min="0" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>含税单价 ($)</label><input type="number" id="unitPrice" value="3.50" step="0.01" min="0" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>货币</label><select id="currency" onchange="SCT.calc()"><option value="$">USD ($)</option><option value="￥">CNY (￥)</option><option value="€">EUR (€)</option></select></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📦 交货与质量参数</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>交货周期 (天)</label><input type="number" id="leadDays" value="30" step="1" min="1" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>交货方式</label><select id="deliveryTerms" onchange="SCT.calc()"><option value="FOB深圳">FOB 深圳</option><option value="EXW工厂">EXW 工厂</option><option value="DDP目的地">DDP 目的地</option><option value="CIF港口">CIF 港口</option></select></div>
+      <div class="jx-field"><label>质量验收标准</label><select id="qualityStd" onchange="SCT.calc()"><option value="AQL 2.5">AQL 2.5</option><option value="AQL 1.0">AQL 1.0</option><option value="AQL 4.0">AQL 4.0</option><option value="零缺陷">零缺陷</option></select></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>质保期 (月)</label><input type="number" id="warranty" value="12" step="1" min="0" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>不良率上限 (%)</label><input type="number" id="defectRate" value="2" step="0.1" min="0" max="100" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>最低起订量 (MOQ)</label><input type="number" id="moq" value="1000" step="100" min="0" oninput="SCT.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💳 付款与违约参数</h2>
+    <div class="jx-row">
+      <div class="jx-field"><label>付款方式</label><select id="paymentTerms" onchange="SCT.calc()"><option value="30%预付+70%发货前付清">30%预付 + 70%发货前付清</option><option value="月结30天">月结 30 天</option><option value="月结60天">月结 60 天</option><option value="货到付款">货到付款</option><option value="100%预付">100% 预付</option></select></div>
+      <div class="jx-field"><label>逾期交货违约金 (%/天)</label><input type="number" id="latePenalty" value="0.5" step="0.1" min="0" oninput="SCT.calc()"></div>
+    </div>
+    <div class="jx-row">
+      <div class="jx-field"><label>质量违约赔偿上限 (%)</label><input type="number" id="qualityPenalty" value="20" step="1" min="0" max="100" oninput="SCT.calc()"></div>
+      <div class="jx-field"><label>保密期限 (年)</label><input type="number" id="ndaYears" value="3" step="1" min="0" oninput="SCT.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📄 合同预览 <button class="copy-btn" id="copyBtn" style="float:right;margin-top:-4px" onclick="SCT.copyContract()">📋 一键复制合同</button></h2>
+    <div class="contract-preview" id="contractPreview"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 7大条款概览</h2>
+    <div class="clause-section"><h3><span class="cs-num">1</span>价格条款</h3><div class="clause-body" id="clause1"></div></div>
+    <div class="clause-section"><h3><span class="cs-num">2</span>质量标准条款</h3><div class="clause-body" id="clause2"></div></div>
+    <div class="clause-section"><h3><span class="cs-num">3</span>交货条款</h3><div class="clause-body" id="clause3"></div></div>
+    <div class="clause-section"><h3><span class="cs-num">4</span>付款条款</h3><div class="clause-body" id="clause4"></div></div>
+    <div class="clause-section"><h3><span class="cs-num">5</span>违约责任条款</h3><div class="clause-body" id="clause5"></div></div>
+    <div class="clause-section"><h3><span class="cs-num">6</span>知识产权条款</h3><div class="clause-body" id="clause6"></div></div>
+    <div class="clause-section"><h3><span class="cs-num">7</span>保密条款</h3><div class="clause-body" id="clause7"></div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📄</div><div><h5>采购订单构建</h5><p>格式化PO</p></div></a>
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">🏆</div><div><h5>供应商评分卡</h5><p>8维度评分</p></div></a>
+      <a href="quality-inspection-checklist.html" class="rt-card"><div class="rt-icon">🔍</div><div><h5>品质检验清单</h5><p>AQL抽样方案</p></div></a>
+      <a href="supplier-risk-assessment.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>供应商风险评估</h5><p>6维度风险矩阵</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-contract-terms.html">合同条款生成器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var SCT=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function v(id){return $(id)?$(id).value:''}
+  function n(id){return parseFloat($(id).value)||0}
+  function fmt(n){var c=v('currency');return c+(isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'0.00')}
+
+  function genContractNo(){
+    var existing=v('contractNo');
+    if(existing)return existing;
+    var d=new Date();
+    return 'PO-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(Math.floor(Math.random()*9000)+1000);
+  }
+
+  function calc(){
+    var buyer=v('buyerName'),sup=v('supplierName'),prod=v('productName');
+    var qty=n('quantity'),price=n('unitPrice'),lead=n('leadDays');
+    var total=qty*price;
+    var cno=genContractNo();
+    var payTerms=v('paymentTerms'),delTerms=v('deliveryTerms'),qStd=v('qualityStd');
+    var warranty=n('warranty'),defect=n('defectRate'),moq=n('moq');
+    var lateP=n('latePenalty'),qPenalty=n('qualityPenalty'),nda=n('ndaYears');
+    var d=new Date();
+    var dateStr=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
+
+    $('mAmount').textContent=fmt(total);
+    $('mLead').textContent=lead+'天';
+    $('mPay').textContent=payTerms;
+
+    // Clause summaries
+    $('clause1').innerHTML='产品含税单价 <span class="highlight">'+fmt(price)+'</span>，数量 <span class="highlight">'+qty.toLocaleString()+'</span> 件，合同总金额 <span class="highlight">'+fmt(total)+'</span>。MOQ为 '+moq.toLocaleString()+' 件，价格有效期 12 个月，含税（增值税专用发票）。';
+    $('clause2').innerHTML='执行 <span class="highlight">'+qStd+'</span> 验收标准，不良率上限 <span class="highlight">'+defect+'%</span>，质保期 <span class="highlight">'+warranty+' 个月</span>。到货后 5 个工作日内完成验收，不合格批次乙方须 7 日内免费补换货。';
+    $('clause3').innerHTML='交货方式 <span class="highlight">'+delTerms+'</span>，交货周期 <span class="highlight">'+lead+' 天</span>（自订单确认起计）。乙方负责包装、装运并承担运输至甲方指定仓库的物流费用（FOB/CIF 条款下按国际贸易惯例执行）。';
+    $('clause4').innerHTML='付款方式：<span class="highlight">'+payTerms+'</span>。乙方开具增值税专用发票后，甲方按约定账期通过银行转账支付。';
+    $('clause5').innerHTML='逾期交货：乙方按合同总额 <span class="highlight">'+lateP+'%/天</span> 支付违约金，上限 15%。质量违约：不合格率超标时，乙方承担退换货费用并赔偿甲方损失，赔偿上限为合同总额的 <span class="highlight">'+qPenalty+'%</span>。';
+    $('clause6').innerHTML='乙方保证所供产品不侵犯任何第三方知识产权。如因产品引发知识产权纠纷，乙方承担全部法律责任并赔偿甲方因此遭受的全部损失。甲方提供的定制设计、图纸等知识产权归甲方所有。';
+    $('clause7').innerHTML='双方对合同内容及交易过程中获知的对方商业信息负有保密义务，保密期限为合同终止后 <span class="highlight">'+nda+' 年</span>。违反保密义务的一方应赔偿对方因此遭受的全部损失。';
+
+    // Full contract
+    var h='<h2>采购合同</h2>';
+    h+='<div class="cp-meta">合同编号：'+cno+'<br>签订日期：'+dateStr+'<br>签订地点：甲方办公地</div>';
+    h+='<p><strong>甲方（采购方）：'+buyer+'</strong></p>';
+    h+='<p><strong>乙方（供应方）：'+sup+'</strong></p>';
+    h+='<p>甲乙双方本着平等互利、诚实信用的原则，经友好协商，就甲方向乙方采购产品事宜，达成如下协议：</p>';
+
+    h+='<h3>第一条 价格条款</h3>';
+    h+='<p>1.1 采购产品：<strong>'+prod+'</strong>。</p>';
+    h+='<p>1.2 含税单价：<strong>'+fmt(price)+'</strong>，采购数量：<strong>'+qty.toLocaleString()+' 件</strong>。</p>';
+    h+='<p>1.3 合同总金额：<strong>'+fmt(total)+'</strong>（大写：'+numberToChinese(total)+'）。</p>';
+    h+='<p>1.4 最低起订量（MOQ）：'+moq.toLocaleString()+' 件。低于 MOQ 的订单乙方有权拒绝或加收小额订单费。</p>';
+    h+='<p>1.5 价格有效期为 12 个月，到期前 30 天双方协商续约价格。如遇原材料价格波动超过 10%，双方可协商调整。</p>';
+    h+='<p>1.6 所有价格均含 13% 增值税，乙方须提供增值税专用发票。</p>';
+
+    h+='<h3>第二条 质量标准条款</h3>';
+    h+='<p>2.1 验收标准：执行 <strong>'+qStd+'</strong> 抽样检验标准。</p>';
+    h+='<p>2.2 不良率上限：<strong>'+defect+'%</strong>，超出标准的批次视为不合格。</p>';
+    h+='<p>2.3 质保期：自交货之日起 <strong>'+warranty+' 个月</strong>。质保期内出现的非人为质量问题，乙方负责免费维修或更换。</p>';
+    h+='<p>2.4 验收流程：到货后 5 个工作日内完成验收。不合格批次乙方须在收到通知后 7 日内免费补换货，并承担往返运费。</p>';
+    h+='<p>2.5 乙方须提供产品出厂检验报告（COA）及符合 RoHS/REACH 等相关法规的合规声明。</p>';
+
+    h+='<h3>第三条 交货条款</h3>';
+    h+='<p>3.1 交货方式：<strong>'+delTerms+'</strong>。</p>';
+    h+='<p>3.2 交货周期：自订单确认之日起 <strong>'+lead+' 天</strong>内交货至甲方指定地点。</p>';
+    h+='<p>3.3 乙方负责产品的适当包装，确保运输过程中不受损坏。包装费用包含在产品价格内。</p>';
+    h+='<p>3.4 乙方应在发货后 24 小时内通知甲方，并提供物流追踪信息。运输途中的风险和费用按交货条款执行。</p>';
+    h+='<p>3.5 甲方有权变更交货地点，提前 3 个工作日通知乙方。变更产生的额外费用由甲方承担。</p>';
+
+    h+='<h3>第四条 付款条款</h3>';
+    h+='<p>4.1 付款方式：<strong>'+payTerms+'</strong>。</p>';
+    h+='<p>4.2 乙方在交货并验收合格后 5 个工作日内开具增值税专用发票。</p>';
+    h+='<p>4.3 甲方收到合规发票后，按约定账期通过银行转账支付至乙方指定账户。</p>';
+    h+='<p>4.4 乙方账户信息须在合同签订时书面确认，如需变更须提前 5 个工作日书面通知甲方并经确认。</p>';
+
+    h+='<h3>第五条 违约责任条款</h3>';
+    h+='<p>5.1 逾期交货：乙方逾期交货的，按合同总额的 <strong>'+lateP+'%/天</strong> 向甲方支付违约金，违约金上限为合同总额的 15%。逾期超过 15 天，甲方有权解除合同并要求赔偿。</p>';
+    h+='<p>5.2 质量违约：产品不合格率超出标准的，乙方应承担退换货全部费用，并赔偿甲方因此遭受的损失，赔偿上限为合同总额的 <strong>'+qPenalty+'%</strong>。</p>';
+    h+='<p>5.3 甲方逾期付款的，按应付金额的 0.05%/天向乙方支付违约金。</p>';
+    h+='<p>5.4 任何一方严重违约导致合同无法履行的，守约方有权解除合同并要求违约方赔偿全部直接损失。</p>';
+
+    h+='<h3>第六条 知识产权条款</h3>';
+    h+='<p>6.1 乙方保证所供产品及其包装不侵犯任何第三方专利、商标、著作权等知识产权。如因产品引发知识产权纠纷，乙方承担全部法律责任并赔偿甲方因此遭受的全部损失。</p>';
+    h+='<p>6.2 甲方提供的定制设计、图纸、技术规格等知识产权归甲方所有，乙方不得用于非甲方订单的生产。</p>';
+    h+='<p>6.3 乙方不得在未经甲方书面同意的情况下，将甲方定制产品销售给第三方。</p>';
+    h+='<p>6.4 双方在合作中共同开发的新技术、新设计，知识产权归属由双方另行书面约定。</p>';
+
+    h+='<h3>第七条 保密条款</h3>';
+    h+='<p>7.1 双方对合同内容、价格信息、技术资料、商业计划等在合作过程中获知的对方商业秘密负有保密义务。</p>';
+    h+='<p>7.2 保密期限：自合同终止之日起 <strong>'+nda+' 年</strong>。</p>';
+    h+='<p>7.3 未经对方书面同意，任何一方不得向第三方披露保密信息，法律要求除外。</p>';
+    h+='<p>7.4 违反保密义务的一方应赔偿对方因此遭受的全部损失，包括但不限于直接损失、利润损失和维权费用。</p>';
+
+    h+='<h3>第八条 不可抗力</h3>';
+    h+='<p>8.1 因不可抗力（自然灾害、战争、疫情、政府行为等）导致合同无法履行的，遭遇方应及时通知对方并提供证明，双方协商延期或解除合同。</p>';
+    h+='<p>8.2 不可抗力影响消除后，双方应尽快恢复合同履行。</p>';
+
+    h+='<h3>第九条 争议解决</h3>';
+    h+='<p>9.1 合同适用中华人民共和国法律。</p>';
+    h+='<p>9.2 因合同引起的争议，双方应友好协商解决；协商不成的，提交甲方所在地人民法院诉讼解决。</p>';
+
+    h+='<h3>第十条 附则</h3>';
+    h+='<p>10.1 本合同自双方盖章之日起生效，有效期 1 年。到期前 30 天双方可协商续签。</p>';
+    h+='<p>10.2 本合同一式两份，甲乙双方各执一份，具有同等法律效力。</p>';
+    h+='<p>10.3 合同修改须经双方书面同意，口头修改无效。</p>';
+
+    h+='<div style="margin-top:40px;display:flex;justify-content:space-between">';
+    h+='<div><p><strong>甲方（盖章）：'+buyer+'</strong></p><p>法定代表人/授权代表：______________</p><p>日期：'+dateStr+'</p></div>';
+    h+='<div><p><strong>乙方（盖章）：'+sup+'</strong></p><p>法定代表人/授权代表：______________</p><p>日期：'+dateStr+'</p></div>';
+    h+='</div>';
+
+    $('contractPreview').innerHTML=h;
+    save();
+  }
+
+  function numberToChinese(n){
+    if(n===0)return '零元整';
+    var digits=['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'];
+    var units=['','拾','佰','仟','万','拾','佰','仟','亿'];
+    var intPart=Math.floor(n);
+    var decPart=Math.round((n-intPart)*100);
+    var str='';
+    var intStr=String(intPart);
+    for(var i=0;i<intStr.length;i++){
+      var d=parseInt(intStr[i]);
+      var u=intStr.length-1-i;
+      if(d===0){
+        if(str[str.length-1]!=='零')str+='零';
+      }else{
+        str+=digits[d]+units[u];
+      }
+    }
+    str=str.replace(/零+$/,'');
+    str+='元';
+    if(decPart===0){str+='整'}
+    else{
+      var j=Math.floor(decPart/10),f=decPart%10;
+      if(j>0)str+=digits[j]+'角';
+      if(f>0)str+=digits[f]+'分';
+    }
+    return str;
+  }
+
+  function copyContract(){
+    var text=$('contractPreview').innerText;
+    var ta=document.createElement('textarea');
+    ta.value=text;
+    ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');var btn=$('copyBtn');btn.textContent='✓ 已复制';btn.classList.add('copied');setTimeout(function(){btn.textContent='📋 一键复制合同';btn.classList.remove('copied')},2000)}catch(e){alert('复制失败，请手动选择文本复制')}
+    document.body.removeChild(ta);
+  }
+
+  function save(){try{var data={};['buyerName','supplierName','productName','quantity','unitPrice','leadDays','warranty','defectRate','moq','latePenalty','qualityPenalty','ndaYears'].forEach(function(id){data[id]=v(id)});data.deliveryTerms=v('deliveryTerms');data.qualityStd=v('qualityStd');data.paymentTerms=v('paymentTerms');data.currency=v('currency');localStorage.setItem('jx_sct_data',JSON.stringify(data))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_sct_data'));if(!d)return;Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,copyContract:copyContract,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SCT.init)}else{SCT.init()}
+</script>
+</body>
+</html>

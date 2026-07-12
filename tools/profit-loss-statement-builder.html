@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="P&L损益表构建器：自动生成月度/季度/年度损益表，多维度拆分（SKU/品类/渠道），同比环比自动计算，利润率趋势SVG折线图与行业基准对比。">
+<title>P&L损益表构建器 - 多维度拆分·同比环比·趋势分析 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* ===== 工作流导航条 ===== */
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;letter-spacing:.5px;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+/* 面包屑 */
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}
+.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+/* 工具标题区 */
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+/* 通用卡片 */
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+/* 输入 */
+.jx-field{margin-bottom:14px}
+.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+/* 指标卡 */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:26px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card .mc-sub{font-size:11px;color:var(--muted);margin-top:6px}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}
+.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}
+.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}
+.metric-card.warn .mc-value{color:#d97706}
+/* P&L 表格 */
+.pnl-table{width:100%;border-collapse:collapse;font-size:14px}
+.pnl-table th{padding:12px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:13px}
+.pnl-table td{padding:11px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.pnl-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.pnl-table tr.section td{background:#f8fafc;font-weight:700;color:var(--ink);border-bottom:2px solid var(--rule)}
+.pnl-table tr.total td{background:linear-gradient(90deg,#eef2ff,#f5f3ff);font-weight:800;color:#4f46e5;border-bottom:2px solid #4f46e5}
+.pnl-table tr.total td.num{font-size:16px}
+.pnl-table .pos{color:#059669}.pnl-table .neg{color:#dc2626}
+/* 维度切换 */
+.dim-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.dim-tab{padding:8px 18px;border-radius:50px;font-size:13px;font-weight:600;border:1px solid var(--rule);background:#fff;color:var(--muted);cursor:pointer;transition:all .2s;font-family:inherit}
+.dim-tab.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.dim-tab:hover:not(.active){border-color:#c7d2fe;color:#4f46e5}
+/* SVG 图表 */
+.chart-wrap{position:relative;width:100%;overflow-x:auto}
+.svg-chart{width:100%;min-width:600px;height:300px;display:block}
+.chart-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:13px}
+.chart-legend .lg-item{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.chart-legend .lg-dot{width:14px;height:3px;border-radius:2px}
+/* 同比环比标签 */
+.yoy-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;margin-left:8px}
+.yoy-tag.up{background:#ecfdf5;color:#059669}
+.yoy-tag.down{background:#fef2f2;color:#dc2626}
+/* 相关工具 */
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.pnl-table{font-size:12px}.pnl-table th,.pnl-table td{padding:8px 10px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+
+<div class="workflow-nav">
+  <div class="workflow-nav-inner">
+    <div class="workflow-label">W33 财务核算深度工作流</div>
+    <div class="workflow-steps">
+      <a href="profit-loss-statement-builder.html" class="workflow-step active">损益表</a>
+      <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+      <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+      <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+      <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+      <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+      <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+      <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+      <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+      <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+    </div>
+  </div>
+</div>
+
+<div class="breadcrumb-bar">
+  <div class="container">
+    <a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">损益表构建器</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tool-title-area">
+    <h1><span class="tt-icon">📊</span>P&L 损益表构建器 <span style="font-size:13px;padding:3px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-weight:600">深度版</span></h1>
+    <p>自动生成月度/季度/年度损益表，支持按 SKU / 品类 / 渠道多维度拆分，同比环比自动计算，利润率趋势 SVG 折线图叠加行业基准对比线，让财务核算从手工 Excel 走向自动化洞察。</p>
+  </div>
+</div>
+
+<section class="tool-section">
+  <div class="container">
+    <div class="metric-grid" id="metricGrid">
+      <div class="metric-card"><div class="mc-label">销售收入 Revenue</div><div class="mc-value" id="mRevenue">$0</div><div class="mc-sub" id="mRevenueYoy">同比 --</div></div>
+      <div class="metric-card success"><div class="mc-label">毛利 Gross Profit</div><div class="mc-value" id="mGross">$0</div><div class="mc-sub" id="mGrossMargin">毛利率 0%</div></div>
+      <div class="metric-card warn"><div class="mc-label">运营利润 Op Profit</div><div class="mc-value" id="mOp">$0</div><div class="mc-sub" id="mOpMargin">运营利润率 0%</div></div>
+      <div class="metric-card danger"><div class="mc-label">净利润 Net Profit</div><div class="mc-value" id="mNet">$0</div><div class="mc-sub" id="mNetMargin">净利率 0%</div></div>
+    </div>
+
+    <div class="jx-card">
+      <h2>📋 输入财务数据（当期）</h2>
+      <div class="jx-row">
+        <div class="jx-field"><label>销售收入 Revenue <span class="hint">($)</span></label><input type="number" id="revenue" value="120000" step="100" min="0" oninput="PL.calc()"></div>
+        <div class="jx-field"><label>COGS 销货成本 <span class="hint">($)</span></label><input type="number" id="cogs" value="48000" step="100" min="0" oninput="PL.calc()"></div>
+      </div>
+      <div class="jx-row">
+        <div class="jx-field"><label>运营费用 OpEx <span class="hint">($)</span></label><input type="number" id="opex" value="15000" step="100" min="0" oninput="PL.calc()"></div>
+        <div class="jx-field"><label>广告费 Ad Spend <span class="hint">($)</span></label><input type="number" id="adFee" value="12000" step="100" min="0" oninput="PL.calc()"></div>
+      </div>
+      <div class="jx-row">
+        <div class="jx-field"><label>平台佣金/费 Platform Fee <span class="hint">($)</span></label><input type="number" id="platformFee" value="9000" step="100" min="0" oninput="PL.calc()"></div>
+        <div class="jx-field"><label>物流费 Logistics <span class="hint">($)</span></label><input type="number" id="logistics" value="11000" step="100" min="0" oninput="PL.calc()"></div>
+      </div>
+      <div class="jx-row">
+        <div class="jx-field"><label>其他费用 Other Expense <span class="hint">($)</span></label><input type="number" id="otherFee" value="5000" step="100" min="0" oninput="PL.calc()"></div>
+        <div class="jx-field"><label>税费 Tax <span class="hint">($)</span></label><input type="number" id="tax" value="4000" step="100" min="0" oninput="PL.calc()"></div>
+      </div>
+      <div style="height:1px;background:var(--rule-light);margin:18px 0"></div>
+      <div class="jx-row-3">
+        <div class="jx-field"><label>上年同期收入 <span class="hint">($) 用于同比</span></label><input type="number" id="prevRevenue" value="95000" step="100" min="0" oninput="PL.calc()"></div>
+        <div class="jx-field"><label>上月收入 <span class="hint">($) 用于环比</span></label><input type="number" id="lastMonthRevenue" value="105000" step="100" min="0" oninput="PL.calc()"></div>
+        <div class="jx-field"><label>行业平均净利率 <span class="hint">(%) 基准线</span></label><input type="number" id="benchmark" value="12" step="0.5" min="0" max="100" oninput="PL.calc()"></div>
+      </div>
+    </div>
+
+    <div class="jx-card">
+      <h2>📑 完整损益表 P&L Statement</h2>
+      <div style="overflow-x:auto">
+        <table class="pnl-table" id="pnlTable"></table>
+      </div>
+    </div>
+
+    <div class="jx-card">
+      <h2>📈 利润率趋势 & 行业基准对比</h2>
+      <div class="chart-wrap">
+        <svg class="svg-chart" id="trendChart" viewBox="0 0 700 300" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="chart-legend">
+        <div class="lg-item"><div class="lg-dot" style="background:#4f46e5"></div>毛利率 Gross Margin</div>
+        <div class="lg-item"><div class="lg-dot" style="background:#10b981"></div>净利率 Net Margin</div>
+        <div class="lg-item"><div class="lg-dot" style="background:#f59e0b"></div>行业基准 Benchmark</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">注：趋势图展示近6个月利润率走势（基于当期数据模拟环比波动），橙色虚线为行业基准净利率，便于直观判断竞争力。</p>
+    </div>
+
+    <div class="jx-card">
+      <h2>🔍 多维度拆分分析</h2>
+      <div class="dim-tabs">
+        <button class="dim-tab active" onclick="PL.switchDim('sku',this)">按 SKU</button>
+        <button class="dim-tab" onclick="PL.switchDim('channel',this)">按渠道</button>
+        <button class="dim-tab" onclick="PL.switchDim('category',this)">按品类</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="pnl-table" id="dimTable"></table>
+      </div>
+    </div>
+
+    <div class="jx-card">
+      <h2>💡 智能诊断建议</h2>
+      <ul id="diagnosis" style="list-style:none;padding:0;margin:0"></ul>
+    </div>
+
+    <div class="jx-card">
+      <h2>🧰 相关工具推荐</h2>
+      <div class="related-tools">
+        <a href="profit-waterfall.html" class="rt-card"><div class="rt-icon">🌊</div><div><h5>利润瀑布图</h5><p>收入到净利润逐项拆解</p></div></a>
+        <a href="cost-allocation-matrix.html" class="rt-card"><div class="rt-icon">📐</div><div><h5>成本分摊矩阵</h5><p>间接成本按规则分摊</p></div></a>
+        <a href="financial-health-scorecard.html" class="rt-card"><div class="rt-icon">💚</div><div><h5>财务健康度</h5><p>9维度综合评分</p></div></a>
+        <a href="budget-vs-actual.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>预算vs实际</h5><p>差异分析与对比</p></div></a>
+      </div>
+    </div>
+
+    <div class="back-center">
+      <a href="index.html">← 返回工具中心</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="profit-loss-statement-builder.html">P&L损益表</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+var PL=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  function pct(n){return (isFinite(n)?n.toFixed(1):'0.0')+'%'}
+  var curDim='sku';
+  var dimData={
+    sku:[
+      {name:'SKU-A001 旗舰款',rev:0.40,cogs:0.42,ad:0.45,other:0.35},
+      {name:'SKU-B002 标准款',rev:0.30,cogs:0.30,ad:0.25,other:0.30},
+      {name:'SKU-C003 入门款',rev:0.20,cogs:0.18,ad:0.20,other:0.25},
+      {name:'SKU-D004 配件',rev:0.10,cogs:0.10,ad:0.10,other:0.10}
+    ],
+    channel:[
+      {name:'Amazon US',rev:0.50,cogs:0.50,ad:0.55,other:0.45},
+      {name:'Amazon EU',rev:0.25,cogs:0.25,ad:0.20,other:0.25},
+      {name:'Shopify DTC',rev:0.15,cogs:0.15,ad:0.15,other:0.20},
+      {name:'eBay / Walmart',rev:0.10,cogs:0.10,ad:0.10,other:0.10}
+    ],
+    category:[
+      {name:'3C 电子',rev:0.45,cogs:0.48,ad:0.40,other:0.40},
+      {name:'家居生活',rev:0.30,cogs:0.28,ad:0.30,other:0.30},
+      {name:'运动户外',rev:0.15,cogs:0.14,ad:0.18,other:0.18},
+      {name:'其他',rev:0.10,cogs:0.10,ad:0.12,other:0.12}
+    ]
+  };
+
+  function calc(){
+    var rev=parseFloat($('revenue').value)||0;
+    var cogs=parseFloat($('cogs').value)||0;
+    var opex=parseFloat($('opex').value)||0;
+    var ad=parseFloat($('adFee').value)||0;
+    var plat=parseFloat($('platformFee').value)||0;
+    var logi=parseFloat($('logistics').value)||0;
+    var other=parseFloat($('otherFee').value)||0;
+    var tax=parseFloat($('tax').value)||0;
+    var prevRev=parseFloat($('prevRevenue').value)||0;
+    var lastRev=parseFloat($('lastMonthRevenue').value)||0;
+    var bench=parseFloat($('benchmark').value)||0;
+
+    var gross=rev-cogs;
+    var totalOp=opex+ad+plat+logi+other;
+    var opProfit=gross-totalOp;
+    var net=opProfit-tax;
+    var grossMargin=rev>0?gross/rev*100:0;
+    var opMargin=rev>0?opProfit/rev*100:0;
+    var netMargin=rev>0?net/rev*100:0;
+    var yoy=prevRev>0?(rev-prevRev)/prevRev*100:0;
+    var mom=lastRev>0?(rev-lastRev)/lastRev*100:0;
+
+    $('mRevenue').textContent=fmt(rev);
+    $('mRevenueYoy').innerHTML='同比 '+(yoy>=0?'<span class="yoy-tag up">+'+yoy.toFixed(1)+'%</span>':'<span class="yoy-tag down">'+yoy.toFixed(1)+'%</span>');
+    $('mGross').textContent=fmt(gross);
+    $('mGrossMargin').textContent='毛利率 '+pct(grossMargin);
+    $('mOp').textContent=fmt(opProfit);
+    $('mOpMargin').textContent='运营利润率 '+pct(opMargin);
+    $('mNet').textContent=fmt(net);
+    $('mNetMargin').textContent='净利率 '+pct(netMargin);
+
+    renderPnL(rev,cogs,gross,opex,ad,plat,logi,other,totalOp,opProfit,tax,net,grossMargin,opMargin,netMargin,yoy,mom);
+    renderTrend(grossMargin,netMargin,bench);
+    renderDim(rev,cogs,ad,opex,plat,logi,other);
+    renderDiag(grossMargin,opMargin,netMargin,bench,ad,rev,totalOp);
+    save(rev,cogs,opex,ad,plat,logi,other,tax);
+  }
+
+  function renderPnL(rev,cogs,gross,opex,ad,plat,logi,other,totalOp,opProfit,tax,net,gm,om,nm,yoy,mom){
+    var h='<thead><tr><th>科目 Item</th><th style="text-align:right">金额 Amount</th><th style="text-align:right">占比 % of Rev</th><th style="text-align:right">同比/环比</th></tr></thead><tbody>';
+    h+='<tr class="section"><td>收入 Revenue</td><td class="num">'+fmt(rev)+'</td><td class="num">100.0%</td><td class="num"><span class="yoy-tag '+(yoy>=0?'up':'down')+'">'+(yoy>=0?'+':'')+yoy.toFixed(1)+'% YoY</span></td></tr>';
+    h+='<tr><td style="padding-left:28px">COGS 销货成本</td><td class="num">('+fmt(cogs)+')</td><td class="num">'+pct(rev>0?-cogs/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr class="total"><td>毛利 Gross Profit</td><td class="num">'+fmt(gross)+'</td><td class="num">'+pct(gm)+'</td><td class="num"><span class="yoy-tag '+(mom>=0?'up':'down')+'">'+(mom>=0?'+':'')+mom.toFixed(1)+'% MoM</span></td></tr>';
+    h+='<tr class="section"><td>运营费用 Operating Expenses</td><td class="num">('+fmt(totalOp)+')</td><td class="num">'+pct(rev>0?-totalOp/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr><td style="padding-left:28px">运营费用 OpEx</td><td class="num">('+fmt(opex)+')</td><td class="num">'+pct(rev>0?-opex/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr><td style="padding-left:28px">广告费 Ad Spend</td><td class="num">('+fmt(ad)+')</td><td class="num">'+pct(rev>0?-ad/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr><td style="padding-left:28px">平台费 Platform Fee</td><td class="num">('+fmt(plat)+')</td><td class="num">'+pct(rev>0?-plat/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr><td style="padding-left:28px">物流费 Logistics</td><td class="num">('+fmt(logi)+')</td><td class="num">'+pct(rev>0?-logi/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr><td style="padding-left:28px">其他费用 Other</td><td class="num">('+fmt(other)+')</td><td class="num">'+pct(rev>0?-other/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr class="total"><td>运营利润 Operating Profit</td><td class="num">'+fmt(opProfit)+'</td><td class="num">'+pct(om)+'</td><td class="num">--</td></tr>';
+    h+='<tr><td style="padding-left:28px">税费 Tax</td><td class="num">('+fmt(tax)+')</td><td class="num">'+pct(rev>0?-tax/rev*100:0)+'</td><td class="num">--</td></tr>';
+    h+='<tr class="total"><td>净利润 Net Profit</td><td class="num '+(net>=0?'pos':'neg')+'">'+fmt(net)+'</td><td class="num '+(nm>=0?'pos':'neg')+'">'+pct(nm)+'</td><td class="num">'+(nm>=bench?'<span class="yoy-tag up">优于基准</span>':'<span class="yoy-tag down">低于基准</span>')+'</td></tr>';
+    h+='</tbody>';
+    $('pnlTable').innerHTML=h;
+  }
+
+  function renderTrend(gm,nm,bench){
+    var months=['1月','2月','3月','4月','5月','6月'];
+    var gmData=[],nmData=[];
+    var seed=gm;
+    for(var i=0;i<6;i++){
+      var delta=(i-2.5)*1.5+ (i%2?-1:1);
+      gmData.push(Math.max(0,gm+delta));
+      nmData.push(Math.max(0,nm+delta*0.7));
+    }
+    gmData[5]=gm;nmData[5]=nm;
+    var W=700,H=300,padL=50,padR=20,padT=30,padB=40;
+    var maxV=Math.max(60,gm+10,bench+10);
+    var xStep=(W-padL-padR)/(months.length-1);
+    function y(v){return padT+(1-v/maxV)*(H-padT-padB)}
+    function x(i){return padL+i*xStep}
+    var svg='<defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity=".25"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>';
+    svg+='<rect x="'+padL+'" y="'+padT+'" width="'+(W-padL-padR)+'" height="'+(H-padT-padB)+'" fill="#fff" stroke="#f1f5f9"/>';
+    for(var g=0;g<=5;g++){var gv=maxV/5*g;var gy=y(gv);svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#f1f5f9"/><text x="'+(padL-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#94a3b8">'+gv.toFixed(0)+'%</text>';}
+    for(var m=0;m<months.length;m++){svg+='<text x="'+x(m)+'" y="'+(H-padB+18)+'" text-anchor="middle" font-size="11" fill="#64748b">'+months[m]+'</text>';}
+    // benchmark line
+    var by=y(bench);
+    svg+='<line x1="'+padL+'" y1="'+by+'" x2="'+(W-padR)+'" y2="'+by+'" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4"/>';
+    svg+='<text x="'+(W-padR)+'" y="'+(by-6)+'" text-anchor="end" font-size="10" fill="#d97706" font-weight="700">基准 '+bench+'%</text>';
+    // gross margin area
+    var areaPts=gmData.map(function(v,i){return x(i)+','+y(v)}).join(' ');
+    svg+='<polygon points="'+padL+','+(H-padB)+' '+areaPts+' '+(W-padR)+','+(H-padB)+'" fill="url(#lg1)"/>';
+    var gmPath=gmData.map(function(v,i){return (i?'L':'M')+x(i)+' '+y(v)}).join(' ');
+    svg+='<path d="'+gmPath+'" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round"/>';
+    gmData.forEach(function(v,i){svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="4" fill="#fff" stroke="#4f46e5" stroke-width="2"/>';if(i===5)svg+='<text x="'+x(i)+'" y="'+(y(v)-10)+'" text-anchor="middle" font-size="11" fill="#4f46e5" font-weight="700">'+v.toFixed(1)+'%</text>';});
+    var nmPath=nmData.map(function(v,i){return (i?'L':'M')+x(i)+' '+y(v)}).join(' ');
+    svg+='<path d="'+nmPath+'" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linejoin="round"/>';
+    nmData.forEach(function(v,i){svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="4" fill="#fff" stroke="#10b981" stroke-width="2"/>';if(i===5)svg+='<text x="'+x(i)+'" y="'+(y(v)-10)+'" text-anchor="middle" font-size="11" fill="#059669" font-weight="700">'+v.toFixed(1)+'%</text>';});
+    $('trendChart').innerHTML=svg;
+  }
+
+  function renderDim(rev,cogs,ad,opex,plat,logi,other){
+    var data=dimData[curDim];
+    var h='<thead><tr><th>'+ (curDim==='sku'?'SKU':curDim==='channel'?'渠道':'品类') +'</th><th style="text-align:right">收入</th><th style="text-align:right">COGS</th><th style="text-align:right">毛利</th><th style="text-align:right">毛利率</th><th style="text-align:right">广告费</th><th style="text-align:right">净利估算</th><th style="text-align:right">净利率</th></tr></thead><tbody>';
+    data.forEach(function(d){
+      var dRev=rev*d.rev,dCogs=cogs*d.cogs,dAd=ad*d.ad;
+      var dOther=(opex+plat+logi+other)*d.other;
+      var dGross=dRev-dCogs,dNet=dGross-dAd-dOther;
+      var gm=dRev>0?dGross/dRev*100:0,nm=dRev>0?dNet/dRev*100:0;
+      h+='<tr><td>'+d.name+'</td><td class="num">'+fmt(dRev)+'</td><td class="num">'+fmt(dCogs)+'</td><td class="num '+(dGross>=0?'pos':'neg')+'">'+fmt(dGross)+'</td><td class="num">'+pct(gm)+'</td><td class="num">'+fmt(dAd)+'</td><td class="num '+(dNet>=0?'pos':'neg')+'">'+fmt(dNet)+'</td><td class="num '+(nm>=0?'pos':'neg')+'">'+pct(nm)+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('dimTable').innerHTML=h;
+  }
+
+  function switchDim(d,btn){
+    curDim=d;
+    document.querySelectorAll('.dim-tab').forEach(function(t){t.classList.remove('active')});
+    btn.classList.add('active');
+    calc();
+  }
+
+  function renderDiag(gm,om,nm,bench,ad,rev,totalOp){
+    var tips=[];
+    if(gm<30)tips.push({t:'毛利率 '+pct(gm)+' 偏低（建议 ≥40%），COGS 占比过高。建议优化供应链议价、提升客单价或淘汰低毛利 SKU。',c:'#dc2626'});
+    else tips.push({t:'毛利率 '+pct(gm)+' 处于健康区间，成本控制良好。',c:'#059669'});
+    if(ad/rev*100>15)tips.push({t:'广告费占收入 '+pct(ad/rev*100)+'，高于 15% 警戒线。建议核查 ACoS，暂停高花费低转化关键词。',c:'#dc2626'});
+    else tips.push({t:'广告费占收入 '+pct(ad/rev*100)+'，投放结构合理。',c:'#059669'});
+    if(nm<bench)tips.push({t:'净利率 '+pct(nm)+' 低于行业基准 '+pct(bench)+'，竞争力不足。重点关注运营费用与物流费优化。',c:'#d97706'});
+    else tips.push({t:'净利率 '+pct(nm)+' 优于行业基准 '+pct(bench)+'，盈利能力领先。',c:'#059669'});
+    if(totalOp/rev*100>40)tips.push({t:'运营费用合计占收入 '+pct(totalOp/rev*100)+'，费用偏重。建议拆分各项费用逐一优化。',c:'#d97706'});
+    tips.push({t:'建议每月使用本工具生成 P&L，与成本分摊矩阵、利润瀑布图联动分析，形成完整财务闭环。',c:'#4f46e5'});
+    $('diagnosis').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;width:18px;height:18px;border-radius:50%;background:'+t.c+';opacity:.15"></span><span style="position:absolute;left:5px;top:13px;color:'+t.c+';font-size:12px;font-weight:700">!</span>'+t.t+'</li>'}).join('');
+  }
+
+  function save(){
+    var data={};
+    ['revenue','cogs','opex','adFee','platformFee','logistics','otherFee','tax','prevRevenue','lastMonthRevenue','benchmark'].forEach(function(id){data[id]=$(''+id).value});
+    try{localStorage.setItem('jx_pl_data',JSON.stringify(data))}catch(e){}
+  }
+  function load(){
+    try{var d=JSON.parse(localStorage.getItem('jx_pl_data'));if(d){Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}}catch(e){}
+  }
+
+  return {calc:calc,switchDim:switchDim,init:function(){load();calc();}};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PL.init)}else{PL.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播互动率计算器：输入观看人数/点赞/评论/分享/关注，计算各互动指标比率，行业基准对比，优化建议。免费直播运营工具。">
+<meta name="keywords" content="直播互动率,互动指标,点赞率,评论率,分享率,关注率,行业基准,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-interaction-calc.html">
+<title>直播互动率计算器 - 互动指标·行业基准对比 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .benchmark-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light)}
+  .bm-label{flex:1;font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .bm-bar{flex:2;height:10px;background:var(--rule-light);border-radius:5px;overflow:hidden;position:relative}
+  .bm-fill{height:100%;border-radius:5px;transition:width .5s}
+  .bm-val{font-size:13px;font-weight:700;min-width:60px;text-align:right}
+  .bm-status{font-size:11px;padding:2px 8px;border-radius:6px;white-space:nowrap;font-weight:600}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播互动率计算器","description":"直播互动率计算器：输入观看人数/点赞/评论/分享/关注，计算各互动指标比率，行业基准对比，优化建议。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-interaction-calc.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_interaction_calc">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第5步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 标准版</span>
+      <h1>直播互动率<em>计算器</em></h1>
+      <p class="tool-hero-desc">输入观看人数/点赞/评论/分享/关注，计算各互动指标比率，行业基准对比，优化建议。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 互动数据输入</h2>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>观看人数</label><input type="number" id="viewers" value="12000" step="100" oninput="IC.calc()"></div>
+        <div class="calc-field"><label>点赞数</label><input type="number" id="likes" value="35000" step="100" oninput="IC.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>评论数</label><input type="number" id="comments" value="2800" step="10" oninput="IC.calc()"></div>
+        <div class="calc-field"><label>分享数</label><input type="number" id="shares" value="450" step="10" oninput="IC.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>新增关注</label><input type="number" id="follows" value="320" step="10" oninput="IC.calc()"></div>
+        <div class="calc-field"><label>直播时长 (分钟)</label><input type="number" id="duration" value="120" step="10" oninput="IC.calc()"></div>
+      </div>
+      <div class="fee-rule-box">
+        <h4>📐 行业基准</h4>
+        <ul>
+          <li>点赞率（点赞/观看）：优秀>300%，一般150-300%，差<150%</li>
+          <li>评论率（评论/观看）：优秀>15%，一般5-15%，差<5%</li>
+          <li>分享率（分享/观看）：优秀>5%，一般2-5%，差<2%</li>
+          <li>关注率（关注/观看）：优秀>3%，一般1-3%，差<1%</li>
+        </ul>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  <div id="extraSections"></div>
+  
+      <div class="wf-foot-nav"><a href="live-data-dashboard.html" class="prev"><span class="fn-label">上一步 · 第4步</span><span class="fn-name">← 数据看板</span></a><a href="live-replay-analyzer.html" class="next"><span class="fn-label">下一步 · 第6步</span><span class="fn-name">直播复盘 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var IC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+
+  function calc(){
+    var viewers=n('viewers'),likes=n('likes'),comments=n('comments'),shares=n('shares'),follows=n('follows'),dur=n('duration');
+    if(viewers<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">💬</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入互动数据</p>';$('extraSections').innerHTML='';return;}
+
+    var likeRate=viewers>0?(likes/viewers*100):0;
+    var commentRate=viewers>0?(comments/viewers*100):0;
+    var shareRate=viewers>0?(shares/viewers*100):0;
+    var followRate=viewers>0?(follows/viewers*100):0;
+    var totalInteraction=likes+comments+shares;
+    var interactionRate=viewers>0?(totalInteraction/viewers*100):0;
+    var interactionPerMin=dur>0?(totalInteraction/dur):0;
+
+    var metrics=[
+      {name:'点赞率',value:likeRate,benchmark:300,unit:'%',color:'#ef4444'},
+      {name:'评论率',value:commentRate,benchmark:15,unit:'%',color:'#3b82f6'},
+      {name:'分享率',value:shareRate,benchmark:5,unit:'%',color:'#10b981'},
+      {name:'关注率',value:followRate,benchmark:3,unit:'%',color:'#f59e0b'}
+    ];
+
+    $('resultCard').innerHTML=
+      '<h3>💬 互动率分析</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+interactionRate.toFixed(1)+'%</div><div class="rsb-lbl">总互动率</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+likeRate.toFixed(0)+'%</div><div class="rsb-lbl">点赞率</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+commentRate.toFixed(1)+'%</div><div class="rsb-lbl">评论率</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val">'+interactionPerMin.toFixed(0)+'</div><div class="rsb-lbl">每分钟互动</div></div>'+
+      '</div>';
+
+    // 行业基准对比
+    var benchHtml='<div class="section-block"><h3>📊 行业基准对比</h3>';
+    metrics.forEach(function(m){
+      var ratio=m.benchmark>0?m.value/m.benchmark*100:0;
+      var barWidth=Math.min(ratio,100);
+      var status=ratio>=100?{text:'优秀',cls:'background:#ecfdf5;color:#10b981'}:ratio>=60?{text:'一般',cls:'background:#fffbeb;color:#f59e0b'}:{text:'待提升',cls:'background:#fef2f2;color:#ef4444'};
+      benchHtml+='<div class="benchmark-row"><div class="bm-label">'+m.name+'</div><div class="bm-bar"><div class="bm-fill" style="width:'+barWidth+'%;background:'+m.color+'"></div></div><div class="bm-val">'+m.value.toFixed(1)+m.unit+'</div><span class="bm-status" style="'+status.cls+'">'+status.text+'</span></div>';
+    });
+    benchHtml+='</div>';
+
+    // 优化建议
+    var advice='<div class="section-block"><h3>🧠 互动优化建议</h3><ul class="opt-tips" style="list-style:none;padding:0;margin:0">';
+    if(likeRate<150)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">👍 点赞率偏低：增加"点赞领福利"环节，主播主动引导点赞</li>';
+    else advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">👍 点赞率良好：继续保持互动引导节奏</li>';
+    if(commentRate<5)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">💬 评论率偏低：设置话题讨论、提问互动，主动回复评论</li>';
+    else advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">💬 评论率良好：维持话题讨论活跃度</li>';
+    if(shareRate<2)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📤 分享率偏低：设置"分享抽大奖"活动，提升裂变传播</li>';
+    if(followRate<1)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">⭐ 关注率偏低：增加"关注领优惠券"环节，强化关注引导</li>';
+    advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative">📌 综合建议：每10分钟设置一次互动高潮，利用抽奖、限时福利等手段拉升互动数据</li>';
+    advice+='</ul></div>';
+
+    $('extraSections').innerHTML=benchHtml+advice;
+  }
+
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',IC.init);}else{IC.init();}
+  
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="召回预防清单：5大类30项（设计安全/生产质控/标签准确/测试认证/监控反馈），CSS检查清单，风险评分，进度条，localStorage保存。免费在线合规工具。">
+<title>召回预防清单 - 30项检查·风险评分·进度追踪 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.progress-bar{height:12px;background:var(--t-rule);border-radius:6px;overflow:hidden;margin-top:16px}.progress-fill{height:100%;border-radius:6px;transition:width .5s;background:linear-gradient(90deg,var(--t-primary),var(--t-success))}
+.cat-section{margin-bottom:20px}.cat-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;font-size:15px;font-weight:700;color:#fff;margin-bottom:0}.cat-1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.cat-2{background:linear-gradient(135deg,#0ea5e9,#38bdf8)}.cat-3{background:linear-gradient(135deg,#10b981,#34d399)}.cat-4{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.cat-5{background:linear-gradient(135deg,#ef4444,#f87171)}.cat-progress{margin-left:auto;font-size:13px;background:rgba(255,255,255,0.25);padding:2px 10px;border-radius:10px}
+.checklist{list-style:none;padding:0;margin:0;border:1px solid var(--t-rule);border-top:none;border-radius:0 0 10px 10px;overflow:hidden}.check-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--t-rule-light);transition:background .2s}.check-item:last-child{border-bottom:none}.check-item.done{background:#f0fdf4}.check-item:hover{background:var(--t-bg-soft)}.check-item.done:hover{background:#dcfce7}
+.check-box{width:22px;height:22px;border:2px solid var(--t-rule);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}.check-box.checked{background:var(--t-success);border-color:var(--t-success);color:#fff;font-size:14px}
+.check-content{flex:1}.check-title{font-size:14px;font-weight:600;color:var(--t-ink)}.check-desc{font-size:12px;color:var(--t-muted);margin-top:2px}
+.check-item.done .check-title{color:var(--t-success)}
+.risk-badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;flex-shrink:0}.risk-high{background:#fee2e2;color:#991b1b}.risk-med{background:#fef3c7;color:#92400e}.risk-low{background:#dbeafe;color:#1e40af}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;color:#fff;background:var(--t-muted)}.btn:hover{opacity:.85}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+<a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step active">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W41 合规深度</a><span class="sep">/</span><span class="current">召回预防清单</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W41 · 合规深度工作流</span><h1>召回预防<em>清单</em></h1><p class="tool-header-desc">5大类30项预防检查清单（设计安全/生产质控/标签准确/测试认证/监控反馈），风险评分，进度条追踪，localStorage自动保存。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>预防总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statDone">0/30</div><div class="stat-lbl">完成项</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statScore">0%</div><div class="stat-lbl">预防评分</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statRisk">高</div><div class="stat-lbl">召回风险</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div style="text-align:right;margin-top:6px"><button class="btn" onclick="RPC.reset()">重置清单</button></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <div id="checklistContainer"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="product-safety-assessment.html" class="related-card"><div class="related-card-icon">🛡️</div><div class="related-card-content"><h5>产品安全评估</h5><p>5维度风险评估</p></div></a>
+      <a href="compliance-audit-scorecard.html" class="related-card"><div class="related-card-icon">📋</div><div class="related-card-content"><h5>合规审计评分卡</h5><p>10维度审计评分</p></div></a>
+      <a href="product-compliance-matrix.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>产品合规矩阵</h5><p>多市场合规热力图</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var RPC = (function(){
+  'use strict';
+  var DATA = [
+    {cat:1,title:'设计安全审查',items:[
+      {t:'产品设计风险评估',d:'产品设计阶段完成全面风险评估（EN ISO 12100或ASTM标准）',r:'high'},
+      {t:'小零件测试',d:'含小零件产品通过吞咽窒息测试（16 CFR 1501）',r:'high'},
+      {t:'尖点/锐边测试',d:'产品无危险尖点和锐边（16 CFR 1500.48/49）',r:'high'},
+      {t:'结构稳定性',d:'产品在正常和可预见滥用下保持结构稳定',r:'med'},
+      {t:'材料安全选型',d:'材料选择经过安全评估，无已知高风险物质',r:'high'},
+      {t:'安全冗余设计',d:'关键安全功能有冗余设计（如双重保护）',r:'med'}
+    ]},
+    {cat:2,title:'生产质控',items:[
+      {t:'来料检验标准',d:'建立来料检验标准，批次抽检关键安全材料',r:'high'},
+      {t:'生产过程巡检',d:'生产线上定期巡检关键工序和参数',r:'med'},
+      {t:'成品抽检制度',d:'每批次成品按AQL标准抽检',r:'high'},
+      {t:'供应商质量协议',d:'与关键供应商签订质量保证协议',r:'med'},
+      {t:'追溯体系',d:'每批次产品可追溯到原材料和生产日期',r:'high'},
+      {t:'变更管理流程',d:'材料/工艺/设计变更经过审批和验证',r:'med'}
+    ]},
+    {cat:3,title:'标签准确',items:[
+      {t:'年龄标识准确',d:'产品年龄标识与实际安全评估一致',r:'high'},
+      {t:'警示语完整',d:'所有必需安全警示语均已标注',r:'high'},
+      {t:'成分/材质标注',d:'成分和材质信息准确无误',r:'high'},
+      {t:'多语言合规',d:'目标市场要求语言均已覆盖',r:'med'},
+      {t:'使用说明清晰',d:'使用说明易懂，含安全操作指引',r:'med'},
+      {t:'追溯码标注',d:'每件产品含批次/序列号便于追溯',r:'med'}
+    ]},
+    {cat:4,title:'测试认证',items:[
+      {t:'安全测试报告',d:'产品已通过目标市场安全标准测试',r:'high'},
+      {t:'化学测试报告',d:'材料已通过重金属/邻苯/REACH测试',r:'high'},
+      {t:'认证有效期管理',d:'所有认证证书在有效期内',r:'high'},
+      {t:'定期重新测试',d:'材料或工艺变更后重新测试',r:'med'},
+      {t:'第三方实验室',d:'使用CPSC认可或ISO 17025认证实验室',r:'med'},
+      {t:'认证文件归档',d:'所有测试报告和证书妥善归档',r:'low'}
+    ]},
+    {cat:5,title:'监控反馈',items:[
+      {t:'客诉监控',d:'建立客诉收集和分析系统',r:'high'},
+      {t:'安全事件报告',d:'建立安全事件内部报告机制',r:'high'},
+      {t:'市场监控',d:'监控竞品召回信息和法规更新',r:'med'},
+      {t:'CPSC/CPSIA追踪',d:'定期查看CPSC召回公告，评估同类风险',r:'med'},
+      {t:'消费者反馈分析',d:'分析退货/差评中安全相关问题',r:'med'},
+      {t:'召回预案',d:'制定产品召回应急预案和流程',r:'low'}
+    ]}
+  ];
+  var catColors = {1:'cat-1',2:'cat-2',3:'cat-3',4:'cat-4',5:'cat-5'};
+  var riskClass = {high:'risk-high',med:'risk-med',low:'risk-low'};
+  var riskText = {high:'高',med:'中',low:'低'};
+  var STORAGE_KEY = 'jx_recall_checklist';
+  var state = {};
+
+  function load(){
+    try{ var saved = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); state = saved; }catch(e){ state = {}; }
+  }
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function compute(){
+    var total=0,done=0;
+    var html='';
+    DATA.forEach(function(catData){
+      var catDone=0, catTotal=catData.items.length;
+      html += '<div class="cat-section"><div class="cat-header '+catColors[catData.cat]+'">'+catData.title+'<span class="cat-progress" id="cat'+catData.cat+'prog">0/'+catTotal+'</span></div><div class="checklist">';
+      catData.items.forEach(function(item,idx){
+        var key = catData.cat+'_'+idx;
+        var isChecked = !!state[key];
+        if(isChecked){done++;catDone++;}
+        total++;
+        html += '<div class="check-item'+(isChecked?' done':'')+'" onclick="RPC.toggle('+catData.cat+','+idx+')">';
+        html += '<div class="check-box'+(isChecked?' checked':'')+'">'+(isChecked?'✓':'')+'</div>';
+        html += '<div class="check-content"><div class="check-title">'+item.t+'</div><div class="check-desc">'+item.d+'</div></div>';
+        html += '<span class="risk-badge '+riskClass[item.r]+'">'+riskText[item.r]+'</span>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('checklistContainer').innerHTML = html;
+
+    // 更新各类进度
+    DATA.forEach(function(catData){
+      var catDone=0;
+      catData.items.forEach(function(item,idx){
+        if(state[catData.cat+'_'+idx]) catDone++;
+      });
+      var el = document.getElementById('cat'+catData.cat+'prog');
+      if(el) el.textContent = catDone+'/'+catData.items.length;
+    });
+
+    var pct = total>0?Math.round(done/total*100):0;
+    document.getElementById('statDone').textContent = done+'/'+total;
+    document.getElementById('statScore').textContent = pct+'%';
+    document.getElementById('progressFill').style.width = pct+'%';
+
+    var risk, riskColor;
+    if(pct>=80){risk='低';riskColor='#10b981';}
+    else if(pct>=50){risk='中';riskColor='#f59e0b';}
+    else{risk='高';riskColor='#ef4444';}
+    document.getElementById('statRisk').textContent = risk;
+    document.getElementById('statRisk').parentElement.style.background = 'linear-gradient(135deg,'+riskColor+','+riskColor+'cc)';
+  }
+
+  function toggle(cat,idx){
+    var key = cat+'_'+idx;
+    state[key] = !state[key];
+    save();
+    compute();
+  }
+
+  function reset(){
+    state = {};
+    save();
+    compute();
+  }
+
+  load();
+  return { compute:compute, toggle:toggle, reset:reset };
+})();
+RPC.compute();
+</script>
+</body>
+</html>

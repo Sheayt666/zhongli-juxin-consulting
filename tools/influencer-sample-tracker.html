@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="样品寄送追踪器：寄送清单管理达人/地址/样品/物流单号/状态，CSS追踪时间线，状态管理待寄送/已寄送/已签收/已发布，localStorage保存。免费达人营销工具。">
+<meta name="keywords" content="样品寄送,物流追踪,达人样品,寄送管理,状态追踪,localStorage">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-sample-tracker.html">
+<title>样品寄送追踪器 - 物流状态管理·localStorage | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .sample-row{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .sample-status{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+  .st-pending{background:#fffbeb;color:#f59e0b}
+  .st-shipped{background:#eff6ff;color:#3b82f6}
+  .st-delivered{background:#e0e7ff;color:#4f46e5}
+  .st-published{background:#ecfdf5;color:#10b981}
+  .timeline{display:flex;align-items:center;gap:4px}
+  .tl-step{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;flex-shrink:0}
+  .tl-done{background:#10b981}
+  .tl-current{background:#4f46e5}
+  .tl-todo{background:#e2e8f0;color:#94a3b8}
+  .tl-arrow{color:#cbd5e1;font-size:10px}
+  .btn-status{padding:4px 10px;border-radius:6px;border:1px solid var(--rule);background:#fff;font-size:12px;cursor:pointer;color:#4f46e5}
+  .btn-status:hover{background:#e0e7ff}
+  .btn-del{padding:4px 10px;border-radius:6px;border:1px solid #ef4444;background:#fff;font-size:12px;cursor:pointer;color:#ef4444}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"样品寄送追踪器","description":"样品寄送追踪器：寄送清单管理达人/地址/样品/物流单号/状态，CSS追踪时间线，状态管理待寄送/已寄送/已签收/已发布，localStorage保存。免费达人营销工具。","url":"https://juxin-consulting.help/tools/influencer-sample-tracker.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="influencer_sample_tracker">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">🎯</span><span class="workflow-name">达人营销工作流</span><span class="workflow-step">第8步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="influencer-match-score.html" class="step">达人匹配</a><span class="arrow">→</span><a href="influencer-commission-calc.html" class="step">佣金计算</a><span class="arrow">→</span><a href="influencer-tier-manager.html" class="step">达人分级</a><span class="arrow">→</span><span class="step current">样品寄送</span><span class="arrow">→</span><a href="influencer-database.html" class="step">达人资源库</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具 · 标准版</span>
+      <h1>样品寄送<em>追踪器</em></h1>
+      <p class="tool-hero-desc">寄送清单管理达人/地址/样品/物流单号/状态，CSS追踪时间线可视化，状态流转：待寄送→已寄送→已签收→已发布，localStorage持久化保存。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 添加寄送记录</h2>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>达人名称</label><input type="text" id="newName" value="BeautyQueen"></div>
+        <div class="calc-field"><label>样品名称</label><input type="text" id="newSample" value="维C精华液×2"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>寄送地址</label><input type="text" id="newAddr" value="Los Angeles, CA 90001"></div>
+        <div class="calc-field"><label>物流单号</label><input type="text" id="newTracking" value="USPS-123456789"></div>
+      </div>
+      <button class="btn-add" style="padding:10px 24px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;cursor:pointer" onclick="ST.add()">+ 添加寄送</button>
+    </div>
+    <div class="calc-results">
+      <div class="result-card" id="resultCard"></div>
+    </div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="influencer-content-brief.html" class="prev"><span class="fn-label">上一步 · 第7步</span><span class="fn-name">← 内容Brief</span></a><a href="influencer-contract-generator.html" class="next"><span class="fn-label">下一步 · 第9步</span><span class="fn-name">合同生成 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-match-score.html">达人匹配评分器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var ST=(function(){
+  'use strict';
+  var KEY='jx_sample_tracker';
+  var data=[];
+  var STATUSES=['待寄送','已寄送','已签收','已发布'];
+  function $(id){return document.getElementById(id);}
+  function v(id){return $(id).value||'';}
+
+  function load(){try{var s=localStorage.getItem(KEY);if(s)data=JSON.parse(s)||[];}catch(e){data=[];}if(!data.length){data=[{name:'BeautyQueen',sample:'维C精华液×2',addr:'Los Angeles, CA 90001',tracking:'USPS-123456789',status:1},{name:'FitGuru',sample:'蛋白粉×1',addr:'New York, NY 10001',tracking:'FedEx-987654321',status:2},{name:'TechReview',sample:'蓝牙耳机×1',addr:'Austin, TX 73301',tracking:'UPS-456789123',status:3}];save();}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+
+  function add(){
+    var name=v('newName'),sample=v('newSample'),addr=v('newAddr'),track=v('newTracking');
+    if(!name||!sample){alert('请填写达人名称和样品名称');return;}
+    data.push({name:name,sample:sample,addr:addr,tracking:track,status:0});
+    save();calc();
+  }
+  function del(i){data.splice(i,1);save();calc();}
+  function advance(i){if(data[i].status<3)data[i].status++;save();calc();}
+
+  function calc(){
+    if(!data.length){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">📦</div><p style="text-align:center;font-size:14px;color:var(--muted)">添加寄送记录开始追踪</p>';return;}
+    var counts=[0,0,0,0];
+    data.forEach(function(d){counts[d.status]++;});
+
+    var html='<h3>📦 寄送追踪总览</h3><div class="result-summary-bar">'+
+      counts.map(function(c,i){return '<div class="rsb-card"><div class="rsb-val">'+c+'</div><div class="rsb-lbl">'+STATUSES[i]+'</div></div>';}).join('')+
+      '</div>';
+
+    html+='<div style="margin-top:16px">'+data.map(function(d,i){
+      var stCls=['st-pending','st-shipped','st-delivered','st-published'][d.status];
+      var tlHtml='';
+      for(var j=0;j<4;j++){
+        var cls=j<d.status?'tl-done':j===d.status?'tl-current':'tl-todo';
+        tlHtml+='<div class="tl-step '+cls+'">'+(j+1)+'</div>';
+        if(j<3)tlHtml+='<span class="tl-arrow">→</span>';
+      }
+      return '<div class="sample-row">'+
+        '<div style="flex:1;min-width:180px"><div style="font-weight:600;font-size:14px">'+d.name+'</div><div style="font-size:12px;color:var(--muted)">'+d.sample+'</div></div>'+
+        '<div style="flex:1;min-width:150px"><div style="font-size:12px;color:var(--muted)">地址</div><div style="font-size:13px">'+d.addr+'</div></div>'+
+        '<div style="flex:1;min-width:120px"><div style="font-size:12px;color:var(--muted)">物流单号</div><div style="font-size:13px;font-family:monospace">'+d.tracking+'</div></div>'+
+        '<div class="timeline">'+tlHtml+'</div>'+
+        '<span class="sample-status '+stCls+'">'+STATUSES[d.status]+'</span>'+
+        (d.status<3?'<button class="btn-status" onclick="ST.advance('+i+')">→ 推进</button>':'')+
+        '<button class="btn-del" onclick="ST.del('+i+')">删除</button>'+
+      '</div>';
+    }).join('')+'</div>';
+
+    html+='<div class="result-note" style="margin-top:16px">💡 状态流转：待寄送 → 已寄送 → 已签收 → 已发布。点击"推进"按钮更新状态。数据自动保存到浏览器本地。</div>';
+    $('resultCard').innerHTML=html;
+  }
+
+  function init(){load();calc();}
+  return{add:add,del:del,advance:advance,calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ST.init);}else{ST.init();}
+  
+</script>
+</body>
+</html>

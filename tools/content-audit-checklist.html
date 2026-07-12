@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="内容审计清单：5大类25项检查（品牌一致性/内容质量/SEO优化/转化导向/合规性），进度环，评分卡，localStorage保存。免费在线内容营销工具。">
+<title>内容审计清单 - 25项检查·进度环·评分卡 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-dark:#4338ca;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-success-bg:#ecfdf5;--t-warning:#f59e0b;--t-warning-bg:#fffbeb;--t-danger:#ef4444;--t-danger-bg:#fef2f2;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-muted-light:#94a3b8;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#ffffff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+/* 评分卡 */
+.audit-summary{display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:center;margin-bottom:24px}
+.progress-ring-wrap{text-align:center}
+.progress-ring{width:160px;height:160px;border-radius:50%;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center}
+.progress-ring::before{content:'';position:absolute;inset:12px;border-radius:50%;background:#fff}
+.progress-ring-val{position:relative;z-index:1;text-align:center}
+.progress-ring-val .pr-num{font-size:36px;font-weight:800}.progress-ring-val .pr-lbl{font-size:12px;color:var(--t-muted)}
+.score-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.score-mini{background:var(--t-bg-soft);border-radius:10px;padding:14px;text-align:center;border-top:3px solid}
+.score-mini.cat1{border-top-color:#4f46e5}.score-mini.cat2{border-top-color:#10b981}.score-mini.cat3{border-top-color:#f59e0b}.score-mini.cat4{border-top-color:#ef4444}.score-mini.cat5{border-top-color:#06b6d4}
+.score-mini .sm-val{font-size:22px;font-weight:800;color:var(--t-ink)}.score-mini .sm-lbl{font-size:11px;color:var(--t-muted);margin-top:2px}
+/* 检查清单 */
+.audit-category{margin-bottom:24px;border:1px solid var(--t-rule);border-radius:var(--t-radius);overflow:hidden}
+.audit-cat-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--t-bg-soft);cursor:pointer}
+.audit-cat-title{font-size:15px;font-weight:700;color:var(--t-ink);display:flex;align-items:center;gap:8px}
+.audit-cat-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.audit-cat-body{padding:8px 20px}
+.audit-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--t-rule-light);font-size:14px}
+.audit-item:last-child{border-bottom:none}
+.audit-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--t-rule);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.audit-checkbox.checked{background:var(--t-success);border-color:var(--t-success);color:#fff}
+.audit-item-text{flex:1;color:var(--t-ink-soft)}.audit-item-text.done{text-decoration:line-through;color:var(--t-muted)}
+.audit-item-weight{font-size:11px;color:var(--t-muted-light);padding:2px 8px;background:var(--t-bg-soft);border-radius:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}.btn-primary:hover{transform:translateY(-1px)}
+.btn-secondary{background:#fff;color:var(--t-ink-soft);border:1px solid var(--t-rule)}.btn-secondary:hover{border-color:var(--t-primary);color:var(--t-primary)}
+.btn-danger{background:var(--t-danger-bg);color:var(--t-danger);border:1px solid #fecaca}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.audit-summary{grid-template-columns:1fr}.score-cards{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W39 内容营销工作流</div><div class="workflow-steps">
+<a href="content-calendar-planner.html" class="workflow-step">日历规划</a><a href="social-post-scheduler.html" class="workflow-step">发布排期</a><a href="content-pillar-builder.html" class="workflow-step">内容支柱</a><a href="video-script-optimizer.html" class="workflow-step">视频脚本</a><a href="hashtag-research-tool.html" class="workflow-step">标签研究</a><a href="content-repurpose-planner.html" class="workflow-step">内容复用</a><a href="engagement-rate-predictor.html" class="workflow-step">互动预测</a><a href="content-audit-checklist.html" class="workflow-step active">内容审计</a><a href="brand-voice-guide-generator.html" class="workflow-step">品牌语音</a><a href="content-roi-tracker.html" class="workflow-step">ROI追踪</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W39 内容营销</a><span class="sep">/</span><span class="current">内容审计清单</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W39 · 内容营销工作流</span><h1>内容<em>审计清单</em></h1><p class="tool-header-desc">5大类25项内容审计检查，含品牌一致性、内容质量、SEO优化、转化导向、合规性，进度环与评分卡实时反馈，localStorage自动保存。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <div class="audit-summary">
+      <div class="progress-ring-wrap">
+        <div class="progress-ring" id="progressRing"></div>
+        <p style="font-size:13px;color:var(--t-muted);margin-top:12px" id="progressText">0/25 项已完成</p>
+      </div>
+      <div>
+        <h2 style="margin-bottom:12px">审计评分卡</h2>
+        <div class="score-cards" id="scoreCards"></div>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="AUD.reset()">重置清单</button>
+          <button class="btn btn-primary" onclick="AUD.checkAll()">全部标记完成</button>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>25项审计清单</h2>
+    <p class="section-sub">逐项检查，点击方框标记完成（数据自动保存）</p>
+    <div id="auditList"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="brand-voice-guide-generator.html" class="related-card"><div class="related-card-icon">🎤</div><div class="related-card-content"><h5>品牌语音指南</h5><p>品牌一致性参考</p></div></a>
+      <a href="content-pillar-builder.html" class="related-card"><div class="related-card-icon">🏛</div><div class="related-card-content"><h5>内容支柱构建器</h5><p>内容体系规划</p></div></a>
+      <a href="content-roi-tracker.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>内容ROI追踪器</h5><p>效果评估</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var AUD = {
+  STORAGE_KEY: 'jx_content_audit',
+  checks: {
+    cat1: {name:'品牌一致性',icon:'🎨',color:'#4f46e5',items:[
+      {text:'视觉风格统一（配色/字体/版式一致）',w:5},
+      {text:'品牌Logo使用规范正确',w:4},
+      {text:'品牌语调贯穿所有内容',w:5},
+      {text:'品牌故事/价值观有体现',w:4},
+      {text:'跨平台品牌形象一致',w:5}
+    ]},
+    cat2: {name:'内容质量',icon:'⭐',color:'#10b981',items:[
+      {text:'内容原创性（无抄袭/搬运）',w:5},
+      {text:'信息准确（数据/事实可查）',w:5},
+      {text:'内容深度（非浅层信息）',w:4},
+      {text:'排版清晰（段落/标题/列表）',w:4},
+      {text:'视觉素材高清优质',w:4}
+    ]},
+    cat3: {name:'SEO优化',icon:'🔍',color:'#f59e0b',items:[
+      {text:'关键词布局合理（标题/正文/标签）',w:5},
+      {text:'标题含核心关键词且吸引人',w:4},
+      {text:'描述/摘要含关键词',w:3},
+      {text:'图片Alt标签已填写',w:3},
+      {text:'内链/外链布局合理',w:4}
+    ]},
+    cat4: {name:'转化导向',icon:'🎯',color:'#ef4444',items:[
+      {text:'包含明确CTA行动号召',w:5},
+      {text:'CTA与内容目标匹配',w:4},
+      {text:'购买/注册路径顺畅',w:4},
+      {text:'紧迫感/稀缺性营造',w:3},
+      {text:'社交证明（评价/案例）',w:4}
+    ]},
+    cat5: {name:'合规性',icon:'🛡',color:'#06b6d4',items:[
+      {text:'版权素材已获授权',w:5},
+      {text:'广告标注合规（#ad/赞助）',w:4},
+      {text:'隐私/数据使用合规',w:4},
+      {text:'平台规则/社区准则符合',w:4},
+      {text:'敏感词/违禁词已排查',w:5}
+    ]}
+  },
+  state: {},
+
+  init: function(){
+    this.load();
+    this.render();
+  },
+  load: function(){
+    try{ var d = localStorage.getItem(this.STORAGE_KEY); if(d) this.state = JSON.parse(d); }catch(e){}
+  },
+  save: function(){
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
+  },
+  toggle: function(cat,idx){
+    var key = cat+'_'+idx;
+    this.state[key] = !this.state[key];
+    this.save();
+    this.render();
+  },
+  reset: function(){
+    if(confirm('确定重置所有检查项？')){ this.state = {}; this.save(); this.render(); }
+  },
+  checkAll: function(){
+    var self = this;
+    Object.keys(this.checks).forEach(function(cat){
+      self.checks[cat].items.forEach(function(item,idx){ self.state[cat+'_'+idx] = true; });
+    });
+    this.save();
+    this.render();
+  },
+  render: function(){
+    var totalDone = 0, totalItems = 0, totalScore = 0, maxScore = 0;
+    var catScores = {};
+    var listHtml = '';
+    var cardsHtml = '';
+    var catIdx = 0;
+    for(var cat in this.checks){
+      catIdx++;
+      var c = this.checks[cat];
+      var catDone = 0, catScore = 0, catMax = 0;
+      var bodyHtml = '';
+      c.items.forEach(function(item, i){
+        var key = cat+'_'+i;
+        var done = self.state[key];
+        if(done){ catDone++; totalDone++; catScore += item.w; totalScore += item.w; }
+        catMax += item.w; maxScore += item.w; totalItems++;
+        bodyHtml += '<div class="audit-item"><div class="audit-checkbox'+(done?' checked':'')+'" onclick="AUD.toggle(\''+cat+'\','+i+')">'+(done?'✓':'')+'</div><div class="audit-item-text'+(done?' done':'')+'">'+item.text+'</div><span class="audit-item-weight">'+item.w+'分</span></div>';
+      });
+      catScores[cat] = {score:catScore, max:catMax, done:catDone, total:c.items.length};
+      var pct = Math.round(catDone/c.items.length*100);
+      var badgeColor = pct===100?'background:var(--t-success-bg);color:var(--t-success)':pct>=60?'background:var(--t-warning-bg);color:var(--t-warning)':'background:var(--t-bg-soft);color:var(--t-muted)';
+      listHtml += '<div class="audit-category"><div class="audit-cat-header"><div class="audit-cat-title">'+c.icon+' '+c.name+'</div><span class="audit-cat-badge" style="'+badgeColor+'">'+catDone+'/'+c.items.length+' ('+pct+'%)</span></div><div class="audit-cat-body">'+bodyHtml+'</div></div>';
+      cardsHtml += '<div class="score-mini cat'+catIdx+'"><div class="sm-val">'+catScore+'/'+catMax+'</div><div class="sm-lbl">'+c.name+'</div></div>';
+    }
+    var self = this;
+    var overallPct = Math.round(totalScore/maxScore*100);
+    var deg = overallPct*3.6;
+    var color = overallPct>=80?'#10b981':overallPct>=60?'#f59e0b':overallPct>=40?'#f59e0b':'#ef4444';
+    document.getElementById('progressRing').style.background = 'conic-gradient('+color+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)';
+    document.getElementById('progressRing').innerHTML = '<div class="progress-ring-val"><div class="pr-num" style="color:'+color+'">'+overallPct+'</div><div class="pr-lbl">审计评分</div></div>';
+    document.getElementById('progressText').textContent = totalDone+'/'+totalItems+' 项已完成 · 得分 '+totalScore+'/'+maxScore;
+    document.getElementById('scoreCards').innerHTML = cardsHtml;
+    document.getElementById('auditList').innerHTML = listHtml;
+  }
+};
+var self = AUD;
+AUD.init();
+</script>
+</body>
+</html>

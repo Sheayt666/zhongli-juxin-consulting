@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="月度结账检查清单：5大类30项检查（收入核对/费用核对/库存核对/银行对账/税务核对），每项可勾选，进度条跟踪，localStorage自动保存。">
+<title>月度结账检查清单 - 5大类30项·进度追踪·自动保存 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.overall-progress{text-align:center;padding:24px;background:linear-gradient(135deg,#eef2ff,#f5f3ff);border-radius:16px;margin-bottom:20px}
+.op-ring{width:120px;height:120px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;position:relative}
+.op-ring-text{position:absolute;font-size:28px;font-weight:800;color:#4f46e5}
+.op-status{font-size:16px;font-weight:700;color:var(--ink)}
+.op-sub{font-size:13px;color:var(--muted);margin-top:4px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.cat-card{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px}
+.cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cat-title{font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+.cat-count{font-size:12px;color:var(--muted);font-weight:600}
+.cat-bar{height:8px;background:var(--rule);border-radius:4px;overflow:hidden;margin-bottom:14px}
+.cat-bar-fill{height:100%;border-radius:4px;transition:width .4s}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule-light);cursor:pointer}
+.check-item:last-child{border-bottom:none}
+.check-item input{display:none}
+.check-box{width:20px;height:20px;border:2px solid var(--rule);border-radius:6px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.check-item input:checked+.check-box{background:#10b981;border-color:#10b981}
+.check-box::after{content:'✓';color:#fff;font-size:13px;font-weight:700;opacity:0;transition:opacity .2s}
+.check-item input:checked+.check-box::after{opacity:1}
+.check-label{font-size:13px;color:var(--ink-soft);line-height:1.5;transition:all .2s}
+.check-item input:checked~.check-label{color:var(--muted-light);text-decoration:line-through}
+.btn-row{display:flex;gap:10px;margin-top:16px}
+.btn-action{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);transition:all .2s}
+.btn-action:hover{border-color:#4f46e5;color:#4f46e5}
+.btn-action.primary{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.tool-title-area h1{font-size:22px}.cat-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step active">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">月度结账清单</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">✅</span>月度结账检查清单 Monthly Close Checklist</h1>
+  <p>5 大类 30 项月结检查（收入核对 / 费用核对 / 库存核对 / 银行对账 / 税务核对），每项可勾选，进度条实时跟踪，数据自动保存到本地，确保每月财务结账完整无遗漏。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="overall-progress">
+    <div class="op-ring" id="opRing"><div class="op-ring-text" id="opPct">0%</div></div>
+    <div class="op-status" id="opStatus">尚未开始</div>
+    <div class="op-sub" id="opSub">0 / 30 项已完成</div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 月结检查清单（5大类30项）</h2>
+    <div class="cat-grid" id="catGrid"></div>
+    <div class="btn-row">
+      <button class="btn-action primary" onclick="MCC.reset()">全部重置</button>
+      <button class="btn-action" onclick="MCC.markAll()">全部勾选</button>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 月结提示</h2>
+    <ul id="tips" style="list-style:none;padding:0;margin:0"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>月度损益表生成</p></div></a>
+      <a href="budget-vs-actual.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>预算vs实际</h5><p>差异分析对比</p></div></a>
+      <a href="financial-health-scorecard.html" class="rt-card"><div class="rt-icon">💚</div><div><h5>财务健康度</h5><p>9维度评分</p></div></a>
+      <a href="vat-oss-calculator.html" class="rt-card"><div class="rt-icon">🇪🇺</div><div><h5>VAT OSS计算</h5><p>税务申报计算</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="monthly-close-checklist.html">月度结账清单</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var MCC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var cats=[
+    {title:'收入核对 Revenue',icon:'💰',color:'#4f46e5',items:['核对各平台销售收入总额与银行到账金额一致','核对 Amazon Settlement Report 与内部订单系统数据','核对退款退货金额，确认收入冲减准确','核对汇率换算，多币种收入折算正确','核对促销折扣与 Coupon 费用扣除','核对佣金与平台费用是否准确入账']},
+    {title:'费用核对 Expense',icon:'💸',color:'#10b981',items:['核对广告费（SP/SB/SD）与账单金额一致','核对 FBA 配送费与仓储费账单','核对物流头程费用与货代账单','核对采购付款与应付账款余额','核对工资社保等人力成本','核对其他运营费用（SaaS/办公等）']},
+    {title:'库存核对 Inventory',icon:'📦',color:'#f59e0b',items:['核对 FBA 库存与系统库存数量一致','核对在途库存（头程/转运）入账','核对库存盘亏盘盈，处理差异','核对滞销库存并计提减值','核对移除/退货库存状态','核对库存成本核算（加权平均/FIFO）']},
+    {title:'银行对账 Reconciliation',icon:'🏦',color:'#8b5cf6',items:['完成所有银行账户月度对账','核对 PayPal/Stripe 等收款账户余额','核对信用卡账单与费用入账','处理银行手续费与汇率差异','核对应付账款付款记录','确认期末现金余额准确']},
+    {title:'税务核对 Tax',icon:'🧾',color:'#ef4444',items:['核对各国 VAT 应缴金额与申报数据','核对 OSS 季度申报数据准备','核对所得税预缴金额','核对关税与进口增值税','核对平台代扣代缴税款','整理税务凭证与备案文件']}
+  ];
+  var state={};
+
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_mcc_data'));if(d)state=d}catch(e){}}
+  function save(){try{localStorage.setItem('jx_mcc_data',JSON.stringify(state))}catch(e){}}
+
+  function key(ci,ii){return 'c'+ci+'_'+ii}
+
+  function isChecked(ci,ii){return state[key(ci,ii)]===true}
+
+  function toggle(ci,ii){state[key(ci,ii)]=!isChecked(ci,ii);save();render()}
+
+  function render(){
+    var total=0,done=0;
+    var h='';
+    cats.forEach(function(cat,ci){
+      var catDone=0;
+      cat.items.forEach(function(it,ii){total++;if(isChecked(ci,ii)){catDone++;done++}});
+      var catPct=Math.round(catDone/cat.items.length*100);
+      var catColor=cat.color;
+      h+='<div class="cat-card"><div class="cat-head"><span class="cat-title">'+cat.icon+' '+cat.title+'</span><span class="cat-count">'+catDone+'/'+cat.items.length+'</span></div>';
+      h+='<div class="cat-bar"><div class="cat-bar-fill" style="width:'+catPct+'%;background:'+catColor+'"></div></div>';
+      cat.items.forEach(function(it,ii){
+        h+='<label class="check-item"><input type="checkbox" '+(isChecked(ci,ii)?'checked':'')+' onchange="MCC.toggle('+ci+','+ii+')"><span class="check-box"></span><span class="check-label">'+it+'</span></label>';
+      });
+      h+='</div>';
+    });
+    $('catGrid').innerHTML=h;
+
+    var pct=Math.round(done/total*100);
+    var ringDeg=pct/100*360;
+    $('opRing').style.background='conic-gradient(#10b981 0deg '+ringDeg+'deg, #e2e8f0 '+ringDeg+'deg 360deg)';
+    $('opPct').textContent=pct+'%';
+    $('opSub').textContent=done+' / '+total+' 项已完成';
+    var status=pct===100?'月结完成 ✓':pct>=80?'即将完成':pct>=50?'进行中':pct>0?'已开始':'尚未开始';
+    $('opStatus').textContent=status;
+
+    var tips=[];
+    if(pct===100)tips.push('月度结账全部完成！建议导出 P&L 损益表和预算对比报告，召开月度财务复盘会议。');
+    else{
+      tips.push('当前进度 '+pct+'%（'+done+'/'+total+' 项），还需完成 '+(total-done)+' 项检查。');
+      cats.forEach(function(cat,ci){var cd=0;cat.items.forEach(function(it,ii){if(isChecked(ci,ii))cd++});if(cd<cat.items.length){tips.push('「'+cat.title+'」尚有 '+(cat.items.length-cd)+' 项未完成，建议优先处理。');}});
+      tips.push('建议按 收入→费用→库存→银行→税务 顺序逐项核对，确保勾稽关系准确。');
+      tips.push('月结截止日前完成所有检查项，未完成项需备注原因并跟踪至下月。');
+    }
+    $('tips').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;color:#4f46e5;font-weight:700">›</span>'+t+'</li>'}).join('');
+  }
+
+  function reset(){if(!confirm('确认重置所有检查项？'))return;state={};save();render()}
+  function markAll(){cats.forEach(function(cat,ci){cat.items.forEach(function(it,ii){state[key(ci,ii)]=true})});save();render()}
+
+  return {toggle:toggle,reset:reset,markAll:markAll,init:function(){load();render()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MCC.init)}else{MCC.init()}
+</script>
+</body>
+</html>

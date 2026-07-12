@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="季节性广告规划器：12月热度日历热力图，关键促销节点标注，预算分配建议，帮助跨境卖家把握全年广告节奏。">
+<meta name="keywords" content="季节性广告,广告日历,促销节点,预算分配,跨境电商工具">
+<title>季节性广告规划器 - 12月热力图·促销节点·预算分配 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.input-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.input-field select,.input-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;font-family:inherit}
+.input-field select:focus,.input-field input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.heatmap{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:16px}
+.heat-cell{border-radius:var(--radius-sm);padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;border:1px solid var(--rule)}
+.heat-cell:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.heat-month{font-size:14px;font-weight:700;margin-bottom:4px}
+.heat-level{font-size:11px;color:var(--muted)}
+.heat-event{font-size:10px;margin-top:4px;color:var(--indigo);font-weight:600}
+.budget-bars{margin-top:20px}
+.budget-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.budget-month{font-size:13px;font-weight:600;width:50px;flex-shrink:0}
+.budget-track{flex:1;height:28px;border-radius:8px;background:var(--bg);overflow:hidden;position:relative}
+.budget-fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;color:#fff;font-weight:700;transition:width .3s}
+.budget-pct{font-size:13px;font-weight:700;width:50px;text-align:right;flex-shrink:0}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.event-list{list-style:none;padding:0}
+.event-list li{padding:10px 0;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--rule-light)}
+.event-list li:last-child{border-bottom:none}
+.event-month{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:#fff}
+.event-info{flex:1}
+.event-name{font-size:14px;font-weight:600}.event-desc{font-size:12px;color:var(--muted)}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.input-row{grid-template-columns:1fr}.heatmap{grid-template-columns:repeat(3,1fr)}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W35 广告创意工作流</div><div class="workflow-steps">
+<a href="ad-creative-scorecard.html" class="workflow-step">创意评分</a><span class="workflow-arrow">→</span>
+<a href="headline-generator.html" class="workflow-step">标题</a><span class="workflow-arrow">→</span>
+<a href="product-image-analyzer.html" class="workflow-step">图片分析</a><span class="workflow-arrow">→</span>
+<a href="ab-test-planner.html" class="workflow-step">A/B测试</a><span class="workflow-arrow">→</span>
+<a href="ad-copy-variants.html" class="workflow-step">文案变体</a><span class="workflow-arrow">→</span>
+<a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a><span class="workflow-arrow">→</span>
+<a href="seasonal-ad-planner.html" class="workflow-step active">季节规划</a><span class="workflow-arrow">→</span>
+<a href="ad-budget-splitter.html" class="workflow-step">预算拆分</a><span class="workflow-arrow">→</span>
+<a href="creative-brief-builder.html" class="workflow-step">Brief</a><span class="workflow-arrow">→</span>
+<a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W35</a><span class="sep">/</span><span class="current">季节规划</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W35 广告创意工作流</span><h1>季节性广告<em>规划器</em></h1><p>全年12月热度日历热力图，标注关键促销节点（Prime Day/黑五/网一/圣诞等），智能预算分配建议，让广告投放踩准节奏。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbPeak" style="color:var(--red)">-</div><div class="sb-lbl">年度峰值月</div></div>
+<div class="sb-card"><div class="sb-val" id="sbLow" style="color:var(--green)">-</div><div class="sb-lbl">年度低谷月</div></div>
+<div class="sb-card"><div class="sb-val" id="sbEvents" style="color:var(--gold)">0</div><div class="sb-lbl">关键促销节点</div></div>
+<div class="sb-card"><div class="sb-val" id="sbRatio" style="color:var(--indigo)">-</div><div class="sb-lbl">峰谷比</div></div>
+</div>
+<div class="card">
+<h3>📅 全年12月热度热力图</h3>
+<div class="input-row" style="max-width:600px">
+<div class="input-field"><label>产品类目</label><select id="category" onchange="plan()"><option value="electronics">3C电子</option><option value="home">家居生活</option><option value="fashion">服饰鞋包</option><option value="beauty">美妆个护</option><option value="outdoor">户外运动</option><option value="toys">玩具母婴</option></select></div>
+<div class="input-field"><label>目标市场</label><select id="market" onchange="plan()"><option value="us">美国站</option><option value="eu">欧洲站</option><option value="jp">日本站</option><option value="uk">英国站</option></select></div>
+</div>
+<div class="heatmap" id="heatmap"></div>
+<div style="display:flex;gap:16px;justify-content:center;margin-top:16px;font-size:12px;color:var(--muted)">
+<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#dcfce7"></span>低热度</span>
+<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#fde68a"></span>中等</span>
+<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#fb923c"></span>高热度</span>
+<span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#ef4444"></span>峰值</span>
+</div>
+</div>
+<div class="card">
+<h3>💰 全年预算分配建议</h3>
+<div class="budget-bars" id="budgetBars"></div>
+</div>
+<div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div class="card">
+<h3>🎯 关键促销节点</h3>
+<ul class="event-list" id="eventList"></ul>
+</div>
+<div class="card">
+<h3>💡 季节性策略建议</h3>
+<ul class="event-list" id="strategyList"></ul>
+</div>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="ad-budget-splitter.html" class="rt-card"><span class="rt-icon">💰</span><div class="rt-content"><h5>广告预算拆分器</h5><p>渠道分配方案</p></div></a>
+<a href="ad-creative-scorecard.html" class="rt-card"><span class="rt-icon">🎯</span><div class="rt-content"><h5>创意综合评分卡</h5><p>10维度评分</p></div></a>
+<a href="creative-brief-builder.html" class="rt-card"><span class="rt-icon">📋</span><div class="rt-content"><h5>创意Brief构建器</h5><p>结构化Brief</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+const categoryData={
+electronics:[40,35,42,50,55,45,75,60,65,70,95,100],
+home:[45,40,45,50,60,55,50,55,60,65,80,90],
+fashion:[50,45,55,60,65,60,55,70,75,80,90,100],
+beauty:[55,50,55,58,62,58,60,62,65,70,85,100],
+outdoor:[30,35,50,65,80,90,95,85,70,50,35,30],
+toys:[35,30,35,40,45,50,45,50,55,70,95,100]
+};
+const events=[
+{month:1,name:'新年促销',desc:'New Year Sale，冬季清仓',color:'#4f46e5'},
+{month:2,name:'情人节',desc:'Valentine\'s Day，礼品类目',color:'#ef4444'},
+{month:5,name:'母亲节',desc:'Mother\'s Day，礼品/美妆',color:'#f59e0b'},
+{month:6,name:'Prime Day预热',desc:'6月底开始Prime Day预热',color:'#4f46e5'},
+{month:7,name:'Prime Day',desc:'年度大促，全类目爆发',color:'#ef4444'},
+{month:8,name:'返校季',desc:'Back to School，文具/电子',color:'#10b981'},
+{month:10,name:'万圣节',desc:'Halloween，服饰/装饰',color:'#f59e0b'},
+{month:11,name:'黑五网一',desc:'Black Friday + Cyber Monday',color:'#ef4444'},
+{month:12,name:'圣诞节',desc:'Christmas，年度峰值',color:'#ef4444'}
+];
+function plan(){
+const cat=document.getElementById('category').value;
+const data=categoryData[cat];
+// Heatmap
+const heatColors=['#dcfce7','#d1fae5','#fde68a','#fcd34d','#fb923c','#ef4444'];
+let html='';
+data.forEach((v,i)=>{
+const colorIdx=Math.min(5,Math.floor(v/20));
+const bg=heatColors[colorIdx];
+const textColor=v>60?'#fff':'var(--ink)';
+html+=`<div class="heat-cell" style="background:${bg};color:${textColor}"><div class="heat-month">${i+1}月</div><div class="heat-level">热度 ${v}</div></div>`;
+});
+document.getElementById('heatmap').innerHTML=html;
+// Peak/low
+const peak=Math.max(...data);const peakMonth=data.indexOf(peak)+1;
+const low=Math.min(...data);const lowMonth=data.indexOf(low)+1;
+document.getElementById('sbPeak').textContent=peakMonth+'月';
+document.getElementById('sbLow').textContent=lowMonth+'月';
+document.getElementById('sbRatio').textContent=(peak/low).toFixed(1)+'x';
+// Events for this market
+const relevantEvents=events.filter(e=>data[e.month-1]>=50);
+document.getElementById('sbEvents').textContent=relevantEvents.length;
+document.getElementById('eventList').innerHTML=relevantEvents.map(e=>`<li><div class="event-month" style="background:${e.color}">${e.month}月</div><div class="event-info"><div class="event-name">${e.name}</div><div class="event-desc">${e.desc}</div></div></li>`).join('');
+// Budget bars
+const total=data.reduce((a,b)=>a+b,0);
+document.getElementById('budgetBars').innerHTML=data.map((v,i)=>{
+const pct=Math.round(v/total*100);
+const color=heatColors[Math.min(5,Math.floor(v/20))];
+return `<div class="budget-row"><span class="budget-month">${i+1}月</span><div class="budget-track"><div class="budget-fill" style="width:${pct*3}%;background:${color}">${pct}%</div></div><span class="budget-pct">${pct}%</span></div>`;
+}).join('');
+// Strategy
+const strategies=[];
+if(peakMonth===11||peakMonth===12)strategies.push('Q4是年度峰值，建议8-9月开始备货备创意，10月加大广告预算');
+if(peakMonth===7)strategies.push('Prime Day前后是关键窗口，建议提前2周提升预算30-50%');
+if(low===data[0]||low===data[1])strategies.push('Q1为低谷期，建议降低广告预算至年度均值的60%，专注清库存');
+strategies.push(`峰值月(${peakMonth}月)预算建议占年度${Math.round(peak/total*100)}%，低谷月(${lowMonth}月)占${Math.round(low/total*100)}%`);
+strategies.push('促销节点前2周开始预热投放，节点当天集中爆发');
+strategies.push('低谷期适合测试新创意和新关键词，为旺季做准备');
+strategies.push('峰谷比'+(peak/low).toFixed(1)+'x，季节性波动较大，需灵活调整预算');
+document.getElementById('strategyList').innerHTML=strategies.map(s=>`<li><div class="event-month" style="background:var(--indigo)">💡</div><div class="event-info"><div class="event-name" style="font-size:13px">${s}</div></div></li>`).join('');
+try{localStorage.setItem('jx_seasonal_planner',JSON.stringify({cat}))}catch(e){}
+}
+try{const s=JSON.parse(localStorage.getItem('jx_seasonal_planner'));if(s)document.getElementById('category').value=s.cat}catch(e){}
+plan();
+</script>
+</body>
+</html>

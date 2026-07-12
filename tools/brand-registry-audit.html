@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="品牌注册审计：Brand Registry当前状态，8项审计检查，完成度评分，缺失项清单，CSS审计报告。免费在线品牌保护工具。">
+<title>品牌注册审计 - 8项检查·完成度评分·审计报告 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.audit-item{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--t-rule-light)}.audit-item:last-child{border-bottom:none}
+.audit-check{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;transition:all .2s}.audit-check.done{background:var(--t-success)}.audit-check.pending{background:var(--t-rule);color:var(--t-muted)}
+.audit-content{flex:1}.audit-title{font-size:14px;font-weight:700}.audit-desc{font-size:12px;color:var(--t-muted);margin-top:2px}.audit-fix{font-size:12px;color:var(--t-primary);margin-top:4px;font-weight:600}
+.progress-bar{height:12px;background:var(--t-rule);border-radius:6px;overflow:hidden;margin-top:16px}.progress-fill{height:100%;border-radius:6px;transition:width .5s;background:linear-gradient(90deg,var(--t-primary),var(--t-success))}
+.missing-box{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--t-radius);padding:16px;margin-top:16px}.missing-box h4{font-size:14px;font-weight:700;color:var(--t-danger);margin:0 0 8px}.missing-box ul{margin:0;padding-left:20px}.missing-box li{font-size:13px;color:#991b1b;margin-bottom:4px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护深度工作流</div><div class="workflow-steps">
+<a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step active">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W42 品牌保护</a><span class="sep">/</span><span class="current">品牌注册审计</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W42 · 品牌保护深度工作流</span><h1>品牌注册<em>审计</em></h1><p class="tool-header-desc">Brand Registry当前状态8项审计检查，完成度评分，缺失项清单，CSS审计报告。点击勾选已完成项。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>审计总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statDone">0/8</div><div class="stat-lbl">完成项</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statScore">0%</div><div class="stat-lbl">完成度</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statMissing">0</div><div class="stat-lbl">缺失项</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>8项审计检查清单</h2>
+    <p class="section-sub">点击勾选已完成的审计项，实时更新完成度和缺失项</p>
+    <div id="auditList"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>缺失项清单</h2>
+    <div class="missing-box" id="missingBox"><h4>需优先处理的缺失项</h4><ul id="missingList"></ul></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="brand-portal-optimizer.html" class="related-card"><div class="related-card-icon">🔧</div><div class="related-card-content"><h5>品牌门户优化器</h5><p>功能利用率分析</p></div></a>
+      <a href="brand-protection-strategy.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>品牌保护策略</h5><p>6维度评估</p></div></a>
+      <a href="project-zero-enrollment.html" class="related-card"><div class="related-card-icon">🛡️</div><div class="related-card-content"><h5>Project Zero</h5><p>自助打假工具</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var BRA = (function(){
+  'use strict';
+  var STORAGE_KEY='jx_brand_registry_audit';
+  var AUDIT_ITEMS=[
+    {title:'品牌注册完成',desc:'已在Amazon Brand Registry完成品牌注册',fix:'访问brandregistry.amazon.com提交品牌注册申请'},
+    {title:'商标信息验证',desc:'商标注册号已验证并与政府数据库一致',fix:'确认商标注册号正确，与USPTO/EUIPO数据库一致'},
+    {title:'品牌角色设置',desc:'已为团队成员分配Brand Registry角色和权限',fix:'在Settings > User Permissions中添加团队成员并分配角色'},
+    {title:'产品目录关联',desc:'所有ASIN已正确关联到品牌',fix:'通过Report a Violation或Case关联未关联的ASIN'},
+    {title:'A+ Content创建',desc:'已为核心ASIN创建A+ Content',fix:'在A+ Content Manager中为畅销产品创建A+页面'},
+    {title:'Brand Store搭建',desc:'已搭建品牌旗舰店',fix:'在Stores中创建多页面品牌旗舰店'},
+    {title:'侵权投诉工具启用',desc:'已使用Report a Violation工具提交投诉',fix:'熟悉投诉流程，准备证据模板，建立投诉SOP'},
+    {title:'品牌信息更新',desc:'品牌信息（logo/官网/联系方式）已更新',fix:'在Settings中更新品牌logo、官网URL和联系信息'}
+  ];
+  var state={};
+
+  function load(){try{state=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');}catch(e){state={};}}
+  function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+
+  function compute(){
+    var done=0,missing=[];
+    var html='';
+    AUDIT_ITEMS.forEach(function(item,i){
+      var isChecked=!!state[i];
+      if(isChecked) done++; else missing.push(item);
+      html+='<div class="audit-item"><div class="audit-check '+(isChecked?'done':'pending')+'" onclick="BRA.toggle('+i+')">'+(isChecked?'✓':'○')+'</div>';
+      html+='<div class="audit-content"><div class="audit-title">'+(i+1)+'. '+item.title+'</div><div class="audit-desc">'+item.desc+'</div>';
+      if(!isChecked) html+='<div class="audit-fix">建议操作：'+item.fix+'</div>';
+      html+='</div></div>';
+    });
+    document.getElementById('auditList').innerHTML=html;
+
+    var pct=Math.round(done/AUDIT_ITEMS.length*100);
+    document.getElementById('statDone').textContent=done+'/'+AUDIT_ITEMS.length;
+    document.getElementById('statScore').textContent=pct+'%';
+    document.getElementById('statMissing').textContent=missing.length;
+    document.getElementById('progressFill').style.width=pct+'%';
+
+    // 缺失项
+    var mh='';
+    if(missing.length===0){mh='<li>所有审计项均已完成，品牌注册状态优秀！</li>';}
+    else{missing.forEach(function(m){mh+='<li><strong>'+m.title+'</strong> — '+m.fix+'</li>';});}
+    document.getElementById('missingList').innerHTML=mh;
+
+    // 更新完成度颜色
+    var color=pct>=80?'#10b981':pct>=50?'#f59e0b':'#ef4444';
+    document.getElementById('statScore').parentElement.style.background='linear-gradient(135deg,'+color+','+color+'cc)';
+  }
+
+  function toggle(i){state[i]=!state[i];save();compute();}
+
+  load();
+  return{compute:compute,toggle:toggle};
+})();
+BRA.compute();
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="未授权卖家追踪器：ASIN，卖家列表，价格，未授权卖家识别，CSS追踪时间线，Test Buy计划，localStorage保存。免费在线品牌保护工具。">
+<title>未授权卖家追踪器 - 时间线·Test Buy计划·localStorage | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row3{display:grid;grid-template-columns:2fr 2fr 1fr;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;color:#fff;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light))}.btn:hover{opacity:.9}.btn-sm{padding:6px 12px;font-size:12px}.btn-danger{background:var(--t-danger)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.stat-card.s3{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.seller-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}.seller-table th{padding:10px 12px;text-align:left;font-weight:700;background:var(--t-bg-soft);border-bottom:2px solid var(--t-rule)}.seller-table td{padding:10px 12px;border-bottom:1px solid var(--t-rule-light)}
+.status-badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}.status-unauthorized{background:#fee2e2;color:#991b1b}.status-monitoring{background:#fef3c7;color:#92400e}.status-testbuy{background:#dbeafe;color:#1e40af}.status-resolved{background:#d1fae5;color:#065f46}
+.timeline{position:relative;padding-left:24px}.timeline:before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--t-rule)}.tl-item{position:relative;padding-bottom:16px}.tl-dot{position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid #fff}.tl-dot.danger{background:var(--t-danger)}.tl-dot.warning{background:var(--t-warning)}.tl-dot.info{background:var(--t-primary)}.tl-dot.success{background:var(--t-success)}.tl-date{font-size:11px;color:var(--t-muted);font-weight:600}.tl-content{font-size:13px;color:var(--t-ink-soft);margin-top:2px}
+.testbuy-plan{background:var(--t-bg-soft);border-radius:10px;padding:16px;margin-top:12px}.tb-step{display:flex;align-items:center;gap:8px;padding:6px 0}.tb-num{width:20px;height:20px;border-radius:50%;background:var(--t-primary);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W42 品牌保护深度工作流</div><div class="workflow-steps">
+<a href="brand-protection-strategy.html" class="workflow-step">品牌策略</a><a href="counterfeit-detection-guide.html" class="workflow-step">假货检测</a><a href="trademark-monitoring-setup.html" class="workflow-step">商标监控</a><a href="project-zero-enrollment.html" class="workflow-step">Project Zero</a><a href="transparency-program-guide.html" class="workflow-step">Transparency</a><a href="brand-portal-optimizer.html" class="workflow-step">门户优化</a><a href="ip-complaint-builder.html" class="workflow-step">IP投诉</a><a href="unauthorized-seller-tracker.html" class="workflow-step active">未授权卖家</a><a href="brand-registry-audit.html" class="workflow-step">品牌审计</a><a href="counterfeit-impact-calculator.html" class="workflow-step">假货影响</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W42 品牌保护</a><span class="sep">/</span><span class="current">未授权卖家追踪器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W42 · 品牌保护深度工作流</span><h1>未授权卖家<em>追踪器</em></h1><p class="tool-header-desc">ASIN卖家列表追踪，未授权卖家识别，CSS追踪时间线，Test Buy计划生成，localStorage自动保存。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>追踪信息</h2>
+    <div class="form-row3">
+      <div class="form-field"><label>ASIN</label><input type="text" id="inpAsin" value="B0XXXXXXX" oninput="UST.compute()"></div>
+      <div class="form-field"><label>正品价格 ($)</label><input type="number" id="inpPrice" value="29.99" oninput="UST.compute()"></div>
+      <div class="form-field" style="justify-content:flex-end"><label>&nbsp;</label><button class="btn" onclick="UST.addSeller()">添加卖家</button></div>
+    </div>
+    <div class="form-row3">
+      <div class="form-field"><label>卖家名称</label><input type="text" id="inpSeller" placeholder="输入卖家名称"></div>
+      <div class="form-field"><label>卖家售价 ($)</label><input type="number" id="inpSellerPrice" placeholder="0.00"></div>
+      <div class="form-field"><label>卖家状态</label>
+        <select id="inpStatus"><option value="unauthorized">未授权</option><option value="monitoring">监控中</option><option value="testbuy">Test Buy中</option><option value="resolved">已处理</option></select>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>追踪总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">追踪卖家数</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statPrice">-</div><div class="stat-lbl">最低价格差</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statUnauth">0</div><div class="stat-lbl">未授权卖家</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>卖家追踪列表</h2>
+    <table class="seller-table" id="sellerTable"></table>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>追踪时间线</h2>
+    <div class="timeline" id="timeline"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>Test Buy行动计划</h2>
+    <div class="testbuy-plan" id="testBuyPlan"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="ip-complaint-builder.html" class="related-card"><div class="related-card-icon">⚖️</div><div class="related-card-content"><h5>IP投诉构建器</h5><p>投诉信生成</p></div></a>
+      <a href="counterfeit-detection-guide.html" class="related-card"><div class="related-card-icon">🔍</div><div class="related-card-content"><h5>假货检测指南</h5><p>假货概率评分</p></div></a>
+      <a href="brand-protection-strategy.html" class="related-card"><div class="related-card-icon">🛡️</div><div class="related-card-content"><h5>品牌保护策略</h5><p>6维度评估</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var UST = (function(){
+  'use strict';
+  var STORAGE_KEY='jx_unauthorized_sellers';
+  var sellers=[];
+  var statusMap={unauthorized:'status-unauthorized',monitoring:'status-monitoring',testbuy:'status-testbuy',resolved:'status-resolved'};
+  var statusText={unauthorized:'未授权',monitoring:'监控中',testbuy:'Test Buy中',resolved:'已处理'};
+
+  function load(){try{sellers=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch(e){sellers=[];}}
+  function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(sellers));}catch(e){}}
+
+  function addSeller(){
+    var name=document.getElementById('inpSeller').value.trim();
+    var price=parseFloat(document.getElementById('inpSellerPrice').value);
+    var status=document.getElementById('inpStatus').value;
+    if(!name){alert('请输入卖家名称');return;}
+    sellers.push({name:name,price:price||0,status:status,date:new Date().toLocaleDateString('zh-CN')});
+    save();
+    document.getElementById('inpSeller').value='';
+    document.getElementById('inpSellerPrice').value='';
+    compute();
+  }
+
+  function removeSeller(i){sellers.splice(i,1);save();compute();}
+  function updateStatus(i,status){sellers[i].status=status;sellers[i].date=new Date().toLocaleDateString('zh-CN');save();compute();}
+
+  function compute(){
+    var正品价=parseFloat(document.getElementById('inpPrice').value)||0;
+    var unauthCount=sellers.filter(function(s){return s.status==='unauthorized';}).length;
+    document.getElementById('statTotal').textContent=sellers.length;
+    document.getElementById('statUnauth').textContent=unauthCount;
+    var minDiff='-';
+    if(sellers.length>0&&正品价>0){
+      var minPrice=Math.min.apply(null,sellers.map(function(s){return s.price;}));
+      minDiff=((正品价-minPrice)/正品价*100).toFixed(0)+'%';
+    }
+    document.getElementById('statPrice').textContent=minDiff;
+
+    // 卖家表
+    var html='<thead><tr><th>卖家名称</th><th>售价</th><th>价格差</th><th>状态</th><th>追踪日期</th><th>操作</th></tr></thead><tbody>';
+    if(sellers.length===0){html+='<tr><td colspan="6" style="text-align:center;color:var(--t-muted);padding:20px">暂无追踪卖家，请添加卖家信息</td></tr>';}
+    sellers.forEach(function(s,i){
+      var diff=正品价>0?((正品价-s.price)/正品价*100).toFixed(0)+'%':'-';
+      var diffColor=正品价>0&&(正品价-s.price)/正品价>0.3?'#ef4444':'var(--t-muted)';
+      html+='<tr><td><strong>'+s.name+'</strong></td><td>$'+s.price.toFixed(2)+'</td><td style="color:'+diffColor+';font-weight:700">'+diff+'</td>';
+      html+='<td><span class="status-badge '+statusMap[s.status]+'">'+statusText[s.status]+'</span></td>';
+      html+='<td style="font-size:12px;color:var(--t-muted)">'+s.date+'</td>';
+      html+='<td><select onchange="UST.updateStatus('+i+',this.value)" style="font-size:11px;padding:3px 6px;border:1px solid var(--t-rule);border-radius:4px">';
+      html+='<option value="unauthorized"'+(s.status==='unauthorized'?' selected':'')+'>未授权</option>';
+      html+='<option value="monitoring"'+(s.status==='monitoring'?' selected':'')+'>监控中</option>';
+      html+='<option value="testbuy"'+(s.status==='testbuy'?' selected':'')+'>Test Buy</option>';
+      html+='<option value="resolved"'+(s.status==='resolved'?' selected':'')+'>已处理</option>';
+      html+='</select> <button class="btn btn-sm btn-danger" onclick="UST.removeSeller('+i+')">删除</button></td></tr>';
+    });
+    html+='</tbody>';
+    document.getElementById('sellerTable').innerHTML=html;
+
+    // 时间线
+    var th='';
+    if(sellers.length===0){th='<div style="text-align:center;color:var(--t-muted);padding:20px">暂无追踪记录</div>';}
+    sellers.forEach(function(s){
+      var dotClass=s.status==='unauthorized'?'danger':s.status==='monitoring'?'warning':s.status==='testbuy'?'info':'success';
+      var action=s.status==='unauthorized'?'发现未授权卖家':s.status==='monitoring'?'开始监控':s.status==='testbuy'?'发起Test Buy':'已处理完成';
+      th+='<div class="tl-item"><div class="tl-dot '+dotClass+'"></div><div class="tl-date">'+s.date+'</div><div class="tl-content"><strong>'+s.name+'</strong> — '+action+'（售价$'+s.price.toFixed(2)+'）</div></div>';
+    });
+    document.getElementById('timeline').innerHTML=th;
+
+    // Test Buy计划
+    var tbSellers=sellers.filter(function(s){return s.status==='unauthorized'||s.status==='monitoring';});
+    var tbh='';
+    if(tbSellers.length===0){
+      tbh='<div style="text-align:center;color:var(--t-muted);padding:12px">暂无需Test Buy的卖家</div>';
+    } else {
+      tbh='<div style="font-size:13px;font-weight:700;margin-bottom:8px">需Test Buy的卖家：'+tbSellers.length+'个</div>';
+      var steps=['下单购买可疑卖家产品','保留订单号和购买凭证','收到产品后拍摄开箱视频','对比正品和可疑产品差异','整理证据并提交IP投诉','跟进投诉处理结果'];
+      steps.forEach(function(s,i){tbh+='<div class="tb-step"><div class="tb-num">'+(i+1)+'</div><div style="font-size:13px;color:var(--t-ink-soft)">'+s+'</div></div>';});
+      tbh+='<div style="margin-top:12px;padding:10px;background:#fff;border-radius:8px;font-size:12px;color:var(--t-muted)"><strong>建议优先级：</strong>价格差超过30%的卖家优先Test Buy</div>';
+    }
+    document.getElementById('testBuyPlan').innerHTML=tbh;
+  }
+
+  load();
+  return{compute:compute,addSeller:addSeller,removeSeller:removeSeller,updateStatus:updateStatus};
+})();
+UST.compute();
+</script>
+</body>
+</html>

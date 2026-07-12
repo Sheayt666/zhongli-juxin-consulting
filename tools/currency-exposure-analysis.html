@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="汇率敞口分析：评估多币种收入的风险敞口，计算净敞口金额，风险等级评定，对冲建议，CSS柱状图展示各币种敞口。">
+<title>汇率敞口分析 - 多币种风险·对冲建议·敞口可视化 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.cur-table{width:100%;border-collapse:collapse;font-size:13px}
+.cur-table th{padding:11px 12px;text-align:right;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.cur-table th:first-child{text-align:left}
+.cur-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft);text-align:right;font-variant-numeric:tabular-nums}
+.cur-table td:first-child{text-align:left;font-weight:600}
+.cur-table tr.total td{background:linear-gradient(90deg,#eef2ff,#f5f3ff);font-weight:800;color:#4f46e5}
+.input-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule-light)}
+.input-row:last-child{border-bottom:none}
+.input-row label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.input-row input{padding:7px 10px;border:1px solid var(--rule);border-radius:8px;font-size:12px;font-family:inherit;width:100%}
+.input-row input:focus{outline:none;border-color:#4f46e5}
+.input-row .ir-head{font-size:10px;color:var(--muted);font-weight:700;text-align:center}
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:260px;padding:16px 8px;border-bottom:2px solid var(--rule);overflow-x:auto}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:60px;flex:1}
+.bar-fill{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#6366f1,#4f46e5);transition:height .4s;min-height:4px}
+.bar-fill.pos{background:linear-gradient(180deg,#34d399,#10b981)}
+.bar-fill.neg{background:linear-gradient(180deg,#f87171,#ef4444)}
+.bar-val{font-size:11px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted);text-align:center}
+.risk-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:700}
+.risk-badge.low{background:#ecfdf5;color:#059669}
+.risk-badge.medium{background:#fffbeb;color:#d97706}
+.risk-badge.high{background:#fef2f2;color:#dc2626}
+.hedge-box{background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:16px;font-size:14px;color:var(--ink-soft);line-height:1.7}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.tool-title-area h1{font-size:22px}.input-row{grid-template-columns:1fr 1fr}.cur-table{font-size:11px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step active">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">汇率敞口分析</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">💱</span>汇率敞口分析 Currency Exposure Analysis</h1>
+  <p>评估多币种收入与支出的汇率风险敞口，计算各币种净敞口金额（折算为 USD），评定整体风险等级，生成对冲建议，CSS 柱状图直观展示各币种敞口分布。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">总净敞口（USD）</div><div class="mc-value" id="mTotal">$0</div></div>
+    <div class="metric-card warn"><div class="mc-label">最大单币种敞口</div><div class="mc-value" id="mMaxCur" style="font-size:18px">--</div></div>
+    <div class="metric-card danger"><div class="mc-label">潜在最大损失</div><div class="mc-value" id="mLoss">$0</div></div>
+    <div class="metric-card" id="mRiskCard"><div class="mc-label">整体风险等级</div><div class="mc-value" id="mRisk" style="font-size:18px">--</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💱 各币种敞口输入</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">本位币为 USD。填写各币种的收入、支出、当前汇率（兑USD）和波动范围（%）。</p>
+    <div class="input-row"><label>币种 Currency</label><div class="ir-head">收入</div><div class="ir-head">支出</div><div class="ir-head">汇率(兑USD)</div><div class="ir-head">波动(%)</div></div>
+    <div id="curRows"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 各币种净敞口明细</h2>
+    <div style="overflow-x:auto"><table class="cur-table" id="curTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📈 各币种敞口对比（CSS 柱状图）</h2>
+    <div class="bar-chart" id="barChart"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🛡️ 对冲建议</h2>
+    <div class="hedge-box" id="hedgeBox"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="vat-oss-calculator.html" class="rt-card"><div class="rt-icon">🇪🇺</div><div><h5>VAT OSS计算</h5><p>欧盟税务申报</p></div></a>
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>损益表构建</p></div></a>
+      <a href="financial-health-scorecard.html" class="rt-card"><div class="rt-icon">💚</div><div><h5>财务健康度</h5><p>9维度评分</p></div></a>
+      <a href="budget-vs-actual.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>预算vs实际</h5><p>差异分析</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="currency-exposure-analysis.html">汇率敞口分析</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var CEX=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt0(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var currencies=[
+    {name:'EUR 欧元',revenue:45000,expense:8000,rate:1.08,volatility:8},
+    {name:'GBP 英镑',revenue:20000,expense:3000,rate:1.27,volatility:10},
+    {name:'JPY 日元',revenue:3000000,expense:200000,rate:0.0067,volatility:12},
+    {name:'CAD 加元',revenue:15000,expense:2000,rate:0.73,volatility:6},
+    {name:'CNY 人民币',revenue:0,expense:60000,rate:0.14,volatility:5}
+  ];
+
+  function renderRows(){
+    var h='';
+    currencies.forEach(function(c,i){
+      h+='<div class="input-row"><label>'+c.name+'</label><input type="number" value="'+c.revenue+'" step="100" min="0" oninput="CEX.update('+i+','+i+',this.value)"><input type="number" value="'+c.expense+'" step="100" min="0" oninput="CEX.update('+i+',\'e\',this.value)"><input type="number" value="'+c.rate+'" step="0.0001" min="0" oninput="CEX.update('+i+',\'r\',this.value)"><input type="number" value="'+c.volatility+'" step="0.5" min="0" max="100" oninput="CEX.update('+i+',\'v\',this.value)"></div>';
+    });
+    $('curRows').innerHTML=h;
+  }
+
+  function update(i,t,v){
+    if(t===i)currencies[i].revenue=parseFloat(v)||0;
+    else if(t==='e')currencies[i].expense=parseFloat(v)||0;
+    else if(t==='r')currencies[i].rate=parseFloat(v)||0;
+    else if(t==='v')currencies[i].volatility=parseFloat(v)||0;
+    calc();
+  }
+
+  function calc(){
+    var results=[],totalNet=0,maxLoss=0;
+    currencies.forEach(function(c){
+      var netLocal=c.revenue-c.expense;
+      var netUSD=netLocal*c.rate;
+      var potentialLoss=Math.abs(netUSD)*c.volatility/100;
+      totalNet+=netUSD;maxLoss+=potentialLoss;
+      results.push({name:c.name,netLocal:netLocal,netUSD:netUSD,rate:c.rate,volatility:c.volatility,potentialLoss:potentialLoss});
+    });
+    var absTotal=Math.abs(totalNet);
+    var riskPct=totalNet!==0?maxLoss/absTotal*100:0;
+    var riskLevel=riskPct<5?'low':riskPct<10?'medium':'high';
+    var riskLabels={low:'低风险',medium:'中风险',high:'高风险'};
+
+    $('mTotal').textContent=fmt0(totalNet);
+    var maxCur=results.slice().sort(function(a,b){return Math.abs(b.netUSD)-Math.abs(a.netUSD)})[0];
+    $('mMaxCur').textContent=maxCur?maxCur.name.split(' ')[0]+' '+fmt0(Math.abs(maxCur.netUSD)):'--';
+    $('mLoss').textContent=fmt0(maxLoss);
+    $('mRisk').textContent=riskLabels[riskLevel];
+    $('mRiskCard').className='metric-card '+(riskLevel==='low'?'success':riskLevel==='medium'?'warn':'danger');
+
+    // table
+    var h='<thead><tr><th>币种</th><th>净敞口(本币)</th><th>汇率</th><th>净敞口(USD)</th><th>波动率</th><th>潜在损失</th><th>方向</th></tr></thead><tbody>';
+    results.forEach(function(r){
+      h+='<tr><td>'+r.name+'</td><td>'+(r.netLocal>=0?'+':'')+r.netLocal.toLocaleString('en-US',{maximumFractionDigits:0})+'</td><td>'+r.rate+'</td><td style="color:'+(r.netUSD>=0?'#059669':'#dc2626')+';font-weight:700">'+(r.netUSD>=0?'+':'')+fmt0(r.netUSD)+'</td><td>'+r.volatility+'%</td><td style="color:#dc2624">'+fmt0(r.potentialLoss)+'</td><td>'+(r.netUSD>0?'<span class="risk-badge medium">多头 Long</span>':r.netUSD<0?'<span class="risk-badge high">空头 Short</span>':'<span class="risk-badge low">中性</span>')+'</td></tr>';
+    });
+    h+='<tr class="total"><td>合计</td><td>--</td><td>--</td><td>'+fmt0(totalNet)+'</td><td>--</td><td>'+fmt0(maxLoss)+'</td><td><span class="risk-badge '+riskLevel+'">'+riskLabels[riskLevel]+'</span></td></tr>';
+    h+='</tbody>';
+    $('curTable').innerHTML=h;
+
+    // bar chart
+    var active=results.filter(function(r){return Math.abs(r.netUSD)>0});
+    var maxV=Math.max.apply(null,active.map(function(r){return Math.abs(r.netUSD)}).concat([1]));
+    var bh='';
+    active.forEach(function(r){
+      var ht=maxV>0?Math.abs(r.netUSD)/maxV*100:0;
+      var cls=r.netUSD>=0?'pos':'neg';
+      bh+='<div class="bar-col"><div class="bar-val">'+fmt0(Math.abs(r.netUSD))+'</div><div class="bar-fill '+cls+'" style="height:'+ht+'%"></div><div class="bar-label">'+r.name.split(' ')[0]+'</div></div>';
+    });
+    $('barChart').innerHTML=bh;
+
+    // hedge suggestions
+    var hh='';
+    hh+='<p><strong>整体风险评估：</strong>总净敞口 '+fmt0(totalNet)+'，潜在最大汇率损失 '+fmt0(maxLoss)+'（占敞口 '+riskPct.toFixed(1)+'%），评级为 <span class="risk-badge '+riskLevel+'">'+riskLabels[riskLevel]+'</span>。</p>';
+    if(riskLevel==='high')hh+='<p style="margin-top:10px"><strong>对冲建议（高风险）：</strong>建议立即启动远期外汇合约（Forward）锁定 60-80% 敞口，或使用期权对冲尾部风险。优先对冲波动率最高的币种。</p>';
+    else if(riskLevel==='medium')hh+='<p style="margin-top:10px"><strong>对冲建议（中风险）：</strong>建议对冲 30-50% 敞口，重点关注大额单一币种。可使用自然对冲（匹配同币种收入与支出）降低敞口。</p>';
+    else hh+='<p style="margin-top:10px"><strong>对冲建议（低风险）：</strong>敞口可控，建议保持自然对冲策略，定期监控汇率走势，敞口增大时再启动主动对冲。</p>';
+    var longCurs=results.filter(function(r){return r.netUSD>0});
+    var shortCurs=results.filter(function(r){return r.netUSD<0});
+    if(longCurs.length>0)hh+='<p style="margin-top:10px"><strong>多头敞口：</strong>'+longCurs.map(function(r){return r.name+' '+fmt0(r.netUSD)}).join('、')+'。汇率下跌将造成损失，建议关注贬值风险。</p>';
+    if(shortCurs.length>0)hh+='<p style="margin-top:10px"><strong>空头敞口：</strong>'+shortCurs.map(function(r){return r.name+' '+fmt0(Math.abs(r.netUSD))}).join('、')+'。汇率上涨将增加成本，建议关注升值风险。</p>';
+    hh+='<p style="margin-top:10px"><strong>自然对冲：</strong>尽量在同币种内匹配收入与支出（如欧元收入用于欧元供应商付款），可显著降低净敞口和对冲成本。</p>';
+    $('hedgeBox').innerHTML=hh;
+    save();
+  }
+
+  function save(){try{localStorage.setItem('jx_cex_data',JSON.stringify(currencies))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_cex_data'));if(d&&Array.isArray(d))currencies=d}catch(e){}}
+  return {update:update,init:function(){load();renderRows();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CEX.init)}else{CEX.init()}
+</script>
+</body>
+</html>

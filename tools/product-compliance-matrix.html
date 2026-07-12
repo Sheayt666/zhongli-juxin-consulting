@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="产品合规矩阵：6市场（美/欧/日/英/加/澳）×8维度合规检查热力图，合规评分，缺失项预警，行动清单。免费在线跨境电商合规工具。">
+<title>产品合规矩阵 - 多市场×多维度合规热力图 | 跨境卖家工具</title>
+<link rel="canonical" href="https://juxin-consulting.help/tools/product-compliance-matrix.html">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-shadow-lg:0 10px 15px -3px rgba(0,0,0,0.08);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input,.form-field select,.form-field textarea{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card .stat-val{font-size:32px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+/* 热力图矩阵 */
+.heatmap-wrap{overflow-x:auto;margin-top:8px}.heatmap-grid{display:grid;grid-template-columns:140px repeat(6,1fr);gap:2px;min-width:720px;font-size:12px}.hm-cell{padding:10px 6px;text-align:center;border-radius:6px;font-weight:600;transition:transform .2s;cursor:default}.hm-cell.hm-head{background:var(--t-bg-soft);color:var(--t-ink);font-weight:700;font-size:11px}.hm-cell.hm-rowhead{text-align:left;padding-left:12px;background:var(--t-bg-soft);color:var(--t-ink-soft);font-weight:600;font-size:11px}.hm-cell.lvl-pass{background:#d1fae5;color:#065f46}.hm-cell.lvl-warn{background:#fef3c7;color:#92400e}.hm-cell.lvl-fail{background:#fee2e2;color:#991b1b}.hm-cell.lvl-na{background:#f1f5f9;color:#94a3b8}.hm-cell:hover{transform:scale(1.05);z-index:2;position:relative}
+.hm-legend{display:flex;gap:16px;margin-top:16px;font-size:12px;color:var(--t-muted);flex-wrap:wrap}.hm-legend span{display:inline-flex;align-items:center;gap:6px}.hm-dot{width:14px;height:14px;border-radius:4px;display:inline-block}
+/* 行动清单 */
+.action-list{list-style:none;padding:0;margin:0}.action-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--t-rule-light)}.action-item:last-child{border-bottom:none}.action-priority{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}.ap-high{background:var(--t-danger)}.ap-med{background:var(--t-warning)}.ap-low{background:var(--t-primary)}.action-text{font-size:13px;color:var(--t-ink-soft)}.action-text strong{color:var(--t-ink)}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--t-radius);padding:16px;margin-top:16px}.alert-box h4{font-size:14px;font-weight:700;color:var(--t-danger);margin:0 0 8px}.alert-box ul{margin:0;padding-left:20px}.alert-box li{font-size:13px;color:#991b1b;margin-bottom:4px}
+.score-ring{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto}.score-ring-val{font-size:28px;font-weight:800;color:#fff}.score-ring-lbl{font-size:11px;color:rgba(255,255,255,0.85)}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row2{grid-template-columns:1fr}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "产品合规矩阵",
+  "description": "6市场（美/欧/日/英/加/澳）×8维度合规检查热力图，合规评分，缺失项预警，行动清单。免费在线跨境电商合规工具。",
+  "url": "https://juxin-consulting.help/tools/product-compliance-matrix.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "跨境卖家工具", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "产品合规矩阵", "item": "https://juxin-consulting.help/tools/product-compliance-matrix.html" }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+<a href="product-compliance-matrix.html" class="workflow-step active">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W41 合规深度</a><span class="sep">/</span><span class="current">产品合规矩阵</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W41 · 合规深度工作流</span><h1>产品合规<em>矩阵</em></h1><p class="tool-header-desc">6市场（美/欧/日/英/加/澳）×8维度（产品安全/电子认证/化学限制/标签/包装/环保/食品接触/儿童安全）合规矩阵热力图，合规评分，缺失项预警，行动清单。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>产品信息输入</h2>
+    <p class="section-sub">选择目标市场和产品类型，实时生成合规矩阵</p>
+    <div class="form-row2">
+      <div class="form-field"><label>产品类型</label>
+        <select id="inpProduct" onchange="PCM.compute()">
+          <option value="electronics">电子产品（含电池/充电器）</option>
+          <option value="toy">儿童玩具</option>
+          <option value="kitchen">厨房用品/食品接触</option>
+          <option value="cosmetics">化妆品/个护</option>
+          <option value="home">家居用品</option>
+          <option value="apparel">纺织品/服装</option>
+        </select>
+      </div>
+      <div class="form-field"><label>目标市场（多选）</label>
+        <select id="inpMarkets" multiple size="3" style="min-height:90px" onchange="PCM.compute()">
+          <option value="US" selected>美国 (US)</option>
+          <option value="EU" selected>欧盟 (EU)</option>
+          <option value="JP" selected>日本 (JP)</option>
+          <option value="UK">英国 (UK)</option>
+          <option value="CA">加拿大 (CA)</option>
+          <option value="AU">澳大利亚 (AU)</option>
+        </select>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--t-muted);margin-top:-8px">提示：按住 Ctrl/Cmd 多选市场，默认全选6个市场</div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>合规总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">检查项总数</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statPass">0</div><div class="stat-lbl">合规项</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statFail">0</div><div class="stat-lbl">缺失/待办项</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:24px;margin-top:20px">
+      <div class="score-ring" id="scoreRing"><div class="score-ring-val" id="scoreVal">0%</div><div class="score-ring-lbl">合规评分</div></div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px" id="scoreLevel">待评估</div>
+        <div style="font-size:13px;color:var(--t-muted)" id="scoreDesc">选择产品和市场后自动计算合规评分</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>合规矩阵热力图</h2>
+    <p class="section-sub">颜色含义：绿色=已合规 / 黄色=部分合规或需确认 / 红色=缺失或不合规 / 灰色=不适用</p>
+    <div class="heatmap-wrap"><div class="heatmap-grid" id="heatmapGrid"></div></div>
+    <div class="hm-legend">
+      <span><span class="hm-dot" style="background:#d1fae5"></span> 已合规</span>
+      <span><span class="hm-dot" style="background:#fef3c7"></span> 部分合规</span>
+      <span><span class="hm-dot" style="background:#fee2e2"></span> 缺失/不合规</span>
+      <span><span class="hm-dot" style="background:#f1f5f9"></span> 不适用</span>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>缺失项预警</h2>
+    <div class="alert-box" id="alertBox"><h4>需优先处理的合规缺失项</h4><ul id="alertList"></ul></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>行动清单</h2>
+    <p class="section-sub">按优先级排序的合规行动项</p>
+    <ul class="action-list" id="actionList"></ul>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="fda-label-checker.html" class="related-card"><div class="related-card-icon">🏷️</div><div class="related-card-content"><h5>FDA标签检查器</h5><p>食品/化妆品标签合规</p></div></a>
+      <a href="ce-marking-guide.html" class="related-card"><div class="related-card-icon">🇪🇺</div><div class="related-card-content"><h5>CE认证指南</h5><p>欧盟认证流程</p></div></a>
+      <a href="restricted-substance-checker.html" class="related-card"><div class="related-card-icon">⚗️</div><div class="related-card-content"><h5>限制物质检查器</h5><p>REACH/Prop 65检查</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var PCM = (function(){
+  'use strict';
+  var MARKETS = [
+    {code:'US',name:'美国',short:'US'},
+    {code:'EU',name:'欧盟',short:'EU'},
+    {code:'JP',name:'日本',short:'JP'},
+    {code:'UK',name:'英国',short:'UK'},
+    {code:'CA',name:'加拿大',short:'CA'},
+    {code:'AU',name:'澳大利亚',short:'AU'}
+  ];
+  var DIMS = ['产品安全','电子认证','化学限制','标签合规','包装合规','环保要求','食品接触','儿童安全'];
+  // 数据矩阵: [productType][dim][market] = {level, req, action}
+  var DATA = {
+    electronics:{
+      '产品安全':{US:{l:'warn',r:'UL认证',a:'申请UL/ETL安全认证'},EU:{l:'pass',r:'LVD指令',a:'已满足LVD低电压指令'},JP:{l:'warn',r:'PSE认证',a:'申请PSE圆形/菱形标志'},UK:{l:'warn',r:'UKCA标志',a:'加贴UKCA标志并留存技术文件'},CA:{l:'warn',r:'CSA认证',a:'申请CSA或cUL认证'},AU:{l:'fail',r:'RCM标志',a:'必须注册RCM并加贴标志'}},
+      '电子认证':{US:{l:'pass',r:'FCC认证',a:'已完成FCC SDoC或Certification'},EU:{l:'pass',r:'EMC指令',a:'已满足EMC电磁兼容指令'},JP:{l:'warn',r:'技适标志',a:'无线产品需技适认证'},UK:{l:'pass',r:'UKCA EMC',a:'已满足UKCA EMC要求'},CA:{l:'warn',r:'IC认证',a:'申请ISED Canada IC认证'},AU:{l:'fail',r:'RCM EMC',a:'EMC测试报告需ACMA注册'}},
+      '化学限制':{US:{l:'pass',r:'Prop 65',a:'已评估Prop 65警示要求'},EU:{l:'pass',r:'RoHS/REACH',a:'已满足RoHS和REACH SVHC'},JP:{l:'warn',r:'J-Moss',a:'确认J-Moss有害物质标识'},UK:{l:'pass',r:'UK RoHS',a:'已满足UK RoHS要求'},CA:{l:'warn',r:'CCPSA',a:'确认CCPSA化学限制'},AU:{l:'pass',r:'无特殊',a:'无额外化学限制要求'}},
+      '标签合规':{US:{l:'warn',r:'FCC ID+型号',a:'标签需含FCC ID、型号、制造商'},EU:{l:'warn',r:'CE标志+进口商',a:'标签需含CE标志和欧盟进口商信息'},JP:{l:'warn',r:'PSE+日语',a:'标签需含PSE标志和日语说明'},UK:{l:'warn',r:'UKCA+进口商',a:'标签需含UKCA标志和英国进口商'},CA:{l:'warn',r:'双语标签',a:'标签需含英法双语信息'},AU:{l:'fail',r:'RCM+英文',a:'标签需含RCM标志和英文警告'}},
+      '包装合规':{US:{l:'pass',r:'TPCH',a:'包装符合TPCH（无重金属）'},EU:{l:'pass',r:'PPWD',a:'包装符合PPWD回收要求'},JP:{l:'warn',r:'容器包装法',a:'需注册容器包装回收法'},UK:{l:'pass',r:'UK包装法',a:'已满足UK包装法规'},CA:{l:'pass',r:'无特殊',a:'无特殊包装要求'},AU:{l:'pass',r:'APCO',a:'建议加入APCO回收计划'}},
+      '环保要求':{US:{l:'warn',r:'能效DOE',a:'确认DOE能效标准符合性'},EU:{l:'pass',r:'ErP指令',a:'已满足ErP生态设计指令'},JP:{l:'warn',r:'节能法',a:'确认节能法领跑者标准'},UK:{l:'pass',r:'UK ErP',a:'已满足UK ErP要求'},CA:{l:'warn',r:'NRCan',a:'确认NRCan能效要求'},AU:{l:'warn',r:'MEPS',a:'确认MEPS最低能效标准'}},
+      '食品接触':{US:{l:'na',r:'不适用',a:'电子产品无需食品接触认证'},EU:{l:'na',r:'不适用',a:'电子产品无需食品接触认证'},JP:{l:'na',r:'不适用',a:'电子产品无需食品接触认证'},UK:{l:'na',r:'不适用',a:'电子产品无需食品接触认证'},CA:{l:'na',r:'不适用',a:'电子产品无需食品接触认证'},AU:{l:'na',r:'不适用',a:'电子产品无需食品接触认证'}},
+      '儿童安全':{US:{l:'warn',r:'钮扣电池',a:'符合Reese法钮扣电池警示'},EU:{l:'pass',r:'EN 62115',a:'已满足EN 62115玩具安全'},JP:{l:'warn',r:'ST标志',a:'确认电玩具安全标准'},UK:{l:'pass',r:'EN 62115',a:'已满足EN 62115安全标准'},CA:{l:'warn',r:'CCPSA玩具',a:'确认CCPSA玩具法规'},AU:{l:'warn',r:'AS/NZS',a:'确认AS/NZS 8124玩具标准'}}
+    },
+    toy:{
+      '产品安全':{US:{l:'pass',r:'ASTM F963',a:'已满足ASTM F963玩具安全标准'},EU:{l:'pass',r:'EN 71',a:'已满足EN 71玩具安全标准'},JP:{l:'warn',r:'ST标志',a:'申请日本玩具协会ST标志'},UK:{l:'pass',r:'EN 71 UK',a:'已满足UK EN 71标准'},CA:{l:'warn',r:'CCPSA玩具',a:'确认CCPSA玩具法规合规'},AU:{l:'warn',r:'AS/NZS 8124',a:'确认AS/NZS 8124合规'}},
+      '电子认证':{US:{l:'warn',r:'FCC',a:'电动玩具需FCC认证'},EU:{l:'warn',r:'EMC',a:'电动玩具需EMC测试'},JP:{l:'warn',r:'PSE',a:'电动玩具需PSE认证'},UK:{l:'warn',r:'UKCA EMC',a:'电动玩具需UKCA EMC'},CA:{l:'warn',r:'IC认证',a:'电动玩具需IC认证'},AU:{l:'warn',r:'RCM',a:'电动玩具需RCM注册'}},
+      '化学限制':{US:{l:'warn',r:'CPSIA铅/邻苯',a:'CPSIA铅含量≤100ppm、邻苯酯≤0.1%'},EU:{l:'pass',r:'REACH SVHC',a:'已满足REACH SVHC限制'},JP:{l:'warn',r:'食品卫生法',a:'确认食品卫生法化学测试'},UK:{l:'pass',r:'UK REACH',a:'已满足UK REACH要求'},CA:{l:'warn',r:'CCPSA铅',a:'确认CCPSA铅含量限制'},AU:{l:'warn',r:'AS/NZS',a:'确认AS/NZS化学限制'}},
+      '标签合规':{US:{l:'pass',r:'年龄标识+追溯',a:'已含年龄警示和批次追溯码'},EU:{l:'warn',r:'CE+年龄+警告语',a:'需加CE标志、年龄警告语(EN 71)'},JP:{l:'warn',r:'ST+日语',a:'需加ST标志和日语年龄标识'},UK:{l:'warn',r:'UKCA+警告',a:'需加UKCA标志和英文警告语'},CA:{l:'warn',r:'双语+年龄',a:'需含英法双语年龄警示'},AU:{l:'warn',r:'年龄+警告',a:'需含年龄标识和英文警告'}},
+      '包装合规':{US:{l:'pass',r:'TPCH',a:'包装符合TPCH无重金属'},EU:{l:'pass',r:'PPWD',a:'包装符合PPWD要求'},JP:{l:'warn',r:'容器包装法',a:'需注册容器包装回收'},UK:{l:'pass',r:'UK包装法',a:'已满足UK包装法规'},CA:{l:'pass',r:'无特殊',a:'无特殊包装要求'},AU:{l:'pass',r:'APCO',a:'建议加入APCO计划'}},
+      '环保要求':{US:{l:'pass',r:'无特殊',a:'玩具无特殊环保要求'},EU:{l:'pass',r:'无特殊',a:'玩具无特殊ErP要求'},JP:{l:'pass',r:'无特殊',a:'玩具无特殊环保要求'},UK:{l:'pass',r:'无特殊',a:'玩具无特殊环保要求'},CA:{l:'pass',r:'无特殊',a:'玩具无特殊环保要求'},AU:{l:'pass',r:'无特殊',a:'玩具无特殊环保要求'}},
+      '食品接触':{US:{l:'na',r:'不适用',a:'玩具无需食品接触认证'},EU:{l:'na',r:'不适用',a:'玩具无需食品接触认证'},JP:{l:'na',r:'不适用',a:'玩具无需食品接触认证'},UK:{l:'na',r:'不适用',a:'玩具无需食品接触认证'},CA:{l:'na',r:'不适用',a:'玩具无需食品接触认证'},AU:{l:'na',r:'不适用',a:'玩具无需食品接触认证'}},
+      '儿童安全':{US:{l:'pass',r:'CPSIA全面',a:'已满足CPSIA全面合规'},EU:{l:'pass',r:'EN 71全套',a:'已满足EN 71全套安全测试'},JP:{l:'warn',r:'ST标志',a:'需申请ST标志安全认证'},UK:{l:'pass',r:'EN 71 UK',a:'已满足UK EN 71'},CA:{l:'warn',r:'CCPSA全面',a:'需确认CCPSA全面合规'},AU:{l:'warn',r:'8124全套',a:'需确认AS/NZS 8124全套测试'}}
+    },
+    kitchen:{
+      '产品安全':{US:{l:'warn',r:'FDA+NSF',a:'确认FDA和NSF食品安全'},EU:{l:'warn',r:'LFGB',a:'需满足德国LFGB安全测试'},JP:{l:'warn',r:'食品卫生法',a:'需满足食品卫生法测试'},UK:{l:'warn',r:'UK SI 2012',a:'需满足UK食品接触材料法规'},CA:{l:'warn',r:'SFCA',a:'需确认加拿大SFCA合规'},AU:{l:'warn',r:'FSANZ',a:'需确认FSANZ食品标准'}},
+      '电子认证':{US:{l:'warn',r:'FCC/UL',a:'厨房电器需FCC/UL认证'},EU:{l:'warn',r:'LVD/EMC',a:'厨房电器需CE LVD+EMC'},JP:{l:'warn',r:'PSE',a:'厨房电器需PSE认证'},UK:{l:'warn',r:'UKCA',a:'厨房电器需UKCA认证'},CA:{l:'warn',r:'CSA',a:'厨房电器需CSA认证'},AU:{l:'warn',r:'RCM',a:'厨房电器需RCM注册'}},
+      '化学限制':{US:{l:'warn',r:'FDA 21 CFR',a:'确认FDA 21 CFR迁移限值'},EU:{l:'pass',r:'EU 1935/2004',a:'已满足EU 1935/2004框架'},JP:{l:'warn',r:'食品卫生法',a:'需确认重金属迁移限值'},UK:{l:'pass',r:'UK SI 2012',a:'已满足UK食品接触法规'},CA:{l:'warn',r:'SFCMR',a:'需确认SFCMR迁移限值'},AU:{l:'warn',r:'FSANZ',a:'需确认FSANZ迁移限值'}},
+      '标签合规':{US:{l:'warn',r:'FDA标签',a:'标签需含FDA合规声明'},EU:{l:'pass',r:'叉杯标志',a:'已加贴食品接触叉杯标志'},JP:{l:'warn',r:'日语标签',a:'需加日语食品接触标识'},UK:{l:'pass',r:'叉杯标志',a:'已加贴叉杯标志'},CA:{l:'warn',r:'双语标签',a:'需含英法双语标识'},AU:{l:'warn',r:'英文标签',a:'需含英文食品接触标识'}},
+      '包装合规':{US:{l:'pass',r:'TPCH',a:'包装符合TPCH要求'},EU:{l:'pass',r:'PPWD',a:'包装符合PPWD要求'},JP:{l:'warn',r:'容器包装法',a:'需注册容器包装回收'},UK:{l:'pass',r:'UK包装法',a:'已满足UK包装法规'},CA:{l:'pass',r:'无特殊',a:'无特殊包装要求'},AU:{l:'pass',r:'APCO',a:'建议加入APCO计划'}},
+      '环保要求':{US:{l:'pass',r:'无特殊',a:'厨房用品无特殊环保要求'},EU:{l:'pass',r:'无特殊',a:'厨房用品无特殊ErP'},JP:{l:'pass',r:'无特殊',a:'厨房用品无特殊环保要求'},UK:{l:'pass',r:'无特殊',a:'厨房用品无特殊环保要求'},CA:{l:'pass',r:'无特殊',a:'厨房用品无特殊环保要求'},AU:{l:'pass',r:'无特殊',a:'厨房用品无特殊环保要求'}},
+      '食品接触':{US:{l:'warn',r:'FDA FCN',a:'需确认FDA食品接触通知'},EU:{l:'pass',r:'1935/2004',a:'已满足1935/2004框架法规'},JP:{l:'warn',r:'食品卫生法',a:'需完成食品卫生法测试'},UK:{l:'pass',r:'UK SI 2012',a:'已满足UK食品接触法规'},CA:{l:'warn',r:'SFCMR',a:'需确认SFCMR合规'},AU:{l:'warn',r:'FSANZ',a:'需确认FSANZ标准'}},
+      '儿童安全':{US:{l:'warn',r:'锐边警示',a:'需加锐边/尖角警示标签'},EU:{l:'pass',r:'EN标准',a:'已满足EN安全标准'},JP:{l:'warn',r:'警示语',a:'需加日语安全警示'},UK:{l:'pass',r:'EN标准',a:'已满足EN安全标准'},CA:{l:'warn',r:'双语警示',a:'需加英法双语警示'},AU:{l:'warn',r:'英文警示',a:'需加英文安全警示'}}
+    },
+    cosmetics:{
+      '产品安全':{US:{l:'warn',r:'FDA注册',a:'需完成FDA化妆品设施注册'},EU:{l:'warn',r:'CPNP',a:'需在CPNP提交产品通报'},JP:{l:'warn',r:'药机法',a:'需确认药机法分类'},UK:{l:'warn',r:'SCPN',a:'需在SCPN提交通报'},CA:{l:'warn',r:'Cosmetic Reg',a:'需提交化妆品通报'},AU:{l:'warn',r:'NICNAS',a:'需确认AICIS注册'}},
+      '电子认证':{US:{l:'na',r:'不适用',a:'化妆品无需电子认证'},EU:{l:'na',r:'不适用',a:'化妆品无需电子认证'},JP:{l:'na',r:'不适用',a:'化妆品无需电子认证'},UK:{l:'na',r:'不适用',a:'化妆品无需电子认证'},CA:{l:'na',r:'不适用',a:'化妆品无需电子认证'},AU:{l:'na',r:'不适用',a:'化妆品无需电子认证'}},
+      '化学限制':{US:{l:'warn',r:'FDA禁用',a:'需确认FDA禁用成分清单'},EU:{l:'pass',r:'EC 1223/2009',a:'已满足EC 1223/2009化妆品法规'},JP:{l:'warn',r:'药机法',a:'需确认药机法准用成分'},UK:{l:'pass',r:'UK Cosmetics',a:'已满足UK化妆品法规'},CA:{l:'warn',r:'Cosmetic IHSL',a:'需确认禁用成分清单'},AU:{l:'warn',r:'NICNAS',a:'需确认AICIS化学品清单'}},
+      '标签合规':{US:{l:'warn',r:'FDA标签',a:'标签需含成分、净含量、警示语'},EU:{l:'pass',r:'EC 1223标签',a:'已满足EC 1223标签要求'},JP:{l:'warn',r:'药机法标签',a:'需含日语成分和制造贩卖业者'},UK:{l:'pass',r:'UK标签',a:'已满足UK化妆品标签'},CA:{l:'warn',r:'双语标签',a:'需含英法双语成分列表'},AU:{l:'warn',r:'英文标签',a:'需含英文成分和警示语'}},
+      '包装合规':{US:{l:'pass',r:'TPCH',a:'包装符合TPCH要求'},EU:{l:'pass',r:'PPWD',a:'包装符合PPWD要求'},JP:{l:'warn',r:'容器包装法',a:'需注册容器包装回收'},UK:{l:'pass',r:'UK包装法',a:'已满足UK包装法规'},CA:{l:'pass',r:'无特殊',a:'无特殊包装要求'},AU:{l:'pass',r:'APCO',a:'建议加入APCO计划'}},
+      '环保要求':{US:{l:'pass',r:'无特殊',a:'化妆品无特殊环保要求'},EU:{l:'warn',r:'微塑料',a:'需确认微塑料禁令合规'},JP:{l:'pass',r:'无特殊',a:'化妆品无特殊环保要求'},UK:{l:'warn',r:'微塑料',a:'需确认微塑料禁令'},CA:{l:'pass',r:'无特殊',a:'化妆品无特殊环保要求'},AU:{l:'pass',r:'无特殊',a:'化妆品无特殊环保要求'}},
+      '食品接触':{US:{l:'na',r:'不适用',a:'化妆品无需食品接触认证'},EU:{l:'na',r:'不适用',a:'化妆品无需食品接触认证'},JP:{l:'na',r:'不适用',a:'化妆品无需食品接触认证'},UK:{l:'na',r:'不适用',a:'化妆品无需食品接触认证'},CA:{l:'na',r:'不适用',a:'化妆品无需食品接触认证'},AU:{l:'na',r:'不适用',a:'化妆品无需食品接触认证'}},
+      '儿童安全':{US:{l:'warn',r:'CR包装',a:'需确认儿童安全包装要求'},EU:{l:'pass',r:'EN标准',a:'已满足EN儿童安全标准'},JP:{l:'warn',r:'药机法',a:'需确认药机法儿童安全要求'},UK:{l:'pass',r:'EN标准',a:'已满足EN标准'},CA:{l:'warn',r:'CPR',a:'需确认CPR儿童安全包装'},AU:{l:'warn',r:'AS标准',a:'需确认AS儿童安全标准'}}
+    },
+    home:{
+      '产品安全':{US:{l:'warn',r:'CPSC',a:'需确认CPSC安全标准'},EU:{l:'warn',r:'GPSD',a:'需满足GPSD通用产品安全'},JP:{l:'warn',r:'SG标志',a:'建议申请SG安全标志'},UK:{l:'warn',r:'GPSR',a:'需满足UK GPSR'},CA:{l:'warn',r:'CCPSA',a:'需确认CCPSA合规'},AU:{l:'warn',r:'ACCC',a:'需确认ACCC安全标准'}},
+      '电子认证':{US:{l:'warn',r:'UL',a:'电动家居需UL认证'},EU:{l:'warn',r:'CE LVD',a:'电动家居需CE LVD'},JP:{l:'warn',r:'PSE',a:'电动家居需PSE'},UK:{l:'warn',r:'UKCA',a:'电动家居需UKCA'},CA:{l:'warn',r:'CSA',a:'电动家居需CSA'},AU:{l:'warn',r:'RCM',a:'电动家居需RCM'}},
+      '化学限制':{US:{l:'warn',r:'Prop 65',a:'需评估Prop 65警示'},EU:{l:'pass',r:'REACH',a:'已满足REACH SVHC'},JP:{l:'warn',r:'JIS',a:'需确认JIS化学标准'},UK:{l:'pass',r:'UK REACH',a:'已满足UK REACH'},CA:{l:'warn',r:'CCPSA',a:'需确认CCPSA限制'},AU:{l:'pass',r:'无特殊',a:'无额外化学限制'}},
+      '标签合规':{US:{l:'warn',r:'英文标签',a:'需含英文安全警示'},EU:{l:'warn',r:'CE+语言',a:'需加CE标志和目标国语言'},JP:{l:'warn',r:'日语标签',a:'需含日语安全警示'},UK:{l:'warn',r:'UKCA+英文',a:'需加UKCA标志和英文'},CA:{l:'warn',r:'双语标签',a:'需含英法双语'},AU:{l:'warn',r:'英文标签',a:'需含英文警示'}},
+      '包装合规':{US:{l:'pass',r:'TPCH',a:'包装符合TPCH'},EU:{l:'pass',r:'PPWD',a:'包装符合PPWD'},JP:{l:'warn',r:'容器包装法',a:'需注册容器包装'},UK:{l:'pass',r:'UK包装法',a:'已满足UK包装法'},CA:{l:'pass',r:'无特殊',a:'无特殊包装要求'},AU:{l:'pass',r:'APCO',a:'建议加入APCO'}},
+      '环保要求':{US:{l:'pass',r:'无特殊',a:'家居无特殊环保要求'},EU:{l:'warn',r:'EPR',a:'需确认EPR生产者责任'},JP:{l:'pass',r:'无特殊',a:'家居无特殊环保要求'},UK:{l:'warn',r:'EPR',a:'需确认UK EPR要求'},CA:{l:'pass',r:'无特殊',a:'家居无特殊环保要求'},AU:{l:'pass',r:'无特殊',a:'家居无特殊环保要求'}},
+      '食品接触':{US:{l:'na',r:'不适用',a:'一般家居无需食品接触'},EU:{l:'na',r:'不适用',a:'一般家居无需食品接触'},JP:{l:'na',r:'不适用',a:'一般家居无需食品接触'},UK:{l:'na',r:'不适用',a:'一般家居无需食品接触'},CA:{l:'na',r:'不适用',a:'一般家居无需食品接触'},AU:{l:'na',r:'不适用',a:'一般家居无需食品接触'}},
+      '儿童安全':{US:{l:'warn',r:'安全警示',a:'需加儿童安全警示'},EU:{l:'warn',r:'EN标准',a:'需满足EN安全标准'},JP:{l:'warn',r:'SG标志',a:'建议申请SG标志'},UK:{l:'warn',r:'EN标准',a:'需满足EN标准'},CA:{l:'warn',r:'CCPSA',a:'需确认CCPSA要求'},AU:{l:'warn',r:'AS标准',a:'需确认AS标准'}}
+    },
+    apparel:{
+      '产品安全':{US:{l:'pass',r:'CPSC',a:'已满足CPSC纺织品安全'},EU:{l:'pass',r:'GPSD',a:'已满足GPSD通用安全'},JP:{l:'warn',r:'JIS',a:'需确认JIS安全标准'},UK:{l:'pass',r:'GPSR',a:'已满足UK GPSR'},CA:{l:'pass',r:'CCPSA',a:'已满足CCPSA要求'},AU:{l:'pass',r:'ACCC',a:'已满足ACCC安全'}},
+      '电子认证':{US:{l:'na',r:'不适用',a:'纺织品无需电子认证'},EU:{l:'na',r:'不适用',a:'纺织品无需电子认证'},JP:{l:'na',r:'不适用',a:'纺织品无需电子认证'},UK:{l:'na',r:'不适用',a:'纺织品无需电子认证'},CA:{l:'na',r:'不适用',a:'纺织品无需电子认证'},AU:{l:'na',r:'不适用',a:'纺织品无需电子认证'}},
+      '化学限制':{US:{l:'warn',r:'CPSIA铅',a:'儿童服装需CPSIA铅测试≤100ppm'},EU:{l:'pass',r:'REACH',a:'已满足REACH偶氮染料限制'},JP:{l:'warn',r:'JIS',a:'需确认甲醛和偶氮染料'},UK:{l:'pass',r:'UK REACH',a:'已满足UK REACH'},CA:{l:'warn',r:'CCPSA',a:'需确认CCPSA铅限制'},AU:{l:'warn',r:'NICNAS',a:'需确认AICIS化学品'}},
+      '标签合规':{US:{l:'pass',r:'RN+纤维',a:'已含RN号和纤维成分'},EU:{l:'pass',r:'Textile Reg',a:'已满足EU纺织品标签法规'},JP:{l:'warn',r:'JAS+日语',a:'需含日语纤维成分和洗护'},UK:{l:'pass',r:'UK Textile',a:'已满足UK纺织品标签'},CA:{l:'warn',r:'双语+CA号',a:'需含英法双语和CA识别号'},AU:{l:'warn',r:'英文标签',a:'需含英文纤维成分'}},
+      '包装合规':{US:{l:'pass',r:'TPCH',a:'包装符合TPCH'},EU:{l:'pass',r:'PPWD',a:'包装符合PPWD'},JP:{l:'warn',r:'容器包装法',a:'需注册容器包装'},UK:{l:'pass',r:'UK包装法',a:'已满足UK包装法'},CA:{l:'pass',r:'无特殊',a:'无特殊包装要求'},AU:{l:'pass',r:'APCO',a:'建议加入APCO'}},
+      '环保要求':{US:{l:'pass',r:'无特殊',a:'纺织品无特殊环保要求'},EU:{l:'warn',r:'EPR',a:'需确认EPR纺织品回收'},JP:{l:'pass',r:'无特殊',a:'纺织品无特殊环保要求'},UK:{l:'warn',r:'EPR',a:'需确认UK EPR纺织品'},CA:{l:'pass',r:'无特殊',a:'纺织品无特殊环保要求'},AU:{l:'pass',r:'无特殊',a:'纺织品无特殊环保要求'}},
+      '食品接触':{US:{l:'na',r:'不适用',a:'纺织品无需食品接触'},EU:{l:'na',r:'不适用',a:'纺织品无需食品接触'},JP:{l:'na',r:'不适用',a:'纺织品无需食品接触'},UK:{l:'na',r:'不适用',a:'纺织品无需食品接触'},CA:{l:'na',r:'不适用',a:'纺织品无需食品接触'},AU:{l:'na',r:'不适用',a:'纺织品无需食品接触'}},
+      '儿童安全':{US:{l:'warn',r:'拉绳安全',a:'儿童服装需符合拉绳安全标准'},EU:{l:'pass',r:'EN 14682',a:'已满足EN 14682拉绳安全'},JP:{l:'warn',r:'JIS安全',a:'需确认JIS拉绳标准'},UK:{l:'pass',r:'EN 14682',a:'已满足EN 14682'},CA:{l:'warn',r:'CCPSA',a:'需确认CCPSA拉绳要求'},AU:{l:'warn',r:'AS标准',a:'需确认AS拉绳标准'}}
+    }
+  };
+  var lvlClass = {pass:'lvl-pass',warn:'lvl-warn',fail:'lvl-fail',na:'lvl-na'};
+  var lvlText = {pass:'合规',warn:'待办',fail:'缺失',na:'N/A'};
+
+  function getSelectedMarkets(){
+    var sel = document.getElementById('inpMarkets');
+    var result = [];
+    for(var i=0;i<sel.options.length;i++){ if(sel.options[i].selected) result.push(sel.options[i].value); }
+    return result;
+  }
+
+  function compute(){
+    var prod = document.getElementById('inpProduct').value;
+    var markets = getSelectedMarkets();
+    var prodData = DATA[prod];
+    var total=0,passN=0,warnN=0,failN=0,naN=0;
+    var alerts=[],actions=[];
+
+    // 热力图
+    var hm = '<div class="hm-cell hm-head"></div>';
+    MARKETS.forEach(function(m){ if(markets.indexOf(m.code)>=0) hm += '<div class="hm-cell hm-head">'+m.short+'</div>'; });
+    DIMS.forEach(function(dim){
+      hm += '<div class="hm-cell hm-rowhead">'+dim+'</div>';
+      MARKETS.forEach(function(m){
+        if(markets.indexOf(m.code)<0) return;
+        var cell = prodData[dim][m.code];
+        total++;
+        if(cell.l==='pass'){passN++;}
+        else if(cell.l==='warn'){warnN++;actions.push({p:'med',m:m.name,d:dim,r:cell.r,a:cell.a});}
+        else if(cell.l==='fail'){failN++;alerts.push(m.name+' / '+dim+'：'+cell.r+' — '+cell.a);actions.push({p:'high',m:m.name,d:dim,r:cell.r,a:cell.a});}
+        else{naN++;total--;}
+        hm += '<div class="hm-cell '+lvlClass[cell.l]+'" title="'+m.name+' / '+dim+'：'+cell.r+'">'+lvlText[cell.l]+'</div>';
+      });
+    });
+    document.getElementById('heatmapGrid').innerHTML = hm;
+
+    // 统计
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statPass').textContent = passN;
+    document.getElementById('statFail').textContent = failN+warnN;
+
+    // 评分
+    var score = total>0 ? Math.round(passN/total*100) : 0;
+    var ring = document.getElementById('scoreRing');
+    var color = score>=80?'#10b981':score>=50?'#f59e0b':'#ef4444';
+    ring.style.background = 'conic-gradient('+color+' '+score+'%, #e2e8f0 '+score+'%)';
+    document.getElementById('scoreVal').textContent = score+'%';
+    var level,desc;
+    if(score>=80){level='合规优秀';desc='合规评分达到'+score+'%，大部分检查项已满足，继续完善剩余项即可';}
+    else if(score>=50){level='部分合规';desc='合规评分'+score+'%，存在较多待办项，建议优先处理缺失项';}
+    else{level='合规不足';desc='合规评分仅'+score+'%，缺失项较多，存在较高合规风险，需立即整改';}
+    document.getElementById('scoreLevel').textContent = level;
+    document.getElementById('scoreLevel').style.color = color;
+    document.getElementById('scoreDesc').textContent = desc;
+
+    // 预警
+    var al = '';
+    if(alerts.length===0){ al = '<li>暂无高优先级缺失项</li>'; }
+    else { alerts.forEach(function(a){ al += '<li>'+a+'</li>'; }); }
+    document.getElementById('alertList').innerHTML = al;
+
+    // 行动清单（按优先级排序）
+    actions.sort(function(a,b){ return a.p==='high'?-1:1; });
+    var act = '';
+    if(actions.length===0){ act = '<li class="action-item"><div class="action-priority ap-low">✓</div><div class="action-text"><strong>恭喜！</strong>所有检查项均已合规</div></li>'; }
+    else {
+      actions.forEach(function(a){
+        var pl = a.p==='high'?'高':(a.p==='med'?'中':'低');
+        var pc = a.p==='high'?'ap-high':(a.p==='med'?'ap-med':'ap-low');
+        act += '<li class="action-item"><div class="action-priority '+pc+'">'+pl+'</div><div class="action-text"><strong>'+a.m+' / '+a.d+'</strong> — 需求：'+a.r+'<br>行动：'+a.a+'</div></li>';
+      });
+    }
+    document.getElementById('actionList').innerHTML = act;
+  }
+
+  return { compute:compute };
+})();
+PCM.compute();
+</script>
+</body>
+</html>

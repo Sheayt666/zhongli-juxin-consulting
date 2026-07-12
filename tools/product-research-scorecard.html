@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="选品综合评分卡：12维度评分（市场需求/竞争强度/利润空间/供应链难度/差异化潜力/季节性/法规风险/品牌壁垒/复购率/物流成本/资金周转/增长趋势），SVG雷达图，Go/No-Go智能决策。">
+<meta name="keywords" content="选品评分,产品研究,Go/No-Go决策,选品评估,跨境电商工具">
+<title>选品综合评分卡 - 12维度诊断·Go/No-Go决策 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.scorecard-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.dim-item{margin-bottom:14px}
+.dim-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.dim-name{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.dim-score{font-size:16px;font-weight:800;min-width:32px;text-align:right}
+.dim-slider{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--rule);outline:none}
+.dim-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--indigo);cursor:pointer;box-shadow:0 2px 6px rgba(79,70,229,.3)}
+.dim-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--indigo);cursor:pointer;border:none}
+.dim-desc{font-size:11px;color:var(--muted)}
+.decision-box{text-align:center;padding:24px;border-radius:var(--radius);margin-bottom:20px}
+.decision-box.go{background:linear-gradient(135deg,var(--green-bg),#fff);border:2px solid var(--green)}
+.decision-box.nogo{background:linear-gradient(135deg,var(--red-bg),#fff);border:2px solid var(--red)}
+.decision-box.caution{background:linear-gradient(135deg,var(--gold-bg),#fff);border:2px solid var(--gold)}
+.decision-label{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:8px}
+.decision-text{font-size:36px;font-weight:900;letter-spacing:-1px}
+.decision-text.go{color:var(--green)}
+.decision-text.nogo{color:var(--red)}
+.decision-text.caution{color:var(--gold)}
+.decision-sub{font-size:13px;color:var(--muted);margin-top:8px}
+.radar-wrap{display:flex;justify-content:center;margin:16px 0}
+.radar-svg{max-width:340px;width:100%;height:auto}
+.risk-list{list-style:none;padding:0}
+.risk-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule-light)}
+.risk-item:last-child{border-bottom:none}
+.risk-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.risk-icon.high{background:var(--red-bg);color:var(--red)}
+.risk-icon.med{background:var(--gold-bg);color:var(--gold)}
+.risk-icon.low{background:var(--green-bg);color:var(--green)}
+.risk-text{font-size:13px;color:var(--ink-soft)}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.scorecard-grid{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+<a href="product-research-scorecard.html" class="workflow-step active">选品评分</a><span class="workflow-arrow">→</span>
+<a href="market-gap-finder.html" class="workflow-step">市场空白</a><span class="workflow-arrow">→</span>
+<a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a><span class="workflow-arrow">→</span>
+<a href="competition-density-mapper.html" class="workflow-step">竞争密度</a><span class="workflow-arrow">→</span>
+<a href="product-differentiation-planner.html" class="workflow-step">差异化</a><span class="workflow-arrow">→</span>
+<a href="seasonality-checker.html" class="workflow-step">季节性</a><span class="workflow-arrow">→</span>
+<a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a><span class="workflow-arrow">→</span>
+<a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a><span class="workflow-arrow">→</span>
+<a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a><span class="workflow-arrow">→</span>
+<a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W36</a><span class="sep">/</span><span class="current">选品评分</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W36 · 深度版工具</span><h1>选品综合<em>评分卡</em></h1><p>12维度全面评估选品可行性，SVG雷达图可视化，Go/No-Go智能决策建议，风险标注与改进方向，让选品决策从"拍脑袋"变成"看数据"。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbTotal" style="color:var(--indigo)">0</div><div class="sb-lbl">加权总分 / 10</div></div>
+<div class="sb-card"><div class="sb-val" id="sbDecision" style="color:var(--muted)">-</div><div class="sb-lbl">决策建议</div></div>
+<div class="sb-card"><div class="sb-val" id="sbRisks" style="color:var(--red)">0</div><div class="sb-lbl">高风险项</div></div>
+<div class="sb-card"><div class="sb-val" id="sbStrengths" style="color:var(--green)">0</div><div class="sb-lbl">优势维度</div></div>
+</div>
+<div class="scorecard-grid">
+<div class="card">
+<h3>📋 12维度评分（拖动滑块，实时计算）</h3>
+<div id="dimContainer"></div>
+</div>
+<div>
+<div class="decision-box caution" id="decisionBox">
+<div class="decision-label">选品决策建议</div>
+<div class="decision-text caution" id="decisionText">待评估</div>
+<div class="decision-sub" id="decisionSub">请完成所有维度评分</div>
+</div>
+<div class="card">
+<h3>📊 12维度雷达图</h3>
+<div class="radar-wrap"><svg class="radar-svg" id="radarChart" viewBox="0 0 360 360"></svg></div>
+</div>
+<div class="card">
+<h3>⚠️ 风险标注</h3>
+<ul class="risk-list" id="riskList"></ul>
+</div>
+</div>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="market-gap-finder.html" class="rt-card"><span class="rt-icon">🔍</span><div class="rt-content"><h5>市场空白发现器</h5><p>机会矩阵分析</p></div></a>
+<a href="profit-margin-forecaster.html" class="rt-card"><span class="rt-icon">💰</span><div class="rt-content"><h5>利润率预测器</h5><p>3场景利润对比</p></div></a>
+<a href="competition-density-mapper.html" class="rt-card"><span class="rt-icon">🔥</span><div class="rt-content"><h5>竞争密度图</h5><p>竞争热力图</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+const dimensions=[
+{name:'市场需求',desc:'目标市场规模与增长潜力',weight:1.3},
+{name:'竞争强度',desc:'竞品数量与头部集中度（分高=竞争小）',weight:1.2},
+{name:'利润空间',desc:'售价与成本的利润率',weight:1.3},
+{name:'供应链难度',desc:'采购/生产/质检的难易度',weight:1.0},
+{name:'差异化潜力',desc:'产品可改进和差异化空间',weight:1.1},
+{name:'季节性',desc:'全年需求稳定性（分高=非季节性）',weight:0.8},
+{name:'法规风险',desc:'认证/合规/知识产权风险（分高=风险低）',weight:1.0},
+{name:'品牌壁垒',desc:'品牌建设的难易度与护城河',weight:0.9},
+{name:'复购率',desc:'产品消耗速度与重复购买率',weight:1.0},
+{name:'物流成本',desc:'体积重量对FBA/物流费用影响（分高=成本低）',weight:1.1},
+{name:'资金周转',desc:'库存周转速度与资金占用',weight:1.0},
+{name:'增长趋势',desc:'品类搜索量/销量增长趋势',weight:1.2}
+];
+const container=document.getElementById('dimContainer');
+dimensions.forEach((d,i)=>{
+const div=document.createElement('div');div.className='dim-item';
+div.innerHTML=`<div class="dim-header"><span class="dim-name">${i+1}. ${d.name} <span style="font-size:10px;color:var(--muted);font-weight:400">×${d.weight}</span></span><span class="dim-score" id="score${i}" style="color:var(--indigo)">6</span></div><input type="range" class="dim-slider" id="dim${i}" min="1" max="10" value="6" step="1" oninput="calc()"><div class="dim-desc">${d.desc}</div>`;
+container.appendChild(div);
+});
+function calc(){
+let total=0,tw=0;const scores=[];
+dimensions.forEach((d,i)=>{
+const v=parseInt(document.getElementById('dim'+i).value);
+document.getElementById('score'+i).textContent=v;
+scores.push(v);total+=v*d.weight;tw+=d.weight;
+});
+const weighted=(total/tw).toFixed(2);
+document.getElementById('sbTotal').textContent=weighted;
+// Decision
+let decision,cls,sub;
+if(weighted>=7.5){decision='GO';cls='go';sub='选品评分优秀，建议立即推进'}
+else if(weighted>=6){decision='GO (谨慎)';cls='caution';sub='评分尚可，需关注风险项后推进'}
+else if(weighted>=4.5){decision='CAUTION';cls='caution';sub='评分一般，建议深入调研后再决定'}
+else{decision='NO-GO';cls='nogo';sub='评分偏低，建议放弃或大幅调整'}
+const db=document.getElementById('decisionBox');
+db.className='decision-box '+cls;
+const dt=document.getElementById('decisionText');
+dt.textContent=decision;dt.className='decision-text '+cls;
+document.getElementById('decisionSub').textContent=sub;
+document.getElementById('sbDecision').textContent=decision;
+// Risks
+const risks=[];
+dimensions.forEach((d,i)=>{
+if(scores[i]<=3)risks.push({name:d.name,score:scores[i],level:'high',desc:d.desc});
+else if(scores[i]<=5)risks.push({name:d.name,score:scores[i],level:'med',desc:d.desc});
+});
+const highRisks=risks.filter(r=>r.level==='high');
+document.getElementById('sbRisks').textContent=highRisks.length;
+document.getElementById('sbStrengths').textContent=scores.filter(s=>s>=8).length;
+document.getElementById('riskList').innerHTML=risks.length?risks.map(r=>`<li class="risk-item"><div class="risk-icon ${r.level}">${r.level==='high'?'!':'?'}</div><div class="risk-text"><strong>${r.name}</strong>：${r.score}/10 — ${r.level==='high'?'高风险，需重点解决':'中等风险，需关注'}</div></li>`).join(''):'<li class="risk-item"><div class="risk-icon low">✓</div><div class="risk-text">暂无重大风险项</div></li>';
+drawRadar(scores);
+try{localStorage.setItem('jx_product_scorecard',JSON.stringify(scores))}catch(e){}
+}
+function drawRadar(scores){
+const svg=document.getElementById('radarChart');
+const cx=180,cy=180,maxR=120,n=dimensions.length;
+let html='';
+for(let r=1;r<=5;r++){
+const radius=maxR*r/5;let pts=[];
+for(let i=0;i<n;i++){const a=(Math.PI*2*i/n)-Math.PI/2;pts.push((cx+radius*Math.cos(a))+','+(cy+radius*Math.sin(a)))}
+html+=`<polygon points="${pts.join(' ')}" fill="none" stroke="#e2e8f0" stroke-width="1"/>`;
+}
+for(let i=0;i<n;i++){
+const a=(Math.PI*2*i/n)-Math.PI/2;
+html+=`<line x1="${cx}" y1="${cy}" x2="${cx+maxR*Math.cos(a)}" y2="${cy+maxR*Math.sin(a)}" stroke="#e2e8f0" stroke-width="1"/>`;
+const lx=cx+(maxR+20)*Math.cos(a),ly=cy+(maxR+20)*Math.sin(a);
+html+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#64748b" font-weight="600">${dimensions[i].name.slice(0,4)}</text>`;
+}
+let dpts=[];
+for(let i=0;i<n;i++){const a=(Math.PI*2*i/n)-Math.PI/2;const r=maxR*scores[i]/10;dpts.push((cx+r*Math.cos(a))+','+(cy+r*Math.sin(a)))}
+html+=`<polygon points="${dpts.join(' ')}" fill="rgba(79,70,229,0.2)" stroke="#4f46e5" stroke-width="2"/>`;
+for(let i=0;i<n;i++){const a=(Math.PI*2*i/n)-Math.PI/2;const r=maxR*scores[i]/10;html+=`<circle cx="${cx+r*Math.cos(a)}" cy="${cy+r*Math.sin(a)}" r="3" fill="#4f46e5"/>`}
+svg.innerHTML=html;
+}
+try{const s=JSON.parse(localStorage.getItem('jx_product_scorecard'));if(s&&s.length===12)s.forEach((v,i)=>{document.getElementById('dim'+i).value=v})}catch(e){}
+calc();
+</script>
+</body>
+</html>

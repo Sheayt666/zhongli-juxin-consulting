@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="财务健康度评分卡：9维度综合评分（流动性/盈利/运营效率/成长性/杠杆/现金流/库存周转/应收/费用控制），SVG雷达图，行业基准对比，A/B/C/D健康等级，改善建议引擎。">
+<title>财务健康度评分卡 - 9维度雷达图·健康等级·改善建议 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.score-hero{text-align:center;padding:30px;background:linear-gradient(135deg,#eef2ff,#f5f3ff);border-radius:16px;margin-bottom:20px}
+.score-hero .grade{display:inline-flex;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;font-size:42px;font-weight:800;color:#fff;margin-bottom:12px}
+.grade.A{background:linear-gradient(135deg,#10b981,#059669)}
+.grade.B{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+.grade.C{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.grade.D{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.score-hero .score-num{font-size:48px;font-weight:800;color:var(--ink);line-height:1}
+.score-hero .score-lbl{font-size:14px;color:var(--muted);margin-top:6px}
+.score-hero .score-desc{font-size:14px;color:var(--ink-soft);margin-top:12px;max-width:500px;margin-left:auto;margin-right:auto}
+.radar-wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap;justify-content:center}
+.svg-radar{width:380px;height:380px;flex-shrink:0;max-width:100%}
+.radar-legend{flex:1;min-width:200px}
+.dim-list{display:grid;gap:10px}
+.dim-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:var(--bg-soft);font-size:13px}
+.dim-item .di-name{font-weight:600;color:var(--ink);min-width:90px}
+.dim-item .di-bar{flex:1;height:8px;background:var(--rule);border-radius:4px;overflow:hidden}
+.dim-item .di-fill{height:100%;border-radius:4px;transition:width .4s}
+.dim-item .di-score{font-weight:800;min-width:40px;text-align:right}
+.dim-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.dim-card{padding:16px;border-radius:12px;border:1px solid var(--rule-light);background:#fff}
+.dim-card .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dim-card .dc-name{font-size:14px;font-weight:700;color:var(--ink)}
+.dim-card .dc-score{font-size:20px;font-weight:800}
+.dim-card .dc-bench{font-size:12px;color:var(--muted);margin-bottom:8px}
+.dim-card .dc-tip{font-size:13px;color:var(--ink-soft);line-height:1.6;padding-top:8px;border-top:1px solid var(--rule-light)}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step active">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">财务健康度</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">💚</span>财务健康度评分卡 <span style="font-size:13px;padding:3px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-weight:600">深度版</span></h1>
+  <p>9 维度综合评分（流动性 / 盈利能力 / 运营效率 / 成长性 / 杠杆 / 现金流 / 库存周转 / 应收账款 / 费用控制），SVG 雷达图全景展示，行业基准对比，A/B/C/D 健康等级评定，改善建议引擎精准定位短板。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="score-hero">
+    <div class="grade" id="gradeBox">B</div>
+    <div class="score-num" id="totalScore">0</div>
+    <div class="score-lbl">综合健康评分（满分 100）</div>
+    <div class="score-desc" id="gradeDesc">--</div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 9 维度指标输入</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>流动比率 Current Ratio <span class="hint">(倍)</span></label><input type="number" id="d_liquidity" value="2.1" step="0.1" min="0" oninput="FHS.calc()"></div>
+      <div class="jx-field"><label>净利率 Net Margin <span class="hint">(%)</span></label><input type="number" id="d_profit" value="15" step="0.5" min="0" oninput="FHS.calc()"></div>
+      <div class="jx-field"><label>资产周转率 Asset Turnover <span class="hint">(倍)</span></label><input type="number" id="d_efficiency" value="1.8" step="0.1" min="0" oninput="FHS.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>收入增长率 Growth Rate <span class="hint">(%)</span></label><input type="number" id="d_growth" value="25" step="1" oninput="FHS.calc()"></div>
+      <div class="jx-field"><label>资产负债率 Debt Ratio <span class="hint">(%)</span></label><input type="number" id="d_leverage" value="45" step="1" min="0" max="100" oninput="FHS.calc()"></div>
+      <div class="jx-field"><label>现金流覆盖率 Cash Flow Cover <span class="hint">(倍)</span></label><input type="number" id="d_cashflow" value="1.3" step="0.1" min="0" oninput="FHS.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>库存周转率 Inventory Turnover <span class="hint">(次/年)</span></label><input type="number" id="d_inventory" value="6" step="0.5" min="0" oninput="FHS.calc()"></div>
+      <div class="jx-field"><label>应收周转天数 DSO <span class="hint">(天)</span></label><input type="number" id="d_receivable" value="35" step="1" min="0" oninput="FHS.calc()"></div>
+      <div class="jx-field"><label>费用率 Expense Ratio <span class="hint">(%)</span></label><input type="number" id="d_expense" value="28" step="1" min="0" max="100" oninput="FHS.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 9 维度 SVG 雷达图</h2>
+    <div class="radar-wrap">
+      <svg class="svg-radar" id="radar" viewBox="0 0 400 400"></svg>
+      <div class="radar-legend" id="radarLegend"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 各维度诊断卡片</h2>
+    <div class="dim-cards" id="dimCards"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 改善建议引擎</h2>
+    <ul id="tips" style="list-style:none;padding:0;margin:0"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>多维度损益表构建</p></div></a>
+      <a href="cash-flow-forecast.html" class="rt-card"><div class="rt-icon">💵</div><div><h5>现金流预测</h5><p>现金流管理</p></div></a>
+      <a href="inventory-turnover.html" class="rt-card"><div class="rt-icon">📦</div><div><h5>库存周转</h5><p>库存效率分析</p></div></a>
+      <a href="working-capital-calc.html" class="rt-card"><div class="rt-icon">🔄</div><div><h5>营运资金计算</h5><p>营运资金管理</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="financial-health-scorecard.html">财务健康度</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var FHS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  // 9 dimensions with scoring functions and benchmarks
+  var dims=[
+    {key:'liquidity',name:'流动性',icon:'💧',weight:12,bench:2.0,benchScore:75,score:function(v){return Math.min(100,v/3*100)},input:'d_liquidity',label:'流动比率',unit:'倍',better:'高'},
+    {key:'profit',name:'盈利能力',icon:'📈',weight:15,bench:12,benchScore:70,score:function(v){return Math.min(100,v/25*100)},input:'d_profit',label:'净利率',unit:'%',better:'高'},
+    {key:'efficiency',name:'运营效率',icon:'⚙️',weight:10,bench:2.0,benchScore:72,score:function(v){return Math.min(100,v/3*100)},input:'d_efficiency',label:'资产周转率',unit:'倍',better:'高'},
+    {key:'growth',name:'成长性',icon:'🚀',weight:12,bench:20,benchScore:75,score:function(v){return Math.min(100,Math.max(0,(v+10)/50*100))},input:'d_growth',label:'收入增长率',unit:'%',better:'高'},
+    {key:'leverage',name:'杠杆',icon:'⚖️',weight:10,bench:50,benchScore:65,score:function(v){return Math.max(0,100-Math.abs(v-30)/70*100)},input:'d_leverage',label:'资产负债率',unit:'%',better:'适中30%'},
+    {key:'cashflow',name:'现金流',icon:'💵',weight:13,bench:1.2,benchScore:72,score:function(v){return Math.min(100,v/2*100)},input:'d_cashflow',label:'现金流覆盖率',unit:'倍',better:'高'},
+    {key:'inventory',name:'库存周转',icon:'📦',weight:10,bench:6,benchScore:75,score:function(v){return Math.min(100,v/10*100)},input:'d_inventory',label:'库存周转率',unit:'次/年',better:'高'},
+    {key:'receivable',name:'应收账款',icon:'📥',weight:8,bench:40,benchScore:70,score:function(v){return Math.max(0,100-v/90*100)},input:'d_receivable',label:'DSO应收天数',unit:'天',better:'低'},
+    {key:'expense',name:'费用控制',icon:'🎛️',weight:10,bench:30,benchScore:70,score:function(v){return Math.max(0,100-v/60*100)},input:'d_expense',label:'费用率',unit:'%',better:'低'}
+  ];
+
+  function scoreColor(s){return s>=80?'#10b981':s>=60?'#4f46e5':s>=40?'#f59e0b':'#ef4444'}
+
+  function calc(){
+    var total=0,results=[];
+    dims.forEach(function(d){
+      var v=parseFloat($(d.input).value)||0;
+      var s=Math.round(d.score(v));
+      var wScore=s*d.weight/100;
+      total+=wScore;
+      results.push({dim:d,value:v,score:s,weight:d.weight,wScore:wScore,bench:d.bench,benchScore:d.benchScore});
+    });
+    total=Math.round(total);
+    var grade=total>=85?'A':total>=70?'B':total>=50?'C':'D';
+    var gradeDescs={
+      A:'财务状况优秀，各维度均衡健康，具备强劲的抗风险能力和增长潜力。建议保持现有经营策略，探索扩张机会。',
+      B:'财务状况良好，多数维度达标，存在个别短板需优化。建议聚焦薄弱维度提升，向 A 级迈进。',
+      C:'财务状况一般，多个维度存在风险，需重点关注流动性、盈利和现金流。建议制定专项改善计划。',
+      D:'财务状况堪忧，核心指标全面偏弱，存在较高经营风险。建议立即启动财务重组，优先解决现金流和盈利问题。'
+    };
+    var gb=$('gradeBox');
+    gb.textContent=grade;gb.className='grade '+grade;
+    $('totalScore').textContent=total;
+    $('gradeDesc').textContent=gradeDescs[grade];
+    renderRadar(results);
+    renderCards(results);
+    renderTips(results,grade);
+    save();
+  }
+
+  function renderRadar(results){
+    var cx=200,cy=200,R=150,N=9;
+    var svg='';
+    // grid rings
+    for(var r=1;r<=4;r++){
+      var rr=R*r/4;var pts='';
+      for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;pts+=(i?' ':'')+((cx+rr*Math.cos(a)).toFixed(1))+','+((cy+rr*Math.sin(a)).toFixed(1))}
+      svg+='<polygon points="'+pts+'" fill="none" stroke="#e2e8f0" stroke-width="1"/>';
+    }
+    // axes & labels
+    for(var i=0;i<N;i++){
+      var a=-Math.PI/2+i*2*Math.PI/N;
+      var ex=cx+R*Math.cos(a),ey=cy+R*Math.sin(a);
+      svg+='<line x1="'+cx+'" y1="'+cy+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="#e2e8f0"/>';
+      var lx=cx+(R+22)*Math.cos(a),ly=cy+(R+22)*Math.sin(a);
+      svg+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#64748b" font-weight="600">'+results[i].dim.name+'</text>';
+    }
+    // benchmark polygon
+    var bp='';
+    for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var rr=R*results[i].benchScore/100;bp+=(i?' ':'')+((cx+rr*Math.cos(a)).toFixed(1))+','+((cy+rr*Math.sin(a)).toFixed(1))}
+    svg+='<polygon points="'+bp+'" fill="rgba(245,158,11,.08)" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>';
+    // score polygon
+    var sp='';
+    for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var rr=R*results[i].score/100;sp+=(i?' ':'')+((cx+rr*Math.cos(a)).toFixed(1))+','+((cy+rr*Math.sin(a)).toFixed(1))}
+    svg+='<polygon points="'+sp+'" fill="rgba(79,70,229,.18)" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round"/>';
+    // score points
+    for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var rr=R*results[i].score/100;var px=cx+rr*Math.cos(a),py=cy+rr*Math.sin(a);svg+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="4" fill="#fff" stroke="'+scoreColor(results[i].score)+'" stroke-width="2"/>';}
+    $('radar').innerHTML=svg;
+    // legend
+    var lh='<div class="dim-list">';
+    results.forEach(function(r){
+      var c=scoreColor(r.score);
+      lh+='<div class="dim-item"><span class="di-name">'+r.dim.icon+' '+r.dim.name+'</span><div class="di-bar"><div class="di-fill" style="width:'+r.score+'%;background:'+c+'"></div></div><span class="di-score" style="color:'+c+'">'+r.score+'</span></div>';
+    });
+    lh+='</div><div style="margin-top:12px;font-size:12px;color:var(--muted)">橙色虚线 = 行业基准 · 蓝色实线 = 当前得分</div>';
+    $('radarLegend').innerHTML=lh;
+  }
+
+  function renderCards(results){
+    var h='';
+    results.forEach(function(r){
+      var c=scoreColor(r.score);
+      var vsBench=r.score-r.benchScore;
+      var tip='';
+      if(r.dim.key==='liquidity')tip=r.score<60?'流动比率偏低，短期偿债压力大。建议增加现金储备、优化应付账期。':r.score>90?'流动比率过高，资金闲置。建议将部分流动资金投入高回报项目。':'流动性健康，短期偿债能力良好。';
+      else if(r.dim.key==='profit')tip=r.score<60?'净利率偏低，盈利能力不足。建议提升毛利（涨价/降本）或压缩费用。':'盈利能力达标，保持成本管控。';
+      else if(r.dim.key==='efficiency')tip=r.score<60?'资产周转偏慢，运营效率低。建议清理闲置资产、提升销售。':'运营效率良好。';
+      else if(r.dim.key==='growth')tip=r.score<60?'增长率偏低，业务增长乏力。建议拓展新品/新市场。':r.score>90?'高速增长，注意确保供应链和现金流匹配。':'成长性健康。';
+      else if(r.dim.key==='leverage')tip=r.score<60?'负债率过高/过低，杠杆运用不理想。建议优化资本结构。':'杠杆水平适中。';
+      else if(r.dim.key==='cashflow')tip=r.score<60?'现金流覆盖率不足，存在资金链风险。建议加速回款、延长付款。':'现金流稳健。';
+      else if(r.dim.key==='inventory')tip=r.score<60?'库存周转慢，资金占用大。建议清理滞销、优化补货。':'库存周转健康。';
+      else if(r.dim.key==='receivable')tip=r.score<60?'应收天数偏长，回款慢。建议收紧账期、加强催收。':'应收管理良好。';
+      else tip=r.score<60?'费用率偏高，成本管控弱。建议逐项审查费用结构。':'费用控制良好。';
+      h+='<div class="dim-card"><div class="dc-head"><span class="dc-name">'+r.dim.icon+' '+r.dim.name+'</span><span class="dc-score" style="color:'+c+'">'+r.score+'</span></div><div class="dc-bench">'+r.dim.label+': '+r.value+r.dim.unit+' · 行业基准 '+r.dim.bench+r.dim.unit+'（基准分 '+r.benchScore+'）· '+(vsBench>=0?'<span style="color:#059669">优于基准 '+vsBench+'</span>':'<span style="color:#dc2626">低于基准 '+(-vsBench)+'</span>')+'</div><div class="dc-tip">'+tip+'</div></div>';
+    });
+    $('dimCards').innerHTML=h;
+  }
+
+  function renderTips(results,grade){
+    var tips=[];
+    var sorted=results.slice().sort(function(a,b){return a.score-b.score});
+    var weakest=sorted[0];
+    tips.push({t:'最薄弱维度为「'+weakest.dim.name+'」（'+weakest.score+'分），是改善的首要优先级。建议制定专项提升计划，目标 3 个月内提升至 70 分以上。',c:scoreColor(weakest.score)});
+    var second=sorted[1];
+    if(second.score<60)tips.push({t:'第二短板为「'+second.dim.name+'」（'+second.score+'分），建议同步优化，避免短板效应拖累整体健康度。',c:scoreColor(second.score)});
+    var strongest=sorted[sorted.length-1];
+    tips.push({t:'最强维度为「'+strongest.dim.name+'」（'+strongest.score+'分），保持优势并以此为标杆带动其他维度提升。',c:'#10b981'});
+    var belowBench=results.filter(function(r){return r.score<r.benchScore});
+    if(belowBench.length>0)tips.push({t:'有 '+belowBench.length+' 个维度低于行业基准：'+belowBench.map(function(r){return r.dim.name}).join('、')+'。建议参考行业标杆逐项对标改进。',c:'#f59e0b'});
+    if(grade==='A'||grade==='B')tips.push({t:'当前健康等级为 '+grade+'，整体财务状况'+(grade==='A'?'优秀':'良好')+'。建议每季度复评一次，持续监控趋势变化。',c:'#4f46e5'});
+    else tips.push({t:'当前健康等级为 '+grade+'，需高度重视。建议每月复评，优先改善现金流和盈利能力维度。',c:'#ef4444'});
+    $('tips').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;width:18px;height:18px;border-radius:50%;background:'+t.c+';opacity:.15"></span><span style="position:absolute;left:5px;top:13px;color:'+t.c+';font-size:12px;font-weight:700">!</span>'+t.t+'</li>'}).join('');
+  }
+
+  function save(){var d={};dims.forEach(function(dim){d[dim.input]=$(dim.input).value});try{localStorage.setItem('jx_fhs_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_fhs_data'));if(d)Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',FHS.init)}else{FHS.init()}
+</script>
+</body>
+</html>

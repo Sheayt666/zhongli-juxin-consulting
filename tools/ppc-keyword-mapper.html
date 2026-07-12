@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="PPC关键词映射器：输入关键词与表现数据，自动分配匹配类型（精确/词组/广泛），CSS分配图可视化，输出竞价建议与否定词推荐。">
+<meta name="keywords" content="PPC关键词,匹配类型,精确匹配,词组匹配,广泛匹配,竞价建议,亚马逊广告">
+<title>PPC关键词映射器 - 匹配类型分配·竞价建议 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--indigo:#4f46e5;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--success:#10b981;--warn:#f59e0b;--danger:#ef4444}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f8fafc}
+.wf-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;top:64px;z-index:90;height:48px;display:flex;align-items:center}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%;overflow-x:auto}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:#475569;text-decoration:none;white-space:nowrap;transition:all .2s}
+.workflow-step:hover{background:#e0e7ff;color:var(--indigo)}.workflow-step.active{background:var(--indigo);color:#fff;font-weight:600}
+.workflow-arrow{color:#cbd5e1;font-size:11px;flex-shrink:0}
+.crumb{max-width:1152px;margin:0 auto;padding:12px 24px;font-size:13px;color:#64748b}.crumb a{color:#64748b}.crumb a:hover{color:var(--indigo)}.crumb .cur{color:#0f172a;font-weight:600}
+.tool-head{max-width:1152px;margin:0 auto;padding:8px 24px 24px}.tool-head h1{font-size:32px;font-weight:800;color:#0f172a;letter-spacing:-.5px}.tool-head h1 em{font-style:normal;color:var(--indigo)}.tool-head p{font-size:15px;color:#64748b;margin-top:8px;max-width:680px;line-height:1.7}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #f1f5f9}
+.card h3{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:left;font-weight:700;color:#334155;background:#f8fafc;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#475569}
+tr:hover td{background:#f8fafc}
+.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px}.field label .h{font-weight:400;color:#94a3b8;font-size:12px;margin-left:4px}
+.field input,.field select{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;color:#0f172a;background:#fff;font-family:inherit;transition:all .2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.btn{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn-ghost{background:#fff;border:1px solid #e2e8f0;color:#475569}
+.result-note{font-size:12px;color:#64748b;line-height:1.6;padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--indigo);margin-top:14px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.sum-card{padding:18px;border-radius:12px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0}.sum-card .v{font-size:22px;font-weight:800}.sum-card .l{font-size:12px;color:#64748b;margin-top:2px}
+.match-tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;color:#fff}
+.mt-exact{background:#10b981}.mt-phrase{background:#4f46e5}.mt-broad{background:#f59e0b}
+/* 分配图 */
+.alloc-chart{display:flex;height:40px;border-radius:10px;overflow:hidden;margin:16px 0}
+.alloc-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;transition:width .5s}
+.alloc-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#64748b;margin-top:8px}
+.alloc-legend span{display:flex;align-items:center;gap:5px}.alloc-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.bid-bar{display:flex;align-items:center;gap:8px}
+.bid-track{flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden;min-width:50px}
+.bid-track i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--indigo),var(--indigo-light))}
+.advice-list{list-style:none;padding:0;margin:0}.advice-list li{padding:10px 0 10px 28px;font-size:14px;color:#334155;position:relative;line-height:1.6;border-bottom:1px solid #f1f5f9}.advice-list li:last-child{border-bottom:none}.advice-list li::before{content:'';position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--indigo)}.advice-list li.ok::before{background:var(--success)}.advice-list li.warn::before{background:var(--warn)}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel-card{display:flex;gap:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;transition:all .2s}.rel-card:hover{border-color:var(--indigo);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.rel-ic{font-size:22px;flex-shrink:0}.rel-card h4{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}.rel-card p{font-size:12px;color:#64748b}
+.back-link{text-align:center;padding:24px}.back-link a{display:inline-block;padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.empty{text-align:center;padding:40px;color:#94a3b8;font-size:14px}
+@media(max-width:768px){.summary-grid{grid-template-columns:1fr 1fr}.row3{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="ppc_keyword_mapper">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner">
+<a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+<a href="index.html" class="tool-nav-back">← 工具中心</a></div></nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W37 关键词深度工作流</div><div class="workflow-steps">
+<a href="keyword-research-matrix.html" class="workflow-step">研究矩阵</a><span class="workflow-arrow">›</span>
+<a href="search-volume-estimator.html" class="workflow-step">搜索量</a><span class="workflow-arrow">›</span>
+<a href="keyword-difficulty-scorer.html" class="workflow-step">难度评分</a><span class="workflow-arrow">›</span>
+<a href="long-tail-keyword-finder.html" class="workflow-step">长尾词</a><span class="workflow-arrow">›</span>
+<a href="keyword-cluster-builder.html" class="workflow-step">聚类构建</a><span class="workflow-arrow">›</span>
+<a href="competitor-keyword-intersection.html" class="workflow-step">竞品交集</a><span class="workflow-arrow">›</span>
+<a href="keyword-trend-forecaster.html" class="workflow-step">趋势预测</a><span class="workflow-arrow">›</span>
+<a href="ppc-keyword-mapper.html" class="workflow-step active">PPC映射</a><span class="workflow-arrow">›</span>
+<a href="search-term-report-analyzer.html" class="workflow-step">搜索词报告</a><span class="workflow-arrow">›</span>
+<a href="keyword-canibalization-checker.html" class="workflow-step">蚕食检查</a>
+</div></div></div>
+<div class="crumb"><a href="../index.html">首页</a> › <a href="index.html">实用工具</a> › <a href="ppc-keyword-mapper.html">W37</a> › <span class="cur">PPC关键词映射器</span></div>
+<div class="tool-head"><h1>PPC关键词<em>映射器</em></h1><p>输入关键词与表现数据，按转化率与商业意图自动分配匹配类型（精确/词组/广泛），CSS分配图可视化，输出差异化竞价建议与否定词推荐。</p></div>
+<div class="wf-container">
+  <div class="card">
+    <h2>📋 添加关键词</h2>
+    <div class="row3">
+      <div class="field"><label>关键词</label><input type="text" id="kw" value="bluetooth speaker" oninput="PKM.calc()"></div>
+      <div class="field"><label>月搜索量</label><input type="number" id="vol" value="18000" min="0" oninput="PKM.calc()"></div>
+      <div class="field"><label>转化率 <span class="h">(%)</span></label><input type="number" id="cvr" value="12" step="0.1" min="0" oninput="PKM.calc()"></div>
+    </div>
+    <div class="row3">
+      <div class="field"><label>当前CPC <span class="h">($)</span></label><input type="number" id="cpc" value="0.85" step="0.01" min="0" oninput="PKM.calc()"></div>
+      <div class="field"><label>售价 <span class="h">($)</span></label><input type="number" id="price" value="29.99" step="0.01" min="0" oninput="PKM.calc()"></div>
+      <div class="field"><label>商业意图 <span class="h">（1-10）</span></label><input type="number" id="intent" value="8" min="1" max="10" oninput="PKM.calc()"></div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" onclick="PKM.add()">＋ 加入映射</button><button class="btn btn-ghost" onclick="PKM.sample()">载入示例</button><button class="btn btn-ghost" onclick="PKM.clearAll()" style="border-color:#fecaca;color:#ef4444">清空</button></div>
+    <div class="result-note">💡 分配逻辑：转化率≥10%且意图≥7 → 精确匹配；转化率5-10%或意图5-7 → 词组匹配；转化率<5%或探索新词 → 广泛匹配。竞价按匹配类型与转化价值差异化。</div>
+  </div>
+  <div class="card"><h2>📊 匹配类型分配矩阵</h2><div id="result" class="empty">添加关键词查看分配结果</div></div>
+  <div class="card"><h2>🧰 相关工具推荐</h2><div class="rel-grid">
+    <a class="rel-card" href="search-term-report-analyzer.html"><span class="rel-ic">📋</span><div><h4>搜索词报告分析器</h4><p>否词与机会词识别</p></div></a>
+    <a class="rel-card" href="keyword-cluster-builder.html"><span class="rel-ic">🗂️</span><div><h4>关键词聚类构建器</h4><p>按簇建广告组</p></div></a>
+    <a class="rel-card" href="acos-calculator.html"><span class="rel-ic">🎯</span><div><h4>ACoS计算器</h4><p>评估投放效果</p></div></a>
+  </div></div>
+  <div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<script>
+var PKM=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var kws=[];
+  function esc(s){return (s||'').replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c]})}
+  function assign(cvr,intent){
+    if(cvr>=10&&intent>=7)return{type:'精确',cls:'mt-exact',color:'#10b981',desc:'高转化高意图，精准收割'};
+    if(cvr>=5||intent>=5)return{type:'词组',cls:'mt-phrase',color:'#4f46e5',desc:'中等表现，平衡流量与精准'};
+    return{type:'广泛',cls:'mt-broad',color:'#f59e0b',desc:'低转化或探索期，低成本拓词'};
+  }
+  function bid(cpc,cvr,price,type){
+    // 建议CPC = 当前CPC × 匹配系数 × 转化价值系数
+    var tFactor=type==='精确'?1.3:type==='词组'?1.0:0.6;
+    var vFactor=cvr>0?Math.min(1.5,0.6+cvr/20):0.6;
+    return cpc*tFactor*vFactor;
+  }
+  function calc(){/* 当前词预览 */}
+  function add(){
+    var kw=$('kw').value.trim();if(!kw){alert('请输入关键词');return}
+    var vol=parseFloat($('vol').value)||0,cvr=parseFloat($('cvr').value)||0,cpc=parseFloat($('cpc').value)||0,price=parseFloat($('price').value)||0,intent=parseFloat($('intent').value)||5;
+    kws.push({kw:kw,vol:vol,cvr:cvr,cpc:cpc,price:price,intent:intent});
+    render();
+    $('kw').value='';$('kw').focus();
+  }
+  function sample(){
+    kws=[
+      {kw:'bluetooth speaker',vol:18000,cvr:12,cpc:0.85,price:29.99,intent:8},
+      {kw:'best portable speaker',vol:6200,cvr:9,cpc:0.72,price:29.99,intent:7},
+      {kw:'wireless speaker for shower',vol:2400,cvr:15,cpc:0.55,price:29.99,intent:9},
+      {kw:'speaker reviews',vol:8800,cvr:3,cpc:0.40,price:29.99,intent:4},
+      {kw:'cheap speaker',vol:12000,cvr:5,cpc:0.30,price:29.99,intent:5}
+    ];
+    render();
+  }
+  function clearAll(){kws=[];render()}
+  function del(i){kws.splice(i,1);render()}
+  function render(){
+    if(!kws.length){$('result').className='empty';$('result').innerHTML='添加关键词查看分配结果';return}
+    kws.forEach(function(k){var a=assign(k.cvr,k.intent);k.type=a.type;k.cls=a.cls;k.bid=bid(k.cpc,k.cvr,k.price,a.type)});
+    var counts={精确:0,词组:0,广泛:0};kws.forEach(function(k){counts[k.type]++});
+    var total=kws.length;
+    var html='<div class="summary-grid"><div class="sum-card"><div class="v" style="color:#4f46e5">'+total+'</div><div class="l">关键词总数</div></div><div class="sum-card"><div class="v" style="color:#10b981">'+counts['精确']+'</div><div class="l">精确匹配</div></div><div class="sum-card"><div class="v" style="color:#4f46e5">'+counts['词组']+'</div><div class="l">词组匹配</div></div><div class="sum-card"><div class="v" style="color:#f59e0b">'+counts['广泛']+'</div><div class="l">广泛匹配</div></div></div>';
+    // 分配图
+    html+='<h3>匹配类型分配比例</h3><div class="alloc-chart">';
+    if(counts['精确'])html+='<div class="alloc-seg" style="width:'+(counts['精确']/total*100)+'%;background:#10b981">'+Math.round(counts['精确']/total*100)+'%</div>';
+    if(counts['词组'])html+='<div class="alloc-seg" style="width:'+(counts['词组']/total*100)+'%;background:#4f46e5">'+Math.round(counts['词组']/total*100)+'%</div>';
+    if(counts['广泛'])html+='<div class="alloc-seg" style="width:'+(counts['广泛']/total*100)+'%;background:#f59e0b">'+Math.round(counts['广泛']/total*100)+'%</div>';
+    html+='</div><div class="alloc-legend"><span><i style="background:#10b981"></i>精确匹配</span><span><i style="background:#4f46e5"></i>词组匹配</span><span><i style="background:#f59e0b"></i>广泛匹配</span></div>';
+    // 表格
+    html+='<h3 style="margin-top:20px">关键词映射表</h3><div style="overflow-x:auto"><table><thead><tr><th>关键词</th><th>搜索量</th><th>转化率</th><th>意图</th><th>当前CPC</th><th>建议匹配</th><th>建议竞价</th><th>竞价对比</th><th>策略</th><th>操作</th></tr></thead><tbody>';
+    kws.forEach(function(k,i){
+      var maxBid=Math.max.apply(null,kws.map(function(x){return x.bid}));
+      html+='<tr><td><b>'+esc(k.kw)+'</b></td><td>'+k.vol.toLocaleString()+'</td><td>'+k.cvr+'%</td><td>'+k.intent+'/10</td><td>$'+k.cpc.toFixed(2)+'</td><td><span class="match-tag '+k.cls+'">'+k.type+'</span></td><td><b style="color:#4f46e5">$'+k.bid.toFixed(2)+'</b></td><td><div class="bid-bar"><div class="bid-track"><i style="width:'+(k.bid/maxBid*100)+'%"></i></div></div></td><td style="font-size:12px;color:#64748b">'+(k.type==='精确'?'主收割':k.type==='词组'?'平衡拓量':'低成本探索')+'</td><td><button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="PKM.del('+i+')">删除</button></td></tr>';
+    });
+    html+='</tbody></table></div>';
+    // 否定词建议
+    html+='<h3 style="margin-top:20px">🚫 否定词建议</h3><div style="font-size:13px;color:#334155;line-height:1.8">针对广泛/词组匹配低转化词，建议否定：';
+    var negs=['free','download','how to make','diy','pdf','used','second hand','repair'];
+    html+='<div style="margin-top:8px">'+negs.map(function(n){return '<span class="match-tag mt-broad" style="margin:3px">-'+n+'</span>'}).join('')+'</div></div>';
+    // 建议
+    html+='<h3 style="margin-top:20px">🧭 投放策略建议</h3><ul class="advice-list">';
+    html+='<li class="ok">精确匹配 '+counts['精确']+' 个词为收割主力，建议占预算50-60%，竞价可上浮30%锁定首页顶部。</li>';
+    html+='<li>词组匹配 '+counts['词组']+' 个词用于平衡流量，建议占预算25-35%，持续监控搜索词报告优化。</li>';
+    html+='<li class="warn">广泛匹配 '+counts['广泛']+' 个词仅用于拓词探索，建议占预算10-15%，跑出高转化词后升级为词组/精确。</li>';
+    html+='<li>建议为每个匹配类型单独建广告组，便于差异化竞价与预算控制。精确组可用"动态竞价-提高和降低"。</li>';
+    html+='<li>每周复盘搜索词报告，将广泛组跑出的高转化词升级匹配类型，低转化词加入否定。</li>';
+    html+='</ul>';
+    $('result').className='';$('result').innerHTML=html;
+  }
+  function init(){var bt=$('backToTop');window.addEventListener('scroll',function(){bt.classList.toggle('visible',window.scrollY>300)});bt.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})}}
+  return{add:add,del:del,sample:sample,clearAll:clearAll,calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PKM.init)}else{PKM.init()}
+</script>
+</body>
+</html>

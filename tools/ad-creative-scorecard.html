@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="广告创意综合评分卡：10维度评分系统，SVG雷达图可视化，S/A/B/C/D分级，智能优化建议引擎，帮助跨境卖家全面诊断广告创意质量。">
+<meta name="keywords" content="广告创意评分,创意质量评估,雷达图,广告优化,创意诊断,跨境电商工具">
+<title>广告创意综合评分卡 - 10维度诊断·雷达图·优化建议 | 跨境卖家工具</title>
+<link rel="canonical" href="https://juxin-consulting.help/tools/ad-creative-scorecard.html">
+<style>
+:root{--indigo:#4f46e5;--indigo-dark:#4338ca;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18),0 4px 10px -6px rgba(15,23,42,.06);--shadow-lg:0 24px 48px -16px rgba(79,70,229,.22);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+/* Workflow Nav */
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+/* Breadcrumb */
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted)}
+.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}
+.breadcrumb .current{color:var(--ink);font-weight:600}
+/* Hero */
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+/* Layout */
+.tool-section{padding:24px 0 60px}
+.scorecard-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+/* Dimension inputs */
+.dim-item{margin-bottom:18px}
+.dim-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.dim-name{font-size:14px;font-weight:600;color:var(--ink-soft)}
+.dim-score{font-size:18px;font-weight:800;min-width:36px;text-align:right}
+.dim-slider{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--rule);outline:none}
+.dim-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--indigo);cursor:pointer;box-shadow:0 2px 6px rgba(79,70,229,.3)}
+.dim-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--indigo);cursor:pointer;border:none}
+.dim-desc{font-size:12px;color:var(--muted)}
+/* Results */
+.grade-display{text-align:center;padding:20px 0}
+.grade-circle{width:120px;height:120px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:900;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.grade-S{background:linear-gradient(135deg,#4f46e5,#7c3aed)}
+.grade-A{background:linear-gradient(135deg,#10b981,#059669)}
+.grade-B{background:linear-gradient(135deg,#3b82f6,#2563eb)}
+.grade-C{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.grade-D{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.total-score{font-size:42px;font-weight:900;margin-bottom:4px}
+.total-label{font-size:13px;color:var(--muted)}
+/* Radar Chart */
+.radar-wrap{display:flex;justify-content:center;margin:20px 0}
+.radar-svg{max-width:360px;width:100%;height:auto}
+/* Diagnosis */
+.diag-list{list-style:none;padding:0}
+.diag-item{padding:12px 0;border-bottom:1px solid var(--rule-light);display:flex;gap:12px;align-items:flex-start}
+.diag-item:last-child{border-bottom:none}
+.diag-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.diag-icon.good{background:var(--green-bg);color:var(--green)}
+.diag-icon.warn{background:var(--gold-bg);color:var(--gold)}
+.diag-icon.bad{background:var(--red-bg);color:var(--red)}
+.diag-text{flex:1}
+.diag-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.diag-suggest{font-size:12px;color:var(--muted);line-height:1.5}
+/* Summary bar */
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--bg);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}
+.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* Footer */
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}
+.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}
+.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.scorecard-grid{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "广告创意综合评分卡",
+  "description": "10维度评分系统，SVG雷达图可视化，S/A/B/C/D分级，智能优化建议引擎，帮助跨境卖家全面诊断广告创意质量。",
+  "url": "https://juxin-consulting.help/tools/ad-creative-scorecard.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "publisher": { "@type": "Organization", "name": "跨境卖家工具", "url": "https://juxin-consulting.help" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "广告创意综合评分卡", "item": "https://juxin-consulting.help/tools/ad-creative-scorecard.html" }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="workflow-nav">
+  <div class="workflow-nav-inner">
+    <div class="workflow-label">W35 广告创意工作流</div>
+    <div class="workflow-steps">
+      <a href="ad-creative-scorecard.html" class="workflow-step active">创意评分</a><span class="workflow-arrow">→</span>
+      <a href="headline-generator.html" class="workflow-step">标题</a><span class="workflow-arrow">→</span>
+      <a href="product-image-analyzer.html" class="workflow-step">图片分析</a><span class="workflow-arrow">→</span>
+      <a href="ab-test-planner.html" class="workflow-step">A/B测试</a><span class="workflow-arrow">→</span>
+      <a href="ad-copy-variants.html" class="workflow-step">文案变体</a><span class="workflow-arrow">→</span>
+      <a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a><span class="workflow-arrow">→</span>
+      <a href="seasonal-ad-planner.html" class="workflow-step">季节规划</a><span class="workflow-arrow">→</span>
+      <a href="ad-budget-splitter.html" class="workflow-step">预算拆分</a><span class="workflow-arrow">→</span>
+      <a href="creative-brief-builder.html" class="workflow-step">Brief</a><span class="workflow-arrow">→</span>
+      <a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../index.html">首页</a><span class="sep">/</span>
+    <a href="index.html">实用工具</a><span class="sep">/</span>
+    <a href="#">W35</a><span class="sep">/</span>
+    <span class="current">创意评分</span>
+  </div>
+</div>
+
+<header class="tool-hero">
+  <div class="container">
+    <span class="tool-hero-badge">W35 · 深度版工具</span>
+    <h1>广告创意<em>综合评分卡</em></h1>
+    <p>10维度全面评估广告创意质量，SVG雷达图可视化，S/A/B/C/D智能分级，内置优化建议引擎，让创意决策从"凭感觉"变成"看数据"。</p>
+  </div>
+</header>
+
+<section class="tool-section">
+  <div class="container">
+    <div class="summary-bar">
+      <div class="sb-card"><div class="sb-val" id="sbTotal" style="color:var(--indigo)">0</div><div class="sb-lbl">加权总分 / 10</div></div>
+      <div class="sb-card"><div class="sb-val" id="sbGrade" style="color:var(--muted)">-</div><div class="sb-lbl">创意等级</div></div>
+      <div class="sb-card"><div class="sb-val" id="sbStrong" style="color:var(--green)">0</div><div class="sb-lbl">优势维度数</div></div>
+      <div class="sb-card"><div class="sb-val" id="sbWeak" style="color:var(--red)">0</div><div class="sb-lbl">待改进维度</div></div>
+    </div>
+
+    <div class="scorecard-grid">
+      <div class="card">
+        <h3>📋 10维度评分（拖动滑块，实时计算）</h3>
+        <div id="dimContainer"></div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:24px">
+          <h3>🎯 创意等级与总分</h3>
+          <div class="grade-display">
+            <div class="grade-circle grade-C" id="gradeCircle">-</div>
+            <div class="total-score" id="totalScore">0.0</div>
+            <div class="total-label">加权总分（满分10）</div>
+          </div>
+          <div class="radar-wrap">
+            <svg class="radar-svg" id="radarChart" viewBox="0 0 360 360"></svg>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🔍 逐维度诊断与优化建议</h3>
+          <ul class="diag-list" id="diagList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-footer">
+      <h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+      <div class="related-tools">
+        <a href="headline-generator.html" class="rt-card"><span class="rt-icon">✍️</span><div class="rt-content"><h5>广告标题生成器</h5><p>10种公式生成30个标题</p></div></a>
+        <a href="ad-copy-variants.html" class="rt-card"><span class="rt-icon">📝</span><div class="rt-content"><h5>广告文案变体生成器</h5><p>5种风格文案变体</p></div></a>
+        <a href="creative-fatigue-detector.html" class="rt-card"><span class="rt-icon">😴</span><div class="rt-content"><h5>创意疲劳检测器</h5><p>检测广告疲劳度</p></div></a>
+      </div>
+      <a href="index.html" class="back-link">← 返回工具中心</a>
+    </div>
+  </div>
+</section>
+
+<script>
+const dimensions = [
+  {name:'视觉吸引力',desc:'色彩、构图、质感的第一印象冲击力',weight:1.2},
+  {name:'文案相关性',desc:'标题/正文与产品卖点的匹配度',weight:1.0},
+  {name:'CTA力度',desc:'行动号召的清晰度与紧迫感',weight:1.1},
+  {name:'品牌一致性',desc:'视觉风格与品牌调性的统一',weight:0.8},
+  {name:'移动适配',desc:'小屏幕下的可读性与加载体验',weight:1.0},
+  {name:'加载速度',desc:'素材体积与首屏渲染时间',weight:0.9},
+  {name:'差异化',desc:'与竞品广告的视觉/内容区分度',weight:1.1},
+  {name:'情感共鸣',desc:'引发目标用户情感连接的能力',weight:1.0},
+  {name:'信息密度',desc:'信息量与可读性的平衡',weight:0.8},
+  {name:'转化导向',desc:'从点击到购买的引导路径设计',weight:1.2}
+];
+
+// Build inputs
+const container = document.getElementById('dimContainer');
+dimensions.forEach((d,i)=>{
+  const div=document.createElement('div');
+  div.className='dim-item';
+  div.innerHTML=`
+    <div class="dim-header">
+      <span class="dim-name">${i+1}. ${d.name} <span style="font-size:11px;color:var(--muted);font-weight:400">权重×${d.weight}</span></span>
+      <span class="dim-score" id="score${i}" style="color:var(--indigo)">7</span>
+    </div>
+    <input type="range" class="dim-slider" id="dim${i}" min="1" max="10" value="7" step="1" oninput="calcScore()">
+    <div class="dim-desc">${d.desc}</div>
+  `;
+  container.appendChild(div);
+});
+
+function calcScore(){
+  let total=0,totalWeight=0;
+  const scores=[];
+  dimensions.forEach((d,i)=>{
+    const v=parseInt(document.getElementById('dim'+i).value);
+    document.getElementById('score'+i).textContent=v;
+    scores.push(v);
+    total+=v*d.weight;
+    totalWeight+=d.weight;
+  });
+  const weighted=(total/totalWeight).toFixed(2);
+  document.getElementById('totalScore').textContent=weighted;
+  document.getElementById('sbTotal').textContent=weighted;
+
+  // Grade
+  let grade,gradeClass;
+  if(weighted>=9){grade='S';gradeClass='grade-S'}
+  else if(weighted>=7.5){grade='A';gradeClass='grade-A'}
+  else if(weighted>=6){grade='B';gradeClass='grade-B'}
+  else if(weighted>=4){grade='C';gradeClass='grade-C'}
+  else{grade='D';gradeClass='grade-D'}
+  const gc=document.getElementById('gradeCircle');
+  gc.textContent=grade;
+  gc.className='grade-circle '+gradeClass;
+  document.getElementById('sbGrade').textContent=grade;
+
+  // Strong/weak
+  const strong=scores.filter(s=>s>=8).length;
+  const weak=scores.filter(s=>s<5).length;
+  document.getElementById('sbStrong').textContent=strong;
+  document.getElementById('sbWeak').textContent=weak;
+
+  drawRadar(scores);
+  genDiagnosis(scores);
+  saveData(scores);
+}
+
+function drawRadar(scores){
+  const svg=document.getElementById('radarChart');
+  const cx=180,cy=180,maxR=130;
+  const n=dimensions.length;
+  let html='';
+
+  // Grid circles
+  for(let r=1;r<=5;r++){
+    const radius=maxR*r/5;
+    let pts=[];
+    for(let i=0;i<n;i++){
+      const angle=(Math.PI*2*i/n)-Math.PI/2;
+      pts.push((cx+radius*Math.cos(angle))+','+(cy+radius*Math.sin(angle)));
+    }
+    html+=`<polygon points="${pts.join(' ')}" fill="none" stroke="#e2e8f0" stroke-width="1"/>`;
+  }
+  // Axis lines + labels
+  for(let i=0;i<n;i++){
+    const angle=(Math.PI*2*i/n)-Math.PI/2;
+    const x2=cx+maxR*Math.cos(angle);
+    const y2=cy+maxR*Math.sin(angle);
+    html+=`<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#e2e8f0" stroke-width="1"/>`;
+    const lx=cx+(maxR+22)*Math.cos(angle);
+    const ly=cy+(maxR+22)*Math.sin(angle);
+    html+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#64748b" font-weight="600">${dimensions[i].name.slice(0,4)}</text>`;
+  }
+  // Data polygon
+  let dataPts=[];
+  for(let i=0;i<n;i++){
+    const angle=(Math.PI*2*i/n)-Math.PI/2;
+    const r=maxR*scores[i]/10;
+    dataPts.push((cx+r*Math.cos(angle))+','+(cy+r*Math.sin(angle)));
+  }
+  html+=`<polygon points="${dataPts.join(' ')}" fill="rgba(79,70,229,0.2)" stroke="#4f46e5" stroke-width="2"/>`;
+  // Data points
+  for(let i=0;i<n;i++){
+    const angle=(Math.PI*2*i/n)-Math.PI/2;
+    const r=maxR*scores[i]/10;
+    const x=cx+r*Math.cos(angle);
+    const y=cy+r*Math.sin(angle);
+    html+=`<circle cx="${x}" cy="${y}" r="4" fill="#4f46e5"/>`;
+  }
+  svg.innerHTML=html;
+}
+
+function genDiagnosis(scores){
+  const list=document.getElementById('diagList');
+  const suggestions={
+    0:'提升视觉冲击力：使用高对比色彩、大字号核心卖点、产品3D渲染或使用场景图',
+    1:'加强文案相关性：确保标题直接点出产品核心卖点，避免泛泛而谈',
+    2:'强化CTA：使用"限时""立即""免费试用"等行动词，增加紧迫感按钮',
+    3:'统一品牌调性：检查Logo位置、品牌色使用、字体风格是否一致',
+    4:'优化移动端：文字字号≥24px，按钮点击区域≥44px，减少横向滚动',
+    5:'加速加载：压缩图片至WebP格式，控制在200KB以内，使用懒加载',
+    6:'增加差异化：研究竞品广告素材，突出独有卖点和使用场景',
+    7:'增强情感共鸣：讲述用户故事，展示使用前后的情绪变化',
+    8:'调整信息密度：核心信息放在前3秒，次要信息折叠或分屏展示',
+    9:'优化转化路径：从创意到落地页保持视觉一致，减少跳转步骤'
+  };
+  let html='';
+  dimensions.forEach((d,i)=>{
+    const s=scores[i];
+    let iconClass,iconText;
+    if(s>=8){iconClass='good';iconText='✓'}
+    else if(s>=5){iconClass='warn';iconText='!'}
+    else{iconClass='bad';iconText='✗'}
+    const status=s>=8?'表现优秀':s>=5?'有提升空间':'需要重点优化';
+    html+=`<li class="diag-item">
+      <div class="diag-icon ${iconClass}">${iconText}</div>
+      <div class="diag-text">
+        <div class="diag-title">${d.name}：${s}/10 — ${status}</div>
+        <div class="diag-suggest">${s<8?suggestions[i]:'保持当前水平，持续监控表现'}</div>
+      </div>
+    </li>`;
+  });
+  list.innerHTML=html;
+}
+
+function saveData(scores){
+  try{localStorage.setItem('jx_ad_creative_scorecard',JSON.stringify(scores))}catch(e){}
+}
+
+// Load saved
+try{
+  const saved=JSON.parse(localStorage.getItem('jx_ad_creative_scorecard'));
+  if(saved&&saved.length===10){
+    saved.forEach((v,i)=>{document.getElementById('dim'+i).value=v});
+  }
+}catch(e){}
+
+calcScore();
+</script>
+</body>
+</html>

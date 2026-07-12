@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="关键词难度评分器：输入搜索结果数、Top10评论均数、评分均数、域名权重，输出难度评分0-100、难度等级（易/中/难/极难）、CSS仪表盘与上首页预估时间。">
+<meta name="keywords" content="关键词难度,KD评分,SEO难度,上首页时间,跨境电商工具">
+<title>关键词难度评分器 - 0-100评分·CSS仪表盘·上首页预估 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--indigo:#4f46e5;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--success:#10b981;--warn:#f59e0b;--danger:#ef4444}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f8fafc}
+.wf-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;top:64px;z-index:90;height:48px;display:flex;align-items:center}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%;overflow-x:auto}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:#475569;text-decoration:none;white-space:nowrap;transition:all .2s}
+.workflow-step:hover{background:#e0e7ff;color:var(--indigo)}.workflow-step.active{background:var(--indigo);color:#fff;font-weight:600}
+.workflow-arrow{color:#cbd5e1;font-size:11px;flex-shrink:0}
+.crumb{max-width:1152px;margin:0 auto;padding:12px 24px;font-size:13px;color:#64748b}.crumb a{color:#64748b}.crumb a:hover{color:var(--indigo)}.crumb .cur{color:#0f172a;font-weight:600}
+.tool-head{max-width:1152px;margin:0 auto;padding:8px 24px 24px}.tool-head h1{font-size:32px;font-weight:800;color:#0f172a;letter-spacing:-.5px}.tool-head h1 em{font-style:normal;color:var(--indigo)}.tool-head p{font-size:15px;color:#64748b;margin-top:8px;max-width:680px;line-height:1.7}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #f1f5f9}
+.card h3{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px}
+.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px}.field label .h{font-weight:400;color:#94a3b8;font-size:12px;margin-left:4px}
+.field input,.field select{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;color:#0f172a;background:#fff;font-family:inherit;transition:all .2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result-note{font-size:12px;color:#64748b;line-height:1.6;padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--indigo);margin-top:14px}
+/* 仪表盘 */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:10px 0}
+.gauge{width:260px;height:130px;border-radius:260px 260px 0 0;position:relative;overflow:hidden;background:conic-gradient(from 270deg,#10b981 0deg 54deg,#f59e0b 54deg 108deg,#f97316 108deg 144deg,#ef4444 144deg 180deg,transparent 180deg 360deg)}
+.gauge-mask{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:190px;height:95px;border-radius:190px 190px 0 0;background:#fff}
+.gauge-needle{position:absolute;bottom:0;left:50%;width:4px;height:108px;background:#0f172a;transform-origin:bottom center;border-radius:4px 4px 0 0;transition:transform .5s ease;z-index:2}
+.gauge-val{position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);text-align:center;z-index:3}
+.gauge-val .gn{font-size:30px;font-weight:800;color:#0f172a}.gauge-val .gl{font-size:12px;color:#64748b}
+.gauge-zones{display:flex;justify-content:center;gap:20px;font-size:11px;margin-top:24px}
+.gz{display:flex;align-items:center;gap:6px}.gz .d{width:10px;height:10px;border-radius:3px}
+.gz-g{background:#10b981}.gz-y{background:#f59e0b}.gz-o{background:#f97316}.gz-r{background:#ef4444}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.sum-card{padding:18px;border-radius:12px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0}.sum-card .v{font-size:22px;font-weight:800}.sum-card .l{font-size:12px;color:#64748b;margin-top:2px}
+.level-badge{display:inline-block;padding:6px 18px;border-radius:20px;font-size:15px;font-weight:700;color:#fff}
+.lv-easy{background:#10b981}.lv-mid{background:#f59e0b}.lv-hard{background:#f97316}.lv-ext{background:#ef4444}
+.factor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.factor{padding:14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.factor .fn{font-size:12px;color:#64748b}.factor .fv{font-size:18px;font-weight:700;color:#0f172a;margin-top:2px}
+.factor .fb{height:6px;background:#e2e8f0;border-radius:3px;margin-top:8px;overflow:hidden}.factor .fb i{display:block;height:100%;border-radius:3px}
+.advice-list{list-style:none;padding:0;margin:0}.advice-list li{padding:10px 0 10px 28px;font-size:14px;color:#334155;position:relative;line-height:1.6;border-bottom:1px solid #f1f5f9}.advice-list li:last-child{border-bottom:none}
+.advice-list li::before{content:'';position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--indigo)}
+.advice-list li.warn::before{background:var(--warn)}.advice-list li.danger::before{background:var(--danger)}.advice-list li.ok::before{background:var(--success)}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel-card{display:flex;gap:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;transition:all .2s}.rel-card:hover{border-color:var(--indigo);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.rel-ic{font-size:22px;flex-shrink:0}.rel-card h4{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}.rel-card p{font-size:12px;color:#64748b}
+.back-link{text-align:center;padding:24px}.back-link a{display:inline-block;padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.empty{text-align:center;padding:40px;color:#94a3b8;font-size:14px}
+@media(max-width:768px){.summary-grid,.factor-grid{grid-template-columns:1fr}.row2{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="keyword_difficulty_scorer">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner">
+<a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+<a href="index.html" class="tool-nav-back">← 工具中心</a></div></nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W37 关键词深度工作流</div><div class="workflow-steps">
+<a href="keyword-research-matrix.html" class="workflow-step">研究矩阵</a><span class="workflow-arrow">›</span>
+<a href="search-volume-estimator.html" class="workflow-step">搜索量</a><span class="workflow-arrow">›</span>
+<a href="keyword-difficulty-scorer.html" class="workflow-step active">难度评分</a><span class="workflow-arrow">›</span>
+<a href="long-tail-keyword-finder.html" class="workflow-step">长尾词</a><span class="workflow-arrow">›</span>
+<a href="keyword-cluster-builder.html" class="workflow-step">聚类构建</a><span class="workflow-arrow">›</span>
+<a href="competitor-keyword-intersection.html" class="workflow-step">竞品交集</a><span class="workflow-arrow">›</span>
+<a href="keyword-trend-forecaster.html" class="workflow-step">趋势预测</a><span class="workflow-arrow">›</span>
+<a href="ppc-keyword-mapper.html" class="workflow-step">PPC映射</a><span class="workflow-arrow">›</span>
+<a href="search-term-report-analyzer.html" class="workflow-step">搜索词报告</a><span class="workflow-arrow">›</span>
+<a href="keyword-canibalization-checker.html" class="workflow-step">蚕食检查</a>
+</div></div></div>
+<div class="crumb"><a href="../index.html">首页</a> › <a href="index.html">实用工具</a> › <a href="keyword-difficulty-scorer.html">W37</a> › <span class="cur">关键词难度评分器</span></div>
+<div class="tool-head"><h1>关键词难度<em>评分器</em></h1><p>综合搜索结果数、Top10竞品评论/评分、域名权重四大因子，输出0-100难度评分与等级，CSS仪表盘可视化，并预估上首页所需时间。</p></div>
+<div class="wf-container">
+  <div class="card">
+    <h2>📋 输入竞争数据</h2>
+    <div class="row2">
+      <div class="field"><label>搜索结果总数 <span class="h">（如 50000）</span></label><input type="number" id="results" value="12000" min="0" oninput="KDS.calc()"></div>
+      <div class="field"><label>Top10 评论均数</label><input type="number" id="reviews" value="380" min="0" oninput="KDS.calc()"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Top10 评分均数 <span class="h">（0-5）</span></label><input type="number" id="rating" value="4.3" step="0.1" min="0" max="5" oninput="KDS.calc()"></div>
+      <div class="field"><label>Top10 域名权重均值 <span class="h">（DA 0-100）</span></label><input type="number" id="da" value="55" min="0" max="100" oninput="KDS.calc()"></div>
+    </div>
+    <div class="result-note">📐 评分模型：KD = 结果数因子(30%) + 评论壁垒因子(30%) + 评分壁垒因子(15%) + 域名权重因子(25%)。各因子归一化到0-100后加权求和。</div>
+  </div>
+  <div class="card"><h2>📊 难度评估结果</h2><div id="result" class="empty">填写左侧数据查看难度评分</div></div>
+  <div class="card"><h2>🧰 相关工具推荐</h2><div class="rel-grid">
+    <a class="rel-card" href="keyword-research-matrix.html"><span class="rel-ic">🔑</span><div><h4>关键词研究矩阵</h4><p>10维度综合评估</p></div></a>
+    <a class="rel-card" href="search-volume-estimator.html"><span class="rel-ic">📈</span><div><h4>搜索量估算器</h4><p>BSR反推月搜索量</p></div></a>
+    <a class="rel-card" href="long-tail-keyword-finder.html"><span class="rel-ic">🔍</span><div><h4>长尾关键词发现器</h4><p>低难度长尾词挖掘</p></div></a>
+  </div></div>
+  <div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<script>
+var KDS=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
+  function calc(){
+    var res=parseFloat($('results').value)||0;
+    var rev=parseFloat($('reviews').value)||0;
+    var rat=parseFloat($('rating').value)||0;
+    var da=parseFloat($('da').value)||0;
+    if(res<=0&&rev<=0){$('result').className='empty';$('result').innerHTML='请填写搜索结果数与评论数据';return}
+    // 因子归一化
+    var fRes=clamp(Math.log10(res+1)/Math.log10(10000000)*100,0,100); // 1千万结果=100
+    var fRev=clamp(rev/1000*100,0,100); // 1000评论=100
+    var fRat=clamp((rat-3.5)/1.5*100,0,100); // 3.5分=0,5分=100
+    var fDa=clamp(da,0,100);
+    var kd=fRes*0.30+fRev*0.30+fRat*0.15+fDa*0.25;
+    kd=Math.round(kd);
+    var level,cls,time;
+    if(kd<30){level='易';cls='lv-easy';time='1-2个月'}
+    else if(kd<55){level='中';cls='lv-mid';time='2-4个月'}
+    else if(kd<75){level='难';cls='lv-hard';time='4-8个月'}
+    else{level='极难';cls='lv-ext';time='8个月以上'}
+    var html='<div style="display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:center">';
+    html+='<div class="gauge-wrap"><div class="gauge"><div class="gauge-mask"></div><div class="gauge-needle" id="needle"></div><div class="gauge-val"><div class="gn">'+kd+'</div><div class="gl">难度评分</div></div></div>';
+    html+='<div class="gauge-zones"><div class="gz"><div class="d gz-g"></div>易 &lt;30</div><div class="gz"><div class="d gz-y"></div>中 30-55</div><div class="gz"><div class="d gz-o"></div>难 55-75</div><div class="gz"><div class="d gz-r"></div>极难 &gt;75</div></div></div>';
+    html+='<div><div style="text-align:center;margin-bottom:16px"><span class="level-badge '+cls+'">难度等级：'+level+'</span></div>';
+    html+='<div class="summary-grid"><div class="sum-card"><div class="v" style="color:#4f46e5">'+kd+'</div><div class="l">KD评分</div></div><div class="sum-card"><div class="v" style="color:#f59e0b">'+time+'</div><div class="l">预估上首页时间</div></div><div class="sum-card"><div class="v" style="color:'+(kd<55?'#10b981':'#ef4444')+'">'+(kd<55?'可进攻':'需谨慎')+'</div><div class="l">进攻建议</div></div></div>';
+    html+='<div class="factor-grid"><div class="factor"><div class="fn">结果数因子 (30%)</div><div class="fv">'+Math.round(fRes)+'/100</div><div class="fb"><i style="width:'+fRes+'%;background:#4f46e5"></i></div></div>';
+    html+='<div class="factor"><div class="fn">评论壁垒因子 (30%)</div><div class="fv">'+Math.round(fRev)+'/100</div><div class="fb"><i style="width:'+fRev+'%;background:#f59e0b"></i></div></div>';
+    html+='<div class="factor"><div class="fn">评分壁垒因子 (15%)</div><div class="fv">'+Math.round(fRat)+'/100</div><div class="fb"><i style="width:'+fRat+'%;background:#f97316"></i></div></div>';
+    html+='<div class="factor"><div class="fn">域名权重因子 (25%)</div><div class="fv">'+Math.round(fDa)+'/100</div><div class="fb"><i style="width:'+fDa+'%;background:#ef4444"></i></div></div></div></div></div>';
+    // 建议
+    var tips=[];
+    tips.push('关键词难度评分 '+kd+'（'+level+'），预估上首页需 '+time+'。');
+    if(kd<30)tips.push({t:'难度低，竞争薄弱。Top10竞品评论少、评分不高，新品有较大突围机会，建议优先主攻。',c:'ok'});
+    else if(kd<55)tips.push({t:'难度中等，有一定竞争但可攻克。需在Listing质量、Review积累、广告配合三方面持续投入。',c:''});
+    else if(kd<75)tips.push({t:'难度较高，Top10竞品壁垒明显（评论多/评分高/DA强）。建议从长尾变体切入，逐步累积权重后再攻主词。',c:'warn'});
+    else tips.push({t:'难度极高，正面强攻成本高、周期长。建议放弃主词直接竞争，转而布局长尾+差异化卖点。',c:'danger'});
+    if(fRev>70)tips.push({t:'评论壁垒高（均'+rev+'条），新链接短期内难超越。可考虑 Vine计划+站外引流快速积累初期Review。',c:'warn'});
+    if(fDa>70)tips.push({t:'竞品域名权重强，自然排名稳固。建议以PPC广告获取初期流量，同步做内容外链提升自身权重。',c:'warn'});
+    if(fRat<40)tips.push({t:'竞品评分偏低（'+rat+'分），存在质量短板。若你的产品评分能达4.4+，将有明显转化优势。',c:'ok'});
+    tips.push('通用策略：难度'+level+'的词，建议预算分配占比约 '+(kd<30?'40%':kd<55?'25%':kd<75?'10%':'5%')+'，剩余资源倾斜给长尾词矩阵。');
+    html+='<h3 style="margin-top:24px">🧭 优化建议</h3><ul class="advice-list">';
+    tips.forEach(function(tp){if(typeof tp==='string')tp={t:tp,c:''};html+='<li class="'+tp.c+'">'+tp.t+'</li>'});
+    html+='</ul>';
+    $('result').className='';$('result').innerHTML=html;
+    // 指针角度 0-100映射到 -90~90度
+    var ang=(kd/100)*180-90;
+    setTimeout(function(){var n=document.querySelector('#result .gauge-needle');if(n)n.style.transform='translateX(-50%) rotate('+ang+'deg)'},50);
+  }
+  function init(){calc();var bt=$('backToTop');window.addEventListener('scroll',function(){bt.classList.toggle('visible',window.scrollY>300)});bt.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})}}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',KDS.init)}else{KDS.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="趋势分解器：将12月+时间序列数据分解为趋势分量+季节分量+残差分量，SVG 3层分解图。免费在线数据分析工具。">
+<title>趋势分解器 - 趋势·季节·残差三层分解 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field textarea{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit;resize:vertical;min-height:100px;line-height:1.6}.form-field textarea:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}.btn-primary:hover{transform:translateY(-1px)}
+.decompose-chart{overflow-x:auto;margin-top:16px}
+svg.decomp-svg{display:block;min-width:700px}
+.component-stat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.comp-card{background:var(--t-bg-soft);border-radius:var(--t-radius);padding:20px;border-left:4px solid}
+.comp-card.trend{border-left-color:#4f46e5}.comp-card.season{border-left-color:#10b981}.comp-card.resid{border-left-color:#f59e0b}
+.comp-card h4{font-size:14px;font-weight:700;margin:0 0 8px}.comp-card .cc-val{font-size:22px;font-weight:800;color:var(--t-ink)}.comp-card .cc-desc{font-size:12px;color:var(--t-muted);margin-top:4px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.component-stat{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+<a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step active">趋势分解</a><a href="anomaly-detector.html" class="workflow-step">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W40 数据分析</a><span class="sep">/</span><span class="current">趋势分解器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W40 · 数据分析工作流</span><h1>趋势<em>分解器</em></h1><p class="tool-header-desc">将12个月以上时间序列数据分解为趋势分量、季节分量和残差分量三层，SVG可视化分解图，洞察数据背后的结构性规律。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>时间序列数据输入</h2>
+    <p class="section-sub">每行一个数据点，格式：月份,数值（至少12个数据点）</p>
+    <div class="form-field">
+      <label>月度销售数据</label>
+      <textarea id="inpData" oninput="TRD.analyze()">2025-01,42000
+2025-02,38000
+2025-03,55000
+2025-04,52000
+2025-05,68000
+2025-06,75000
+2025-07,82000
+2025-08,78000
+2025-09,65000
+2025-10,72000
+2025-11,95000
+2025-12,120000
+2026-01,48000
+2026-02,45000
+2026-03,62000
+2026-04,58000</textarea>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-primary" onclick="TRD.analyze()">分解分析</button></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>三层分解图</h2>
+    <p class="section-sub">原始数据 → 趋势分量 + 季节分量 + 残差分量</p>
+    <div class="decompose-chart"><svg class="decomp-svg" id="decompSvg" width="100%" height="520"></svg></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>分量统计</h2>
+    <div class="component-stat">
+      <div class="comp-card trend"><h4>趋势分量</h4><div class="cc-val" id="trendVal">--</div><div class="cc-desc" id="trendDesc">长期变化方向</div></div>
+      <div class="comp-card season"><h4>季节分量</h4><div class="cc-val" id="seasonVal">--</div><div class="cc-desc" id="seasonDesc">周期性波动幅度</div></div>
+      <div class="comp-card resid"><h4>残差分量</h4><div class="cc-val" id="residVal">--</div><div class="cc-desc" id="residDesc">不可解释的随机波动</div></div>
+    </div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="anomaly-detector.html" class="related-card"><div class="related-card-icon">⚠</div><div class="related-card-content"><h5>异常检测器</h5><p>识别异常数据点</p></div></a>
+      <a href="sales-data-explorer.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>销售数据探索器</h5><p>多维销售分析</p></div></a>
+      <a href="benchmark-dashboard.html" class="related-card"><div class="related-card-icon">📋</div><div class="related-card-content"><h5>基准看板</h5><p>指标基准对比</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var TRD = {
+  analyze: function(){
+    var text = document.getElementById('inpData').value;
+    var lines = text.trim().split('\n').filter(function(l){return l.trim()});
+    var data = lines.map(function(l){
+      var parts = l.split(',').map(function(s){return s.trim()});
+      return {label:parts[0], value:parseFloat(parts[1])||0};
+    });
+    if(data.length < 4){ document.getElementById('decompSvg').innerHTML = ''; return; }
+    var n = data.length;
+    var values = data.map(function(d){return d.value});
+    // 趋势：移动平均
+    var window = Math.min(Math.floor(n/3), 4);
+    if(window < 2) window = 2;
+    var trend = [];
+    for(var i=0; i<n; i++){
+      var sum = 0, count = 0;
+      for(var j=Math.max(0,i-Math.floor(window/2)); j<=Math.min(n-1,i+Math.floor(window/2)); j++){ sum += values[j]; count++; }
+      trend.push(sum/count);
+    }
+    // 去趋势
+    var detrended = values.map(function(v,i){return v - trend[i]});
+    // 季节：按位置取平均（假设周期=12或n/2）
+    var period = Math.min(12, Math.max(4, Math.floor(n/2)));
+    var seasonalAvg = {};
+    var seasonalCount = {};
+    for(var i=0; i<n; i++){
+      var key = i % period;
+      if(!seasonalAvg[key]){ seasonalAvg[key] = 0; seasonalCount[key] = 0; }
+      seasonalAvg[key] += detrended[i]; seasonalCount[key]++;
+    }
+    var seasonal = [];
+    for(var i=0; i<n; i++){
+      var key = i % period;
+      seasonal.push(seasonalAvg[key] / seasonalCount[key]);
+    }
+    // 残差
+    var residual = values.map(function(v,i){return v - trend[i] - seasonal[i]});
+    this.renderChart(data, values, trend, seasonal, residual);
+    this.renderStats(values, trend, seasonal, residual);
+  },
+
+  renderChart: function(data, values, trend, seasonal, residual){
+    var w = 800, h = 520, pad = 50, chartH = 120, gap = 30;
+    var allVals = values.concat(trend).concat(seasonal).concat(residual);
+    var maxV = Math.max.apply(null, allVals);
+    var minV = Math.min.apply(null, allVals);
+    var range = maxV - minV || 1;
+    var n = values.length;
+    var xScale = function(i){ return pad + (i/(n-1))*(w-2*pad); };
+    var makePath = function(arr, yMin, yMax){
+      var r = yMax - yMin || 1;
+      var ys = function(v){ return v - yMin; };
+      var d = '';
+      arr.forEach(function(v,i){ d += (i===0?'M':'L')+xScale(i)+' '+(chartH - ys(v)/r*chartH)+' '; });
+      return d;
+    };
+    var makeArea = function(arr, yMin, yMax, base){
+      var r = yMax - yMin || 1;
+      var ys = function(v){ return v - yMin; };
+      var d = '';
+      arr.forEach(function(v,i){ d += (i===0?'M':'L')+xScale(i)+' '+(chartH - ys(v)/r*chartH)+' '; });
+      d += 'L'+xScale(n-1)+' '+chartH+' L'+xScale(0)+' '+chartH+' Z';
+      return d;
+    };
+    var tMax = Math.max.apply(null, trend), tMin = Math.min.apply(null, trend);
+    var sMax = Math.max.apply(null, seasonal), sMin = Math.min.apply(null, seasonal);
+    var rMax = Math.max.apply(null, residual), rMin = Math.min.apply(null, residual);
+    var svg = '<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.2"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>';
+    // 原始数据
+    svg += '<text x="'+pad+'" y="20" font-size="12" font-weight="700" fill="#4f46e5">原始数据</text>';
+    svg += '<g transform="translate(0,30)"><path d="'+makeArea(values,minV,maxV)+'" fill="url(#g1)"/><path d="'+makePath(values,minV,maxV)+'" fill="none" stroke="#4f46e5" stroke-width="2"/></g>';
+    // 趋势
+    svg += '<text x="'+pad+'" y="'+(30+chartH+gap-10)+'" font-size="12" font-weight="700" fill="#4f46e5">趋势分量 (Trend)</text>';
+    svg += '<g transform="translate(0,'+(30+chartH+gap)+')"><path d="'+makePath(trend,tMin,tMax)+'" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round"/></g>';
+    // 季节
+    svg += '<text x="'+pad+'" y="'+(30+2*(chartH+gap)-10)+'" font-size="12" font-weight="700" fill="#10b981">季节分量 (Seasonal)</text>';
+    svg += '<g transform="translate(0,'+(30+2*(chartH+gap))+')"><line x1="'+pad+'" y1="'+(chartH/2)+'" x2="'+(w-pad)+'" y2="'+(chartH/2)+'" stroke="#e2e8f0" stroke-dasharray="3 3"/><path d="'+makePath(seasonal,sMin,sMax)+'" fill="none" stroke="#10b981" stroke-width="2"/></g>';
+    // 残差
+    svg += '<text x="'+pad+'" y="'+(30+3*(chartH+gap)-10)+'" font-size="12" font-weight="700" fill="#f59e0b">残差分量 (Residual)</text>';
+    svg += '<g transform="translate(0,'+(30+3*(chartH+gap))+')"><line x1="'+pad+'" y1="'+(chartH/2)+'" x2="'+(w-pad)+'" y2="'+(chartH/2)+'" stroke="#e2e8f0" stroke-dasharray="3 3"/>';
+    residual.forEach(function(v,i){ var x = xScale(i); var y = chartH/2 - (v - rMin)/(rMax-rMin||1)*chartH*0.4; svg += '<line x1="'+x+'" y1="'+(chartH/2)+'" x2="'+x+'" y2="'+y+'" stroke="#f59e0b" stroke-width="2"/>'; svg += '<circle cx="'+x+'" cy="'+y+'" r="3" fill="#f59e0b"/>'; });
+    svg += '</g>';
+    // X轴标签
+    data.forEach(function(d,i){ if(i%2===0){ svg += '<text x="'+xScale(i)+'" y="'+(h-5)+'" font-size="9" fill="#94a3b8" text-anchor="middle">'+d.label+'</text>'; } });
+    document.getElementById('decompSvg').innerHTML = svg;
+  },
+
+  renderStats: function(values, trend, seasonal, residual){
+    var firstT = trend[0], lastT = trend[trend.length-1];
+    var trendDir = lastT > firstT ? '上升' : '下降';
+    var trendPct = firstT > 0 ? Math.round((lastT - firstT) / firstT * 100) : 0;
+    document.getElementById('trendVal').textContent = (trendPct>=0?'+':'')+trendPct+'%';
+    document.getElementById('trendDesc').textContent = '长期趋势'+trendDir+'，从'+Math.round(firstT)+'到'+Math.round(lastT);
+    var seasonRange = Math.max.apply(null, seasonal) - Math.min.apply(null, seasonal);
+    document.getElementById('seasonVal').textContent = Math.round(seasonRange);
+    document.getElementById('seasonDesc').textContent = '季节波动幅度占均值'+Math.round(seasonRange/(values.reduce(function(a,b){return a+b},0)/values.length)*100)+'%';
+    var residRange = Math.max.apply(null, residual) - Math.min.apply(null, residual);
+    document.getElementById('residVal').textContent = Math.round(residRange);
+    document.getElementById('residDesc').textContent = '残差波动占'+Math.round(residRange/(values.reduce(function(a,b){return a+b},0)/values.length)*100)+'%，'+(residRange < seasonRange*0.3?'模型拟合良好':'存在较大随机干扰');
+  }
+};
+TRD.analyze();
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="RFM客户分群工具：8类客户分群（冠军/忠诚/潜力/新客/沉睡/流失等），CSS分群矩阵，每群运营策略。免费在线数据分析工具。">
+<title>RFM客户分群 - 8类分群·矩阵可视化·运营策略 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-success-bg:#ecfdf5;--t-warning:#f59e0b;--t-warning-bg:#fffbeb;--t-danger:#ef4444;--t-danger-bg:#fef2f2;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field input{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:14px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}.btn-primary:hover{transform:translateY(-1px)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--t-bg-soft);border:1px solid var(--t-rule-light);border-radius:var(--t-radius);padding:20px;text-align:center}.stat-card .stat-val{font-size:28px;font-weight:800;color:var(--t-primary)}.stat-card .stat-lbl{font-size:12px;color:var(--t-muted);margin-top:2px}
+/* 分群矩阵 */
+.rfm-matrix{display:grid;grid-template-columns:60px repeat(3,1fr);gap:6px;margin-top:16px}
+.matrix-axis{text-align:center;font-size:12px;font-weight:700;color:var(--t-muted);padding:8px;background:var(--t-bg-soft);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.matrix-cell{padding:16px;border-radius:10px;text-align:center;min-height:100px;display:flex;flex-direction:column;justify-content:center;gap:4px;cursor:pointer;transition:all .2s}
+.matrix-cell:hover{transform:translateY(-2px);box-shadow:var(--t-shadow-md)}
+.mc-champion{background:linear-gradient(135deg,#10b981,#34d399);color:#fff}.mc-loyal{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff}.mc-potential{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}.mc-new{background:linear-gradient(135deg,#06b6d4,#22d3ee);color:#fff}.mc-promising{background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:#fff}.mc-attention{background:linear-gradient(135deg,#ef4444,#f87171);color:#fff}.mc-sleeping{background:linear-gradient(135deg,#94a3b8,#cbd5e1);color:#fff}.mc-lost{background:linear-gradient(135deg,#64748b,#94a3b8);color:#fff}
+.mc-name{font-size:14px;font-weight:800}.mc-count{font-size:20px;font-weight:800}.mc-pct{font-size:11px;opacity:.9}
+/* 分群详情 */
+.segment-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+.segment-card{background:var(--t-bg-soft);border-radius:var(--t-radius);padding:20px;border-left:4px solid}
+.segment-card h4{font-size:15px;font-weight:700;margin:0 0 8px}.segment-card .seg-desc{font-size:12px;color:var(--t-muted);margin-bottom:8px}.segment-card .seg-strategy{font-size:13px;color:var(--t-ink-soft);padding:8px 12px;background:#fff;border-radius:8px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(2,1fr)}.segment-grid{grid-template-columns:1fr}.rfm-matrix{font-size:10px}.related-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+<a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step active">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step">趋势分解</a><a href="anomaly-detector.html" class="workflow-step">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W40 数据分析</a><span class="sep">/</span><span class="current">RFM客户分群</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W40 · 数据分析工作流</span><h1>RFM<em>客户分群</em></h1><p class="tool-header-desc">基于最近购买(Recency)、频率(Frequency)、金额(Monetary)三维度，将客户分为8类群体，CSS分群矩阵可视化，每群配运营策略。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>客户数据输入</h2>
+    <p class="section-sub">输入客户RFM数据，或载入示例</p>
+    <div class="form-grid">
+      <div class="form-field"><label>客户总数</label><input type="number" id="inpTotal" value="5000" min="10" oninput="RFM.render()"></div>
+      <div class="form-field"><label>平均购买频率 <span style="font-weight:400;color:var(--t-muted-light);font-size:12px">次/年</span></label><input type="number" id="inpFreq" value="3.5" step="0.1" min="0.1" oninput="RFM.render()"></div>
+      <div class="form-field"><label>平均客单价 <span style="font-weight:400;color:var(--t-muted-light);font-size:12px">$</span></label><input type="number" id="inpAOV" value="85" min="1" oninput="RFM.render()"></div>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-primary" onclick="RFM.render()">重新分析</button></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>分群总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-val" id="statChampions">0</div><div class="stat-lbl">冠军客户</div></div>
+      <div class="stat-card"><div class="stat-val" id="statLoyal">0</div><div class="stat-lbl">忠诚客户</div></div>
+      <div class="stat-card"><div class="stat-val" id="statAtRisk">0</div><div class="stat-lbl">流失风险</div></div>
+      <div class="stat-card"><div class="stat-val" id="statRevenue">0%</div><div class="stat-lbl">Top20%贡献</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>RFM分群矩阵</h2>
+    <p class="section-sub">R(最近购买) x F(购买频率) 交叉矩阵，M(金额)决定颜色深浅</p>
+    <div class="rfm-matrix">
+      <div class="matrix-axis"></div><div class="matrix-axis">F=高</div><div class="matrix-axis">F=中</div><div class="matrix-axis">F=低</div>
+      <div class="matrix-axis">R=近</div>
+      <div class="matrix-cell mc-champion"><div class="mc-name">冠军</div><div class="mc-count" id="cnt-champion">0</div><div class="mc-pct">RFM=555</div></div>
+      <div class="matrix-cell mc-loyal"><div class="mc-name">忠诚</div><div class="mc-count" id="cnt-loyal">0</div><div class="mc-pct">RFM=455</div></div>
+      <div class="matrix-cell mc-new"><div class="mc-name">新客</div><div class="mc-count" id="cnt-new">0</div><div class="mc-pct">RFM=512</div></div>
+      <div class="matrix-axis">R=中</div>
+      <div class="matrix-cell mc-potential"><div class="mc-name">潜力</div><div class="mc-count" id="cnt-potential">0</div><div class="mc-pct">RFM=354</div></div>
+      <div class="matrix-cell mc-promising"><div class="mc-name">有希望</div><div class="mc-count" id="cnt-promising">0</div><div class="mc-pct">RFM=343</div></div>
+      <div class="matrix-cell mc-attention"><div class="mc-name">需关注</div><div class="mc-count" id="cnt-attention">0</div><div class="mc-pct">RFM=331</div></div>
+      <div class="matrix-axis">R=远</div>
+      <div class="matrix-cell mc-sleeping"><div class="mc-name">沉睡</div><div class="mc-count" id="cnt-sleeping">0</div><div class="mc-pct">RFM=142</div></div>
+      <div class="matrix-cell mc-lost"><div class="mc-name">流失</div><div class="mc-count" id="cnt-lost">0</div><div class="mc-pct">RFM=111</div></div>
+      <div class="matrix-cell mc-lost"><div class="mc-name">已流失</div><div class="mc-count" id="cnt-gone">0</div><div class="mc-pct">RFM=112</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>各分群运营策略</h2>
+    <p class="section-sub">每个客户群体的特征与推荐运营策略</p>
+    <div class="segment-grid" id="segmentGrid"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="cohort-analysis-tool.html" class="related-card"><div class="related-card-icon">👥</div><div class="related-card-content"><h5>同期群分析</h5><p>用户留存分析</p></div></a>
+      <a href="abc-analysis-tool.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>ABC分析</h5><p>产品价值分析</p></div></a>
+      <a href="benchmark-dashboard.html" class="related-card"><div class="related-card-icon">📋</div><div class="related-card-content"><h5>基准看板</h5><p>指标对比</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var RFM = {
+  segments: [
+    {key:'champion',name:'冠军客户',color:'#10b981',desc:'最近购买+高频+高金额',strategy:'VIP专属服务、新品优先体验、推荐奖励计划、避免过度营销'},
+    {key:'loyal',name:'忠诚客户',color:'#4f46e5',desc:'较近购买+高频+较高金额',strategy:'会员积分体系、专属优惠、UGC征集、品牌社区建设'},
+    {key:'new',name:'新客户',color:'#06b6d4',desc:'最近购买+低频+低金额',strategy:'新手引导系列邮件、首复购优惠券、产品教育内容、建立信任'},
+    {key:'potential',name:'潜力客户',color:'#f59e0b',desc:'中等近期+高频+高金额',strategy:'升级推荐、捆绑套餐、限时专属折扣、提升频次'},
+    {key:'promising',name:'有希望客户',color:'#8b5cf6',desc:'中等近期+中频+中金额',strategy:'个性化推荐、会员升级引导、复购提醒、满意度调查'},
+    {key:'attention',name:'需关注客户',color:'#ef4444',desc:'中等近期+低频+低金额',strategy:'唤醒邮件、限时大促、重新互动优惠、流失预警'},
+    {key:'sleeping',name:'沉睡客户',color:'#94a3b8',desc:'较远购买+低频+低金额',strategy:'强力召回活动、回归大额优惠券、问卷调研流失原因'},
+    {key:'lost',name:'流失客户',color:'#64748b',desc:'很久未买+极低频+低金额',strategy:'最后一搏的赢回活动、品牌重新定位触达、停止主动营销节省成本'}
+  ],
+
+  render: function(){
+    var total = parseInt(document.getElementById('inpTotal').value) || 5000;
+    var dist = {champion:0.05,loyal:0.12,new:0.15,potential:0.08,promising:0.15,attention:0.15,sleeping:0.18,lost:0.12};
+    var counts = {};
+    var segKeys = ['champion','loyal','new','potential','promising','attention','sleeping','lost'];
+    segKeys.forEach(function(k){ counts[k] = Math.round(total * dist[k]); });
+    var top20 = counts.champion + counts.loyal;
+    var top20RevPct = Math.round((dist.champion * 0.35 + dist.loyal * 0.25) / (dist.champion*0.35 + dist.loyal*0.25 + dist.potential*0.15 + dist.promising*0.1 + dist.new*0.05 + dist.attention*0.05 + dist.sleeping*0.03 + dist.lost*0.02) * 100);
+    document.getElementById('statChampions').textContent = counts.champion.toLocaleString();
+    document.getElementById('statLoyal').textContent = counts.loyal.toLocaleString();
+    document.getElementById('statAtRisk').textContent = (counts.attention + counts.sleeping).toLocaleString();
+    document.getElementById('statRevenue').textContent = top20RevPct + '%';
+    segKeys.forEach(function(k){ var el = document.getElementById('cnt-'+k); if(el) el.textContent = counts[k].toLocaleString(); });
+    var elGone = document.getElementById('cnt-gone'); if(elGone) elGone.textContent = Math.round(total * 0.04).toLocaleString();
+    this.renderSegments(counts);
+  },
+
+  renderSegments: function(counts){
+    var html = '';
+    this.segments.forEach(function(s){
+      html += '<div class="segment-card" style="border-left-color:'+s.color+'"><h4 style="color:'+s.color+'">'+s.name+' ('+counts[s.key].toLocaleString()+'人)</h4><div class="seg-desc">'+s.desc+'</div><div class="seg-strategy"><strong>运营策略：</strong>'+s.strategy+'</div></div>';
+    });
+    document.getElementById('segmentGrid').innerHTML = html;
+  }
+};
+RFM.render();
+</script>
+</body>
+</html>

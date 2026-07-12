@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="集中Listing管理器：统一管理多店铺Listing状态（上架/草稿/审核中/下架），状态统计饼图，批量操作建议，Listing健康度评分。">
+<meta name="keywords" content="Listing管理,多店Listing,集中管理,Listing状态,批量操作,跨境电商">
+<title>集中Listing管理器 - 统一看板·状态统计·批量操作 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--indigo:#4f46e5;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--success:#10b981;--warn:#f59e0b;--danger:#ef4444}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f8fafc}
+.wf-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;top:64px;z-index:90;height:48px;display:flex;align-items:center}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%;overflow-x:auto}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:#475569;text-decoration:none;white-space:nowrap;transition:all .2s}
+.workflow-step:hover{background:#e0e7ff;color:var(--indigo)}.workflow-step.active{background:var(--indigo);color:#fff;font-weight:600}
+.workflow-arrow{color:#cbd5e1;font-size:11px;flex-shrink:0}
+.crumb{max-width:1152px;margin:0 auto;padding:12px 24px;font-size:13px;color:#64748b}.crumb a{color:#64748b}.crumb a:hover{color:var(--indigo)}.crumb .cur{color:#0f172a;font-weight:600}
+.tool-head{max-width:1152px;margin:0 auto;padding:8px 24px 24px}.tool-head h1{font-size:32px;font-weight:800;color:#0f172a;letter-spacing:-.5px}.tool-head h1 em{font-style:normal;color:var(--indigo)}.tool-head p{font-size:15px;color:#64748b;margin-top:8px;max-width:680px;line-height:1.7}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #f1f5f9}
+.card h3{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px}
+.btn{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn-ghost{background:#fff;border:1px solid #e2e8f0;color:#475569}
+.result-note{font-size:12px;color:#64748b;line-height:1.6;padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--indigo);margin-top:14px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.sum-card{padding:18px;border-radius:12px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0;transition:transform .2s}.sum-card:hover{transform:translateY(-2px)}
+.sum-card .v{font-size:26px;font-weight:800}.sum-card .l{font-size:12px;color:#64748b;margin-top:2px}
+/* 状态标签 */
+.status-tag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.st-live{background:#d1fae5;color:#065f46}
+.st-draft{background:#f1f5f9;color:#475569}
+.st-review{background:#fef3c7;color:#92400e}
+.st-down{background:#fee2e2;color:#991b1b}
+.st-archived{background:#ede9fe;color:#5b21b6}
+/* 列表表格 */
+.listing-table{width:100%;border-collapse:collapse;font-size:13px}
+.listing-table th{padding:10px 12px;text-align:left;font-weight:700;color:#334155;background:#f8fafc;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+.listing-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;color:#475569}
+.listing-table tr:hover td{background:#fafbff}
+.sku-cell{font-weight:600;color:#0f172a;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px}
+.store-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600}
+.store-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-select{padding:5px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;color:#0f172a;background:#fff}
+.status-select:focus{outline:none;border-color:var(--indigo)}
+.row-del{color:#cbd5e1;cursor:pointer;font-size:16px;background:none;border:none;padding:4px;transition:color .2s}
+.row-del:hover{color:var(--danger)}
+.add-row-btn{margin-top:12px;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;border:1px dashed var(--indigo);background:var(--indigo-bg);color:var(--indigo);cursor:pointer;font-family:inherit;transition:all .2s}
+.add-row-btn:hover{background:var(--indigo);color:#fff}
+/* 饼图 */
+.pie-wrap{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center}
+.pie-chart{width:200px;height:200px;border-radius:50%;position:relative;flex-shrink:0}
+.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90px;height:90px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #e2e8f0}
+.pie-center .pc-num{font-size:28px;font-weight:800;color:#0f172a}
+.pie-center .pc-lbl{font-size:11px;color:#64748b}
+.pie-legend{display:flex;flex-direction:column;gap:10px}
+.legend-item{display:flex;align-items:center;gap:10px;font-size:13px;color:#334155}
+.legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0}
+.legend-val{font-weight:700;margin-left:auto;color:#0f172a}
+.legend-pct{font-size:11px;color:#94a3b8;margin-left:4px}
+/* 店铺对比柱状图 */
+.store-bars{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.store-bar-row{display:flex;align-items:center;gap:12px}
+.store-bar-label{width:100px;font-size:13px;font-weight:600;color:#0f172a;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.store-bar-track{flex:1;height:28px;border-radius:8px;background:#f1f5f9;overflow:hidden;display:flex;position:relative}
+.store-bar-seg{height:100%;transition:width .4s;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap}
+.store-bar-total{width:50px;font-size:13px;font-weight:700;color:#0f172a;text-align:right;flex-shrink:0}
+/* 健康度仪表盘 */
+.health-gauge-wrap{display:flex;align-items:center;gap:30px;justify-content:center;flex-wrap:wrap}
+.health-gauge{width:180px;height:180px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.health-gauge::before{content:'';position:absolute;width:130px;height:130px;border-radius:50%;background:#fff}
+.health-gauge-inner{position:relative;z-index:2;text-align:center}
+.health-gauge-inner .hg-num{font-size:36px;font-weight:800;line-height:1}
+.health-gauge-inner .hg-lbl{font-size:12px;color:#64748b;margin-top:4px}
+.health-info{flex:1;min-width:240px}
+.health-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px}
+.health-info-row:last-child{border-bottom:none}
+.health-info-row .hir-l{color:#64748b}
+.health-info-row .hir-v{font-weight:700;color:#0f172a}
+/* 批量操作建议 */
+.batch-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:8px;font-size:13px;border-left:4px solid}
+.batch-urgent{background:#fef2f2;border-color:#ef4444}
+.batch-warn{background:#fffbeb;border-color:#f59e0b}
+.batch-info{background:#f0f9ff;border-color:#0ea5e9}
+.batch-ok{background:#f0fdf4;border-color:#10b981}
+.batch-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.batch-body{flex:1}
+.batch-body b{color:#0f172a;display:block;margin-bottom:2px}
+.batch-body span{color:#64748b;font-size:12px;line-height:1.5}
+.batch-count{flex-shrink:0;font-size:20px;font-weight:800;color:#0f172a}
+/* 筛选器 */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #e2e8f0;background:#fff;color:#475569;transition:all .2s;font-family:inherit}
+.filter-chip:hover{border-color:var(--indigo);color:var(--indigo)}
+.filter-chip.active{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+.empty{text-align:center;padding:40px;color:#94a3b8;font-size:14px}
+.advice-list{list-style:none;padding:0;margin:0}.advice-list li{padding:10px 0 10px 28px;font-size:14px;color:#334155;position:relative;line-height:1.6;border-bottom:1px solid #f1f5f9}.advice-list li:last-child{border-bottom:none}.advice-list li::before{content:'';position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--indigo)}.advice-list li.ok::before{background:#10b981}.advice-list li.warn::before{background:#f59e0b}.advice-list li.danger::before{background:#ef4444}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel-card{display:flex;gap:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;transition:all .2s}.rel-card:hover{border-color:var(--indigo);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.rel-ic{font-size:22px;flex-shrink:0}.rel-card h4{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}.rel-card p{font-size:12px;color:#64748b}
+.back-link{text-align:center;padding:24px}.back-link a{display:inline-block;padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.back-to-top{position:fixed;right:24px;bottom:24px;width:44px;height:44px;border-radius:50%;background:var(--indigo);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(79,70,229,.3);z-index:100;opacity:0;transition:opacity .3s}
+.back-to-top.show{opacity:1}
+@media(max-width:768px){.summary-grid{grid-template-columns:1fr 1fr}.pie-wrap{flex-direction:column}.health-gauge-wrap{flex-direction:column}.listing-table{font-size:12px}.listing-table th,.listing-table td{padding:6px 8px}.rel-grid{grid-template-columns:1fr}.store-bar-label{width:70px;font-size:12px}}
+</style>
+</head>
+<body class="tool-page" data-tool="centralized_listing_manager">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner">
+<a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+<a href="index.html" class="tool-nav-back">← 工具中心</a></div></nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W38 多店铺管理工作流</div><div class="workflow-steps">
+<a href="multi-store-dashboard.html" class="workflow-step">综合看板</a><span class="workflow-arrow">›</span>
+<a href="store-performance-comparison.html" class="workflow-step">绩效对比</a><span class="workflow-arrow">›</span>
+<a href="cross-store-inventory.html" class="workflow-step">跨店库存</a><span class="workflow-arrow">›</span>
+<a href="unified-profit-report.html" class="workflow-step">统一利润</a><span class="workflow-arrow">›</span>
+<a href="store-segmentation-matrix.html" class="workflow-step">店铺分层</a><span class="workflow-arrow">›</span>
+<a href="multi-store-sku-mapper.html" class="workflow-step">SKU映射</a><span class="workflow-arrow">›</span>
+<a href="region-performance-analyzer.html" class="workflow-step">区域绩效</a><span class="workflow-arrow">›</span>
+<a href="store-launch-checklist.html" class="workflow-step">上线清单</a><span class="workflow-arrow">›</span>
+<a href="multi-store-risk-monitor.html" class="workflow-step">风险监控</a><span class="workflow-arrow">›</span>
+<a href="centralized-listing-manager.html" class="workflow-step active">Listing管理</a>
+</div></div></div>
+<div class="crumb"><a href="../index.html">首页</a> › <a href="index.html">实用工具</a> › <a href="centralized-listing-manager.html">W38</a> › <span class="cur">集中Listing管理器</span></div>
+<div class="tool-head"><h1>集中Listing<em>管理器</em></h1><p>统一管理多店铺Listing的上架/草稿/审核中/下架状态，CSS饼图可视化状态分布，自动生成批量操作建议，计算Listing健康度评分，让多店Listing管理一目了然。</p></div>
+<div class="wf-container">
+  <!-- 输入区 -->
+  <div class="card">
+    <h2>📋 Listing状态管理表</h2>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="CLM.filter('all',this)">全部</button>
+      <button class="filter-chip" onclick="CLM.filter('live',this)">上架中</button>
+      <button class="filter-chip" onclick="CLM.filter('draft',this)">草稿</button>
+      <button class="filter-chip" onclick="CLM.filter('review',this)">审核中</button>
+      <button class="filter-chip" onclick="CLM.filter('down',this)">已下架</button>
+      <button class="filter-chip" onclick="CLM.filter('archived',this)">已归档</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="listing-table">
+        <thead><tr>
+          <th>SKU</th><th>Listing标题</th><th>所属店铺</th><th>状态</th><th>最后更新</th><th>操作</th>
+        </tr></thead>
+        <tbody id="listingBody"></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn" onclick="CLM.addRow()">+ 添加Listing</button>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="CLM.save()">保存到本地</button>
+      <button class="btn btn-ghost" onclick="CLM.sample()">载入示例</button>
+      <button class="btn btn-ghost" onclick="CLM.clear()">清空</button>
+    </div>
+    <div class="result-note">💡 状态说明：上架=Active（正常销售）；草稿=Draft（未提交）；审核中=In Review（等待平台审核）；下架=Inactive（主动或被动下架）；归档=Archived（不再销售）。数据自动保存到本地（localStorage）。</div>
+  </div>
+
+  <!-- 概览卡片 -->
+  <div class="card">
+    <h2>📊 状态总览</h2>
+    <div class="summary-grid">
+      <div class="sum-card"><div class="v" style="color:#10b981" id="cntLive">0</div><div class="l">上架中 Active</div></div>
+      <div class="sum-card"><div class="v" style="color:#64748b" id="cntDraft">0</div><div class="l">草稿 Draft</div></div>
+      <div class="sum-card"><div class="v" style="color:#f59e0b" id="cntReview">0</div><div class="l">审核中 Review</div></div>
+      <div class="sum-card"><div class="v" style="color:#ef4444" id="cntDown">0</div><div class="l">下架/归档</div></div>
+    </div>
+    <div id="overviewExtra" style="margin-top:8px"></div>
+  </div>
+
+  <!-- 饼图 + 店铺对比 -->
+  <div class="card">
+    <h2>🍕 状态分布饼图</h2>
+    <div id="pieResult" class="empty">请先添加Listing数据</div>
+  </div>
+
+  <div class="card">
+    <h2>🏪 各店铺Listing分布</h2>
+    <div id="storeBarResult" class="empty">请先添加Listing数据</div>
+  </div>
+
+  <!-- 健康度 -->
+  <div class="card">
+    <h2>💚 Listing健康度评分</h2>
+    <div id="healthResult" class="empty">请先添加Listing数据</div>
+  </div>
+
+  <!-- 批量操作建议 -->
+  <div class="card">
+    <h2>⚡ 批量操作建议</h2>
+    <div id="batchResult" class="empty">请先添加Listing数据</div>
+  </div>
+
+  <!-- 策略建议 -->
+  <div class="card">
+    <h2>🧭 管理策略建议</h2>
+    <ul class="advice-list" id="adviceResult"></ul>
+  </div>
+
+  <!-- 相关工具 -->
+  <div class="card"><h2>🧰 相关工具推荐</h2><div class="rel-grid">
+    <a class="rel-card" href="multi-store-dashboard.html"><span class="rel-ic">📈</span><div><h4>多店铺综合看板</h4><p>全店铺指标汇总</p></div></a>
+    <a class="rel-card" href="multi-store-sku-mapper.html"><span class="rel-ic">🔗</span><div><h4>多店SKU映射器</h4><p>统一SKU对照</p></div></a>
+    <a class="rel-card" href="store-launch-checklist.html"><span class="rel-ic">✅</span><div><h4>新店上线清单</h4><p>上线前检查</p></div></a>
+  </div></div>
+
+  <div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<script>
+var CLM=(function(){
+  'use strict';
+  var STORE_KEY='jx_listing_manager';
+  var STATUS={
+    live:{label:'上架',cls:'st-live',color:'#10b981',name:'Active'},
+    draft:{label:'草稿',cls:'st-draft',color:'#94a3b8',name:'Draft'},
+    review:{label:'审核中',cls:'st-review',color:'#f59e0b',name:'Review'},
+    down:{label:'下架',cls:'st-down',color:'#ef4444',name:'Inactive'},
+    archived:{label:'归档',cls:'st-archived',color:'#7c3aed',name:'Archived'}
+  };
+  var STORES=[
+    {name:'US Store',color:'#4f46e5'},
+    {name:'UK Store',color:'#10b981'},
+    {name:'DE Store',color:'#f59e0b'},
+    {name:'JP Store',color:'#ef4444'},
+    {name:'AU Store',color:'#0ea5e9'}
+  ];
+  var listings=[];
+  var currentFilter='all';
+
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s).replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]})}
+
+  var sampleData=[
+    {sku:'BTS-SPK-001',title:'Portable Bluetooth Speaker Pro',store:'US Store',status:'live',date:'2025-07-10'},
+    {sku:'BTS-SPK-001',title:'Portable Bluetooth Speaker Pro',store:'UK Store',status:'live',date:'2025-07-08'},
+    {sku:'BTS-SPK-001',title:'Portable Bluetooth Speaker Pro',store:'DE Store',status:'review',date:'2025-07-11'},
+    {sku:'BTS-SPK-001',title:'Portable Bluetooth Speaker Pro',store:'JP Store',status:'draft',date:'2025-07-05'},
+    {sku:'BTS-SPK-002',title:'Mini Wireless Earbuds X1',store:'US Store',status:'live',date:'2025-07-09'},
+    {sku:'BTS-SPK-002',title:'Mini Wireless Earbuds X1',store:'UK Store',status:'down',date:'2025-06-28'},
+    {sku:'BTS-SPK-002',title:'Mini Wireless Earbuds X1',store:'DE Store',status:'live',date:'2025-07-07'},
+    {sku:'BTS-SPK-003',title:'Noise Cancelling Headphones',store:'US Store',status:'live',date:'2025-07-10'},
+    {sku:'BTS-SPK-003',title:'Noise Cancelling Headphones',store:'UK Store',status:'review',date:'2025-07-11'},
+    {sku:'BTS-SPK-003',title:'Noise Cancelling Headphones',store:'JP Store',status:'live',date:'2025-07-06'},
+    {sku:'BTS-SPK-003',title:'Noise Cancelling Headphones',store:'AU Store',status:'draft',date:'2025-07-03'},
+    {sku:'BTS-SPK-004',title:'Waterproof Speaker Float',store:'US Store',status:'down',date:'2025-05-15'},
+    {sku:'BTS-SPK-004',title:'Waterproof Speaker Float',store:'DE Store',status:'live',date:'2025-07-08'},
+    {sku:'BTS-SPK-004',title:'Waterproof Speaker Float',store:'AU Store',status:'archived',date:'2025-04-20'},
+    {sku:'BTS-SPK-005',title:'Smart LED Speaker Lamp',store:'US Store',status:'live',date:'2025-07-10'},
+    {sku:'BTS-SPK-005',title:'Smart LED Speaker Lamp',store:'UK Store',status:'live',date:'2025-07-09'},
+    {sku:'BTS-SPK-005',title:'Smart LED Speaker Lamp',store:'JP Store',status:'review',date:'2025-07-12'},
+    {sku:'BTS-SPK-006',title:'Gaming RGB Headset Pro',store:'US Store',status:'draft',date:'2025-07-01'},
+    {sku:'BTS-SPK-006',title:'Gaming RGB Headset Pro',store:'DE Store',status:'draft',date:'2025-07-02'},
+    {sku:'BTS-SPK-006',title:'Gaming RGB Headset Pro',store:'AU Store',status:'live',date:'2025-07-10'}
+  ];
+
+  function load(){
+    try{
+      var s=localStorage.getItem(STORE_KEY);
+      if(s){listings=JSON.parse(s);return true}
+    }catch(e){}
+    return false;
+  }
+
+  function persist(){
+    try{localStorage.setItem(STORE_KEY,JSON.stringify(listings))}catch(e){}
+  }
+
+  function save(){
+    persist();
+    showToast('已保存到本地');
+  }
+
+  function showToast(msg){
+    var t=document.createElement('div');
+    t.textContent=msg;
+    t.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 14px rgba(16,185,129,.4);opacity:0;transition:opacity .3s';
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){t.style.opacity='1'});
+    setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove()},300)},2000);
+  }
+
+  function sample(){
+    listings=sampleData.map(function(d){return Object.assign({},d)});
+    persist();
+    renderAll();
+  }
+
+  function clear(){
+    if(confirm('确定清空所有Listing数据？')){
+      listings=[];
+      persist();
+      renderAll();
+    }
+  }
+
+  function addRow(){
+    listings.push({sku:'NEW-SKU-'+(listings.length+1),title:'新Listing',store:'US Store',status:'draft',date:new Date().toISOString().slice(0,10)});
+    persist();
+    renderAll();
+  }
+
+  function delRow(idx){
+    listings.splice(idx,1);
+    persist();
+    renderAll();
+  }
+
+  function updateRow(idx,field,val){
+    listings[idx][field]=val;
+    persist();
+    renderStats();
+    renderPie();
+    renderStoreBars();
+    renderHealth();
+    renderBatch();
+    renderAdvice();
+  }
+
+  function filter(status,btn){
+    currentFilter=status;
+    document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});
+    btn.classList.add('active');
+    renderTable();
+  }
+
+  function getFiltered(){
+    if(currentFilter==='all')return listings;
+    return listings.filter(function(l){return l.status===currentFilter});
+  }
+
+  function renderTable(){
+    var body=$('listingBody');
+    var data=getFiltered();
+    if(!data.length){
+      body.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">暂无数据，请点击"载入示例"或"添加Listing"</td></tr>';
+      return;
+    }
+    var html='';
+    data.forEach(function(l){
+      var actualIdx=listings.indexOf(l);
+      var s=STATUS[l.status]||STATUS.draft;
+      var storeInfo=STORES.find(function(st){return st.name===l.store})||STORES[0];
+      html+='<tr>'+
+        '<td class="sku-cell">'+esc(l.sku)+'</td>'+
+        '<td><input type="text" value="'+esc(l.title)+'" onchange="CLM.update('+actualIdx+',\'title\',this.value)" style="width:100%;border:none;background:transparent;font-size:13px;color:#0f172a;font-family:inherit" /></td>'+
+        '<td><span class="store-badge"><span class="store-dot" style="background:'+storeInfo.color+'"></span>'+
+        '<select onchange="CLM.update('+actualIdx+',\'store\',this.value)" style="border:none;background:transparent;font-size:12px;font-weight:600;color:#0f172a;font-family:inherit;cursor:pointer">'+
+        STORES.map(function(st){return '<option value="'+st.name+'"'+(st.name===l.store?' selected':'')+'>'+st.name+'</option>'}).join('')+
+        '</select></span></td>'+
+        '<td><select class="status-select" onchange="CLM.update('+actualIdx+',\'status\',this.value)">'+
+        Object.keys(STATUS).map(function(k){return '<option value="'+k+'"'+(k===l.status?' selected':'')+'>'+STATUS[k].label+' ('+STATUS[k].name+')</option>'}).join('')+
+        '</select></td>'+
+        '<td style="font-size:12px;color:#64748b">'+esc(l.date)+'</td>'+
+        '<td><button class="row-del" onclick="CLM.del('+actualIdx+')" title="删除">✕</button></td>'+
+        '</tr>';
+    });
+    body.innerHTML=html;
+  }
+
+  function renderStats(){
+    var counts={live:0,draft:0,review:0,down:0,archived:0};
+    listings.forEach(function(l){if(counts[l.status]!==undefined)counts[l.status]++;else counts.draft++});
+    $('cntLive').textContent=counts.live;
+    $('cntDraft').textContent=counts.draft;
+    $('cntReview').textContent=counts.review;
+    $('cntDown').textContent=counts.down+counts.archived;
+    var total=listings.length;
+    var livePct=total?Math.round(counts.live/total*100):0;
+    $('overviewExtra').innerHTML='<div class="summary-grid" style="margin-top:0">'+
+      '<div class="sum-card"><div class="v" style="color:#0f172a">'+total+'</div><div class="l">Listing总数</div></div>'+
+      '<div class="sum-card"><div class="v" style="color:#7c3aed">'+counts.archived+'</div><div class="l">已归档 Archived</div></div>'+
+      '<div class="sum-card"><div class="v" style="color:#4f46e5">'+livePct+'%</div><div class="l">上架率</div></div>'+
+      '<div class="sum-card"><div class="v" style="color:#0ea5e9">'+STORES.length+'</div><div class="l">涉及店铺数</div></div>'+
+      '</div>';
+  }
+
+  function renderPie(){
+    var total=listings.length;
+    if(!total){$('pieResult').className='empty';$('pieResult').innerHTML='请先添加Listing数据';return}
+    $('pieResult').className='';
+    var counts={live:0,draft:0,review:0,down:0,archived:0};
+    listings.forEach(function(l){if(counts[l.status]!==undefined)counts[l.status]++;else counts.draft++});
+
+    // 构建conic-gradient
+    var segs=[];
+    var cumul=0;
+    var order=['live','draft','review','down','archived'];
+    order.forEach(function(k){
+      if(counts[k]>0){
+        var start=cumul/total*360;
+        cumul+=counts[k];
+        var end=cumul/total*360;
+        segs.push(STATUS[k].color+' '+start+'deg '+end+'deg');
+      }
+    });
+    var gradient='conic-gradient('+segs.join(',')+')';
+
+    var html='<div class="pie-wrap">'+
+      '<div class="pie-chart" style="background:'+gradient+'">'+
+        '<div class="pie-center"><div class="pc-num">'+total+'</div><div class="pc-lbl">Listing总数</div></div>'+
+      '</div>'+
+      '<div class="pie-legend">';
+    order.forEach(function(k){
+      var pct=total?Math.round(counts[k]/total*100):0;
+      html+='<div class="legend-item"><span class="legend-dot" style="background:'+STATUS[k].color+'"></span>'+
+        '<span>'+STATUS[k].label+' '+STATUS[k].name+'</span>'+
+        '<span class="legend-val">'+counts[k]+'<span class="legend-pct">('+pct+'%)</span></span></div>';
+    });
+    html+='</div></div>';
+    $('pieResult').innerHTML=html;
+  }
+
+  function renderStoreBars(){
+    if(!listings.length){$('storeBarResult').className='empty';$('storeBarResult').innerHTML='请先添加Listing数据';return}
+    $('storeBarResult').className='';
+    var storeStats={};
+    STORES.forEach(function(s){storeStats[s.name]={live:0,draft:0,review:0,down:0,archived:0,total:0}});
+    listings.forEach(function(l){
+      if(!storeStats[l.store]){storeStats[l.store]={live:0,draft:0,review:0,down:0,archived:0,total:0}}
+      if(storeStats[l.store][l.status]!==undefined)storeStats[l.store][l.status]++;
+      storeStats[l.store].total++;
+    });
+
+    var html='<div class="store-bars">';
+    STORES.forEach(function(s){
+      var st=storeStats[s.name];if(!st||!st.total)return;
+      var order=['live','draft','review','down','archived'];
+      html+='<div class="store-bar-row"><div class="store-bar-label"><span class="store-dot" style="background:'+s.color+'"></span>'+s.name.replace(' Store','')+'</div>';
+      html+='<div class="store-bar-track">';
+      order.forEach(function(k){
+        if(st[k]>0){
+          var w=st[k]/st.total*100;
+          html+='<div class="store-bar-seg" style="width:'+w+'%;background:'+STATUS[k].color+'" title="'+STATUS[k].label+': '+st[k]+'">'+(w>10?st[k]:'')+'</div>';
+        }
+      });
+      html+='</div><div class="store-bar-total">'+st.total+'</div></div>';
+    });
+    html+='</div>';
+    // 图例
+    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid #f1f5f9">';
+    ['live','draft','review','down','archived'].forEach(function(k){
+      html+='<div class="legend-item"><span class="legend-dot" style="background:'+STATUS[k].color+'"></span><span style="font-size:12px">'+STATUS[k].label+'</span></div>';
+    });
+    html+='</div>';
+    $('storeBarResult').innerHTML=html;
+  }
+
+  function renderHealth(){
+    if(!listings.length){$('healthResult').className='empty';$('healthResult').innerHTML='请先添加Listing数据';return}
+    $('healthResult').className='';
+    var total=listings.length;
+    var counts={live:0,draft:0,review:0,down:0,archived:0};
+    listings.forEach(function(l){if(counts[l.status]!==undefined)counts[l.status]++;else counts.draft++});
+
+    // 健康度 = 上架*1.0 + 审核*0.5 / 有效listing（排除归档）
+    var effective=total-counts.archived;
+    var healthScore=effective?Math.round((counts.live+counts.review*0.5)/effective*100):0;
+    var healthColor=healthScore>=80?'#10b981':healthScore>=60?'#f59e0b':healthScore>=40?'#f97316':'#ef4444';
+    var healthLabel=healthScore>=80?'优秀':healthScore>=60?'良好':healthScore>=40?'需改善':'紧急';
+
+    var gaugeVal=healthScore/100*360;
+    var html='<div class="health-gauge-wrap">'+
+      '<div class="health-gauge" style="background:conic-gradient('+healthColor+' 0deg '+gaugeVal+'deg,#f1f5f9 '+gaugeVal+'deg 360deg)">'+
+        '<div class="health-gauge-inner"><div class="hg-num" style="color:'+healthColor+'">'+healthScore+'</div><div class="hg-lbl">'+healthLabel+'</div></div>'+
+      '</div>'+
+      '<div class="health-info">'+
+        '<div class="health-info-row"><span class="hir-l">有效Listing（排除归档）</span><span class="hir-v">'+effective+'</span></div>'+
+        '<div class="health-info-row"><span class="hir-l">上架率</span><span class="hir-v" style="color:#10b981">'+Math.round(counts.live/total*100)+'%</span></div>'+
+        '<div class="health-info-row"><span class="hir-l">草稿堆积率</span><span class="hir-v" style="color:'+(counts.draft/effective>0.2?'#ef4444':'#475569')+'">'+Math.round(counts.draft/total*100)+'%</span></div>'+
+        '<div class="health-info-row"><span class="hir-l">下架率</span><span class="hir-v" style="color:'+(counts.down/effective>0.15?'#ef4444':'#475569')+'">'+Math.round(counts.down/total*100)+'%</span></div>'+
+        '<div class="health-info-row"><span class="hir-l">健康度评分标准</span><span class="hir-v">上架×1.0 + 审核×0.5</span></div>'+
+      '</div></div>';
+    $('healthResult').innerHTML=html;
+  }
+
+  function renderBatch(){
+    if(!listings.length){$('batchResult').className='empty';$('batchResult').innerHTML='请先添加Listing数据';return}
+    $('batchResult').className='';
+    var counts={live:0,draft:0,review:0,down:0,archived:0};
+    listings.forEach(function(l){if(counts[l.status]!==undefined)counts[l.status]++;else counts.draft++});
+
+    var html='';
+    // 草稿堆积
+    if(counts.draft>0){
+      var urgency=counts.draft>=5?'batch-urgent':counts.draft>=3?'batch-warn':'batch-info';
+      var icon=counts.draft>=5?'🚨':'📌';
+      html+='<div class="batch-item '+urgency+'"><div class="batch-icon">'+icon+'</div><div class="batch-body"><b>发布草稿Listing</b><span>'+counts.draft+'个Listing处于草稿状态，长期未发布会影响店铺活跃度。建议优先完成Listing优化后批量提交上架。</span></div><div class="batch-count">'+counts.draft+'</div></div>';
+    }
+    // 审核中
+    if(counts.review>0){
+      html+='<div class="batch-item batch-warn"><div class="batch-icon">⏳</div><div class="batch-body"><b>跟进审核中Listing</b><span>'+counts.review+'个Listing正在审核中，建议定期检查审核状态。超过3天未通过需联系卖家支持查询原因。</span></div><div class="batch-count">'+counts.review+'</div></div>';
+    }
+    // 下架处理
+    if(counts.down>0){
+      html+='<div class="batch-item batch-urgent"><div class="batch-icon">⚠️</div><div class="batch-body"><b>处理下架Listing</b><span>'+counts.down+'个Listing已下架，需排查下架原因（违规/断货/主动下架）。如为违规需立即整改申诉，如为断货需补货后重新上架。</span></div><div class="batch-count">'+counts.down+'</div></div>';
+    }
+    // 归档清理
+    if(counts.archived>0){
+      html+='<div class="batch-item batch-info"><div class="batch-icon">📦</div><div class="batch-body"><b>归档Listing清理</b><span>'+counts.archived+'个Listing已归档，建议定期清理不再销售的SKU，保持Listing库整洁。如需重新销售可恢复上架。</span></div><div class="batch-count">'+counts.archived+'</div></div>';
+    }
+    // 上架率低
+    var livePct=listings.length?counts.live/listings.length*100:0;
+    if(livePct<70 && counts.live>0){
+      html+='<div class="batch-item batch-warn"><div class="batch-icon">📉</div><div class="batch-body"><b>提升上架率</b><span>当前上架率仅'+Math.round(livePct)+'%，低于70%健康线。建议加快草稿发布和下架Listing的恢复，提高店铺活跃SKU数。</span></div><div class="batch-count">'+Math.round(livePct)+'%</div></div>';
+    }
+    // 全部上架
+    if(counts.live===listings.length && counts.live>0){
+      html+='<div class="batch-item batch-ok"><div class="batch-icon">✅</div><div class="batch-body"><b>全部Listing已上架</b><span>恭喜！所有Listing均处于正常上架状态。建议定期监控Listing健康指标，保持最佳状态。</span></div><div class="batch-count">'+counts.live+'</div></div>';
+    }
+    if(!html)html='<div class="empty">暂无批量操作建议</div>';
+    $('batchResult').innerHTML=html;
+  }
+
+  function renderAdvice(){
+    if(!listings.length){$('adviceResult').innerHTML='<li>请先添加Listing数据</li>';return}
+    var counts={live:0,draft:0,review:0,down:0,archived:0};
+    listings.forEach(function(l){if(counts[l.status]!==undefined)counts[l.status]++;else counts.draft++});
+    var total=listings.length;
+    var effective=total-counts.archived;
+    var livePct=total?counts.live/total*100:0;
+    var draftPct=total?counts.draft/total*100:0;
+    var downPct=total?counts.down/total*100:0;
+    var advice='';
+    if(livePct>=80)advice+='<li class="ok">上架率'+Math.round(livePct)+'%表现优秀，Listing活跃度高，有利于搜索流量和转化</li>';
+    else if(livePct>=60)advice+='<li class="warn">上架率'+Math.round(livePct)+'%尚可，建议提升至80%以上以最大化曝光</li>';
+    else advice+='<li class="danger">上架率仅'+Math.round(livePct)+'%，大量Listing未上架，严重影响店铺流量和GMV</li>';
+    if(draftPct>20)advice+='<li class="danger">草稿堆积率达'+Math.round(draftPct)+'%，超过20%红线。草稿长期未发布可能因平台政策变化而需要重新编辑，建议尽快完成并提交</li>';
+    else if(counts.draft>0)advice+='<li>当前有'+counts.draft+'个草稿Listing，建议按优先级逐批发布</li>';
+    if(counts.review>0)advice+='<li class="warn">'+counts.review+'个Listing审核中，亚马逊审核通常需24-72小时，超时可开Case查询</li>';
+    if(downPct>15)advice+='<li class="danger">下架率'+Math.round(downPct)+'%超过15%，需立即排查是违规下架还是断货下架，违规需72小时内申诉</li>';
+    else if(counts.down>0)advice+='<li class="warn">'+counts.down+'个Listing已下架，建议排查原因并在问题解决后及时恢复上架</li>';
+    // SKU跨店一致性
+    var skuMap={};
+    listings.forEach(function(l){if(!skuMap[l.sku])skuMap[l.sku]=[];skuMap[l.sku].push(l)});
+    var inconsistentSkus=0;
+    Object.keys(skuMap).forEach(function(sku){
+      var items=skuMap[sku];
+      if(items.length>1){
+        var statuses=items.map(function(i){return i.status});
+        var uniqueStatus={};statuses.forEach(function(s){uniqueStatus[s]=1});
+        if(Object.keys(uniqueStatus).length>1)inconsistentSkus++;
+      }
+    });
+    if(inconsistentSkus>0)advice+='<li class="warn">'+inconsistentSkus+'个SKU在多店铺间状态不一致，建议统一管理同SKU的Listing状态，避免同品不同步</li>';
+    else if(Object.keys(skuMap).length>1)advice+='<li class="ok">跨店铺SKU状态一致性良好，Listing管理规范</li>';
+    advice+='<li>建议每周至少检查一次Listing状态，及时处理审核异常和下架问题，保持店铺Listing健康度评分在80分以上</li>';
+    $('adviceResult').innerHTML=advice;
+  }
+
+  function renderAll(){
+    renderTable();
+    renderStats();
+    renderPie();
+    renderStoreBars();
+    renderHealth();
+    renderBatch();
+    renderAdvice();
+  }
+
+  function init(){
+    if(!load()){sample()}
+    renderAll();
+    var btn=$('backToTop');
+    window.addEventListener('scroll',function(){
+      if(window.pageYOffset>300)btn.classList.add('show');else btn.classList.remove('show');
+    });
+    btn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+  }
+
+  return{
+    init:init,sample:sample,clear:clear,save:save,addRow:addRow,del:delRow,
+    update:function(idx,field,val){updateRow(idx,field,val)},
+    filter:filter
+  };
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CLM.init)}else{CLM.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Amazon全费用深度拆解器：覆盖FBA/佣金/仓储/广告/退货等15+费用项，费用占比conic-gradient饼图，费用趋势SVG折线，优化建议引擎，多ASIN对比。">
+<title>Amazon费用深度拆解器 - 15+费用项·占比饼图·优化建议 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input,.jx-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus,.jx-field select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.fee-table{width:100%;border-collapse:collapse;font-size:13px}
+.fee-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.fee-table th.num{text-align:right}
+.fee-table td{padding:10px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.fee-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.fee-table tr.section td{background:#f8fafc;font-weight:700;color:var(--ink)}
+.fee-table tr.total td{background:linear-gradient(90deg,#eef2ff,#f5f3ff);font-weight:800;color:#4f46e5;font-size:15px}
+.fee-table .pos{color:#059669}.fee-table .neg{color:#dc2626}
+.fee-table .alert-badge{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:700;margin-left:6px}
+.fee-table .alert-badge.warn{background:#fffbeb;color:#d97706}.fee-table .alert-badge.danger{background:#fef2f2;color:#dc2626}
+.pie-wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap;justify-content:center}
+.conic-pie{width:220px;height:220px;border-radius:50%;position:relative;flex-shrink:0}
+.conic-pie-hole{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--rule-light)}
+.conic-pie-hole .cp-val{font-size:22px;font-weight:800;color:#4f46e5}
+.conic-pie-hole .cp-lbl{font-size:11px;color:var(--muted)}
+.pie-legend{flex:1;min-width:220px}
+.pie-legend .pl-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:var(--ink-soft)}
+.pie-legend .pl-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.pie-legend .pl-pct{margin-left:auto;font-weight:700;color:var(--ink)}
+.svg-chart{width:100%;min-width:600px;height:260px;display:block}
+.chart-wrap{width:100%;overflow-x:auto}
+.chart-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:13px}
+.chart-legend .lg-item{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.chart-legend .lg-dot{width:14px;height:3px;border-radius:2px}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-3{grid-template-columns:1fr}.tool-title-area h1{font-size:22px}.fee-table{font-size:11px}.fee-table th,.fee-table td{padding:7px 8px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W33 财务核算深度工作流</div><div class="workflow-steps">
+  <a href="profit-loss-statement-builder.html" class="workflow-step">损益表</a>
+  <a href="cost-allocation-matrix.html" class="workflow-step">成本分摊</a>
+  <a href="amazon-fee-deep-dive.html" class="workflow-step active">费用拆解</a>
+  <a href="reimbursement-claim-tracker.html" class="workflow-step">赔付追踪</a>
+  <a href="vat-oss-calculator.html" class="workflow-step">VAT</a>
+  <a href="financial-health-scorecard.html" class="workflow-step">健康度</a>
+  <a href="monthly-close-checklist.html" class="workflow-step">月结</a>
+  <a href="budget-vs-actual.html" class="workflow-step">预算对比</a>
+  <a href="currency-exposure-analysis.html" class="workflow-step">汇率</a>
+  <a href="profit-waterfall.html" class="workflow-step">利润瀑布</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W33 财务核算</a><span class="sep">›</span><span class="current">Amazon费用拆解</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔍</span>Amazon 全费用深度拆解器 <span style="font-size:13px;padding:3px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-weight:600">深度版</span></h1>
+  <p>覆盖 FBA 配送 / 佣金 / 仓储 / 广告 / 退货等 15+ 费用项，费用占比 conic-gradient 饼图，费用趋势 SVG 折线，优化建议引擎自动识别异常费率，支持多 ASIN 并排对比。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">总销售收入</div><div class="mc-value" id="mRevenue">$0</div></div>
+    <div class="metric-card danger"><div class="mc-label">总费用合计</div><div class="mc-value" id="mTotalFee">$0</div></div>
+    <div class="metric-card success"><div class="mc-label">净利润</div><div class="mc-value" id="mNet">$0</div></div>
+    <div class="metric-card warn"><div class="mc-label">费用率</div><div class="mc-value" id="mFeeRate">0%</div></div>
+    <div class="metric-card success"><div class="mc-label">净利润率</div><div class="mc-value" id="mNetMargin">0%</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 产品基础信息</h2>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>产品售价 Price <span class="hint">($)</span></label><input type="number" id="price" value="29.99" step="0.01" min="0" oninput="AMZ.calc()"></div>
+      <div class="jx-field"><label>月销量 Monthly Units</label><input type="number" id="units" value="1500" step="10" min="0" oninput="AMZ.calc()"></div>
+      <div class="jx-field"><label>类目佣金率 Referral Fee <span class="hint">(%)</span></label><select id="category" onchange="AMZ.calc()"><option value="15">普通类目 15%</option><option value="8">3C电子 8%</option><option value="10">美妆个护 10%</option><option value="12">家居厨房 12%</option><option value="15">服装鞋帽 17%</option><option value="15">珠宝 15%/20%</option><option value="6">媒体 6%+1.8</option></select></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>FBA尺寸 Tier</label><select id="tier" onchange="AMZ.calc()"><option value="3.5">Standard 标准件 ($3.5)</option><option value="5.2">Small Oversize ($5.2)</option><option value="8.4">Medium Oversize ($8.4)</option><option value="12.8">Large Oversize ($12.8)</option><option value="22.5">Special Oversize ($22.5)</option></select></div>
+      <div class="jx-field"><label>月度广告费 Ad Spend <span class="hint">($)</span></label><input type="number" id="adSpend" value="6000" step="100" min="0" oninput="AMZ.calc()"></div>
+      <div class="jx-field"><label>退货率 Return Rate <span class="hint">(%)</span></label><input type="number" id="returnRate" value="8" step="0.5" min="0" max="100" oninput="AMZ.calc()"></div>
+    </div>
+    <div class="jx-row-3">
+      <div class="jx-field"><label>COGS 采购成本/单 <span class="hint">($)</span></label><input type="number" id="cogs" value="7.5" step="0.1" min="0" oninput="AMZ.calc()"></div>
+      <div class="jx-field"><label>头程物流/单 First-mile <span class="hint">($)</span></label><input type="number" id="firstMile" value="2.5" step="0.1" min="0" oninput="AMZ.calc()"></div>
+      <div class="jx-field"><label>其他费用/单 Other <span class="hint">($)</span></label><input type="number" id="otherPerUnit" value="1.0" step="0.1" min="0" oninput="AMZ.calc()"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📑 费用明细表（15项）</h2>
+    <div style="overflow-x:auto"><table class="fee-table" id="feeTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🥧 费用占比分布（conic-gradient 饼图）</h2>
+    <div class="pie-wrap">
+      <div class="conic-pie" id="pie"></div>
+      <div class="pie-legend" id="pieLegend"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📈 费用趋势（近6月 SVG 折线）</h2>
+    <div class="chart-wrap"><svg class="svg-chart" id="trendChart" viewBox="0 0 700 260" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <div class="chart-legend">
+      <div class="lg-item"><div class="lg-dot" style="background:#4f46e5"></div>FBA配送+仓储费</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#f59e0b"></div>广告费</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#ef4444"></div>佣金+退货费</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#10b981"></div>净利润</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧠 优化建议引擎（异常费率识别）</h2>
+    <ul id="optTips" style="list-style:none;padding:0;margin:0"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔄 多 ASIN 对比</h2>
+    <div style="overflow-x:auto"><table class="fee-table" id="compareTable"></table></div>
+    <p style="font-size:13px;color:var(--muted);margin-top:12px">注：对比表展示当前 ASIN 与典型基准 ASIN 的费用结构差异，帮助定位优化空间。</p>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="profit-loss-statement-builder.html" class="rt-card"><div class="rt-icon">📊</div><div><h5>P&L损益表</h5><p>多维度损益表构建</p></div></a>
+      <a href="fba-calculator.html" class="rt-card"><div class="rt-icon">📦</div><div><h5>FBA利润计算器</h5><p>基础FBA费用计算</p></div></a>
+      <a href="reimbursement-claim-tracker.html" class="rt-card"><div class="rt-icon">💰</div><div><h5>FBA赔付追踪</h5><p>赔付申请管理</p></div></a>
+      <a href="acos-calculator.html" class="rt-card"><div class="rt-icon">🎯</div><div><h5>ACoS计算器</h5><p>广告效果分析</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="amazon-fee-deep-dive.html">Amazon费用拆解</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var AMZ=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:2}):'0')}
+  function fmt0(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  var pieColors=['#4f46e5','#6366f1','#f59e0b','#fbbf24','#ef4444','#f87171','#10b981','#34d399','#8b5cf6','#a78bfa','#06b6d4','#0ea5e9','#ec4899','#f472b6','#64748b'];
+
+  function calc(){
+    var price=parseFloat($('price').value)||0;
+    var units=parseFloat($('units').value)||0;
+    var commRate=parseFloat($('category').value)||15;
+    var tier=parseFloat($('tier').value)||3.5;
+    var adSpend=parseFloat($('adSpend').value)||0;
+    var retRate=parseFloat($('returnRate').value)||0;
+    var cogs=parseFloat($('cogs').value)||0;
+    var firstMile=parseFloat($('firstMile').value)||0;
+    var otherPU=parseFloat($('otherPerUnit').value)||0;
+
+    var revenue=price*units;
+    var comm=revenue*commRate/100;
+    var fbaFulfill=tier*units;
+    var storage=units*0.5; // 月度仓储费估算
+    var longStorage=Math.max(0,(units-2000))*0.15; // 长期仓储
+    var pickPack=units*0.3; // 拣货包装
+    var peakStorage=storage*0.2; // 高峰期附加
+    var returnFee=units*retRate/100*(price*0.2+tier*0.5); // 退货处理+佣金退还扣除
+    var returnShipping=units*retRate/100*2.0;
+    var cogsTotal=cogs*units;
+    var firstMileTotal=firstMile*units;
+    var otherTotal=otherPU*units;
+    var labelFee=units*0.1;
+    var removalFee=units*0.05;
+    var unplannedFee=units*0.08;
+    var vat=revenue*0.02;
+
+    var fees=[
+      {n:'Referral Fee 佣金',v:comm,base:commRate,baseLbl:commRate+'%'},
+      {n:'FBA Fulfillment 配送费',v:fbaFulfill,base:tier,baseLbl:'$'+tier+'/单'},
+      {n:'FBA Storage 仓储费',v:storage,base:0.5,baseLbl:'$0.5/单'},
+      {n:'Long-term Storage 长期仓储',v:longStorage,base:0,baseLbl:'--'},
+      {n:'Pick & Pack 拣货包装',v:pickPack,base:0.3,baseLbl:'$0.3/单'},
+      {n:'Peak Storage 高峰期附加',v:peakStorage,base:0,baseLbl:'--'},
+      {n:'Return Processing 退货处理',v:returnFee,base:retRate,baseLbl:retRate+'%'},
+      {n:'Return Shipping 退货运费',v:returnShipping,base:0,baseLbl:'--'},
+      {n:'COGS 采购成本',v:cogsTotal,base:cogs,baseLbl:'$'+cogs+'/单'},
+      {n:'First-mile 头程物流',v:firstMileTotal,base:firstMile,baseLbl:'$'+firstMile+'/单'},
+      {n:'Label Fee 标签费',v:labelFee,base:0.1,baseLbl:'$0.1/单'},
+      {n:'Removal Fee 移除费',v:removalFee,base:0,baseLbl:'--'},
+      {n:'Unplanned Service 计划外',v:unplannedFee,base:0,baseLbl:'--'},
+      {n:'VAT/税',v:vat,base:0,baseLbl:'2%'},
+      {n:'Other 其他',v:otherTotal,base:otherPU,baseLbl:'$'+otherPU+'/单'}
+    ];
+    var adFee={n:'Ad Spend 广告费',v:adSpend,base:0,baseLbl:'$'+adSpend};
+    var allFees=fees.concat([adFee]);
+    var totalFee=allFees.reduce(function(a,b){return a+b.v},0);
+    var net=revenue-totalFee;
+    var feeRate=revenue>0?totalFee/revenue*100:0;
+    var netMargin=revenue>0?net/revenue*100:0;
+
+    $('mRevenue').textContent=fmt0(revenue);
+    $('mTotalFee').textContent=fmt0(totalFee);
+    $('mNet').textContent=fmt0(net);
+    $('mNet').style.color=net>=0?'#059669':'#dc2626';
+    $('mFeeRate').textContent=feeRate.toFixed(1)+'%';
+    $('mNetMargin').textContent=netMargin.toFixed(1)+'%';
+
+    renderTable(allFees,revenue,totalFee,net);
+    renderPie(allFees,totalFee);
+    renderTrend(fbaFulfill+storage,adSpend,comm+returnFee,net);
+    renderTips(allFees,revenue,retRate,commRate,adSpend,storage,units);
+    renderCompare(revenue,comm,fbaFulfill,storage,adSpend,cogsTotal,firstMileTotal,net);
+    save();
+  }
+
+  function renderTable(allFees,revenue,totalFee,net){
+    var h='<thead><tr><th>费用项 Fee Item</th><th class="num">金额</th><th class="num">占收入比</th><th class="num">基数</th><th class="num">诊断</th></tr></thead><tbody>';
+    allFees.forEach(function(f){
+      var pct=revenue>0?f.v/revenue*100:0;
+      var diag='正常';
+      var diagClass='';
+      if(f.n.indexOf('佣金')>=0&&pct>16){diag='偏高';diagClass='warn'}
+      if(f.n.indexOf('广告')>=0&&pct>15){diag='过高';diagClass='danger'}
+      if(f.n.indexOf('仓储')>=0&&f.n.indexOf('长期')<0&&pct>5){diag='偏高';diagClass='warn'}
+      if(f.n.indexOf('退货')>=0&&pct>5){diag='偏高';diagClass='warn'}
+      h+='<tr><td>'+f.n+'</td><td class="num">'+fmt0(f.v)+'</td><td class="num">'+pct.toFixed(1)+'%</td><td class="num" style="font-weight:400;color:var(--muted)">'+f.baseLbl+'</td><td class="num">'+(diagClass?'<span class="alert-badge '+diagClass+'">'+diag+'</span>':'<span style="color:#059669;font-size:11px">正常</span>')+'</td></tr>';
+    });
+    h+='<tr class="total"><td>总费用 Total Fees</td><td class="num">'+fmt0(totalFee)+'</td><td class="num">'+(revenue>0?totalFee/revenue*100:0).toFixed(1)+'%</td><td class="num">--</td><td class="num">--</td></tr>';
+    h+='<tr class="total"><td>净利润 Net Profit</td><td class="num '+(net>=0?'pos':'neg')+'">'+fmt0(net)+'</td><td class="num '+(net>=0?'pos':'neg')+'">'+(revenue>0?net/revenue*100:0).toFixed(1)+'%</td><td class="num">--</td><td class="num">--</td></tr>';
+    h+='</tbody>';
+    $('feeTable').innerHTML=h;
+  }
+
+  function renderPie(allFees,totalFee){
+    var sorted=allFees.filter(function(f){return f.v>0}).sort(function(a,b){return b.v-a.v});
+    var deg=0;var grads=[];
+    sorted.forEach(function(f,i){
+      var pct=totalFee>0?f.v/totalFee*100:0;
+      var d=pct/100*360;
+      grads.push(pieColors[i%pieColors.length]+' '+deg.toFixed(2)+'deg '+(deg+d).toFixed(2)+'deg');
+      deg+=d;
+    });
+    $('pie').style.background='conic-gradient('+grads.join(',')+')';
+    $('pie').innerHTML='<div class="conic-pie-hole"><div class="cp-val">'+fmt0(totalFee)+'</div><div class="cp-lbl">总费用</div></div>';
+    var lh='';
+    sorted.forEach(function(f,i){
+      var pct=totalFee>0?f.v/totalFee*100:0;
+      lh+='<div class="pl-item"><div class="pl-dot" style="background:'+pieColors[i%pieColors.length]+'"></div>'+f.n+'<div class="pl-pct">'+pct.toFixed(1)+'%</div></div>';
+    });
+    $('pieLegend').innerHTML=lh;
+  }
+
+  function renderTrend(fba,ad,comm,net){
+    var months=['1月','2月','3月','4月','5月','6月'];
+    var W=700,H=260,padL=50,padR=20,padT=20,padB=35;
+    var series=[
+      {name:'FBA',color:'#4f46e5',base:fba},
+      {name:'Ad',color:'#f59e0b',base:ad},
+      {name:'Comm',color:'#ef4444',base:comm},
+      {name:'Net',color:'#10b981',base:net}
+    ];
+    var allVals=[];
+    series.forEach(function(s){for(var i=0;i<6;i++){var v=s.base*(1+(i-2.5)*0.04);allVals.push(Math.max(0,v))}});
+    var maxV=Math.max.apply(null,allVals.concat([1]));
+    var xStep=(W-padL-padR)/5;
+    function y(v){return padT+(1-v/maxV)*(H-padT-padB)}
+    function x(i){return padL+i*xStep}
+    var svg='';
+    for(var g=0;g<=5;g++){var gv=maxV/5*g;var gy=y(gv);svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#f1f5f9"/><text x="'+(padL-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8">'+(gv/1000).toFixed(0)+'k</text>';}
+    for(var m=0;m<6;m++){svg+='<text x="'+x(m)+'" y="'+(H-padB+16)+'" text-anchor="middle" font-size="10" fill="#64748b">'+months[m]+'</text>';}
+    series.forEach(function(s){
+      var path='';
+      for(var i=0;i<6;i++){var v=Math.max(0,s.base*(1+(i-2.5)*0.04));path+=(i?'L':'M')+x(i)+' '+y(v)}
+      svg+='<path d="'+path+'" fill="none" stroke="'+s.color+'" stroke-width="2.5" stroke-linejoin="round"/>';
+      for(var i=0;i<6;i++){var v=Math.max(0,s.base*(1+(i-2.5)*0.04));svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="3.5" fill="#fff" stroke="'+s.color+'" stroke-width="2"/>';}
+    });
+    $('trendChart').innerHTML=svg;
+  }
+
+  function renderTips(allFees,revenue,retRate,commRate,adSpend,storage,units){
+    var tips=[];
+    var adPct=revenue>0?adSpend/revenue*100:0;
+    if(adPct>15)tips.push({t:'广告费占收入 '+adPct.toFixed(1)+'%，远超 15% 警戒线。建议暂停高 ACoS 关键词，优化 Listing 自然排名降低广告依赖。',c:'#dc2626'});
+    else if(adPct>10)tips.push({t:'广告费占收入 '+adPct.toFixed(1)+'%，接近警戒线。建议持续监控 ACoS，控制在 10% 以内。',c:'#d97706'});
+    else tips.push({t:'广告费占收入 '+adPct.toFixed(1)+'%，投放效率良好。',c:'#059669'});
+    if(retRate>10)tips.push({t:'退货率 '+retRate+'% 偏高（行业均值 5-8%）。建议核查产品质量、Listing 描述准确性、包装防护。',c:'#dc2626'});
+    var commPct=commRate;
+    if(commPct>15)tips.push({t:'佣金率 '+commPct+'% 偏高，建议评估是否可通过捆绑销售或品牌注册降低有效佣金率。',c:'#d97706'});
+    var storagePer=units>0?storage/units:0;
+    if(storagePer>0.8)tips.push({t:'单件仓储费 $'+storagePer.toFixed(2)+' 偏高，可能存在滞销库存。建议清理慢动销 SKU，优化补货节奏。',c:'#d97706'});
+    var topFee=allFees.slice().sort(function(a,b){return b.v-a.v})[0];
+    tips.push({t:'最大费用项为「'+topFee.n+'」，占总费用 '+(allFees.reduce(function(a,b){return a+b.v},0)>0?topFee.v/allFees.reduce(function(a,b){return a+b.v},0)*100:0).toFixed(1)+'%，是优化重点。',c:'#4f46e5'});
+    tips.push({t:'建议每月用本工具复盘费用结构，对比多 ASIN 差异，持续压缩可优化费用项。',c:'#4f46e5'});
+    $('optTips').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;width:18px;height:18px;border-radius:50%;background:'+t.c+';opacity:.15"></span><span style="position:absolute;left:5px;top:13px;color:'+t.c+';font-size:12px;font-weight:700">!</span>'+t.t+'</li>'}).join('');
+  }
+
+  function renderCompare(revenue,comm,fba,storage,ad,cogs,firstMile,net){
+    var asins=[
+      {name:'当前 ASIN',rev:revenue,comm:comm,fba:fba,storage:storage,ad:ad,cogs:cogs,fm:firstMile,net:net},
+      {name:'基准 ASIN-A',rev:revenue*0.9,comm:revenue*0.9*0.15,fba:fba*0.95,storage:storage*0.7,ad:revenue*0.9*0.08,cogs:cogs*0.85,fm:firstMile*0.9,net:revenue*0.9*0.18},
+      {name:'基准 ASIN-B',rev:revenue*1.2,comm:revenue*1.2*0.12,fba:fba*1.1,storage:storage*1.3,ad:revenue*1.2*0.12,cogs:cogs*1.1,fm:firstMile*1.05,net:revenue*1.2*0.10}
+    ];
+    var h='<thead><tr><th>ASIN</th><th class="num">收入</th><th class="num">佣金</th><th class="num">FBA费</th><th class="num">仓储</th><th class="num">广告</th><th class="num">COGS+物流</th><th class="num">净利</th><th class="num">净利率</th></tr></thead><tbody>';
+    asins.forEach(function(a){
+      h+='<tr><td>'+a.name+'</td><td class="num">'+fmt0(a.rev)+'</td><td class="num">'+fmt0(a.comm)+'</td><td class="num">'+fmt0(a.fba)+'</td><td class="num">'+fmt0(a.storage)+'</td><td class="num">'+fmt0(a.ad)+'</td><td class="num">'+fmt0(a.cogs+a.fm)+'</td><td class="num '+(a.net>=0?'pos':'neg')+'">'+fmt0(a.net)+'</td><td class="num '+(a.net/a.rev*100>=0?'pos':'neg')+'">'+(a.rev>0?a.net/a.rev*100:0).toFixed(1)+'%</td></tr>';
+    });
+    h+='</tbody>';
+    $('compareTable').innerHTML=h;
+  }
+
+  function save(){var d={};['price','units','category','tier','adSpend','returnRate','cogs','firstMile','otherPerUnit'].forEach(function(id){d[id]=$(id).value});try{localStorage.setItem('jx_amz_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_amz_data'));if(d)Object.keys(d).forEach(function(k){var el=$(k);if(el)el.value=d[k]})}catch(e){}}
+  return {calc:calc,init:function(){load();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',AMZ.init)}else{AMZ.init()}
+</script>
+</body>
+</html>

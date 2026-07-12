@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="包装合规检查器：目标市场×包装材料×产品类型，包装要求清单（回收标志/语言要求/环保要求/运输标识），CSS检查表。免费在线合规工具。">
+<title>包装合规检查器 - 回收标志·语言要求·环保要求 | 跨境卖家工具</title>
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:#94a3b8}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{border-radius:var(--t-radius);padding:24px;text-align:center;color:#fff}.stat-card.s1{background:linear-gradient(135deg,#4f46e5,#6366f1)}.stat-card.s2{background:linear-gradient(135deg,#10b981,#34d399)}.stat-card.s3{background:linear-gradient(135deg,#ef4444,#f87171)}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:13px;opacity:.9;margin-top:2px}
+.req-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}.req-category{border:1px solid var(--t-rule);border-radius:12px;overflow:hidden}.req-cat-header{padding:14px 16px;font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}.req-cat-header.recycle{background:linear-gradient(135deg,#10b981,#34d399)}.req-cat-header.language{background:linear-gradient(135deg,#4f46e5,#6366f1)}.req-cat-header.eco{background:linear-gradient(135deg,#f59e0b,#fbbf24)}.req-cat-header.transport{background:linear-gradient(135deg,#0ea5e9,#38bdf8)}.req-list{padding:8px 16px}.req-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--t-rule-light)}.req-item:last-child{border-bottom:none}.req-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}.req-dot.must{background:var(--t-danger)}.req-dot.should{background:var(--t-warning)}.req-dot.info{background:var(--t-primary)}.req-text{font-size:13px;color:var(--t-ink-soft);line-height:1.5}.req-text strong{color:var(--t-ink)}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.form-row3{grid-template-columns:1fr}.req-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W41 合规深度工作流</div><div class="workflow-steps">
+<a href="product-compliance-matrix.html" class="workflow-step">合规矩阵</a><a href="fda-label-checker.html" class="workflow-step">FDA</a><a href="ce-marking-guide.html" class="workflow-step">CE</a><a href="product-safety-assessment.html" class="workflow-step">安全评估</a><a href="packaging-compliance-checker.html" class="workflow-step active">包装合规</a><a href="recall-prevention-checklist.html" class="workflow-step">召回预防</a><a href="import-regulation-lookup.html" class="workflow-step">进口法规</a><a href="restricted-substance-checker.html" class="workflow-step">限制物质</a><a href="label-translation-verifier.html" class="workflow-step">标签翻译</a><a href="compliance-audit-scorecard.html" class="workflow-step">审计评分</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W41 合规深度</a><span class="sep">/</span><span class="current">包装合规检查器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W41 · 合规深度工作流</span><h1>包装合规<em>检查器</em></h1><p class="tool-header-desc">目标市场×包装材料×产品类型三维交叉检查，包装要求清单（回收标志/语言要求/环保要求/运输标识），CSS分类检查表。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>包装信息输入</h2>
+    <p class="section-sub">选择目标市场、包装材料和产品类型，实时生成包装合规要求</p>
+    <div class="form-row3">
+      <div class="form-field"><label>目标市场</label>
+        <select id="inpMarket" onchange="PCC.compute()">
+          <option value="US">美国 (US)</option>
+          <option value="EU">欧盟 (EU)</option>
+          <option value="JP">日本 (JP)</option>
+          <option value="UK">英国 (UK)</option>
+          <option value="CA">加拿大 (CA)</option>
+          <option value="AU">澳大利亚 (AU)</option>
+        </select>
+      </div>
+      <div class="form-field"><label>包装材料</label>
+        <select id="inpMaterial" onchange="PCC.compute()">
+          <option value="plastic">塑料 (PET/HDPE/PP)</option>
+          <option value="paper">纸/纸板</option>
+          <option value="metal">金属（铝/铁）</option>
+          <option value="glass">玻璃</option>
+          <option value="mixed">复合材料/混合包装</option>
+        </select>
+      </div>
+      <div class="form-field"><label>产品类型</label>
+        <select id="inpProduct" onchange="PCC.compute()">
+          <option value="general">一般商品</option>
+          <option value="food">食品/饮料</option>
+          <option value="cosmetics">化妆品/个护</option>
+          <option value="electronics">电子产品</option>
+          <option value="dangerous">危险品/含电池</option>
+        </select>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>合规总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">检查项总数</div></div>
+      <div class="stat-card s2"><div class="stat-val" id="statMust">0</div><div class="stat-lbl">必需项</div></div>
+      <div class="stat-card s3"><div class="stat-val" id="statCat">0</div><div class="stat-lbl">检查类别</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>包装合规要求清单</h2>
+    <p class="section-sub">红色=必需 / 黄色=建议 / 蓝色=信息参考</p>
+    <div class="req-grid" id="reqGrid"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="product-compliance-matrix.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>产品合规矩阵</h5><p>多市场合规热力图</p></div></a>
+      <a href="label-translation-verifier.html" class="related-card"><div class="related-card-icon">🌐</div><div class="related-card-content"><h5>标签翻译验证器</h5><p>多语言标签检查</p></div></a>
+      <a href="fda-label-checker.html" class="related-card"><div class="related-card-icon">🏷️</div><div class="related-card-content"><h5>FDA标签检查器</h5><p>标签合规检查</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var PCC = (function(){
+  'use strict';
+  var MARKET_NAME = {US:'美国',EU:'欧盟',JP:'日本',UK:'英国',CA:'加拿大',AU:'澳大利亚'};
+  var MATERIAL_NAME = {plastic:'塑料',paper:'纸/纸板',metal:'金属',glass:'玻璃',mixed:'复合材料'};
+  var PRODUCT_NAME = {general:'一般商品',food:'食品/饮料',cosmetics:'化妆品/个护',electronics:'电子产品',dangerous:'危险品/含电池'};
+
+  function compute(){
+    var market = document.getElementById('inpMarket').value;
+    var material = document.getElementById('inpMaterial').value;
+    var product = document.getElementById('inpProduct').value;
+    var m = MARKET_NAME[market], mat = MATERIAL_NAME[material], p = PRODUCT_NAME[product];
+
+    // 回收标志
+    var recycle = [];
+    if(market==='EU'){ recycle.push({l:'must',t:'<strong>包装回收标志</strong>：必须在包装上标注材料识别码（如1-7塑料编号或PAP/FE/GL代号）'}); recycle.push({l:'must',t:'<strong>EPR注册</strong>：必须在目标国完成EPR（生产者责任延伸）注册并缴纳包装回收费'}); }
+    if(market==='DE'){ recycle.push({l:'must',t:'<strong>Grüner Punkt</strong>：如参与Der Grüne Punkt系统需标注绿点标志'}); }
+    if(market==='US'){ recycle.push({l:'should',t:'<strong>How2Recycle标签</strong>：建议加贴How2Recycle回收指导标签'}); recycle.push({l:'must',t:'<strong>TPCH合规</strong>：包装不得含铅/镉/汞/六价铬（总量<100ppm）'}); }
+    if(market==='JP'){ recycle.push({l:'must',t:'<strong>容器包装回收法</strong>：需注册容器包装回收法人并缴纳回收费用'}); recycle.push({l:'should',t:'<strong>识别标识</strong>：建议标注材质识别标志（PET/プラ/紙/鋼等）'}); }
+    if(market==='UK'){ recycle.push({l:'must',t:'<strong>UK EPR</strong>：需完成UK包装生产者责任注册'}); recycle.push({l:'should',t:'<strong>OPRL标签</strong>：建议加贴OPRL回收指导标签'}); }
+    if(market==='CA'){ recycle.push({l:'should',t:'<strong>回收标识</strong>：魁北克省要求包装标注回收信息'}); }
+    if(market==='AU'){ recycle.push({l:'should',t:'<strong>APCO会员</strong>：建议加入澳大利亚包装公约组织(APCO)'}); recycle.push({l:'should',t:'<strong>APRRID标识</strong>：建议使用Australasian Recycling Label回收标识'}); }
+    if(material==='plastic') recycle.push({l:'must',t:'<strong>塑料编号</strong>：塑料包装必须标注树脂识别码（1-7三角回收标志）'});
+    if(material==='mixed') recycle.push({l:'should',t:'<strong>分离说明</strong>：复合材料包装建议标注"分离后回收"说明'});
+
+    // 语言要求
+    var language = [];
+    if(market==='US') language.push({l:'should',t:'<strong>英文</strong>：建议包装含英文信息'});
+    if(market==='CA') language.push({l:'must',t:'<strong>双语要求</strong>：加拿大包装必须同时含英文和法文（魁北克省强制）'});
+    if(market==='EU') language.push({l:'must',t:'<strong>目标国语言</strong>：包装信息必须使用销售目标国官方语言'});
+    if(market==='UK') language.push({l:'must',t:'<strong>英文</strong>：包装必须含英文信息'});
+    if(market==='JP') language.push({l:'must',t:'<strong>日语</strong>：包装必须含日语信息'});
+    if(market==='AU') language.push({l:'should',t:'<strong>英文</strong>：建议包装含英文信息'});
+    if(product==='food'||product==='cosmetics') language.push({l:'must',t:'<strong>成分列表</strong>：'+m+'法规要求包装含目标语言成分列表'});
+    if(product==='dangerous') language.push({l:'must',t:'<strong>危险品警示</strong>：包装必须含目标语言危险品警示语'});
+
+    // 环保要求
+    var eco = [];
+    if(market==='EU'){ eco.push({l:'must',t:'<strong>PPWD</strong>：符合包装及包装废弃物指令94/62/EC，重金属总量<100ppm'}); eco.push({l:'must',t:'<strong>可回收性声明</strong>：如标注"可回收"需符合EN 13430标准'}); eco.push({l:'should',t:'<strong>轻量化</strong>：建议减少包装体积和重量，符合减量化原则'}); }
+    if(market==='US'){ eco.push({l:'must',t:'<strong>TPCH</strong>：包装重金属含量限制（铅/镉/汞/六价铬<100ppm）'}); eco.push({l:'should',t:'<strong>EPA指导</strong>：建议符合EPA可持续包装指南'}); }
+    if(market==='JP'){ eco.push({l:'must',t:'<strong>容器包装回收法</strong>：必须依法分类回收包装废弃物'}); eco.push({l:'should',t:'<strong>3R原则</strong>：建议符合Reduce/Reuse/Recycle原则'}); }
+    if(market==='UK'){ eco.push({l:'must',t:'<strong>塑料包装税</strong>：含30%以上再生塑料的包装需申报塑料包装税'}); eco.push({l:'should',t:'<strong>减塑目标</strong>：建议减少一次性塑料使用'}); }
+    if(market==='AU'){ eco.push({l:'should',t:'<strong>2025国家包装目标</strong>：建议符合100%可回收/可堆肥/可重复使用目标'}); }
+    if(material==='plastic') eco.push({l:'should',t:'<strong>再生塑料</strong>：建议使用PCR（消费后回收）塑料减少环境影响'});
+    if(product==='food') eco.push({l:'should',t:'<strong>食品级再生塑料</strong>：如使用再生塑料需符合FDA/EFSA食品级认证'});
+
+    // 运输标识
+    var transport = [];
+    transport.push({l:'must',t:'<strong>条码</strong>：包装必须含正确的产品条码（UPC/EAN/JAN等）'});
+    transport.push({l:'must',t:'<strong>原产国标注</strong>：包装必须标注"Made in / Product of [原产国]"'});
+    if(product==='dangerous') transport.push({l:'must',t:'<strong>UN编号</strong>：危险品包装必须含UN编号和Class标识'});
+    if(product==='dangerous') transport.push({l:'must',t:'<strong>UN包装标志</strong>：含电池产品需符合UN3480/UN3481等包装规范'});
+    if(product==='electronics') transport.push({l:'should',t:'<strong>防静电标识</strong>：电子产品包装建议加贴防静电标识'});
+    if(product==='fragile'||product==='glass') transport.push({l:'should',t:'<strong>易碎标识</strong>：玻璃/易碎品包装建议加贴易碎标识'});
+    transport.push({l:'should',t:'<strong>堆码极限</strong>：建议标注堆码层数极限标识'});
+    transport.push({l:'should',t:'<strong>防潮标识</strong>：建议加贴防潮/远离水源标识'});
+    if(product==='food'||product==='cosmetics') transport.push({l:'should',t:'<strong>温度控制</strong>：如需温控运输，建议标注温度要求'});
+    if(market==='JP') transport.push({l:'info',t:'<strong>JAN条码</strong>：日本市场建议使用JAN条码（以45/49开头）'});
+    if(market==='US') transport.push({l:'info',t:'<strong>UPC条码</strong>：美国市场建议使用UPC-A条码'});
+
+    // 渲染
+    var cats = [
+      {title:'♻️ 回收标志要求',cls:'recycle',items:recycle},
+      {title:'🌐 语言要求',cls:'language',items:language},
+      {title:'🌍 环保要求',cls:'eco',items:eco},
+      {title:'🚚 运输标识',cls:'transport',items:transport}
+    ];
+    var total=0,mustN=0;
+    var html='';
+    cats.forEach(function(cat){
+      html += '<div class="req-category"><div class="req-cat-header '+cat.cls+'">'+cat.title+'</div><div class="req-list">';
+      cat.items.forEach(function(item){
+        total++;
+        if(item.l==='must') mustN++;
+        html += '<div class="req-item"><div class="req-dot '+item.l+'"></div><div class="req-text">'+item.t+'</div></div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('reqGrid').innerHTML = html;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statMust').textContent = mustN;
+    document.getElementById('statCat').textContent = cats.length;
+  }
+
+  return { compute:compute };
+})();
+PCC.compute();
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="竞品关键词交集分析器：输入自有与3个竞品的关键词，韦恩图式CSS可视化（独有/共有/缺失），识别机会关键词与词库缺口。">
+<meta name="keywords" content="竞品关键词,关键词交集,韦恩图,词库缺口,跨境电商">
+<title>竞品关键词交集分析 - 韦恩图可视化·机会词识别 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--indigo:#4f46e5;--indigo-light:#6366f1;--indigo-bg:#eef2ff;--success:#10b981;--warn:#f59e0b;--danger:#ef4444}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f8fafc}
+.wf-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;top:64px;z-index:90;height:48px;display:flex;align-items:center}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%;overflow-x:auto}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:#475569;text-decoration:none;white-space:nowrap;transition:all .2s}
+.workflow-step:hover{background:#e0e7ff;color:var(--indigo)}.workflow-step.active{background:var(--indigo);color:#fff;font-weight:600}
+.workflow-arrow{color:#cbd5e1;font-size:11px;flex-shrink:0}
+.crumb{max-width:1152px;margin:0 auto;padding:12px 24px;font-size:13px;color:#64748b}.crumb a{color:#64748b}.crumb a:hover{color:var(--indigo)}.crumb .cur{color:#0f172a;font-weight:600}
+.tool-head{max-width:1152px;margin:0 auto;padding:8px 24px 24px}.tool-head h1{font-size:32px;font-weight:800;color:#0f172a;letter-spacing:-.5px}.tool-head h1 em{font-style:normal;color:var(--indigo)}.tool-head p{font-size:15px;color:#64748b;margin-top:8px;max-width:680px;line-height:1.7}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);margin-bottom:24px}
+.card h2{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #f1f5f9}
+.card h3{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px}
+.kw-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kw-box{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}
+.kw-box-head{padding:10px 14px;font-weight:700;color:#fff;font-size:13px}
+.kw-box textarea{width:100%;border:none;padding:12px 14px;font-size:12px;color:#0f172a;font-family:inherit;resize:vertical;min-height:90px;line-height:1.6}
+.kw-box textarea:focus{outline:none;background:#f8fafc}
+.own{background:linear-gradient(135deg,#4f46e5,#6366f1)}.c1{background:linear-gradient(135deg,#10b981,#059669)}.c2{background:linear-gradient(135deg,#f59e0b,#d97706)}.c3{background:linear-gradient(135deg,#ef4444,#f87171)}
+.btn{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn-ghost{background:#fff;border:1px solid #e2e8f0;color:#475569}
+.result-note{font-size:12px;color:#64748b;line-height:1.6;padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--indigo);margin-top:14px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.sum-card{padding:18px;border-radius:12px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0}.sum-card .v{font-size:22px;font-weight:800}.sum-card .l{font-size:12px;color:#64748b;margin-top:2px}
+/* 韦恩图 */
+.venn-wrap{display:flex;justify-content:center;padding:20px 0}
+.venn{position:relative;width:340px;height:280px}
+.venn-circle{position:absolute;width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;mix-blend-mode:multiply}
+.vc-own{background:rgba(79,70,229,.7);top:90px;left:85px}
+.vc-c1{background:rgba(16,185,129,.7);top:20px;left:30px}
+.vc-c2{background:rgba(245,158,11,.7);top:20px;left:140px}
+.vc-c3{background:rgba(239,68,68,.7);top:110px;left:150px}
+.venn-label{position:absolute;font-size:11px;font-weight:700;color:#0f172a;background:rgba(255,255,255,.9);padding:2px 8px;border-radius:10px;white-space:nowrap}
+/* 区块 */
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.seg-box{border:1px solid #e2e8f0;border-radius:12px;padding:16px}
+.seg-head{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.seg-dot{width:12px;height:12px;border-radius:3px}
+.seg-list{max-height:200px;overflow-y:auto}
+.seg-item{font-size:12px;color:#334155;padding:5px 8px;background:#f8fafc;border-radius:6px;margin-bottom:4px}
+.opportunity-list{margin-top:8px}
+.op-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;font-size:13px;border-left:3px solid var(--success)}
+.op-item .oc{font-size:11px;color:#64748b}
+.advice-list{list-style:none;padding:0;margin:0}.advice-list li{padding:10px 0 10px 28px;font-size:14px;color:#334155;position:relative;line-height:1.6;border-bottom:1px solid #f1f5f9}.advice-list li:last-child{border-bottom:none}.advice-list li::before{content:'';position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--indigo)}.advice-list li.ok::before{background:var(--success)}.advice-list li.warn::before{background:var(--warn)}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel-card{display:flex;gap:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;transition:all .2s}.rel-card:hover{border-color:var(--indigo);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.rel-ic{font-size:22px;flex-shrink:0}.rel-card h4{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}.rel-card p{font-size:12px;color:#64748b}
+.back-link{text-align:center;padding:24px}.back-link a{display:inline-block;padding:12px 32px;border-radius:50px;background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.empty{text-align:center;padding:40px;color:#94a3b8;font-size:14px}
+@media(max-width:768px){.summary-grid,.kw-grid,.seg-grid{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="competitor_keyword_intersection">
+<nav class="tool-nav" role="navigation" aria-label="主导航"><div class="container tool-nav-inner">
+<a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+<ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+<a href="index.html" class="tool-nav-back">← 工具中心</a></div></nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W37 关键词深度工作流</div><div class="workflow-steps">
+<a href="keyword-research-matrix.html" class="workflow-step">研究矩阵</a><span class="workflow-arrow">›</span>
+<a href="search-volume-estimator.html" class="workflow-step">搜索量</a><span class="workflow-arrow">›</span>
+<a href="keyword-difficulty-scorer.html" class="workflow-step">难度评分</a><span class="workflow-arrow">›</span>
+<a href="long-tail-keyword-finder.html" class="workflow-step">长尾词</a><span class="workflow-arrow">›</span>
+<a href="keyword-cluster-builder.html" class="workflow-step">聚类构建</a><span class="workflow-arrow">›</span>
+<a href="competitor-keyword-intersection.html" class="workflow-step active">竞品交集</a><span class="workflow-arrow">›</span>
+<a href="keyword-trend-forecaster.html" class="workflow-step">趋势预测</a><span class="workflow-arrow">›</span>
+<a href="ppc-keyword-mapper.html" class="workflow-step">PPC映射</a><span class="workflow-arrow">›</span>
+<a href="search-term-report-analyzer.html" class="workflow-step">搜索词报告</a><span class="workflow-arrow">›</span>
+<a href="keyword-canibalization-checker.html" class="workflow-step">蚕食检查</a>
+</div></div></div>
+<div class="crumb"><a href="../index.html">首页</a> › <a href="index.html">实用工具</a> › <a href="competitor-keyword-intersection.html">W37</a> › <span class="cur">竞品关键词交集分析</span></div>
+<div class="tool-head"><h1>竞品关键词<em>交集分析</em></h1><p>输入自有与3个竞品的关键词，韦恩图式可视化独有/共有/缺失词，识别竞品有而你没有的"机会关键词"，补齐词库缺口。</p></div>
+<div class="wf-container">
+  <div class="card">
+    <h2>📋 输入各方关键词</h2>
+    <div class="kw-grid">
+      <div class="kw-box"><div class="kw-box-head own">自有 My Store</div><textarea id="own">bluetooth speaker
+wireless speaker
+portable speaker
+mini bluetooth speaker
+waterproof speaker</textarea></div>
+      <div class="kw-box"><div class="kw-box-head c1">竞品1 Competitor A</div><textarea id="comp1">bluetooth speaker
+wireless earbuds
+noise cancelling headphones
+portable speaker
+bluetooth headphones</textarea></div>
+      <div class="kw-box"><div class="kw-box-head c2">竞品2 Competitor B</div><textarea id="comp2">bluetooth speaker
+outdoor speaker
+party speaker
+gaming headphones
+wireless speaker</textarea></div>
+      <div class="kw-box"><div class="kw-box-head c3">竞品3 Competitor C</div><textarea id="comp3">bluetooth speaker
+smart speaker
+mini speaker
+kitchen speaker
+portable speaker</textarea></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" onclick="CKI.analyze()">分析交集</button><button class="btn btn-ghost" onclick="CKI.sample()">载入示例</button></div>
+    <div class="result-note">💡 每行一个关键词（不区分大小写）。分析后输出：你独有的词、四方共有词、以及竞品有而你没有的"机会词"（词库缺口）。</div>
+  </div>
+  <div class="card"><h2>🔬 交集分析结果</h2><div id="result" class="empty">点击"分析交集"查看结果</div></div>
+  <div class="card"><h2>🧰 相关工具推荐</h2><div class="rel-grid">
+    <a class="rel-card" href="keyword-cluster-builder.html"><span class="rel-ic">🗂️</span><div><h4>关键词聚类构建器</h4><p>主题分组</p></div></a>
+    <a class="rel-card" href="keyword-research-matrix.html"><span class="rel-ic">🔑</span><div><h4>关键词研究矩阵</h4><p>10维度评估机会词</p></div></a>
+    <a class="rel-card" href="ppc-keyword-mapper.html"><span class="rel-ic">📐</span><div><h4>PPC关键词映射器</h4><p>机会词投放规划</p></div></a>
+  </div></div>
+  <div class="back-link"><a href="index.html">← 返回工具中心</a></div>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<script>
+var CKI=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function getSet(id){return $(id).value.split(/[\n,]/).map(function(s){return s.trim().toLowerCase()}).filter(Boolean)}
+  function esc(s){return s.replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c]})}
+  function uniq(a){var o={};a.forEach(function(x){o[x]=1});return Object.keys(o)}
+  function intersect(a,b){var s={};b.forEach(function(x){s[x]=1});return a.filter(function(x){return s[x]})}
+  function diff(a,b){var s={};b.forEach(function(x){s[x]=1});return a.filter(function(x){!s[x]})}
+  function analyze(){
+    var own=getSet('own'),c1=getSet('comp1'),c2=getSet('comp2'),c3=getSet('comp3');
+    if(!own.length||!c1.length){$('result').className='empty';$('result').innerHTML='请至少填写自有和竞品1的关键词';return}
+    var all=uniq(own.concat(c1,c2,c3));
+    var common=own;[c1,c2,c3].forEach(function(c){if(c.length)common=intersect(common,c)});
+    var ownOnly=diff(own,c1.concat(c2,c3));
+    var compAll=uniq(c1.concat(c2,c3));
+    var missing=diff(compAll,own); // 竞品有而你没有
+    var withOwn=intersect(compAll,own); // 你和至少一个竞品共有
+    var multiOwned=compAll.filter(function(w){var n=0;[c1,c2,c3].forEach(function(c){if(c.indexOf(w)>=0)n++});return n>=2&&own.indexOf(w)<0}); // 多个竞品有但你没有=高机会
+    var html='<div class="summary-grid"><div class="sum-card"><div class="v" style="color:#4f46e5">'+own.length+'</div><div class="l">自有词数</div></div><div class="sum-card"><div class="v" style="color:#10b981">'+common.length+'</div><div class="l">四方共有词</div></div><div class="sum-card"><div class="v" style="color:#f59e0b">'+ownOnly.length+'</div><div class="l">你独有词</div></div><div class="sum-card"><div class="v" style="color:#ef4444">'+missing.length+'</div><div class="l">缺失词(机会)</div></div></div>';
+    // 韦恩图
+    html+='<div class="venn-wrap"><div class="venn"><div class="venn-circle vc-c1">竞品A<br>'+c1.length+'</div><div class="venn-circle vc-c2">竞品B<br>'+c2.length+'</div><div class="venn-circle vc-c3">竞品C<br>'+c3.length+'</div><div class="venn-circle vc-own">自有<br>'+own.length+'</div></div></div>';
+    // 区块
+    html+='<div class="seg-grid"><div class="seg-box"><div class="seg-head"><span class="seg-dot" style="background:#4f46e5"></span>你独有的关键词（差异化优势）<span style="margin-left:auto;color:#64748b">'+ownOnly.length+'</span></div><div class="seg-list">';
+    if(ownOnly.length)ownOnly.forEach(function(w){html+='<div class="seg-item">'+esc(w)+'</div>'});else html+='<div class="seg-item" style="color:#94a3b8">无独有词</div>';
+    html+='</div></div><div class="seg-box"><div class="seg-head"><span class="seg-dot" style="background:#10b981"></span>四方共有词（核心战场）<span style="margin-left:auto;color:#64748b">'+common.length+'</span></div><div class="seg-list">';
+    if(common.length)common.forEach(function(w){html+='<div class="seg-item">'+esc(w)+'</div>'});else html+='<div class="seg-item" style="color:#94a3b8">无共有词</div>';
+    html+='</div></div></div>';
+    // 机会词
+    html+='<h3 style="margin-top:24px">🎯 机会关键词（竞品有、你没有）</h3>';
+    if(!missing.length){html+='<div class="empty">无缺失词，词库覆盖完整</div>'}
+    else{
+      html+='<div class="opportunity-list">';
+      // 按被多少竞品覆盖排序
+      var scored=missing.map(function(w){var n=0;[c1,c2,c3].forEach(function(c){if(c.indexOf(w)>=0)n++});return{w:w,n:n}});
+      scored.sort(function(a,b){return b.n-a.n});
+      scored.forEach(function(o){html+='<div class="op-item" style="'+(o.n>=2?'border-left-color:#10b981':'')+'"><span><b>'+esc(o.w)+'</b></span><span class="oc">'+o.n+'个竞品覆盖'+(o.n>=2?' · 高优先':'')+'</span></div>'});
+      html+='</div>';
+    }
+    html+='<h3 style="margin-top:24px">🧭 策略建议</h3><ul class="advice-list">';
+    html+='<li class="ok">你独有 '+ownOnly.length+' 个关键词，这是差异化流量来源，建议持续巩固排名优势。</li>';
+    html+='<li>四方共有 '+common.length+' 个核心词，是竞争最激烈的红海，需重点优化Listing与广告以保持排名。</li>';
+    if(missing.length)html+='<li class="warn">发现 '+missing.length+' 个缺失词（竞品有、你没有），其中 '+(scored.filter(function(o){return o.n>=2}).length)+' 个被多个竞品覆盖，建议优先补充到词库并测试投放。</li>';
+    else html+='<li class="ok">词库覆盖完整，无缺口。建议聚焦优化现有词的排名与转化。</li>';
+    html+='<li>建议每月做一次交集复盘，监控竞品新增关键词，及时跟进高潜力新词。</li>';
+    html+='</ul>';
+    $('result').className='';$('result').innerHTML=html;
+  }
+  function sample(){
+    $('own').value='bluetooth speaker\nwireless speaker\nportable speaker\nmini bluetooth speaker\nwaterproof speaker';
+    $('comp1').value='bluetooth speaker\nwireless earbuds\nnoise cancelling headphones\nportable speaker\nbluetooth headphones';
+    $('comp2').value='bluetooth speaker\noutdoor speaker\nparty speaker\ngaming headphones\nwireless speaker';
+    $('comp3').value='bluetooth speaker\nsmart speaker\nmini speaker\nkitchen speaker\nportable speaker';
+    analyze();
+  }
+  function init(){var bt=$('backToTop');window.addEventListener('scroll',function(){bt.classList.toggle('visible',window.scrollY>300)});bt.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})}}
+  return{analyze:analyze,sample:sample,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',CKI.init)}else{CKI.init()}
+</script>
+</body>
+</html>

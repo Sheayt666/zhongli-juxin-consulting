@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="产品上线时间线规划器：输入目标上线日期，自动生成CSS甘特图时间线（选品→采购→物流→上架→广告→优化），标注关键里程碑和各阶段天数。">
+<meta name="keywords" content="产品上线,时间线规划,甘特图,上线计划,跨境电商工具">
+<title>产品上线时间线规划器 - CSS甘特图·里程碑·阶段规划 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.input-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.input-field input,.input-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;font-family:inherit}
+.input-field input:focus,.input-field select:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.gantt-container{margin-top:20px;overflow-x:auto}
+.gantt-header{display:grid;grid-template-columns:140px 1fr;gap:0;margin-bottom:8px}
+.gantt-timeline-header{display:grid;background:var(--bg);border-radius:6px;overflow:hidden}
+.gantt-week{padding:6px 4px;text-align:center;font-size:10px;font-weight:600;color:var(--muted);border-right:1px solid var(--rule)}
+.gantt-week:last-child{border-right:none}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;gap:0;align-items:center;margin-bottom:6px;min-height:44px}
+.gantt-label{padding:8px 12px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.gantt-label-icon{font-size:18px}
+.gantt-bar-container{position:relative;height:36px;background:var(--bg);border-radius:6px;display:flex;align-items:center}
+.gantt-bar{height:28px;border-radius:6px;display:flex;align-items:center;padding:0 12px;font-size:11px;font-weight:700;color:#fff;position:absolute;transition:all .3s;overflow:hidden;white-space:nowrap}
+.gantt-bar-milestone{position:absolute;top:-4px;width:3px;height:44px;background:var(--red);z-index:5}
+.gantt-bar-milestone::after{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:var(--red);border:2px solid #fff;box-shadow:0 0 0 1px var(--red)}
+.milestone-list{list-style:none;padding:0}
+.milestone-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-light)}
+.milestone-item:last-child{border-bottom:none}
+.milestone-date{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;text-align:center;min-width:80px}
+.milestone-info{flex:1}
+.milestone-name{font-size:14px;font-weight:600}.milestone-desc{font-size:12px;color:var(--muted)}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:16px}
+.phase-card{padding:14px;border-radius:var(--radius-sm);border:1px solid var(--rule);background:var(--bg)}
+.phase-card-name{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.phase-card-days{font-size:20px;font-weight:800}
+.phase-card-desc{font-size:11px;color:var(--muted);margin-top:4px}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.input-row{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+<a href="product-research-scorecard.html" class="workflow-step">选品评分</a><span class="workflow-arrow">→</span>
+<a href="market-gap-finder.html" class="workflow-step">市场空白</a><span class="workflow-arrow">→</span>
+<a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a><span class="workflow-arrow">→</span>
+<a href="competition-density-mapper.html" class="workflow-step">竞争密度</a><span class="workflow-arrow">→</span>
+<a href="product-differentiation-planner.html" class="workflow-step">差异化</a><span class="workflow-arrow">→</span>
+<a href="seasonality-checker.html" class="workflow-step">季节性</a><span class="workflow-arrow">→</span>
+<a href="profit-margin-forecaster.html" class="workflow-step">利润预测</a><span class="workflow-arrow">→</span>
+<a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a><span class="workflow-arrow">→</span>
+<a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a><span class="workflow-arrow">→</span>
+<a href="product-launch-timeline.html" class="workflow-step active">上线时间线</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W36</a><span class="sep">/</span><span class="current">上线时间线</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W36 选品深度工作流</span><h1>产品上线<em>时间线规划器</em></h1><p>输入目标上线日期，自动生成CSS甘特图时间线，覆盖选品→采购→物流→上架→广告→优化全流程，标注关键里程碑和各阶段天数，让上线计划一目了然。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbTotal" style="color:var(--indigo)">0</div><div class="sb-lbl">总工期（天）</div></div>
+<div class="sb-card"><div class="sb-val" id="sbStart" style="color:var(--gold)">-</div><div class="sb-lbl">需启动日期</div></div>
+<div class="sb-card"><div class="sb-val" id="sbLaunch" style="color:var(--green)">-</div><div class="sb-lbl">上线日期</div></div>
+<div class="sb-card"><div class="sb-val" id="sbPhases" style="color:var(--indigo)">6</div><div class="sb-lbl">阶段数</div></div>
+</div>
+<div class="card">
+<h3>📅 上线参数设置</h3>
+<div class="input-row">
+<div class="input-field"><label>目标上线日期</label><input type="date" id="launchDate" value="2026-10-15" oninput="plan()"></div>
+<div class="input-field"><label>采购方式</label><select id="sourcing" onchange="plan()"><option value="china">中国采购（海运）</option><option value="china-air">中国采购（空运）</option><option value="local">本地采购</option></select></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>选品调研天数</label><input type="number" id="d1" value="14" min="1" oninput="plan()"></div>
+<div class="input-field"><label>采购生产天数</label><input type="number" id="d2" value="20" min="1" oninput="plan()"></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>物流运输天数</label><input type="number" id="d3" value="35" min="1" oninput="plan()"></div>
+<div class="input-field"><label>上架准备天数</label><input type="number" id="d4" value="7" min="1" oninput="plan()"></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>广告启动天数</label><input type="number" id="d5" value="30" min="1" oninput="plan()"></div>
+<div class="input-field"><label>优化迭代天数</label><input type="number" id="d6" value="60" min="1" oninput="plan()"></div>
+</div>
+</div>
+<div class="card">
+<h3>📊 甘特图时间线</h3>
+<div class="gantt-container" id="ganttContainer"></div>
+</div>
+<div class="card">
+<h3>📋 各阶段详情</h3>
+<div class="phase-grid" id="phaseGrid"></div>
+</div>
+<div class="card">
+<h3>🎯 关键里程碑</h3>
+<ul class="milestone-list" id="milestoneList"></ul>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="product-research-scorecard.html" class="rt-card"><span class="rt-icon">📋</span><div class="rt-content"><h5>选品评分卡</h5><p>12维度评估</p></div></a>
+<a href="seasonality-checker.html" class="rt-card"><span class="rt-icon">📅</span><div class="rt-content"><h5>季节性检查器</h5><p>最佳上架月</p></div></a>
+<a href="profit-margin-forecaster.html" class="rt-card"><span class="rt-icon">💰</span><div class="rt-content"><h5>利润率预测器</h5><p>3场景利润</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+const phaseDefs=[
+{name:'选品调研',icon:'🔍',color:'#4f46e5',key:'d1',desc:'市场调研、竞品分析、选品决策'},
+{name:'采购生产',icon:'🏭',color:'#6366f1',key:'d2',desc:'供应商对接、样品确认、批量生产'},
+{name:'物流运输',icon:'🚢',color:'#8b5cf6',key:'d3',desc:'头程物流、清关、FBA入仓'},
+{name:'上架准备',icon:'📦',color:'#f59e0b',key:'d4',desc:'Listing优化、图片拍摄、关键词布局'},
+{name:'广告启动',icon:'📣',color:'#10b981',key:'d5',desc:'PPC广告投放、Prime Day/促销准备'},
+{name:'优化迭代',icon:'🔄',color:'#ef4444',key:'d6',desc:'数据复盘、Listing优化、广告调优'}
+];
+function plan(){
+const launchDate=new Date(document.getElementById('launchDate').value);
+const sourcing=document.getElementById('sourcing').value;
+let days=phaseDefs.map(p=>parseInt(document.getElementById(p.key).value)||1);
+// Adjust logistics based on sourcing
+if(sourcing==='china-air')days[2]=Math.min(days[2],10);
+if(sourcing==='local')days[2]=Math.min(days[2],3);
+const totalDays=days.reduce((a,b)=>a+b,0);
+const startDate=new Date(launchDate);
+// Launch is at end of phase 4 (上架准备)
+const launchOffset=days[0]+days[1]+days[2]+days[3];
+startDate.setDate(startDate.getDate()-launchOffset);
+// Summary
+document.getElementById('sbTotal').textContent=totalDays;
+document.getElementById('sbStart').textContent=startDate.toLocaleDateString('zh-CN',{month:'short',day:'numeric'});
+document.getElementById('sbLaunch').textContent=launchDate.toLocaleDateString('zh-CN',{month:'short',day:'numeric'});
+// Gantt chart
+const totalWeeks=Math.ceil(totalDays/7);
+const weekWidth=100/totalWeeks;
+let headerHtml=`<div></div><div class="gantt-timeline-header">`;
+for(let w=0;w<totalWeeks;w++)headerHtml+=`<div class="gantt-week">W${w+1}</div>`;
+headerHtml+=`</div>`;
+let ganttHtml=`<div class="gantt-header">${headerHtml}</div>`;
+let cumulative=0;
+phaseDefs.forEach((p,i)=>{
+const startWeek=cumulative/7;
+const durationWeeks=days[i]/7;
+const leftPct=startWeek/totalWeeks*100;
+const widthPct=durationWeeks/totalWeeks*100;
+const startDatePhase=new Date(startDate);
+startDatePhase.setDate(startDatePhase.getDate()+cumulative);
+const endDatePhase=new Date(startDatePhase);
+endDatePhase.setDate(endDatePhase.getDate()+days[i]);
+ganttHtml+=`<div class="gantt-row">
+<div class="gantt-label"><span class="gantt-label-icon">${p.icon}</span>${p.name}</div>
+<div class="gantt-bar-container">
+<div class="gantt-bar" style="left:${leftPct}%;width:${widthPct}%;background:linear-gradient(90deg,${p.color},${p.color}dd)">${days[i]}天</div>
+${i===3?`<div class="gantt-bar-milestone" style="left:${(cumulative+days[i])/totalWeeks*100}%" title="上线日"></div>`:''}
+${i===4?`<div class="gantt-bar-milestone" style="left:${(cumulative+days[i])/totalWeeks*100}%;background:var(--green)" title="广告优化完成"></div>`:''}
+</div>
+</div>`;
+cumulative+=days[i];
+});
+document.getElementById('ganttContainer').innerHTML=ganttHtml;
+// Phase cards
+document.getElementById('phaseGrid').innerHTML=phaseDefs.map((p,i)=>{
+const startPhase=new Date(startDate);
+startPhase.setDate(startPhase.getDate()+days.slice(0,i).reduce((a,b)=>a+b,0));
+const endPhase=new Date(startPhase);
+endPhase.setDate(endPhase.getDate()+days[i]);
+return`<div class="phase-card" style="border-left:4px solid ${p.color}">
+<div class="phase-card-name">${p.icon} ${p.name}</div>
+<div class="phase-card-days" style="color:${p.color}">${days[i]}天</div>
+<div class="phase-card-desc">${startPhase.toLocaleDateString('zh-CN',{month:'short',day:'numeric'})} → ${endPhase.toLocaleDateString('zh-CN',{month:'short',day:'numeric'})}</div>
+<div class="phase-card-desc">${p.desc}</div>
+</div>`;
+}).join('');
+// Milestones
+const milestones=[
+{name:'选品决策完成',date:new Date(startDate),days:days[0],desc:'完成市场调研和选品评分，确定最终产品',color:'#4f46e5'},
+{name:'生产完成发货',date:new Date(startDate.getTime()+days[0]*86400000+days[1]*86400000),days:days[0]+days[1],desc:'产品生产完成，安排头程物流发货',color:'#6366f1'},
+{name:'货物到达FBA',date:new Date(startDate.getTime()+(days[0]+days[1]+days[2])*86400000),days:days[0]+days[1]+days[2],desc:'货物完成清关并入库FBA仓库',color:'#8b5cf6'},
+{name:'产品正式上线',date:launchDate,days:launchOffset,desc:'Listing上架，产品正式开售',color:'#10b981'},
+{name:'广告全面启动',date:new Date(launchDate.getTime()+7*86400000),days:launchOffset+7,desc:'PPC广告全面开启，开始积累数据',color:'#f59e0b'},
+{name:'首轮优化完成',date:new Date(launchDate.getTime()+days[4]*86400000),days:launchOffset+days[4],desc:'完成第一轮Listing和广告优化',color:'#ef4444'},
+{name:'稳定运营阶段',date:new Date(launchDate.getTime()+(days[4]+days[5])*86400000),days:totalDays,desc:'进入稳定运营和持续优化阶段',color:'#4f46e5'}
+];
+document.getElementById('milestoneList').innerHTML=milestones.map(m=>`<li class="milestone-item">
+<div class="milestone-date" style="background:${m.color}">${m.date.toLocaleDateString('zh-CN',{month:'short',day:'numeric'})}</div>
+<div class="milestone-info"><div class="milestone-name">${m.name} (Day ${m.days})</div><div class="milestone-desc">${m.desc}</div></div>
+</li>`).join('');
+try{localStorage.setItem('jx_launch_timeline',JSON.stringify({launchDate:document.getElementById('launchDate').value,sourcing,days}))}catch(e){}
+}
+try{const s=JSON.parse(localStorage.getItem('jx_launch_timeline'));if(s){document.getElementById('launchDate').value=s.launchDate;document.getElementById('sourcing').value=s.sourcing;if(s.days)s.days.forEach((d,i)=>{if(document.getElementById('d'+(i+1)))document.getElementById('d'+(i+1)).value=d})}}catch(e){}
+plan();
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="广告预算拆分器：根据总预算、投放目标和各渠道历史ROAS，智能分配广告预算，CSS饼图可视化，预期效果预估。">
+<meta name="keywords" content="广告预算分配,预算拆分,ROAS,渠道分配,跨境电商工具">
+<title>广告预算拆分器 - 渠道分配·CSS饼图·预期效果 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.input-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.input-field input,.input-field select{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;font-family:inherit}
+.input-field input:focus,.input-field select:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.channel-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-sm);border:1px solid var(--rule-light);margin-bottom:10px;background:#fff}
+.channel-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.channel-info{flex:1}
+.channel-name{font-size:14px;font-weight:600}.channel-roas{font-size:12px;color:var(--muted)}
+.channel-input{width:80px;padding:8px;border:1px solid var(--rule);border-radius:8px;font-size:14px;text-align:center}
+.pie-chart{width:240px;height:240px;border-radius:50%;margin:0 auto 20px;transition:all .3s}
+.pie-center{width:120px;height:120px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;position:absolute;transform:translate(60px,60px)}
+.pie-wrap{position:relative;width:240px;margin:0 auto}
+.pie-center-val{font-size:24px;font-weight:900;color:var(--indigo)}
+.pie-center-lbl{font-size:11px;color:var(--muted)}
+.legend{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:13px}
+.legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0}
+.allocation-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:16px}
+.allocation-table th{padding:10px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg);border-bottom:2px solid var(--rule)}
+.allocation-table td{padding:10px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.allocation-table .ch-name{font-weight:600}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-track{flex:1;height:24px;border-radius:6px;background:var(--bg);overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;color:#fff;font-weight:700;transition:width .3s}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.grid-2,.input-row{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W35 广告创意工作流</div><div class="workflow-steps">
+<a href="ad-creative-scorecard.html" class="workflow-step">创意评分</a><span class="workflow-arrow">→</span>
+<a href="headline-generator.html" class="workflow-step">标题</a><span class="workflow-arrow">→</span>
+<a href="product-image-analyzer.html" class="workflow-step">图片分析</a><span class="workflow-arrow">→</span>
+<a href="ab-test-planner.html" class="workflow-step">A/B测试</a><span class="workflow-arrow">→</span>
+<a href="ad-copy-variants.html" class="workflow-step">文案变体</a><span class="workflow-arrow">→</span>
+<a href="creative-fatigue-detector.html" class="workflow-step">疲劳检测</a><span class="workflow-arrow">→</span>
+<a href="seasonal-ad-planner.html" class="workflow-step">季节规划</a><span class="workflow-arrow">→</span>
+<a href="ad-budget-splitter.html" class="workflow-step active">预算拆分</a><span class="workflow-arrow">→</span>
+<a href="creative-brief-builder.html" class="workflow-step">Brief</a><span class="workflow-arrow">→</span>
+<a href="creative-performance-link.html" class="workflow-step">绩效关联</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W35</a><span class="sep">/</span><span class="current">预算拆分</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W35 广告创意工作流</span><h1>广告预算<em>拆分器</em></h1><p>输入总预算和投放目标，结合各渠道历史ROAS，智能生成渠道预算分配方案，CSS饼图可视化，预估各渠道预期收入和整体ROAS。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbBudget" style="color:var(--indigo)">$0</div><div class="sb-lbl">总预算</div></div>
+<div class="sb-card"><div class="sb-val" id="sbRevenue" style="color:var(--green)">$0</div><div class="sb-lbl">预期总收入</div></div>
+<div class="sb-card"><div class="sb-val" id="sbROAS" style="color:var(--gold)">0x</div><div class="sb-lbl">综合ROAS</div></div>
+<div class="sb-card"><div class="sb-val" id="sbProfit" style="color:var(--green)">$0</div><div class="sb-lbl">预期毛利</div></div>
+</div>
+<div class="grid-2">
+<div class="card">
+<h3>💰 预算与目标输入</h3>
+<div class="input-row">
+<div class="input-field"><label>总广告预算 ($)</label><input type="number" id="budget" value="10000" min="0" step="100" oninput="calc()"></div>
+<div class="input-field"><label>主要投放目标</label><select id="goal" onchange="calc()"><option value="traffic">流量最大化</option><option value="conversion" selected>转化最大化</option><option value="brand">品牌曝光</option></select></div>
+</div>
+<div class="input-field" style="margin-bottom:16px"><label>产品毛利率 (%)</label><input type="number" id="margin" value="35" min="0" max="100" step="1" oninput="calc()"></div>
+<h4 style="font-size:14px;font-weight:700;margin-bottom:12px">各渠道历史ROAS</h4>
+<div id="channelContainer"></div>
+</div>
+<div>
+<div class="card">
+<h3>📊 预算分配饼图</h3>
+<div class="pie-wrap">
+<div class="pie-chart" id="pieChart"></div>
+<div class="pie-center"><div class="pie-center-val" id="pieCenter">$0</div><div class="pie-center-lbl">总预算</div></div>
+</div>
+<div class="legend" id="legend"></div>
+</div>
+<div class="card">
+<h3>📋 渠道分配明细</h3>
+<div id="allocBars"></div>
+<table class="allocation-table">
+<thead><tr><th>渠道</th><th>分配预算</th><th>占比</th><th>预期收入</th><th>预期ROAS</th></tr></thead>
+<tbody id="allocTable"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="seasonal-ad-planner.html" class="rt-card"><span class="rt-icon">📅</span><div class="rt-content"><h5>季节性广告规划器</h5><p>12月热力图</p></div></a>
+<a href="acos-calculator.html" class="rt-card"><span class="rt-icon">🎯</span><div class="rt-content"><h5>ACoS计算器</h5><p>广告效果计算</p></div></a>
+<a href="ad-budget-pacing.html" class="rt-card"><span class="rt-icon">📊</span><div class="rt-content"><h5>预算追踪</h5><p>预算消耗追踪</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+const channels=[
+{name:'Sponsored Products',icon:'🔍',roas:4.5,color:'#4f46e5'},
+{name:'Sponsored Brands',icon:'🏷️',roas:3.2,color:'#6366f1'},
+{name:'Sponsored Display',icon:'📱',roas:2.8,color:'#8b5cf6'},
+{name:'DSP',icon:'🎯',roas:3.5,color:'#a78bfa'},
+{name:'Google Ads',icon:'🌐',roas:3.8,color:'#f59e0b'},
+{name:'Facebook Ads',icon:'👥',roas:2.5,color:'#10b981'}
+];
+const container=document.getElementById('channelContainer');
+channels.forEach((ch,i)=>{
+const div=document.createElement('div');div.className='channel-row';
+div.innerHTML=`<div class="channel-icon" style="background:${ch.color}20;color:${ch.color}">${ch.icon}</div><div class="channel-info"><div class="channel-name">${ch.name}</div><div class="channel-roas">历史ROAS</div></div><input type="number" class="channel-input" id="roas${i}" value="${ch.roas}" step="0.1" min="0" oninput="calc()">`;
+container.appendChild(div);
+});
+function calc(){
+const budget=parseFloat(document.getElementById('budget').value)||0;
+const goal=document.getElementById('goal').value;
+const margin=parseFloat(document.getElementById('margin').value)/100;
+// Weight allocation based on goal and ROAS
+const weights=channels.map((ch,i)=>{
+const roas=parseFloat(document.getElementById('roas'+i).value)||0;
+if(goal==='conversion')return Math.pow(roas,2);
+if(goal==='traffic')return roas*0.7+0.3;
+return 1; // brand
+});
+const totalWeight=weights.reduce((a,b)=>a+b,0);
+const allocations=channels.map((ch,i)=>{
+const roas=parseFloat(document.getElementById('roas'+i).value)||0;
+const amt=budget*weights[i]/totalWeight;
+return{...ch,roas,amount:amt,revenue:amt*roas,pct:weights[i]/totalWeight*100};
+});
+// Summary
+const totalRevenue=allocations.reduce((s,a)=>s+a.revenue,0);
+const totalROAS=budget>0?totalRevenue/budget:0;
+const profit=totalRevenue*margin-budget;
+document.getElementById('sbBudget').textContent='$'+budget.toLocaleString();
+document.getElementById('sbRevenue').textContent='$'+Math.round(totalRevenue).toLocaleString();
+document.getElementById('sbROAS').textContent=totalROAS.toFixed(1)+'x';
+document.getElementById('sbProfit').textContent='$'+Math.round(profit).toLocaleString();
+document.getElementById('pieCenter').textContent='$'+(budget>=1000?Math.round(budget/1000)+'K':budget);
+// Pie chart
+let cumulative=0;
+const conicParts=allocations.map(a=>{
+const start=cumulative;
+cumulative+=a.pct;
+return`${a.color} ${start*3.6}deg ${cumulative*3.6}deg`;
+});
+document.getElementById('pieChart').style.background=`conic-gradient(${conicParts.join(',')})`;
+// Legend
+document.getElementById('legend').innerHTML=allocations.map(a=>`<div class="legend-item"><span class="legend-dot" style="background:${a.color}"></span>${a.name} — ${a.pct.toFixed(1)}% ($${Math.round(a.amount).toLocaleString()})</div>`).join('');
+// Allocation bars
+document.getElementById('allocBars').innerHTML=allocations.map(a=>`<div class="bar-row"><span style="font-size:12px;width:120px;flex-shrink:0;font-weight:600">${a.name}</span><div class="bar-track"><div class="bar-fill" style="width:${a.pct}%;background:${a.color}">${a.pct.toFixed(0)}%</div></div></div>`).join('');
+// Table
+document.getElementById('allocTable').innerHTML=allocations.map(a=>`<tr><td class="ch-name">${a.icon} ${a.name}</td><td>$${Math.round(a.amount).toLocaleString()}</td><td>${a.pct.toFixed(1)}%</td><td>$${Math.round(a.revenue).toLocaleString()}</td><td>${a.roas.toFixed(1)}x</td></tr>`).join('');
+try{localStorage.setItem('jx_budget_splitter',JSON.stringify({budget,goal,margin:margin*100,roas:allocations.map(a=>a.roas)}))}catch(e){}
+}
+try{const s=JSON.parse(localStorage.getItem('jx_budget_splitter'));if(s){document.getElementById('budget').value=s.budget;document.getElementById('goal').value=s.goal;document.getElementById('margin').value=s.margin;s.roas.forEach((r,i)=>{if(document.getElementById('roas'+i))document.getElementById('roas'+i).value=r});}}catch(e){}
+calc();
+</script>
+</body>
+</html>

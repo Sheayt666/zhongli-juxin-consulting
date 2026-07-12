@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播排品时间表：输入直播时长和产品列表，自动排品开场引流→爆款→利润款→互动款→收尾，CSS时间线排品可视化，每个产品推荐讲解时长。免费直播运营工具。">
+<meta name="keywords" content="直播排品,排品时间表,直播流程,产品排序,讲解时长,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-product-lineup.html">
+<title>直播排品时间表 - 自动排品·CSS时间线可视化 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .lineup-timeline{position:relative;margin-top:20px;padding-left:24px}
+  .lineup-item{position:relative;padding:16px 20px;margin-bottom:12px;background:var(--bg-soft);border:1px solid var(--rule);border-radius:12px;display:flex;align-items:center;gap:16px}
+  .lineup-item::before{content:'';position:absolute;left:-24px;top:50%;width:12px;height:12px;border-radius:50%;background:#4f46e5;transform:translateY(-50%);z-index:1}
+  .lineup-item::after{content:'';position:absolute;left:-19px;top:0;bottom:0;width:2px;background:#e0e7ff}
+  .lineup-item:first-child::after{top:50%}
+  .lineup-item:last-child::after{bottom:50%}
+  .lineup-time{font-size:12px;color:#4f46e5;font-weight:700;white-space:nowrap;min-width:80px}
+  .lineup-phase{font-size:13px;font-weight:600;color:var(--ink);min-width:80px}
+  .lineup-product{flex:1;font-size:14px;color:var(--ink-soft)}
+  .lineup-duration{font-size:12px;color:var(--muted);padding:4px 10px;background:#fff;border-radius:8px;white-space:nowrap}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播排品时间表","description":"直播排品时间表：输入直播时长和产品列表，自动排品开场引流→爆款→利润款→互动款→收尾，CSS时间线排品可视化，每个产品推荐讲解时长。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-product-lineup.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_product_lineup">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第2步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 标准版</span>
+      <h1>直播排品<em>时间表</em></h1>
+      <p class="tool-hero-desc">输入直播时长和产品列表，自动排品：开场引流→爆款→利润款→互动款→收尾，CSS时间线排品可视化，每个产品推荐讲解时长。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 直播信息</h2>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>直播总时长 (分钟)</label><input type="number" id="duration" value="120" step="10" min="30" oninput="LP.calc()"></div>
+        <div class="calc-field"><label>产品数量</label><input type="number" id="productCount" value="8" step="1" min="3" oninput="LP.calc()"></div>
+      </div>
+      <div class="calc-field"><label>产品列表（逗号分隔，格式：名称|角色）</label>
+        <textarea id="productList" rows="5" style="width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit" oninput="LP.calc()">湿巾便携装|引流
+维C精华液|爆款
+防晒霜SPF50|利润
+洁面泡沫|互动
+黄金面霜|利润
+眼霜礼盒|形象
+面膜套装|利润
+口红试色|互动</textarea>
+      </div>
+      <div class="fee-rule-box">
+        <h4>📐 排品逻辑</h4>
+        <ul>
+          <li>开场引流（10%时长）：低价产品暖场，聚集人气</li>
+          <li>爆款高潮（20%时长）：主推爆款，制造销售高峰</li>
+          <li>利润循环（40%时长）：穿插利润款，持续转化</li>
+          <li>互动调节（15%时长）：互动款调节气氛，拉升停留</li>
+          <li>收尾冲刺（15%时长）：返场爆款+限时优惠，最后一波转化</li>
+        </ul>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  
+      <div class="wf-foot-nav"><a href="live-product-selection.html" class="prev"><span class="fn-label">上一步 · 第1步</span><span class="fn-name">← 选品策略</span></a><a href="live-script-generator.html" class="next"><span class="fn-label">下一步 · 第3步</span><span class="fn-name">话术生成 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var LP=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function v(id){return $(id).value||'';}
+
+  function calc(){
+    var dur=n('duration'),pcount=n('productCount');
+    var raw=v('productList').trim().split('\n').filter(Boolean).map(function(line){
+      var parts=line.split('|');return{name:parts[0].trim(),role:(parts[1]||'利润').trim()};
+    });
+    if(!raw.length||dur<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">📅</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入直播时长和产品列表</p>';return;}
+
+    // 排品逻辑
+    var phases=[
+      {name:'开场引流',pct:0.10,roles:['引流'],icon:'🔥'},
+      {name:'爆款高潮',pct:0.20,roles:['爆款'],icon:'🚀'},
+      {name:'利润循环',pct:0.40,roles:['利润'],icon:'💰'},
+      {name:'互动调节',pct:0.15,roles:['互动'],icon:'💬'},
+      {name:'收尾冲刺',pct:0.15,roles:['形象','爆款','引流'],icon:'🎯'}
+    ];
+
+    // 按角色分组产品
+    var byRole={};
+    raw.forEach(function(p){if(!byRole[p.role])byRole[p.role]=[];byRole[p.role].push(p);});
+
+    // 分配产品到各阶段
+    var lineup=[];var currentTime=0;
+    phases.forEach(function(ph){
+      var phaseDur=dur*ph.pct;
+      var assigned=[];var usedAll=false;
+      ph.roles.forEach(function(r){
+        if(byRole[r]){byRole[r].forEach(function(p){assigned.push(p);});delete byRole[r];}
+      });
+      // 如果该阶段没有匹配产品，从剩余中取
+      if(!assigned.length){
+        var remaining=Object.keys(byRole).flatMap(function(k){return byRole[k]||[];});
+        if(remaining.length){assigned=[remaining[0]];delete byRole[remaining[0].role];}
+      }
+      if(!assigned.length)return;
+      var perProduct=Math.floor(phaseDur/assigned.length);
+      assigned.forEach(function(p){
+        lineup.push({time:currentTime,phase:ph.name,icon:ph.icon,product:p.name,role:p.role,duration:perProduct});
+        currentTime+=perProduct;
+      });
+    });
+
+    // 渲染
+    var timeStr=function(min){return String(Math.floor(min/60)).padStart(2,'0')+':'+String(Math.floor(min%60)).padStart(2,'0');};
+    var html='<h3>📅 直播排品时间表</h3>';
+    html+='<div class="result-summary-bar"><div class="rsb-card"><div class="rsb-val">'+dur+'min</div><div class="rsb-lbl">总时长</div></div><div class="rsb-card"><div class="rsb-val">'+lineup.length+'</div><div class="rsb-lbl">排品数</div></div><div class="rsb-card"><div class="rsb-val">'+phases.length+'</div><div class="rsb-lbl">阶段数</div></div></div>';
+    html+='<div class="lineup-timeline">'+lineup.map(function(item){
+      return '<div class="lineup-item"><div class="lineup-time">'+timeStr(item.time)+'</div><div class="lineup-phase">'+item.icon+' '+item.phase+'</div><div class="lineup-product">'+item.product+' <span style="font-size:11px;color:var(--muted)">('+item.role+')</span></div><div class="lineup-duration">讲解'+item.duration+'min</div></div>';
+    }).join('')+'</div>';
+    html+='<div class="result-note" style="margin-top:16px">💡 排品策略：开场用引流款聚集人气 → 爆款制造销售高峰 → 利润款持续转化 → 互动款调节节奏 → 收尾冲刺最后一波。每个产品讲解时长根据阶段比例自动分配。</div>';
+    $('resultCard').innerHTML=html;
+  }
+
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',LP.init);}else{LP.init();}
+  
+</script>
+</body>
+</html>

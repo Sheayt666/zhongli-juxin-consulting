@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播选品策略器：引流款/利润款/爆款/形象款4种角色选品模型，输入产品数据自动分配角色，直播间产品组合建议，CSS产品矩阵可视化，价格梯度设计。免费直播运营工具。">
+<meta name="keywords" content="直播选品,选品策略,引流款,利润款,爆款,形象款,产品矩阵,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-product-selection.html">
+<title>直播选品策略器 - 4角色选品模型·CSS产品矩阵 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .product-matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+  .role-card{border-radius:16px;padding:20px;border:2px solid;transition:all .2s}
+  .role-card.traffic{border-color:#3b82f6;background:linear-gradient(135deg,#eff6ff,#dbeafe)}
+  .role-card.profit{border-color:#10b981;background:linear-gradient(135deg,#ecfdf5,#d1fae5)}
+  .role-card.hot{border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fee2e2)}
+  .role-card.brand{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7)}
+  .role-card .rc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .role-card .rc-icon{font-size:28px}
+  .role-card .rc-name{font-size:16px;font-weight:700}
+  .role-card .rc-desc{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .role-card .rc-items{font-size:13px}
+  .role-card .rc-item{padding:6px 10px;background:rgba(255,255,255,.7);border-radius:8px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+  .price-gradient{display:flex;align-items:flex-end;gap:8px;height:160px;margin-top:16px;padding:16px 0;border-bottom:2px solid var(--rule)}
+  .pg-bar{flex:1;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px 4px;color:#fff;font-size:12px;font-weight:600;min-height:40px;transition:height .5s}
+  .product-input-row{display:flex;gap:8px;margin-bottom:8px;align-items:flex-end;flex-wrap:wrap}
+  .product-input-row .calc-field{flex:1;min-width:100px}
+  .btn-add{padding:8px 16px;border-radius:8px;border:none;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn-del{padding:4px 8px;border-radius:6px;border:1px solid #ef4444;background:#fff;color:#ef4444;font-size:11px;cursor:pointer}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播选品策略器","description":"直播选品策略器：引流款/利润款/爆款/形象款4种角色选品模型，输入产品数据自动分配角色，直播间产品组合建议，CSS产品矩阵可视化，价格梯度设计。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-product-selection.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_product_selection">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第1步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><span class="step current">选品策略</span><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><a href="live-gmv-forecast.html" class="step">GMV预测</a><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 深度版</span>
+      <h1>直播选品<em>策略器</em></h1>
+      <p class="tool-hero-desc">选品模型：引流款/利润款/爆款/形象款4种角色，输入产品数据自动分配角色，直播间产品组合建议（引流3-5+利润2-3+爆款1-2+形象1），CSS产品矩阵可视化，价格梯度设计。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 产品数据录入</h2>
+      <p class="calc-form-subtitle">添加直播产品数据，系统自动分配角色并生成选品策略</p>
+      <div class="product-input-row">
+        <div class="calc-field"><label>产品名称</label><input type="text" id="newName" value="维C精华液"></div>
+        <div class="calc-field"><label>售价 ($)</label><input type="number" id="newPrice" value="29.99" step="0.01"></div>
+        <div class="calc-field"><label>成本 ($)</label><input type="number" id="newCost" value="8" step="0.01"></div>
+        <div class="calc-field"><label>月销量</label><input type="number" id="newSales" value="3000" step="10"></div>
+        <div class="calc-field"><label>好评率 (%)</label><input type="number" id="newRating" value="92" step="1"></div>
+        <button class="btn-add" onclick="PS.add()">+ 添加</button>
+      </div>
+      <div class="fee-rule-box">
+        <h4>📐 角色分配逻辑</h4>
+        <ul>
+          <li>引流款：低价+高频+低利润 → 吸引流量，制造人气</li>
+          <li>利润款：中价+中频+高利润 → 贡献主要利润</li>
+          <li>爆款：高价+高销量+高好评 → 引爆直播间，制造话题</li>
+          <li>形象款：高价+低频+品牌标杆 → 提升品牌调性</li>
+        </ul>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  <div id="extraSections"></div>
+  
+      <div class="wf-foot-nav"><a href="index.html" class="prev"><span class="fn-label">返回</span><span class="fn-name">← 工具中心</span></a><a href="live-product-lineup.html" class="next"><span class="fn-label">下一步 · 第2步</span><span class="fn-name">排品时间表 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var PS=(function(){
+  'use strict';
+  var products=[];
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function v(id){return $(id).value||'';}
+
+  function add(){
+    var name=v('newName'),price=n('newPrice'),cost=n('newCost'),sales=n('newSales'),rating=n('newRating');
+    if(!name||price<=0){alert('请输入产品名称和售价');return;}
+    products.push({name:name,price:price,cost:cost,sales:sales,rating:rating});
+    ['newName','newPrice','newCost','newSales','newRating'].forEach(function(id){$(id).value='';});
+    calc();
+  }
+  function del(i){products.splice(i,1);calc();}
+
+  function assignRole(p){
+    var margin=p.price>0?(p.price-p.cost)/p.price*100:0;
+    var profit=p.price*p.sales*margin/100;
+    // 爆款: 高销量+高好评
+    if(p.sales>=2000&&p.rating>=90)return'hot';
+    // 引流款: 低价(<$15)+高销量
+    if(p.price<15&&p.sales>=500)return'traffic';
+    // 形象款: 高价(>$50)+低销量
+    if(p.price>=50&&p.sales<500)return'brand';
+    // 利润款: 高利润率
+    if(margin>=50)return'profit';
+    // 默认
+    if(p.price<15)return'traffic';
+    if(p.price>=50)return'brand';
+    return'profit';
+  }
+
+  function calc(){
+    if(!products.length){products=[
+      {name:'湿巾便携装',price:3.99,cost:1.2,sales:5000,rating:95},
+      {name:'维C精华液',price:29.99,cost:8,sales:3000,rating:92},
+      {name:'防晒霜SPF50',price:19.99,cost:5,sales:2500,rating:90},
+      {name:'黄金面霜',price:69.99,cost:15,sales:800,rating:94},
+      {name:'洁面泡沫',price:9.99,cost:2.5,sales:4000,rating:88},
+      {name:'眼霜礼盒',price:89.99,cost:20,sales:300,rating:96}
+    ];}
+    products.forEach(function(p){p.role=assignRole(p);p.margin=p.price>0?(p.price-p.cost)/p.price*100:0;p.profit=(p.price-p.cost)*p.sales;});
+    var counts={traffic:0,profit:0,hot:0,brand:0};
+    products.forEach(function(p){counts[p.role]++;});
+
+    var roleInfo={
+      traffic:{icon:'🔥',name:'引流款',desc:'低价高频，吸引流量',cls:'traffic',target:'3-5个',color:'#3b82f6'},
+      profit:{icon:'💰',name:'利润款',desc:'高利润，贡献收益',cls:'profit',target:'2-3个',color:'#10b981'},
+      hot:{icon:'🚀',name:'爆款',desc:'高销量好评，引爆直播间',cls:'hot',target:'1-2个',color:'#ef4444'},
+      brand:{icon:'👑',name:'形象款',desc:'高端标杆，提升调性',cls:'brand',target:'1个',color:'#f59e0b'}
+    };
+
+    $('resultCard').innerHTML=
+      '<h3>📊 选品策略总览</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val">'+products.length+'</div><div class="rsb-lbl">总产品数</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#3b82f6">'+counts.traffic+'</div><div class="rsb-lbl">引流款</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+counts.profit+'</div><div class="rsb-lbl">利润款</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#ef4444">'+counts.hot+'</div><div class="rsb-lbl">爆款</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+counts.brand+'</div><div class="rsb-lbl">形象款</div></div>'+
+      '</div>';
+
+    var matrixHtml='<div class="product-matrix">';
+    Object.keys(roleInfo).forEach(function(r){
+      var ri=roleInfo[r];var items=products.filter(function(p){return p.role===r;});
+      var ok=counts[r]>=parseInt(ri.target)&&counts[r]<=parseInt(ri.target)+2;
+      matrixHtml+='<div class="role-card '+ri.cls+'"><div class="rc-header"><div style="display:flex;align-items:center;gap:8px"><span class="rc-icon">'+ri.icon+'</span><span class="rc-name">'+ri.name+'</span></div><span style="font-size:11px;padding:2px 8px;border-radius:6px;background:'+(ok?'#ecfdf5;color:#10b981':'#fef2f2;color:#ef4444')+'">'+(ok?'✓ 合理':'建议'+ri.target)+'</span></div><div class="rc-desc">'+ri.desc+'（建议'+ri.target+'）</div><div class="rc-items">'+(items.length?items.map(function(p,i){return '<div class="rc-item"><span>'+p.name+'</span><span style="font-weight:600">$'+p.price+' · 利润率'+p.margin.toFixed(0)+'%</span></div>';}).join(''):'<div style="font-size:12px;color:var(--muted);padding:6px 0">暂无产品</div>')+'</div></div>';
+    });
+    matrixHtml+='</div>';
+
+    // 价格梯度
+    var sortedP=products.slice().sort(function(a,b){return a.price-b.price;});
+    var maxPrice=Math.max.apply(null,products.map(function(p){return p.price;}));
+    var gradHtml='<div class="price-gradient">';
+    sortedP.forEach(function(p){
+      var h=(p.price/maxPrice)*130;
+      var color=p.role==='traffic'?'#3b82f6':p.role==='profit'?'#10b981':p.role==='hot'?'#ef4444':'#f59e0b';
+      gradHtml+='<div class="pg-bar" style="height:'+h+'px;background:linear-gradient(180deg,'+color+','+color+'cc)">$'+p.price+'<br><span style="font-size:10px;opacity:.8">'+p.name+'</span></div>';
+    });
+    gradHtml+='</div>';
+
+    var advice='<div class="section-block"><h3>🧠 选品策略建议</h3><ul class="opt-tips" style="list-style:none;padding:0;margin:0">';
+    if(counts.traffic<3)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">⚠️ 引流款不足3个，建议增加低价高频产品（<$15），用于开场吸引流量</li>';
+    if(counts.profit<2)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">⚠️ 利润款不足2个，建议增加高利润率产品（利润率>50%），确保直播间盈利</li>';
+    if(counts.hot<1)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">⚠️ 缺少爆款，建议增加高销量高好评产品，用于直播高潮环节</li>';
+    if(counts.brand<1)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">⚠️ 缺少形象款，建议增加高端产品（>$50），提升品牌调性</li>';
+    if(counts.traffic>=3&&counts.profit>=2&&counts.hot>=1&&counts.brand>=1)advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">✅ 产品组合合理，覆盖引流/利润/爆款/形象四种角色</li>';
+    advice+='<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative">📌 价格梯度建议：引流款$3-$15 → 利润款$15-$35 → 爆款$20-$50 → 形象款$50+</li>';
+    advice+='</ul></div>';
+
+    // 产品列表
+    var listHtml='<div class="section-block"><h3>📋 产品清单</h3>'+products.map(function(p,i){
+      var ri=roleInfo[p.role];
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light)"><span style="font-size:20px">'+ri.icon+'</span><div style="flex:1"><div style="font-weight:600;font-size:14px">'+p.name+'</div><div style="font-size:12px;color:var(--muted)">$'+p.price+' · 成本$'+p.cost+' · 利润率'+p.margin.toFixed(0)+'% · 月销'+p.sales+'</div></div><span style="font-size:12px;padding:3px 10px;border-radius:8px;background:'+ri.color+'20;color:'+ri.color+';font-weight:600">'+ri.name+'</span><button class="btn-del" onclick="PS.del('+i+')">删除</button></div>';
+    }).join('')+'</div>';
+
+    $('extraSections').innerHTML='<div class="section-block"><h3>📊 产品角色矩阵</h3>'+matrixHtml+'</div><div class="section-block"><h3>💰 价格梯度设计</h3>'+gradHtml+'</div>'+advice+listHtml;
+  }
+
+  function init(){calc();}
+  return{add:add,del:del,calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PS.init);}else{PS.init();}
+  
+</script>
+</body>
+</html>

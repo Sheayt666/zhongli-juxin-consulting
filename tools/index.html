@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="跨境卖家工具中心：100个免费专业工具，20条工作流，覆盖选品调研、Listing优化、广告投放、库存供应链、财务利润、运营数据、品牌增长、战略决策、物流合规、客户运营、关键词SEO、竞争情报、多平台运营、产品开发、团队管理、数据报表、风险管理、采购管理、定价策略、增长分析跨境全链路。">
-<meta name="keywords" content="跨境电商工具,跨境卖家工具箱,选品工具,Listing优化工具,广告投放工具,库存管理工具,利润计算器,免费在线工具,工作流,ACoS计算器,FBA计算器,标题生成器">
+<meta name="description" content="321个免费跨境工具，42条工作流覆盖跨境全链路。从选品到运营，从广告到财务，从达人到独立站，卖家每天都要用的工具站。">
+<meta name="keywords" content="跨境电商工具,跨境卖家工具箱,选品工具,Listing优化工具,广告投放工具,库存管理工具,利润计算器,免费在线工具,工作流,领星ERP工具,Helium10工具,卖家精灵工具">
 <meta name="author" content="众力聚鑫咨询">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
-<meta property="og:title" content="跨境卖家工具中心 - 100个专业工具 · 20条工作流 | 众力聚鑫咨询">
-<meta property="og:description" content="100个免费跨境工具，20条工作流覆盖跨境全链路。从选品到运营，从广告到财务，卖家每天都要用的工具站。">
+<meta property="og:title" content="跨境卖家工具中心 - 321个专业工具 · 42条工作流 | 众力聚鑫咨询">
+<meta property="og:description" content="321个免费跨境工具，42条工作流覆盖跨境全链路。从选品到运营，从广告到财务，卖家每天都要用的工具站。">
 <meta property="og:site_name" content="众力聚鑫咨询">
 <meta property="og:locale" content="zh_CN">
 <link rel="canonical" href="https://juxin-consulting.help/tools/index.html">
-<title>跨境卖家工具中心 - 100个专业工具 · 20条工作流 | 众力聚鑫咨询</title>
+<title>跨境卖家工具中心 - 321个专业工具 · 42条工作流 | 众力聚鑫咨询</title>
 <meta name="theme-color" content="#4f46e5">
 <link rel="stylesheet" href="../assets/css/style.css">
 <style>
@@ -32,6 +32,7 @@
   --jx-ink-soft:#334155;
   --jx-muted:#64748b;
   --jx-rule:#e2e8f0;
+  --jx-rule-light:#f1f5f9;
   --jx-surface:#ffffff;
   --jx-shadow:0 10px 30px -12px rgba(79,70,229,0.18),0 4px 10px -6px rgba(15,23,42,0.06);
   --jx-shadow-lg:0 24px 48px -16px rgba(79,70,229,0.22),0 8px 16px -8px rgba(15,23,42,0.08);
@@ -39,7 +40,7 @@
 }
 *{box-sizing:border-box}
 .tl-wrap{max-width:1152px;margin:0 auto;padding:0 24px}
-.tl-body{background:var(--jx-bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--jx-ink)}
+.tl-body{background:var(--jx-bg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--jx-ink)}
 
 /* === Sticky 搜索栏 === */
 .tl-searchbar{position:sticky;top:64px;z-index:90;background:rgba(248,250,252,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--jx-rule)}
@@ -157,16 +158,16 @@
 .wf-panel-title .wf-num{font-size:12px;font-weight:700;color:var(--jx-indigo);background:var(--jx-indigo-bg);padding:2px 9px;border-radius:20px;margin-right:8px;vertical-align:2px}
 .wf-panel-desc{font-size:13px;color:var(--jx-muted);margin-top:3px}
 
-.wf-flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
-.wf-flow::-webkit-scrollbar{height:6px}
-.wf-flow::-webkit-scrollbar-thumb{background:var(--jx-rule);border-radius:3px}
+/* 工作流工具网格（3列桌面/2列平板/1列手机） */
+.wf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 
 /* 工具卡片（工作流 + 全部视图通用） */
-.tcard{flex:1 1 0;min-width:172px;background:linear-gradient(180deg,#fff,#fafbff);border:1px solid var(--jx-rule);border-radius:14px;padding:16px 14px;text-decoration:none;color:inherit;transition:all .22s cubic-bezier(.4,0,.2,1);position:relative;display:flex;flex-direction:column}
+.tcard{position:relative;background:linear-gradient(180deg,#fff,#fafbff);border:1px solid var(--jx-rule);border-radius:14px;padding:16px 14px;text-decoration:none;color:inherit;transition:all .22s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
 .tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--jx-indigo),var(--jx-gold));border-radius:14px 14px 0 0;opacity:0;transition:opacity .22s}
 .tcard:hover{transform:translateY(-4px);box-shadow:var(--jx-shadow-lg);border-color:rgba(79,70,229,0.35);background:#fff}
 .tcard:hover::before{opacity:1}
 .tcard.deep{border:2px solid transparent;background:linear-gradient(#fff,#fafbff) padding-box,linear-gradient(135deg,rgba(79,70,229,0.5),rgba(245,158,11,0.5)) border-box}
+.tcard.deep::after{content:'深度';position:absolute;top:-1px;left:-1px;font-size:9px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--jx-indigo),var(--jx-gold));padding:3px 9px;border-radius:14px 0 14px 0;letter-spacing:.5px;z-index:1;line-height:1.3}
 .tcard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
 .tcard-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--jx-indigo-bg);flex-shrink:0}
 .tcard-fav{width:28px;height:28px;border-radius:50%;border:none;background:transparent;cursor:pointer;font-size:14px;color:#cbd5e1;display:flex;align-items:center;justify-content:center;transition:color .2s,transform .2s;flex-shrink:0;line-height:1;padding:0}
@@ -175,13 +176,10 @@
 .tcard-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
 .ttag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;line-height:1.4}
 .ttag.deep{background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#3730a3;border:1px solid #a5b4fc}
-.ttag.new{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;border:1px solid #6ee7b7}
 .tcard-name{font-size:14px;font-weight:700;color:var(--jx-ink);margin-bottom:5px;line-height:1.35}
 .tcard-desc{font-size:11.5px;color:var(--jx-muted);line-height:1.5;flex:1}
 .tcard-go{font-size:11px;font-weight:600;color:var(--jx-indigo);margin-top:10px;display:inline-flex;align-items:center;gap:3px}
 .tcard:hover .tcard-go{gap:6px}
-.wf-arrow{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:28px;color:#c7d2fe;font-size:18px;font-weight:700}
-.wf-arrow svg{width:18px;height:18px}
 
 /* 工作流进度条 */
 .wf-progress{margin-top:22px;padding:18px 22px;background:#fff;border:1px solid var(--jx-rule);border-radius:14px;box-shadow:var(--jx-shadow);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
@@ -189,7 +187,7 @@
 .wf-progress-label strong{color:var(--jx-indigo);font-size:16px}
 .wf-progress-bar{flex:1;min-width:160px;height:10px;background:var(--jx-rule);border-radius:6px;overflow:hidden}
 .wf-progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--jx-indigo),var(--jx-gold));transition:width .5s cubic-bezier(.4,0,.2,1)}
-.wf-progress-badge{font-size:12px;font-weight:700;color:var(--jx-green);background:var(--jx-green);color:#fff;padding:4px 12px;border-radius:20px;display:none}
+.wf-progress-badge{font-size:12px;font-weight:700;background:var(--jx-green);color:#fff;padding:4px 12px;border-radius:20px;display:none}
 .wf-progress-badge.show{display:inline-flex;align-items:center;gap:4px}
 
 /* === 全部工具视图 === */
@@ -199,7 +197,7 @@
 .all-group-title{font-size:18px;font-weight:800;color:var(--jx-ink)}
 .all-group-title .wf-num{font-size:11px;font-weight:700;color:var(--jx-indigo);background:var(--jx-indigo-bg);padding:2px 8px;border-radius:20px;margin-right:8px;vertical-align:2px}
 .all-group-desc{font-size:12px;color:var(--jx-muted);margin-left:auto}
-.all-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.all-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .all-grid .tcard{min-width:0}
 .all-empty{text-align:center;padding:50px 20px;color:var(--jx-muted);font-size:14px}
 .all-empty .icon{font-size:40px;display:block;margin-bottom:10px;opacity:.4}
@@ -223,20 +221,14 @@
   .tl-stats{grid-template-columns:repeat(2,1fr)}
   .hot-grid{grid-template-columns:repeat(2,1fr)}
   .all-grid{grid-template-columns:repeat(3,1fr)}
+  .wf-grid{grid-template-columns:repeat(2,1fr)}
   .tl-searchbar-count{display:none}
 }
 @media(max-width:768px){
   .tl-hero{padding:48px 0 40px}
   .hot-grid{grid-template-columns:1fr}
   .all-grid{grid-template-columns:repeat(2,1fr)}
-  .wf-flow{flex-direction:column;gap:0;overflow-x:visible}
-  .tcard{width:100%;min-width:0;flex-direction:row;align-items:center;gap:12px}
-  .tcard-top{margin-bottom:0;flex-shrink:0}
-  .tcard-tags{position:absolute;top:14px;right:54px;margin-bottom:0}
-  .tcard-name{margin-bottom:2px}
-  .tcard-desc{display:none}
-  .tcard-go{margin-top:4px}
-  .wf-arrow{transform:rotate(90deg);width:100%;height:24px}
+  .wf-grid{grid-template-columns:1fr}
   .tl-cta{padding:40px 22px}
   .tl-searchbar{top:64px}
   .tl-search{padding-right:46px;font-size:14px}
@@ -255,7 +247,7 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "跨境卖家工具中心",
-  "description": "众力聚鑫咨询提供的100个免费跨境电商专业工具合集，20条工作流覆盖选品、Listing、广告、库存、财务、运营、品牌、战略、物流、客户、关键词SEO、竞争情报、多平台、产品开发、团队、报表、风险、采购、定价、增长跨境全链路。",
+  "description": "众力聚鑫咨询提供的321个免费跨境电商专业工具合集，42条工作流覆盖选品、Listing、广告、库存、财务、运营、品牌、战略、物流、客户、关键词SEO、竞争情报、多平台、产品开发、团队、报表、风险、采购、定价、增长、达人、直播、独立站、邮件营销、项目立项、投资决策、产品开发管理、补货、广告自动化、客服、流量、财务核算、供应链、广告创意、选品深度、关键词深度、多店铺、内容营销、数据分析、合规、品牌保护跨境全链路。",
   "url": "https://juxin-consulting.help/tools/index.html",
   "publisher": { "@type": "Organization", "name": "众力聚鑫咨询", "url": "https://juxin-consulting.help" }
 }
@@ -297,12 +289,12 @@
   <div class="tl-wrap">
     <div class="tl-search-wrap">
       <span class="tl-search-icon">🔍</span>
-      <input type="text" class="tl-search" id="toolSearch" placeholder="搜索100个工具，如 FBA计算 / 标题生成 / ACoS..." autocomplete="off" role="combobox" aria-expanded="false" aria-controls="searchDropdown" aria-label="搜索工具">
+      <input type="text" class="tl-search" id="toolSearch" placeholder="搜索321个工具，如 FBA计算 / ACoS / 选品评分..." autocomplete="off" role="combobox" aria-expanded="false" aria-controls="searchDropdown" aria-label="搜索工具">
       <button class="tl-search-clear" id="searchClear" aria-label="清除搜索">×</button>
       <span class="tl-search-kbd" id="searchKbd"><span>⌘</span><span>K</span></span>
       <div class="tl-dropdown" id="searchDropdown" role="listbox"></div>
     </div>
-    <span class="tl-searchbar-count" id="searchbarCount">共 100 个工具</span>
+    <span class="tl-searchbar-count" id="searchbarCount">共 321 个工具</span>
   </div>
 </div>
 
@@ -311,14 +303,14 @@
   <header class="tl-hero">
     <div class="tl-wrap">
       <span class="tl-hero-badge">🧰 跨境卖家全链路工具站</span>
-      <h1>100个专业工具 · 20条工作流<br><em>覆盖跨境全链路</em></h1>
-      <p class="tl-hero-sub">从选品到运营，从广告到财务，卖家每天都要用的工具站。每条工作流串联5个工具，箭头流向即业务推进路径，让数据驱动你的每一个跨境决策。</p>
+      <h1>321个跨境工具 · 42条工作流<br><em>覆盖跨境全链路</em></h1>
+      <p class="tl-hero-sub">从选品到运营，从广告到财务，从达人到独立站，卖家每天都要用的工具站。42条工作流串联321个工具，让数据驱动你的每一个跨境决策。</p>
       <div class="tl-hero-note">无需注册，直接使用 · 全部免费 · 持续更新中</div>
       <div class="tl-stats">
-        <div class="tl-stat"><div class="num">100</div><div class="label">专业工具</div></div>
-        <div class="tl-stat"><div class="num">20</div><div class="label">条工作流</div></div>
-        <div class="tl-stat"><div class="num">30+</div><div class="label">深度版工具</div></div>
-        <div class="tl-stat"><div class="num">100%</div><div class="label">全部免费</div></div>
+        <div class="tl-stat"><div class="num">321</div><div class="label">专业工具</div></div>
+        <div class="tl-stat"><div class="num">42</div><div class="label">条工作流</div></div>
+        <div class="tl-stat"><div class="num">74</div><div class="label">深度定制</div></div>
+        <div class="tl-stat"><div class="num">100%</div><div class="label">免费使用</div></div>
       </div>
     </div>
   </header>
@@ -380,7 +372,7 @@
           <div class="tl-section-icon">🧭</div>
           <div>
             <h2>工作流 <em>工具矩阵</em></h2>
-            <div class="sub">20条工作流 · 每条串联5个工具 · 箭头即业务路径</div>
+            <div class="sub">42条工作流 · 从选品到品牌保护 · 全链路覆盖</div>
           </div>
         </div>
         <div class="tl-view-toggle" role="tablist">
@@ -407,13 +399,13 @@
     <div class="tl-wrap">
       <div class="tl-cta">
         <div class="tl-cta-inner">
-          <h2>100个工具，全部免费，即刻开始</h2>
+          <h2>321个工具，全部免费，即刻开始</h2>
           <p>无需注册、无需下载，打开即用。让数据驱动你的每一个跨境决策，把时间留给增长。</p>
           <div class="tl-cta-btns">
             <button class="tl-btn-primary" id="ctaStart">开始使用 →</button>
             <a href="../contact.html" class="tl-btn-ghost">免费30分钟诊断</a>
           </div>
-          <div class="tl-cta-foot">100个工具 · 20条工作流 · 30+深度版 · 持续更新中</div>
+          <div class="tl-cta-foot">321个工具 · 42条工作流 · 74个深度版 · 持续更新中</div>
         </div>
       </div>
     </div>
@@ -436,9 +428,9 @@
           <li><a href="index.html">工具首页</a></li>
           <li><a href="fba-calculator.html">FBA利润计算器</a></li>
           <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
-          <li><a href="title-generator.html">标题生成器</a></li>
-          <li><a href="keyword-rank-tracker.html">关键词排名追踪</a></li>
-          <li><a href="sales-estimator.html">销量估算器</a></li>
+          <li><a href="product-research-scorecard.html">选品评分卡</a></li>
+          <li><a href="keyword-research-matrix.html">关键词研究矩阵</a></li>
+          <li><a href="financial-health-scorecard.html">财务健康度评分卡</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -464,32 +456,32 @@
 <script src="../assets/js/engagement.js"></script>
 <script>
 /* ===================================================================
-   跨境工具站首页 — 数据驱动渲染 + localStorage 逻辑
+   跨境工具站首页 — 42条工作流 / 321个工具 — 数据驱动渲染
    =================================================================== */
 (function () {
   'use strict';
 
-  /* ---------- 1. 工作流数据（20条 / 100个工具） ---------- */
+  /* ---------- 1. 工作流数据（42条 / 321个工具） ---------- */
   var workflows = [
     {id:'w1',icon:'🔬',name:'选品调研',desc:'从趋势发现到采购决策',tools:[
       {id:'trend-analysis',icon:'📊',name:'趋势分析',desc:'多平台趋势对比+季节性分析',deep:true},
       {id:'opportunity-score',icon:'🎯',name:'机会评分',desc:'5维度选品机会评分',deep:true},
-      {id:'keyword-score',icon:'🔑',name:'关键词评分',desc:'关键词机会评分',deep:true},
+      {id:'keyword-score',icon:'🔑',name:'关键词评分',desc:'关键词机会评分'},
       {id:'competitor-monitor',icon:'🕵️',name:'竞品监控',desc:'6维度竞品对比分析',deep:true},
-      {id:'sourcing-cost',icon:'🏭',name:'采购成本',desc:'1688采购成本计算',deep:false,new:true}
+      {id:'sourcing-cost',icon:'🏭',name:'采购成本',desc:'1688采购成本计算'}
     ]},
     {id:'w2',icon:'📝',name:'Listing优化',desc:'从关键词到Listing全流程',tools:[
-      {id:'keyword-harvest',icon:'🌾',name:'关键词收割',desc:'关键词收集与分类',deep:false,new:true},
+      {id:'keyword-harvest',icon:'🌾',name:'关键词收割',desc:'关键词收集与分类'},
       {id:'title-generator',icon:'✏️',name:'标题生成',desc:'5模板+SEO评分+字节计数',deep:true},
       {id:'bullet-points-generator',icon:'📋',name:'五点描述',desc:'5模板+情感分析',deep:true},
-      {id:'search-term-optimizer',icon:'🔍',name:'ST优化',desc:'后台Search Term优化',deep:false,new:true},
+      {id:'search-term-optimizer',icon:'🔍',name:'ST优化',desc:'后台Search Term优化'},
       {id:'listing-optimizer',icon:'⭐',name:'Listing优化',desc:'关键词密度+评级',deep:true}
     ]},
     {id:'w3',icon:'📊',name:'广告投放',desc:'从CPC到报表分析',tools:[
       {id:'break-even-cpc',icon:'💰',name:'盈亏CPC',desc:'盈亏平衡CPC计算',deep:true},
       {id:'keyword-bid-matrix',icon:'🎯',name:'出价矩阵',desc:'10关键词出价热力图',deep:true},
-      {id:'acos-calculator',icon:'📈',name:'ACoS',desc:'CSS仪表盘+优化建议',deep:true},
-      {id:'ad-budget-pacing',icon:'💳',name:'预算追踪',desc:'广告预算消耗追踪',deep:false},
+      {id:'acos-calculator',icon:'📈',name:'ACoS计算器',desc:'ACoS/TACoS/ROAS仪表盘',deep:true},
+      {id:'ad-budget-pacing',icon:'💳',name:'预算追踪',desc:'广告预算消耗追踪'},
       {id:'ad-report-analyzer',icon:'📉',name:'报表分析',desc:'四象限+否定词建议',deep:true}
     ]},
     {id:'w4',icon:'📦',name:'库存供应链',desc:'从尺寸到多仓分配',tools:[
@@ -497,152 +489,413 @@
       {id:'storage-fee',icon:'🏪',name:'仓储费',desc:'12月预测+长期预警',deep:true},
       {id:'reorder-point',icon:'🔄',name:'补货点',desc:'季节调整+断货成本',deep:true},
       {id:'inventory-turnover',icon:'🔁',name:'库存周转',desc:'行业基准+死库存预警',deep:true},
-      {id:'multi-warehouse',icon:'🌍',name:'多仓分配',desc:'四仓分配+成本对比',deep:false}
+      {id:'multi-warehouse',icon:'🌍',name:'多仓分配',desc:'四仓分配+成本对比'}
     ]},
     {id:'w5',icon:'💵',name:'财务利润',desc:'从FBA利润到现金流',tools:[
-      {id:'fba-calculator',icon:'🧮',name:'FBA利润',desc:'3品对比+健康评分',deep:true},
+      {id:'fba-calculator',icon:'🧮',name:'FBA利润计算器',desc:'3品对比+成本可视化+健康评分',deep:true},
       {id:'margin-markup',icon:'📐',name:'利润率',desc:'目标利润定价+弹性分析',deep:true},
       {id:'roi-payback',icon:'💹',name:'ROI回本',desc:'3品组合+增长预测',deep:true},
-      {id:'break-even-volume',icon:'⚖️',name:'盈亏平衡',desc:'盈亏平衡销量计算',deep:false},
+      {id:'break-even-volume',icon:'⚖️',name:'盈亏平衡',desc:'盈亏平衡销量计算'},
       {id:'cash-flow-forecast',icon:'💰',name:'现金流预测',desc:'12月预测+三场景',deep:true}
     ]},
     {id:'w6',icon:'📈',name:'运营数据',desc:'从销量到利润日历',tools:[
       {id:'sales-estimator',icon:'🔢',name:'销量估算',desc:'BSR推算+多模型对比',deep:true},
-      {id:'bsr-tracker',icon:'📊',name:'BSR追踪',desc:'排名趋势+统计分析',deep:false},
+      {id:'bsr-tracker',icon:'📊',name:'BSR追踪',desc:'排名趋势+统计分析'},
       {id:'conversion-funnel',icon:'🔻',name:'转化漏斗',desc:'4级漏斗+瓶颈识别',deep:true},
-      {id:'review-analyzer',icon:'💬',name:'评价分析',desc:'情感分析+痛点汇总',deep:false},
-      {id:'profit-calendar',icon:'📅',name:'利润日历',desc:'日历视图+月度汇总',deep:false}
+      {id:'review-analyzer',icon:'💬',name:'评价分析',desc:'情感分析+痛点汇总'},
+      {id:'profit-calendar',icon:'📅',name:'利润日历',desc:'日历视图+月度汇总'}
     ]},
     {id:'w7',icon:'🚀',name:'品牌增长',desc:'从备案到站外引流',tools:[
-      {id:'brand-registry-check',icon:'✅',name:'品牌备案',desc:'12项备案清单',deep:false},
+      {id:'brand-registry-check',icon:'✅',name:'品牌备案',desc:'12项备案清单'},
       {id:'brand-health-score',icon:'💚',name:'品牌健康',desc:'6维雷达图+改进建议',deep:true},
       {id:'external-traffic-calculator',icon:'🌐',name:'站外引流',desc:'5渠道+Amazon归因',deep:true},
-      {id:'product-matrix',icon:'⊞',name:'产品矩阵',desc:'BCG四象限分析',deep:false},
-      {id:'social-content',icon:'📱',name:'社媒内容',desc:'多平台字符计数',deep:false}
+      {id:'product-matrix',icon:'⊞',name:'产品矩阵',desc:'BCG四象限分析'},
+      {id:'social-content',icon:'📱',name:'社媒内容',desc:'多平台字符计数'}
     ]},
     {id:'w8',icon:'🎯',name:'战略决策',desc:'从市场进入到预算',tools:[
       {id:'market-entry-evaluator',icon:'🌍',name:'市场进入',desc:'8维评估+Go/No-Go',deep:true},
       {id:'competitive-advantage',icon:'⚔️',name:'竞争优势',desc:'SWOT+差异化策略',deep:true},
-      {id:'market-share',icon:'📊',name:'市场集中度',desc:'CR3/CR5/HHI计算',deep:false},
+      {id:'market-share',icon:'📊',name:'市场集中度',desc:'CR3/CR5/HHI计算'},
       {id:'annual-budget-planner',icon:'📆',name:'年度预算',desc:'12月预算+利润折线',deep:true},
       {id:'referral-fee',icon:'💳',name:'类目佣金',desc:'32类目搜索+对比',deep:true}
     ]},
     {id:'w9',icon:'🚚',name:'物流合规',desc:'从运费到税费',tools:[
-      {id:'first-mile-shipping',icon:'🚢',name:'头程物流',desc:'3运输方式对比',deep:false},
-      {id:'supplier-comparison',icon:'🏢',name:'供应商比价',desc:'5供应商对比',deep:false},
-      {id:'vat-calculator',icon:'🧾',name:'VAT税费',desc:'7国VAT/GST计算',deep:false},
-      {id:'payment-fee',icon:'💸',name:'支付费率',desc:'4支付渠道对比',deep:false},
-      {id:'currency-converter',icon:'💱',name:'汇率换算',desc:'多币种+加价定价',deep:false}
+      {id:'first-mile-shipping',icon:'🚢',name:'头程物流',desc:'3运输方式对比'},
+      {id:'supplier-comparison',icon:'🏢',name:'供应商比价',desc:'5供应商对比'},
+      {id:'vat-calculator',icon:'🧾',name:'VAT税费',desc:'7国VAT/GST计算'},
+      {id:'tax-profit-calculator',icon:'💰',name:'税务利润',desc:'多国税后利润对比+VAT/所得税'},
+      {id:'payment-fee',icon:'💸',name:'支付费率',desc:'4支付渠道对比'},
+      {id:'currency-converter',icon:'💱',name:'汇率换算',desc:'多币种+加价定价'}
     ]},
     {id:'w10',icon:'👥',name:'客户运营',desc:'从变体到评价回复',tools:[
-      {id:'variation-strategy',icon:'🔀',name:'变体策略',desc:'变体矩阵+价格梯度',deep:false},
-      {id:'listing-split-test',icon:'🧪',name:'A/B测试',desc:'Z检验+样本量建议',deep:false},
-      {id:'refund-rate-calculator',icon:'↩️',name:'退货率',desc:'退货成本+原因分析',deep:false},
-      {id:'customer-ltv',icon:'💎',name:'客户LTV',desc:'LTV/CAC+回本周期',deep:false},
-      {id:'review-response-generator',icon:'✍️',name:'评价回复',desc:'9模板+质量评分',deep:false}
+      {id:'variation-strategy',icon:'🔀',name:'变体策略',desc:'变体矩阵+价格梯度'},
+      {id:'listing-split-test',icon:'🧪',name:'A/B测试',desc:'Z检验+样本量建议'},
+      {id:'refund-rate-calculator',icon:'↩️',name:'退货率',desc:'退货成本+原因分析'},
+      {id:'customer-ltv',icon:'💎',name:'客户LTV',desc:'LTV/CAC+回本周期'},
+      {id:'review-response-generator',icon:'✍️',name:'评价回复',desc:'9模板+质量评分'}
     ]},
     {id:'w11',icon:'🔍',name:'关键词SEO',desc:'从排名到SEO审计',tools:[
       {id:'keyword-rank-tracker',icon:'📍',name:'关键词排名',desc:'排名趋势+分布饼图',deep:true},
       {id:'a-plus-optimizer',icon:'🎨',name:'A+优化',desc:'12项检查+内容评分',deep:true},
-      {id:'brand-story-designer',icon:'📖',name:'品牌故事',desc:'4模板自动生成',deep:false},
-      {id:'posts-scheduler',icon:'🗓️',name:'帖子计划',desc:'发布日历+最佳时间',deep:false},
-      {id:'seo-audit',icon:'🔎',name:'SEO审计',desc:'10维度检查+优先级',deep:false}
+      {id:'brand-story-designer',icon:'📖',name:'品牌故事',desc:'4模板自动生成'},
+      {id:'posts-scheduler',icon:'🗓️',name:'帖子计划',desc:'发布日历+最佳时间'},
+      {id:'seo-audit',icon:'🔎',name:'SEO审计',desc:'10维度检查+优先级'}
     ]},
     {id:'w12',icon:'🕵️',name:'竞争情报',desc:'从价格到广告侦察',tools:[
       {id:'price-monitor',icon:'💲',name:'价格监控',desc:'趋势图+价格战预警',deep:true},
-      {id:'review-monitor',icon:'⭐',name:'评论监控',desc:'评论增长+评分分布',deep:false},
-      {id:'ad-spy',icon:'🢂',name:'广告侦察',desc:'热力图+强度评分',deep:true},
-      {id:'listing-spy',icon:'📋',name:'Listing拆解',desc:'5竞品横向对比',deep:false},
-      {id:'bsr-spy',icon:'🏆',name:'BSR侦察',desc:'排名对比+销量推算',deep:false}
+      {id:'review-monitor',icon:'⭐',name:'评论监控',desc:'评论增长+评分分布'},
+      {id:'ad-spy',icon:'🎯',name:'广告侦察',desc:'热力图+强度评分',deep:true},
+      {id:'listing-spy',icon:'📋',name:'Listing拆解',desc:'5竞品横向对比'},
+      {id:'bsr-spy',icon:'🏆',name:'BSR侦察',desc:'排名对比+销量推算'}
     ]},
     {id:'w13',icon:'🌐',name:'多平台运营',desc:'从eBay到TikTok',tools:[
-      {id:'ebay-fees',icon:'🛒',name:'eBay费用',desc:'费用计算+店铺对比',deep:false},
-      {id:'walmart-fees',icon:'🔵',name:'Walmart费用',desc:'Referral+WFS计算',deep:false},
-      {id:'shopify-costs',icon:'🛍️',name:'Shopify成本',desc:'月费+交易费对比',deep:false},
+      {id:'ebay-fees',icon:'🛒',name:'eBay费用',desc:'费用计算+店铺对比'},
+      {id:'walmart-fees',icon:'🔵',name:'Walmart费用',desc:'Referral+WFS计算'},
+      {id:'shopify-costs',icon:'🛍️',name:'Shopify成本',desc:'月费+交易费对比'},
       {id:'tiktok-shop-calc',icon:'🎵',name:'TikTok Shop',desc:'4模式利润+ROI',deep:true},
-      {id:'temu-pricing',icon:'🟠',name:'Temu定价',desc:'半托管/全托管定价',deep:false}
+      {id:'temu-pricing',icon:'🟠',name:'Temu定价',desc:'半托管/全托管定价'}
     ]},
     {id:'w14',icon:'🧪',name:'产品开发',desc:'从需求验证到打样',tools:[
       {id:'demand-validator',icon:'✅',name:'需求验证',desc:'8维度+Go/No-Go',deep:true},
-      {id:'packaging-designer',icon:'📦',name:'包装设计',desc:'尺寸优化+FBA检查',deep:false},
-      {id:'certification-check',icon:'📜',name:'认证检查',desc:'12认证+成本估算',deep:false},
-      {id:'patent-check',icon:'⚖️',name:'专利检查',desc:'侵权风险+检索链接',deep:false},
-      {id:'prototype-cost',icon:'🔨',name:'打样成本',desc:'4方式+成本估算',deep:false}
+      {id:'packaging-designer',icon:'📦',name:'包装设计',desc:'尺寸优化+FBA检查'},
+      {id:'certification-check',icon:'📜',name:'认证检查',desc:'12认证+成本估算'},
+      {id:'patent-check',icon:'⚖️',name:'专利检查',desc:'侵权风险+检索链接'},
+      {id:'prototype-cost',icon:'🔨',name:'打样成本',desc:'4方式+成本估算'}
     ]},
     {id:'w15',icon:'👥',name:'团队管理',desc:'从KPI到组织架构',tools:[
-      {id:'kpi-tracker',icon:'📊',name:'KPI追踪',desc:'5指标雷达图+排行',deep:false},
-      {id:'sop-builder',icon:'📋',name:'SOP构建',desc:'5模板+步骤编辑',deep:false},
-      {id:'salary-calculator',icon:'💵',name:'薪酬计算',desc:'底薪+绩效+提成',deep:false},
-      {id:'productivity-score',icon:'⚡',name:'人效分析',desc:'人均GMV+行业对比',deep:false},
-      {id:'org-chart',icon:'🏗️',name:'组织架构',desc:'7岗位+管理幅度',deep:false}
+      {id:'kpi-tracker',icon:'📊',name:'KPI追踪',desc:'5指标雷达图+排行'},
+      {id:'sop-builder',icon:'📋',name:'SOP构建',desc:'5模板+步骤编辑'},
+      {id:'salary-calculator',icon:'💵',name:'薪酬计算',desc:'底薪+绩效+提成'},
+      {id:'productivity-score',icon:'⚡',name:'人效分析',desc:'人均GMV+行业对比'},
+      {id:'org-chart',icon:'🏗️',name:'组织架构',desc:'7岗位+管理幅度'}
     ]},
     {id:'w16',icon:'📊',name:'数据报表',desc:'从日报到看板',tools:[
-      {id:'daily-report',icon:'📅',name:'日报生成',desc:'自动生成+环比',deep:false},
-      {id:'weekly-report',icon:'🗓️',name:'周报生成',desc:'趋势分析+可复制',deep:false},
-      {id:'monthly-report',icon:'📆',name:'月报生成',desc:'经营分析+折线图',deep:false},
+      {id:'daily-report',icon:'📅',name:'日报生成',desc:'自动生成+环比'},
+      {id:'weekly-report',icon:'🗓️',name:'周报生成',desc:'趋势分析+可复制'},
+      {id:'monthly-report',icon:'📆',name:'月报生成',desc:'经营分析+折线图'},
       {id:'custom-dashboard',icon:'🖥️',name:'自定义看板',desc:'6指标+4图表+预警',deep:true},
-      {id:'kpi-dashboard',icon:'📈',name:'KPI看板',desc:'8核心KPI+健康分',deep:false}
+      {id:'kpi-dashboard',icon:'📈',name:'KPI看板',desc:'8核心KPI+健康分'}
     ]},
     {id:'w17',icon:'⚠️',name:'风险管理',desc:'从账号到封号预防',tools:[
       {id:'account-health',icon:'💚',name:'账号健康',desc:'8维度+改善建议',deep:true},
-      {id:'compliance-check',icon:'✅',name:'合规检查',desc:'6大类合规检查',deep:false},
-      {id:'ip-protector',icon:'🛡️',name:'知识产权',desc:'商标专利版权检查',deep:false},
-      {id:'ban-prevention',icon:'🚫',name:'封号预防',desc:'15项自查+评分',deep:false},
-      {id:'emergency-plan',icon:'🆘',name:'应急预案',desc:'5场景+72小时清单',deep:false}
+      {id:'compliance-check',icon:'✅',name:'合规检查',desc:'6大类合规检查'},
+      {id:'ip-protector',icon:'🛡️',name:'知识产权',desc:'商标专利版权检查'},
+      {id:'ban-prevention',icon:'🚫',name:'封号预防',desc:'15项自查+评分'},
+      {id:'emergency-plan',icon:'🆘',name:'应急预案',desc:'5场景+72小时清单'}
     ]},
     {id:'w18',icon:'🏭',name:'采购管理',desc:'从评估到交期',tools:[
-      {id:'supplier-audit',icon:'🏢',name:'供应商评估',desc:'8维度+A/B/C/D级',deep:false},
-      {id:'purchase-planner',icon:'📝',name:'采购计划',desc:'采购量+时间线',deep:false},
-      {id:'qc-checklist',icon:'✔️',name:'质检清单',desc:'5类型+AQL抽样',deep:false},
-      {id:'cost-reduction',icon:'📉',name:'降本分析',desc:'5方案+节省估算',deep:false},
-      {id:'lead-time-calc',icon:'⏱️',name:'交期计算',desc:'5阶段+时间线',deep:false}
+      {id:'supplier-audit',icon:'🏢',name:'供应商评估',desc:'8维度+A/B/C/D级'},
+      {id:'purchase-planner',icon:'📝',name:'采购计划',desc:'采购量+时间线'},
+      {id:'qc-checklist',icon:'✔️',name:'质检清单',desc:'5类型+AQL抽样'},
+      {id:'cost-reduction',icon:'📉',name:'降本分析',desc:'5方案+节省估算'},
+      {id:'lead-time-calc',icon:'⏱️',name:'交期计算',desc:'5阶段+时间线'}
     ]},
     {id:'w19',icon:'💲',name:'定价策略',desc:'从动态到区域定价',tools:[
       {id:'dynamic-pricing',icon:'⚙️',name:'动态定价',desc:'4策略+弹性计算',deep:true},
-      {id:'competitor-pricing',icon:'🏷️',name:'竞品定价',desc:'5竞品+区间分析',deep:false},
-      {id:'promo-pricing',icon:'🎉',name:'促销定价',desc:'4促销+销量估算',deep:false},
-      {id:'bundle-pricing',icon:'🎁',name:'套餐定价',desc:'4方案+客单价提升',deep:false},
-      {id:'regional-pricing',icon:'🗺️',name:'区域定价',desc:'5站点+PPP调整',deep:false}
+      {id:'competitor-pricing',icon:'🏷️',name:'竞品定价',desc:'5竞品+区间分析'},
+      {id:'promo-pricing',icon:'🎉',name:'促销定价',desc:'4促销+销量估算'},
+      {id:'bundle-pricing',icon:'🎁',name:'套餐定价',desc:'4方案+客单价提升'},
+      {id:'regional-pricing',icon:'🗺️',name:'区域定价',desc:'5站点+PPP调整'}
     ]},
     {id:'w20',icon:'🚀',name:'增长分析',desc:'从增长率到北极星',tools:[
-      {id:'growth-rate',icon:'📐',name:'增长率',desc:'环比+同比+CAGR',deep:false},
+      {id:'growth-rate',icon:'📐',name:'增长率',desc:'环比+同比+CAGR'},
       {id:'cohort-analysis',icon:'🔸',name:'队列分析',desc:'热力图+留存曲线',deep:true},
-      {id:'retention-rate',icon:'🔄',name:'留存率',desc:'留存+行业基准',deep:false},
-      {id:'churn-analysis',icon:'📉',name:'流失分析',desc:'流失成本+预警',deep:false},
-      {id:'north-star-metric',icon:'⭐',name:'北极星',desc:'指标树+优先级',deep:false}
+      {id:'retention-rate',icon:'🔄',name:'留存率',desc:'留存+行业基准'},
+      {id:'churn-analysis',icon:'📉',name:'流失分析',desc:'流失成本+预警'},
+      {id:'north-star-metric',icon:'⭐',name:'北极星',desc:'指标树+优先级'}
+    ]},
+    {id:'w21',icon:'🎥',name:'达人营销',desc:'从匹配到ROI追踪全链路',tools:[
+      {id:'influencer-match-score',icon:'🎯',name:'达人匹配评分',desc:'6维度达人匹配评分+S/A/B/C/D分级',deep:true},
+      {id:'influencer-profile-analyzer',icon:'👤',name:'达人画像分析',desc:'达人画像分析+粉丝质量评估'},
+      {id:'influencer-commission-calc',icon:'💰',name:'佣金计算器',desc:'佣金结构计算+ROI预估'},
+      {id:'influencer-roi-tracker',icon:'📊',name:'ROI追踪器',desc:'达人ROI追踪+效果归因',deep:true},
+      {id:'influencer-tier-manager',icon:'🏆',name:'分级管理',desc:'S/A/B/C/D分级管理+资源分配'},
+      {id:'influencer-outreach-template',icon:'📧',name:'邀约模板',desc:'outreach邮件模板+跟进话术'},
+      {id:'influencer-content-brief',icon:'📋',name:'内容需求文档',desc:'内容需求文档+创作指引'},
+      {id:'influencer-sample-tracker',icon:'📦',name:'样品追踪',desc:'样品寄送追踪+签收确认'},
+      {id:'influencer-contract-generator',icon:'📄',name:'合同生成器',desc:'合作合同生成+条款模板'},
+      {id:'influencer-database',icon:'🗃️',name:'达人资源库',desc:'达人资源库+标签管理'}
+    ]},
+    {id:'w22',icon:'📺',name:'直播运营',desc:'从选品到复盘全流程',tools:[
+      {id:'live-product-selection',icon:'🎯',name:'直播选品',desc:'直播选品+爆款潜力评分',deep:true},
+      {id:'live-product-lineup',icon:'📋',name:'排品管理',desc:'排品顺序+价格梯度设计'},
+      {id:'live-script-generator',icon:'📝',name:'话术生成器',desc:'直播话术+互动脚本生成',deep:true},
+      {id:'live-data-dashboard',icon:'📊',name:'数据看板',desc:'实时数据看板+GMV监控',deep:true},
+      {id:'live-interaction-calc',icon:'💬',name:'互动计算器',desc:'互动率计算+峰值分析'},
+      {id:'live-replay-analyzer',icon:'🎬',name:'回放分析',desc:'回放切片+高光时刻标记'},
+      {id:'live-promo-text',icon:'📣',name:'促销文案',desc:'促销文案+限时话术生成'},
+      {id:'live-gmv-forecast',icon:'📈',name:'GMV预测',desc:'GMV预测+目标拆解'},
+      {id:'live-competitor-analysis',icon:'🔍',name:'竞品直播分析',desc:'竞品直播分析+对标'},
+      {id:'live-checklist',icon:'✅',name:'直播检查清单',desc:'直播前中后检查清单'}
+    ]},
+    {id:'w23',icon:'🛍️',name:'独立站建站',desc:'从选平台到移动端优化',tools:[
+      {id:'shopify-plan-comparator',icon:'📊',name:'Shopify套餐对比',desc:'Shopify套餐对比+成本测算',deep:true},
+      {id:'shopify-app-cost',icon:'🔌',name:'插件成本计算',desc:'插件成本计算+ROI评估'},
+      {id:'shopify-theme-selector',icon:'🎨',name:'主题选择器',desc:'主题选择+性能对比'},
+      {id:'payment-gateway-comparator',icon:'💳',name:'支付网关对比',desc:'支付网关对比+费率计算'},
+      {id:'shipping-calculator-dtc',icon:'🚚',name:'DTC运费计算',desc:'DTC运费计算+策略优化'},
+      {id:'landing-page-optimizer',icon:'📄',name:'落地页优化',desc:'落地页优化+转化提升',deep:true},
+      {id:'checkout-optimizer',icon:'🛒',name:'结账优化',desc:'结账流程优化+弃单挽回'},
+      {id:'cart-abandonment-calc',icon:'📉',name:'弃单计算器',desc:'弃单率计算+挽回策略'},
+      {id:'page-speed-checker',icon:'⚡',name:'页面速度检测',desc:'页面速度检测+优化建议'},
+      {id:'mobile-ux-checker',icon:'📱',name:'移动端UX检查',desc:'移动端UX检查+体验评分'}
+    ]},
+    {id:'w24',icon:'📈',name:'独立站增长',desc:'从ROAS到DTC利润全链路',tools:[
+      {id:'roas-calculator',icon:'📊',name:'ROAS计算器',desc:'ROAS计算+广告效益分析',deep:true},
+      {id:'cac-calculator',icon:'💰',name:'CAC计算器',desc:'获客成本计算+渠道对比',deep:true},
+      {id:'ltv-cac-ratio',icon:'⚖️',name:'LTV/CAC比值',desc:'LTV/CAC比值+健康度评估'},
+      {id:'aov-optimizer',icon:'📈',name:'客单价优化',desc:'客单价提升+捆绑策略'},
+      {id:'repurchase-rate',icon:'🔄',name:'复购率',desc:'复购率计算+留存分析'},
+      {id:'growth-model',icon:'📐',name:'增长模型',desc:'增长模型+预测推演'},
+      {id:'traffic-source-analyzer',icon:'🌊',name:'流量来源分析',desc:'流量来源分析+渠道归因',deep:true},
+      {id:'conversion-rate-optimizer',icon:'🎯',name:'转化率优化',desc:'转化率优化+A/B测试'},
+      {id:'multi-channel-attribution',icon:'🔗',name:'多渠道归因',desc:'多渠道归因+贡献分配'},
+      {id:'dtc-profit-calc',icon:'💹',name:'DTC利润计算',desc:'DTC利润计算+全成本核算'}
+    ]},
+    {id:'w25',icon:'📧',name:'邮件营销',desc:'从序列设计到合规检查',tools:[
+      {id:'email-sequence-designer',icon:'📧',name:'邮件序列设计',desc:'邮件序列设计+触发流程',deep:true},
+      {id:'email-abandoned-cart',icon:'🛒',name:'弃单挽回邮件',desc:'弃单挽回邮件+转化模板',deep:true},
+      {id:'email-open-rate-analyzer',icon:'📊',name:'打开率分析',desc:'打开率分析+优化建议'},
+      {id:'email-roi-calculator',icon:'💰',name:'邮件ROI计算',desc:'邮件ROI计算+效果评估'},
+      {id:'email-welcome-series',icon:'👋',name:'欢迎系列',desc:'欢迎系列+新客培育'},
+      {id:'email-subject-tester',icon:'📝',name:'标题测试器',desc:'标题A/B测试+打开率预测'},
+      {id:'email-segmentation',icon:'👥',name:'用户分群',desc:'用户分群+精准触达'},
+      {id:'email-frequency-optimizer',icon:'⏰',name:'频率优化',desc:'发送频率优化+退订控制'},
+      {id:'email-template-builder',icon:'🎨',name:'模板构建器',desc:'邮件模板构建+响应式设计'},
+      {id:'email-compliance-check',icon:'✅',name:'合规检查',desc:'合规检查+GDPR/CAN-SPAM'}
+    ]},
+    {id:'w26',icon:'📋',name:'项目立项',desc:'从可行性到风险矩阵',tools:[
+      {id:'project-feasibility-score',icon:'📊',name:'可行性评分',desc:'项目可行性评分+Go/No-Go',deep:true},
+      {id:'tam-sam-som-calculator',icon:'🌍',name:'市场规模测算',desc:'市场规模测算+TAM/SAM/SOM',deep:true},
+      {id:'business-model-canvas',icon:'📋',name:'商业模式画布',desc:'商业模式画布+9要素分析',deep:true},
+      {id:'go-nogo-decision',icon:'✅',name:'立项决策',desc:'立项决策矩阵+风险评估',deep:true},
+      {id:'npv-calculator',icon:'💰',name:'NPV计算',desc:'净现值计算+投资评估'},
+      {id:'irr-calculator',icon:'📈',name:'IRR计算',desc:'内部收益率计算+对比'},
+      {id:'sensitivity-analysis',icon:'📉',name:'敏感性分析',desc:'敏感性分析+变量影响'},
+      {id:'project-gantt-chart',icon:'📅',name:'甘特图',desc:'甘特图生成+里程碑管理'},
+      {id:'project-budget-allocator',icon:'💰',name:'预算分配',desc:'预算分配+成本控制'},
+      {id:'project-risk-matrix',icon:'⚠️',name:'风险矩阵',desc:'风险矩阵+应对策略'}
+    ]},
+    {id:'w27',icon:'💰',name:'投资决策',desc:'从回收到基准对比',tools:[
+      {id:'payback-period-calc',icon:'⏱️',name:'回收期计算',desc:'投资回收期计算+对比'},
+      {id:'investment-comparison',icon:'📊',name:'投资对比',desc:'投资方案对比+决策',deep:true},
+      {id:'break-even-analysis',icon:'⚖️',name:'盈亏分析',desc:'盈亏平衡分析+场景模拟'},
+      {id:'currency-hedging',icon:'💱',name:'汇率对冲',desc:'汇率对冲策略+成本测算'},
+      {id:'tax-impact-calc',icon:'🧾',name:'税务影响',desc:'税务影响计算+优化建议'},
+      {id:'depreciation-calc',icon:'📉',name:'折旧计算',desc:'折旧计算+资产摊销'},
+      {id:'working-capital-calc',icon:'💰',name:'营运资金',desc:'营运资金计算+周转分析'},
+      {id:'transfer-pricing',icon:'🔄',name:'转移定价',desc:'转移定价+合规测算'},
+      {id:'dividend-calc',icon:'💵',name:'分红计算',desc:'分红计算+股东回报'},
+      {id:'benchmark-comparison',icon:'📊',name:'基准对比',desc:'行业基准对比+差距分析'}
+    ]},
+    {id:'w28',icon:'🔧',name:'产品开发管理',desc:'从PRD到上线清单',tools:[
+      {id:'prd-template',icon:'📋',name:'PRD模板',desc:'产品需求文档+模板生成',deep:true},
+      {id:'mvp-definer',icon:'🚀',name:'MVP定义',desc:'MVP定义+功能裁剪'},
+      {id:'feature-priority-matrix',icon:'📊',name:'功能优先级',desc:'功能优先级矩阵+排序'},
+      {id:'user-story-generator',icon:'👤',name:'用户故事',desc:'用户故事生成+验收标准'},
+      {id:'product-roadmap',icon:'🗺️',name:'产品路线图',desc:'产品路线图+版本规划'},
+      {id:'acceptance-criteria',icon:'✅',name:'验收标准',desc:'验收标准+测试用例'},
+      {id:'competitive-feature-matrix',icon:'📊',name:'竞品功能矩阵',desc:'竞品功能矩阵+差距分析',deep:true},
+      {id:'wbs-generator',icon:'🌳',name:'WBS生成器',desc:'WBS分解+任务树生成'},
+      {id:'lifecycle-cost',icon:'💰',name:'生命周期成本',desc:'生命周期成本+TCO核算'},
+      {id:'product-launch-checklist',icon:'📋',name:'上线清单',desc:'上线检查清单+发布流程'}
+    ]},
+    {id:'w29',icon:'📦',name:'补货全链路',desc:'从模拟到滞销预警',tools:[
+      {id:'restock-simulator',icon:'🔄',name:'补货模拟器',desc:'补货模拟+多场景推演',deep:true},
+      {id:'multi-channel-restock',icon:'📊',name:'多渠道补货',desc:'多渠道补货+库存调拨'},
+      {id:'overseas-warehouse-compare',icon:'🌍',name:'海外仓对比',desc:'海外仓对比+成本测算'},
+      {id:'fnsku-generator',icon:'🏷️',name:'FNSKU生成',desc:'FNSKU生成+标签打印'},
+      {id:'sta-packing-calc',icon:'📦',name:'STA打包计算',desc:'STA打包计算+箱规规划'},
+      {id:'first-mile-cost-allocator',icon:'💰',name:'头程成本分摊',desc:'头程成本分摊+核算'},
+      {id:'awd-restock-calc',icon:'🤖',name:'AWD补货计算',desc:'AWD补货计算+自动补货'},
+      {id:'inventory-audit',icon:'🔍',name:'库存盘点',desc:'库存盘点+差异分析'},
+      {id:'stockout-cost-calc',icon:'📉',name:'断货成本',desc:'断货成本计算+损失评估'},
+      {id:'overstock-alert',icon:'⚠️',name:'滞销预警',desc:'滞销预警+清库存建议'}
+    ]},
+    {id:'w30',icon:'🤖',name:'广告自动化',desc:'从出价到25项指标诊断',tools:[
+      {id:'auto-bidding-rules',icon:'⚙️',name:'自动出价',desc:'自动出价规则+策略配置',deep:true},
+      {id:'auto-budget-adjuster',icon:'💰',name:'预算自动调整',desc:'预算自动调整+效率优化'},
+      {id:'ad-placement-optimizer',icon:'📍',name:'广告位优化',desc:'广告位优化+位置竞价'},
+      {id:'auto-keyword-expansion',icon:'🔑',name:'自动拓词',desc:'关键词自动拓展+拓词'},
+      {id:'auto-negative-keywords',icon:'🚫',name:'自动否定词',desc:'否定词自动添加+清洗'},
+      {id:'ad-schedule-optimizer',icon:'⏰',name:'分时优化',desc:'分时投放优化+时段竞价'},
+      {id:'sp-campaign-builder',icon:'🔨',name:'SP广告搭建',desc:'SP广告搭建+批量创建'},
+      {id:'sb-ad-planner',icon:'📋',name:'SB广告规划',desc:'SB广告规划+品牌广告'},
+      {id:'sd-audience-targeter',icon:'🎯',name:'SD受众定向',desc:'SD受众定向+再营销'},
+      {id:'ad-25-metrics',icon:'📊',name:'25项广告指标',desc:'25项广告指标+综合诊断',deep:true}
+    ]},
+    {id:'w31',icon:'💬',name:'客服管理',desc:'从模板到KPI看板',tools:[
+      {id:'email-template-generator',icon:'📧',name:'邮件模板生成',desc:'客服邮件模板+多场景生成',deep:true},
+      {id:'review-statistics',icon:'📊',name:'评价统计',desc:'评价统计+趋势分析'},
+      {id:'rma-tracker',icon:'📦',name:'RMA追踪',desc:'退货授权追踪+流程管理'},
+      {id:'customer-ticket-manager',icon:'🎫',name:'工单管理',desc:'工单管理+优先级排序'},
+      {id:'refund-report-generator',icon:'📄',name:'退款报表',desc:'退款报表生成+原因分析',deep:true},
+      {id:'voc-analysis',icon:'🗣️',name:'VOC分析',desc:'客户之声分析+需求挖掘'},
+      {id:'cs-sla-calc',icon:'⏱️',name:'SLA计算',desc:'客服SLA计算+响应时效'},
+      {id:'faq-generator',icon:'❓',name:'FAQ生成',desc:'FAQ自动生成+知识库'},
+      {id:'negative-review-recovery',icon:'🔄',name:'差评挽回',desc:'差评挽回+改进方案'},
+      {id:'cs-kpi-dashboard',icon:'📊',name:'KPI看板',desc:'客服KPI看板+绩效'}
+    ]},
+    {id:'w32',icon:'🌊',name:'流量全链路',desc:'从审计到预测全链路',tools:[
+      {id:'traffic-source-audit',icon:'🔍',name:'流量来源审计',desc:'流量来源审计+渠道诊断',deep:true},
+      {id:'traffic-quality-scorer',icon:'⭐',name:'流量质量评分',desc:'流量质量评分+欺诈检测'},
+      {id:'keyword-traffic-estimator',icon:'🔑',name:'关键词流量预估',desc:'关键词流量预估+潜力'},
+      {id:'organic-vs-paid',icon:'📊',name:'自然vs付费',desc:'自然vs付费流量+占比分析'},
+      {id:'traffic-attack-defense',icon:'🛡️',name:'流量攻击防御',desc:'流量攻击防御+异常监控'},
+      {id:'click-through-optimizer',icon:'🎯',name:'点击率优化',desc:'点击率优化+素材测试'},
+      {id:'cross-channel-attribution',icon:'🔗',name:'跨渠道归因',desc:'跨渠道归因+贡献分配'},
+      {id:'traffic-trend-analyzer',icon:'📈',name:'流量趋势分析',desc:'流量趋势分析+预测'},
+      {id:'brand-search-estimator',icon:'🔍',name:'品牌搜索预估',desc:'品牌搜索预估+热度'},
+      {id:'traffic-forecast',icon:'📊',name:'流量预测',desc:'流量预测+增长建模'}
+    ]},
+    {id:'w33',icon:'💹',name:'财务核算深度',desc:'从损益表到利润瀑布',tools:[
+      {id:'profit-loss-statement-builder',icon:'📊',name:'损益表生成',desc:'损益表生成+自动编制',deep:true},
+      {id:'cost-allocation-matrix',icon:'📋',name:'成本分摊矩阵',desc:'成本分摊矩阵+归集'},
+      {id:'amazon-fee-deep-dive',icon:'💰',name:'亚马逊费用深挖',desc:'亚马逊费用深挖+拆解',deep:true},
+      {id:'reimbursement-claim-tracker',icon:'📄',name:'索赔追踪',desc:'索赔追踪+退款管理'},
+      {id:'vat-oss-calculator',icon:'🧾',name:'VAT/OSS计算',desc:'VAT/OSS计算+欧盟税务'},
+      {id:'financial-health-scorecard',icon:'💹',name:'财务健康度评分卡',desc:'财务健康度评分+全维度诊断',deep:true},
+      {id:'monthly-close-checklist',icon:'✅',name:'月结清单',desc:'月结检查清单+流程'},
+      {id:'budget-vs-actual',icon:'📊',name:'预算vs实际',desc:'预算vs实际+差异分析'},
+      {id:'currency-exposure-analysis',icon:'💱',name:'汇率敞口分析',desc:'汇率敞口分析+对冲'},
+      {id:'profit-waterfall',icon:'📉',name:'利润瀑布图',desc:'利润瀑布图+层层拆解'}
+    ]},
+    {id:'w34',icon:'🔗',name:'供应链协同',desc:'从评分到供应链图谱',tools:[
+      {id:'supplier-scorecard',icon:'📊',name:'供应商评分卡',desc:'供应商评分卡+绩效',deep:true},
+      {id:'purchase-order-builder',icon:'📋',name:'采购订单',desc:'采购订单生成+管理'},
+      {id:'moq-negotiator',icon:'🤝',name:'起订量谈判',desc:'起订量谈判+策略'},
+      {id:'quality-inspection-checklist',icon:'✔️',name:'质检清单',desc:'质检清单+标准'},
+      {id:'supplier-risk-assessment',icon:'⚠️',name:'风险评估',desc:'供应商风险评估+预警'},
+      {id:'cost-reduction-planner',icon:'📉',name:'降本规划',desc:'降本规划+方案对比'},
+      {id:'multi-supplier-allocator',icon:'🔄',name:'多供应商分配',desc:'多供应商分配+均衡'},
+      {id:'supplier-contract-terms',icon:'📄',name:'合同条款',desc:'合同条款+风险点'},
+      {id:'delivery-performance-tracker',icon:'📊',name:'交付绩效',desc:'交付绩效追踪+考核'},
+      {id:'supply-chain-mapping',icon:'🗺️',name:'供应链图谱',desc:'供应链图谱+可视化'}
+    ]},
+    {id:'w35',icon:'🎨',name:'广告创意',desc:'从评分到效果归因',tools:[
+      {id:'ad-creative-scorecard',icon:'📊',name:'创意评分卡',desc:'广告创意评分卡+诊断',deep:true},
+      {id:'headline-generator',icon:'✏️',name:'标题生成',desc:'标题生成+文案测试'},
+      {id:'product-image-analyzer',icon:'🖼️',name:'图片分析',desc:'产品图片分析+优化建议'},
+      {id:'ab-test-planner',icon:'🧪',name:'A/B测试规划',desc:'A/B测试规划+样本量'},
+      {id:'ad-copy-variants',icon:'📝',name:'文案变体',desc:'广告文案变体+批量生成'},
+      {id:'creative-fatigue-detector',icon:'😴',name:'疲劳检测',desc:'创意疲劳检测+换新'},
+      {id:'seasonal-ad-planner',icon:'📅',name:'季节性规划',desc:'季节性广告规划+日历'},
+      {id:'ad-budget-splitter',icon:'💰',name:'预算拆分',desc:'广告预算拆分+分配'},
+      {id:'creative-brief-builder',icon:'📋',name:'创意简报',desc:'创意简报+需求文档'},
+      {id:'creative-performance-link',icon:'🔗',name:'效果关联',desc:'创意效果关联+归因'}
+    ]},
+    {id:'w36',icon:'🎯',name:'选品深度',desc:'从评分卡到上架时间线',tools:[
+      {id:'product-research-scorecard',icon:'🎯',name:'选品评分卡',desc:'选品评分卡+多维诊断',deep:true},
+      {id:'market-gap-finder',icon:'🔍',name:'市场空白发现',desc:'市场空白发现+机会'},
+      {id:'demand-trend-analyzer',icon:'📈',name:'需求趋势分析',desc:'需求趋势分析+预测'},
+      {id:'competition-density-mapper',icon:'🗺️',name:'竞争密度地图',desc:'竞争密度地图+可视化'},
+      {id:'product-differentiation-planner',icon:'✨',name:'差异化规划',desc:'差异化规划+卖点提炼'},
+      {id:'seasonality-checker',icon:'📅',name:'季节性检查',desc:'季节性检查+周期分析'},
+      {id:'profit-margin-forecaster',icon:'💰',name:'利润率预测',desc:'利润率预测+建模'},
+      {id:'review-velocity-analyzer',icon:'📊',name:'评论增速分析',desc:'评论增速分析+预警'},
+      {id:'keyword-opportunity-finder',icon:'🔑',name:'关键词机会',desc:'关键词机会发现+挖掘'},
+      {id:'product-launch-timeline',icon:'📋',name:'上架时间线',desc:'上架时间线+里程碑'}
+    ]},
+    {id:'w37',icon:'🔑',name:'关键词深度',desc:'从矩阵到蚕食检测',tools:[
+      {id:'keyword-research-matrix',icon:'🔑',name:'关键词研究矩阵',desc:'关键词研究矩阵+全景分析',deep:true},
+      {id:'search-volume-estimator',icon:'📊',name:'搜索量预估',desc:'搜索量预估+精度校准'},
+      {id:'keyword-difficulty-scorer',icon:'🎯',name:'难度评分',desc:'关键词难度评分+排名'},
+      {id:'long-tail-keyword-finder',icon:'🔍',name:'长尾词挖掘',desc:'长尾词挖掘+批量拓展'},
+      {id:'keyword-cluster-builder',icon:'📊',name:'关键词聚类',desc:'关键词聚类+分组'},
+      {id:'competitor-keyword-intersection',icon:'🔗',name:'竞品关键词交集',desc:'竞品关键词交集+对比'},
+      {id:'keyword-trend-forecaster',icon:'📈',name:'趋势预测',desc:'关键词趋势预测+预判'},
+      {id:'ppc-keyword-mapper',icon:'📋',name:'PPC映射',desc:'PPC关键词映射+投放'},
+      {id:'search-term-report-analyzer',icon:'📄',name:'搜索词分析',desc:'搜索词报告分析+清洗'},
+      {id:'keyword-canibalization-checker',icon:'⚠️',name:'蚕食检测',desc:'关键词蚕食检测+去重'}
+    ]},
+    {id:'w38',icon:'🏢',name:'多店铺管理',desc:'从看板到集中Listing',tools:[
+      {id:'multi-store-dashboard',icon:'📊',name:'多店铺看板',desc:'多店铺看板+统一管理',deep:true},
+      {id:'store-performance-comparison',icon:'📈',name:'绩效对比',desc:'店铺绩效对比+排名'},
+      {id:'cross-store-inventory',icon:'🔄',name:'跨店库存',desc:'跨店库存+调拨管理'},
+      {id:'unified-profit-report',icon:'💰',name:'统一利润报表',desc:'统一利润报表+汇总'},
+      {id:'store-segmentation-matrix',icon:'📊',name:'店铺分层',desc:'店铺分层矩阵+定位'},
+      {id:'multi-store-sku-mapper',icon:'🔗',name:'SKU映射',desc:'多店SKU映射+对照'},
+      {id:'region-performance-analyzer',icon:'🌍',name:'区域绩效',desc:'区域绩效分析+对比'},
+      {id:'store-launch-checklist',icon:'✅',name:'新店清单',desc:'新店上线清单+流程'},
+      {id:'multi-store-risk-monitor',icon:'⚠️',name:'风险监控',desc:'多店风险监控+预警'},
+      {id:'centralized-listing-manager',icon:'📋',name:'集中Listing',desc:'集中Listing管理+同步'}
+    ]},
+    {id:'w39',icon:'✍️',name:'内容营销',desc:'从日历到ROI追踪',tools:[
+      {id:'content-calendar-planner',icon:'📅',name:'内容日历',desc:'内容日历规划+排期',deep:true},
+      {id:'social-post-scheduler',icon:'📱',name:'社媒排期',desc:'社媒发布排期+定时'},
+      {id:'content-pillar-builder',icon:'🏛️',name:'内容支柱',desc:'内容支柱构建+主题'},
+      {id:'video-script-optimizer',icon:'🎬',name:'视频脚本优化',desc:'视频脚本优化+结构'},
+      {id:'hashtag-research-tool',icon:'#️⃣',name:'标签研究',desc:'标签研究+热门挖掘'},
+      {id:'content-repurpose-planner',icon:'♻️',name:'内容复用',desc:'内容复用规划+一鱼多吃'},
+      {id:'engagement-rate-predictor',icon:'📊',name:'互动率预测',desc:'互动率预测+优化'},
+      {id:'content-audit-checklist',icon:'✅',name:'内容审计',desc:'内容审计清单+评估'},
+      {id:'brand-voice-guide-generator',icon:'📝',name:'品牌调性',desc:'品牌调性指南+规范'},
+      {id:'content-roi-tracker',icon:'💰',name:'ROI追踪',desc:'内容ROI追踪+效果'}
+    ]},
+    {id:'w40',icon:'📊',name:'数据分析深度',desc:'从探索到自动洞察',tools:[
+      {id:'sales-data-explorer',icon:'🔍',name:'销售数据探索',desc:'销售数据探索+挖掘',deep:true},
+      {id:'cohort-analysis-tool',icon:'📊',name:'队列分析',desc:'队列分析工具+留存'},
+      {id:'rfm-segmentation',icon:'👥',name:'RFM分群',desc:'RFM分群+客户价值'},
+      {id:'abc-analysis-tool',icon:'📊',name:'ABC分析',desc:'ABC分析+重点管理'},
+      {id:'trend-decomposition',icon:'📈',name:'趋势分解',desc:'趋势分解+周期拆解'},
+      {id:'anomaly-detector',icon:'⚠️',name:'异常检测',desc:'异常检测+预警'},
+      {id:'benchmark-dashboard',icon:'📊',name:'基准看板',desc:'基准看板+行业对标'},
+      {id:'kpi-tree-builder',icon:'🌳',name:'KPI树',desc:'KPI树构建+指标拆解'},
+      {id:'data-quality-checker',icon:'✅',name:'数据质量检查',desc:'数据质量检查+校验'},
+      {id:'automated-insight-generator',icon:'🤖',name:'自动洞察',desc:'自动洞察生成+智能报告',deep:true}
+    ]},
+    {id:'w41',icon:'📜',name:'合规深度',desc:'从矩阵到审计评分',tools:[
+      {id:'product-compliance-matrix',icon:'📋',name:'合规矩阵',desc:'产品合规矩阵+全维度',deep:true},
+      {id:'fda-label-checker',icon:'💊',name:'FDA标签检查',desc:'FDA标签检查+合规'},
+      {id:'ce-marking-guide',icon:'🇪🇺',name:'CE认证指南',desc:'CE认证指南+流程'},
+      {id:'product-safety-assessment',icon:'⚠️',name:'安全评估',desc:'产品安全评估+风险'},
+      {id:'packaging-compliance-checker',icon:'📦',name:'包装合规',desc:'包装合规检查+规范'},
+      {id:'recall-prevention-checklist',icon:'📋',name:'召回预防',desc:'召回预防清单+排查'},
+      {id:'import-regulation-lookup',icon:'🌍',name:'进口法规查询',desc:'进口法规查询+准入'},
+      {id:'restricted-substance-checker',icon:'🚫',name:'限用物质检查',desc:'限用物质检查+清单'},
+      {id:'label-translation-verifier',icon:'🌐',name:'标签翻译校验',desc:'标签翻译校验+准确'},
+      {id:'compliance-audit-scorecard',icon:'📊',name:'合规审计',desc:'合规审计评分卡+报告'}
+    ]},
+    {id:'w42',icon:'🛡️',name:'品牌保护',desc:'从策略到假货影响计算',tools:[
+      {id:'brand-protection-strategy',icon:'🛡️',name:'品牌保护策略',desc:'品牌保护策略+方案',deep:true},
+      {id:'counterfeit-detection-guide',icon:'🔍',name:'假货检测',desc:'假货检测指南+识别'},
+      {id:'trademark-monitoring-setup',icon:'📋',name:'商标监控',desc:'商标监控配置+预警'},
+      {id:'project-zero-enrollment',icon:'✅',name:'Project Zero',desc:'Project Zero注册+管理'},
+      {id:'transparency-program-guide',icon:'📦',name:'透明计划',desc:'透明计划指南+操作'},
+      {id:'brand-portal-optimizer',icon:'🔧',name:'品牌门户优化',desc:'品牌门户优化+管理'},
+      {id:'ip-complaint-builder',icon:'📄',name:'IP投诉构建',desc:'IP投诉构建+提交'},
+      {id:'unauthorized-seller-tracker',icon:'🚫',name:'未授权卖家追踪',desc:'未授权卖家追踪+清理'},
+      {id:'brand-registry-audit',icon:'✅',name:'品牌注册审计',desc:'品牌注册审计+检查'},
+      {id:'counterfeit-impact-calculator',icon:'💰',name:'假货影响计算',desc:'假货影响计算+损失'}
     ]}
   ];
 
-  // 热门工具 TOP6（按使用频率）
-  var hotIds = ['fba-calculator','acos-calculator','title-generator','keyword-rank-tracker','sales-estimator','cash-flow-forecast'];
-  var hotDesc = {
-    'fba-calculator':'3品对比+成本可视化+健康评分',
-    'acos-calculator':'ACoS/TACoS/ROAS仪表盘',
-    'title-generator':'5模板+SEO评分+字节计数',
-    'keyword-rank-tracker':'排名趋势+分布饼图',
-    'sales-estimator':'BSR推算+多模型对比',
-    'cash-flow-forecast':'12月预测+三场景'
-  };
-  var hotIcons = {
-    'fba-calculator':'💰','acos-calculator':'📊','title-generator':'✏️',
-    'keyword-rank-tracker':'🔍','sales-estimator':'📈','cash-flow-forecast':'💵'
-  };
-  var hotNames = {
-    'fba-calculator':'FBA利润计算器','acos-calculator':'ACoS广告计算器','title-generator':'标题生成器',
-    'keyword-rank-tracker':'关键词排名追踪','sales-estimator':'销量估算器','cash-flow-forecast':'现金流预测'
+  // 热门工具 TOP6
+  var hotIds = ['fba-calculator','acos-calculator','product-research-scorecard','keyword-research-matrix','financial-health-scorecard','restock-simulator'];
+  var hotData = {
+    'fba-calculator':{icon:'💰',name:'FBA利润计算器',desc:'3品对比+成本可视化+健康评分'},
+    'acos-calculator':{icon:'📊',name:'ACoS广告计算器',desc:'ACoS/TACoS/ROAS仪表盘'},
+    'product-research-scorecard':{icon:'🎯',name:'选品评分卡',desc:'选品评分卡+多维诊断'},
+    'keyword-research-matrix':{icon:'🔑',name:'关键词研究矩阵',desc:'关键词研究矩阵+全景分析'},
+    'financial-health-scorecard':{icon:'💹',name:'财务健康度评分卡',desc:'财务健康度评分+全维度诊断'},
+    'restock-simulator':{icon:'📦',name:'补货模拟器',desc:'补货模拟+多场景推演'}
   };
 
   /* ---------- 2. 构建工具索引 ---------- */
   var allTools = [];
   var toolMap = {};
+  var totalTools = 0;
+  var deepCount = 0;
   workflows.forEach(function(wf){
     wf.tools.forEach(function(t){
       var item = {
-        id:t.id, name:t.name, desc:t.desc, icon:t.icon, deep:!!t.deep, isNew:!!t.new,
+        id:t.id, name:t.name, desc:t.desc, icon:t.icon, deep:!!t.deep,
         wfId:wf.id, wfName:wf.name, wfIcon:wf.icon, url:t.id+'.html'
       };
       allTools.push(item);
       toolMap[t.id] = item;
+      totalTools++;
+      if(t.deep) deepCount++;
     });
   });
 
@@ -661,12 +914,10 @@
   function isFav(id){return getFavs().some(function(f){return f.id===id;});}
 
   function recordUse(tool){
-    // 写入最近使用（最多8，去重，新的在前）
     var recent = getRecent().filter(function(r){return r.id!==tool.id;});
     recent.unshift({id:tool.id,name:tool.name,icon:tool.icon,url:tool.url,time:Date.now()});
     if(recent.length>8) recent = recent.slice(0,8);
     LS.setJSON(K_RECENT,recent);
-    // 写入已使用工具集 + 同步工作流进度
     var used = getUsed();
     if(used.indexOf(tool.id)===-1){used.push(tool.id);LS.setJSON(K_USED,used);}
     syncProgress();
@@ -689,28 +940,41 @@
     var idx = favs.findIndex(function(f){return f.id===tool.id;});
     if(idx>-1){favs.splice(idx,1);}else{favs.unshift({id:tool.id,name:tool.name,icon:tool.icon,url:tool.url});}
     LS.setJSON(K_FAV,favs);
-    return idx===-1; // true=已收藏
+    return idx===-1;
   }
 
-  /* ---------- 4. 渲染：热门工具 ---------- */
+  /* ---------- 4. 模糊搜索 ---------- */
+  function fuzzyMatch(str, query){
+    str = str.toLowerCase();
+    query = query.toLowerCase();
+    if(str.indexOf(query)>-1) return true;
+    var qi = 0;
+    for(var si=0; si<str.length && qi<query.length; si++){
+      if(str[si]===query[qi]) qi++;
+    }
+    return qi===query.length;
+  }
+
+  /* ---------- 5. 渲染：热门工具 ---------- */
   function renderHot(){
     var grid = document.getElementById('hotGrid');
     var html = '';
     hotIds.forEach(function(id,idx){
       var t = toolMap[id];
-      if(!t) return;
+      var h = hotData[id];
+      if(!t || !h) return;
       html += '<a class="hot-card" href="'+id+'.html" data-rec data-tool-id="'+id+'" data-wf="'+t.wfId+'">'
         + '<span class="hot-rank">TOP '+(idx+1)+'</span>'
-        + '<div class="hot-icon">'+hotIcons[id]+'</div>'
-        + '<div class="hot-name">'+hotNames[id]+'</div>'
-        + '<div class="hot-desc">'+hotDesc[id]+'</div>'
+        + '<div class="hot-icon">'+h.icon+'</div>'
+        + '<div class="hot-name">'+h.name+'</div>'
+        + '<div class="hot-desc">'+h.desc+'</div>'
         + '<span class="hot-go">立即使用 →</span>'
         + '</a>';
     });
     grid.innerHTML = html;
   }
 
-  /* ---------- 5. 渲染：最近使用 / 收藏 ---------- */
+  /* ---------- 6. 渲染：最近使用 / 收藏 ---------- */
   function timeAgo(ts){
     var diff = Date.now()-ts;
     var m = Math.floor(diff/60000), h = Math.floor(diff/3600000), d = Math.floor(diff/86400000);
@@ -727,7 +991,7 @@
         + '<button class="mini-fav'+(favOn?' on':'')+'" data-fav="'+t.id+'" aria-label="收藏" type="button">★</button>'
       + '</div>'
       + '<div class="mini-name">'+t.name+'</div>'
-      + '<div class="mini-desc">'+(t.desc||toolMap[t.id]?toolMap[t.id].desc:'')+'</div>'
+      + '<div class="mini-desc">'+(t.desc||(toolMap[t.id]?toolMap[t.id].desc:''))+'</div>'
       + timeHtml
       + '</a>';
   }
@@ -756,29 +1020,29 @@
     }).join('');
   }
 
-  /* ---------- 6. 渲染：工作流 Tab + 面板 ---------- */
+  /* ---------- 7. 渲染：工作流 Tab + 面板 ---------- */
   function renderWfTabs(){
     var prog = getProgress();
     var tabs = document.getElementById('wfTabs');
     var html = '';
     workflows.forEach(function(wf){
       var n = prog[wf.id]||0;
-      var done = n>=5;
+      var total = wf.tools.length;
+      var done = n>=total;
       html += '<div class="wf-tab'+(done?' done':'')+'" data-wf="'+wf.id+'" role="tab" tabindex="0">'
         + '<div class="wf-tab-icon">'+wf.icon+'</div>'
         + '<div class="wf-tab-name">'+wf.name+'</div>'
-        + '<div class="wf-tab-prog">'+n+'/5</div>'
+        + '<div class="wf-tab-prog">'+n+'/'+total+'</div>'
         + '</div>';
     });
     tabs.innerHTML = html;
   }
 
-  function tcardHTML(t, showArrow){
+  function tcardHTML(t){
     var tags = '';
     if(t.deep) tags += '<span class="ttag deep">深度版</span>';
-    if(t.isNew) tags += '<span class="ttag new">新工具</span>';
     if(tags) tags = '<div class="tcard-tags">'+tags+'</div>';
-    var card = '<a class="tcard'+(t.deep?' deep':'')+'" href="'+t.url+'" data-rec data-tool-id="'+t.id+'" data-wf="'+t.wfId+'">'
+    return '<a class="tcard'+(t.deep?' deep':'')+'" href="'+t.url+'" data-rec data-tool-id="'+t.id+'" data-wf="'+t.wfId+'">'
       + '<div class="tcard-top">'
         + '<div class="tcard-icon">'+t.icon+'</div>'
         + '<button class="tcard-fav'+(isFav(t.id)?' on':'')+'" data-fav="'+t.id+'" aria-label="收藏" type="button">★</button>'
@@ -788,10 +1052,6 @@
       + '<div class="tcard-desc">'+t.desc+'</div>'
       + '<span class="tcard-go">使用 →</span>'
       + '</a>';
-    if(showArrow){
-      card += '<div class="wf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>';
-    }
-    return card;
   }
 
   function renderWfPanels(){
@@ -800,24 +1060,25 @@
     var html = '';
     workflows.forEach(function(wf){
       var n = prog[wf.id]||0;
-      var pct = Math.round(n/5*100);
-      var done = n>=5;
+      var total = wf.tools.length;
+      var pct = Math.round(n/total*100);
+      var done = n>=total;
       html += '<div class="wf-panel" data-wf="'+wf.id+'">'
         + '<div class="wf-panel-head">'
           + '<div class="wf-panel-icon">'+wf.icon+'</div>'
           + '<div>'
             + '<div class="wf-panel-title"><span class="wf-num">'+wf.id.toUpperCase()+'</span>'+wf.name+'工作流</div>'
-            + '<div class="wf-panel-desc">'+wf.desc+' · 5个工具</div>'
+            + '<div class="wf-panel-desc">'+wf.desc+' · '+total+'个工具</div>'
           + '</div>'
         + '</div>'
-        + '<div class="wf-flow">';
-      wf.tools.forEach(function(t,i){
+        + '<div class="wf-grid">';
+      wf.tools.forEach(function(t){
         var full = toolMap[t.id];
-        html += tcardHTML(full, i<wf.tools.length-1);
+        html += tcardHTML(full);
       });
       html += '</div>'
         + '<div class="wf-progress">'
-          + '<div class="wf-progress-label">已完成 <strong>'+n+'</strong>/5</div>'
+          + '<div class="wf-progress-label">已完成 <strong>'+n+'</strong>/'+total+'</div>'
           + '<div class="wf-progress-bar"><div class="wf-progress-fill" style="width:'+pct+'%"></div></div>'
           + '<span class="wf-progress-badge'+(done?' show':'')+'">✓ 已完成</span>'
         + '</div>'
@@ -834,16 +1095,15 @@
     document.querySelectorAll('.wf-panel').forEach(function(el){
       el.classList.toggle('active', el.getAttribute('data-wf')===wfId);
     });
-    // 滚动当前 tab 到可视区
     var activeTab = document.querySelector('.wf-tab.active');
     if(activeTab && activeTab.scrollIntoView){
       activeTab.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
     }
   }
 
-  /* ---------- 7. 渲染：全部工具视图 ---------- */
+  /* ---------- 8. 渲染：全部工具视图 ---------- */
   function renderAllView(filter){
-    var kw = (filter||'').trim().toLowerCase();
+    var kw = (filter||'').trim();
     var container = document.getElementById('allContainer');
     var html = '';
     var totalVisible = 0;
@@ -851,9 +1111,9 @@
       var cards = '';
       wf.tools.forEach(function(t){
         var full = toolMap[t.id];
-        var hay = (full.name+' '+full.desc+' '+full.id+' '+wf.name).toLowerCase();
-        if(kw && hay.indexOf(kw)===-1) return;
-        cards += tcardHTML(full,false);
+        var hay = full.name+' '+full.desc+' '+full.id+' '+wf.name;
+        if(kw && !fuzzyMatch(hay, kw)) return;
+        cards += tcardHTML(full);
         totalVisible++;
       });
       if(!cards) return;
@@ -872,7 +1132,7 @@
     container.innerHTML = html;
   }
 
-  /* ---------- 8. 视图切换 ---------- */
+  /* ---------- 9. 视图切换 ---------- */
   function switchView(view){
     document.querySelectorAll('.tl-view-btn').forEach(function(b){
       b.classList.toggle('active', b.getAttribute('data-view')===view);
@@ -885,7 +1145,7 @@
     }
   }
 
-  /* ---------- 9. 搜索下拉 ---------- */
+  /* ---------- 10. 搜索下拉 ---------- */
   var searchInput = document.getElementById('toolSearch');
   var dropdown = document.getElementById('searchDropdown');
   var clearBtn = document.getElementById('searchClear');
@@ -893,18 +1153,17 @@
   var ddActive = -1;
 
   function buildResults(q){
-    var kw = q.trim().toLowerCase();
+    var kw = q.trim();
     var results;
     if(!kw){
-      // 无输入时显示热门 + 全部前几
       results = hotIds.map(function(id){return toolMap[id];});
     }else{
       results = allTools.filter(function(t){
-        var hay = (t.name+' '+t.desc+' '+t.id+' '+t.wfName).toLowerCase();
-        return hay.indexOf(kw)>-1;
+        var hay = t.name+' '+t.desc+' '+t.id+' '+t.wfName;
+        return fuzzyMatch(hay, kw);
       });
     }
-    return results.slice(0,8);
+    return results.slice(0,10);
   }
   function renderDropdown(q){
     var list = buildResults(q);
@@ -942,7 +1201,6 @@
       var el = dropdown.querySelector('.tl-dd-item[data-idx="'+i+'"]');
       if(el) el.classList.toggle('active', i===idx);
     });
-    // 滚动可视
     var el = dropdown.querySelector('.tl-dd-item[data-idx="'+idx+'"]');
     if(el) el.scrollIntoView({block:'nearest'});
   }
@@ -951,7 +1209,6 @@
     var v = this.value;
     clearBtn.style.display = v?'flex':'none';
     renderDropdown(v);
-    // 联动全部工具视图过滤
     if(document.getElementById('allView').style.display!=='none'){
       renderAllView(v);
     }
@@ -960,7 +1217,6 @@
     renderDropdown(this.value);
   });
   searchInput.addEventListener('blur', function(){
-    // 延迟关闭，允许点击下拉项
     setTimeout(closeDropdown, 180);
   });
   searchInput.addEventListener('keydown', function(e){
@@ -984,7 +1240,6 @@
       closeDropdown();
     }
   });
-  // 下拉项点击：通过事件委托记录使用
   dropdown.addEventListener('click', function(e){
     var item = e.target.closest('.tl-dd-item');
     if(item){
@@ -1001,7 +1256,6 @@
     searchInput.focus();
   });
 
-  // ⌘K / Ctrl+K 聚焦搜索
   document.addEventListener('keydown', function(e){
     if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){
       e.preventDefault();
@@ -1009,15 +1263,13 @@
       searchInput.select();
     }
   });
-  // Mac 检测，调整快捷键提示
   if(!/Mac/i.test(navigator.platform)){
     var kbd = document.getElementById('searchKbd');
     if(kbd){kbd.innerHTML='<span>Ctrl</span><span>K</span>';}
   }
 
-  /* ---------- 10. 全局事件委托：工具卡片点击记录 + 收藏 ---------- */
+  /* ---------- 11. 全局事件委托：工具卡片点击记录 + 收藏 ---------- */
   document.addEventListener('click', function(e){
-    // 收藏按钮（优先，阻止导航）
     var favBtn = e.target.closest('[data-fav]');
     if(favBtn){
       e.preventDefault();
@@ -1026,7 +1278,6 @@
       var t = toolMap[id];
       if(t){
         var nowFav = toggleFav(t);
-        // 更新所有该工具的收藏按钮状态
         document.querySelectorAll('[data-fav="'+id+'"]').forEach(function(b){
           b.classList.toggle('on', nowFav);
         });
@@ -1035,17 +1286,15 @@
       }
       return;
     }
-    // 工具卡片点击 → 记录使用
     var card = e.target.closest('[data-rec]');
     if(card){
       var tid = card.getAttribute('data-tool-id');
       var t = toolMap[tid];
       if(t) recordUse(t);
-      // 允许默认导航继续
     }
   });
 
-  /* ---------- 11. 视图切换 / Tab 点击 / CTA ---------- */
+  /* ---------- 12. 视图切换 / Tab 点击 / CTA ---------- */
   document.querySelectorAll('.tl-view-btn').forEach(function(b){
     b.addEventListener('click', function(){switchView(this.getAttribute('data-view'));});
   });
@@ -1066,24 +1315,23 @@
     renderRecent();
   });
 
-  /* ---------- 12. 初始化 ---------- */
+  /* ---------- 13. 初始化 ---------- */
   function init(){
-    document.getElementById('searchbarCount').textContent = '共 '+allTools.length+' 个工具';
+    document.getElementById('searchbarCount').textContent = '共 '+totalTools+' 个工具';
     renderHot();
     renderRecent();
     renderFavs();
     renderWfTabs();
     renderWfPanels();
     renderAllView('');
-    // 恢复上次工作流 Tab
     var saved = LS.get(K_WF,'w1');
-    if(!toolMap[saved] && !workflows.some(function(w){return w.id===saved;})) saved='w1';
+    if(!workflows.some(function(w){return w.id===saved;})) saved='w1';
     selectWorkflow(saved);
     clearBtn.style.display='none';
   }
   init();
 
-  /* ---------- 13. 返回顶部 / 滚动进度（复用 engagement 基础） ---------- */
+  /* ---------- 14. 返回顶部 / 滚动进度 ---------- */
   var backTop = document.getElementById('backToTop');
   var progBar = document.getElementById('readingProgress');
   window.addEventListener('scroll', function(){

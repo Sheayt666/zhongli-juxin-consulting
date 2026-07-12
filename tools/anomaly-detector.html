@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="异常检测器：基于3σ规则识别时间序列异常点，CSS异常标注图，异常原因排查清单。免费在线数据分析工具。">
+<title>异常检测器 - 3σ规则·异常标注·排查清单 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field textarea{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:13px;color:var(--t-ink);background:#fff;font-family:inherit;resize:vertical;min-height:100px;line-height:1.6}.form-field select{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:14px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field textarea:focus,.form-field select:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-grid{display:grid;grid-template-columns:1fr 200px;gap:16px;align-items:end}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}.btn-primary:hover{transform:translateY(-1px)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card{background:var(--t-bg-soft);border:1px solid var(--t-rule-light);border-radius:var(--t-radius);padding:20px;text-align:center}.stat-card .stat-val{font-size:28px;font-weight:800}.stat-card .stat-lbl{font-size:12px;color:var(--t-muted);margin-top:2px}
+.anomaly-chart{overflow-x:auto;margin-top:16px}svg.anomaly-svg{display:block;min-width:700px}
+.anomaly-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.anomaly-item{display:grid;grid-template-columns:80px 1fr 100px 100px;gap:12px;align-items:center;padding:12px 16px;border-radius:10px;border-left:4px solid}
+.anomaly-item.high{background:var(--t-danger-bg);border-left-color:var(--t-danger)}.anomaly-item.low{background:var(--t-warning-bg);border-left-color:var(--t-warning)}
+.anomaly-date{font-weight:700;color:var(--t-ink)}.anomaly-detail{font-size:13px;color:var(--t-ink-soft)}.anomaly-type{font-size:12px;font-weight:700;text-align:center}.anomaly-dev{font-size:13px;font-weight:700;text-align:right}
+.checklist-box{background:linear-gradient(135deg,var(--t-primary-bg),#f0f4ff);border-radius:var(--t-radius);padding:20px;margin-top:16px;border:1px solid #c7d2fe}.checklist-box h4{font-size:14px;font-weight:700;color:var(--t-primary);margin:0 0 8px}.checklist-box ul{margin:0;padding-left:20px}.checklist-box li{font-size:13px;color:var(--t-ink-soft);margin-bottom:6px}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.stat-grid{grid-template-columns:repeat(2,1fr)}.related-grid{grid-template-columns:1fr}.anomaly-item{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+<a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step">趋势分解</a><a href="anomaly-detector.html" class="workflow-step active">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W40 数据分析</a><span class="sep">/</span><span class="current">异常检测器</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W40 · 数据分析工作流</span><h1>异常<em>检测器</em></h1><p class="tool-header-desc">基于3σ规则识别时间序列数据中的异常点，CSS异常标注图高亮显示，异常原因排查清单辅助定位问题根因。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>数据输入</h2>
+    <p class="section-sub">每行一个数据点，格式：日期,数值</p>
+    <div class="form-grid">
+      <div class="form-field"><label>时间序列数据</label><textarea id="inpData" oninput="ANM.detect()">2026-06-01,1200
+2026-06-02,1350
+2026-06-03,1100
+2026-06-04,1280
+2026-06-05,1400
+2026-06-06,3200
+2026-06-07,1300
+2026-06-08,1250
+2026-06-09,1180
+2026-06-10,1420
+2026-06-11,380
+2026-06-12,1300
+2026-06-13,1350
+2026-06-14,1280
+2026-06-15,1400
+2026-06-16,1220
+2026-06-17,3400
+2026-06-18,1300
+2026-06-19,1250
+2026-06-20,1380</textarea></div>
+      <div class="form-field"><label>检测灵敏度（σ倍数）</label><select id="inpSigma" onchange="ANM.detect()"><option value="2">2σ (严格)</option><option value="3" selected>3σ (标准)</option><option value="4">4σ (宽松)</option></select></div>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-primary" onclick="ANM.detect()">检测异常</button></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>检测结果总览</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">数据点总数</div></div>
+      <div class="stat-card"><div class="stat-val" id="statAnomaly" style="color:var(--t-danger)">0</div><div class="stat-lbl">异常点数</div></div>
+      <div class="stat-card"><div class="stat-val" id="statRate" style="color:var(--t-warning)">0%</div><div class="stat-lbl">异常率</div></div>
+      <div class="stat-card"><div class="stat-val" id="statMaxDev" style="color:var(--t-danger)">0σ</div><div class="stat-lbl">最大偏离</div></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>异常标注图</h2>
+    <p class="section-sub">红色=异常高点，黄色=异常低点，虚线=3σ控制限</p>
+    <div class="anomaly-chart"><svg class="anomaly-svg" id="anomalySvg" width="100%" height="300"></svg></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>异常点详情</h2>
+    <div class="anomaly-list" id="anomalyList"></div>
+    <div class="checklist-box">
+      <h4>异常原因排查清单</h4>
+      <ul id="checklist"></ul>
+    </div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="trend-decomposition.html" class="related-card"><div class="related-card-icon">📉</div><div class="related-card-content"><h5>趋势分解器</h5><p>数据结构分解</p></div></a>
+      <a href="sales-data-explorer.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>销售数据探索器</h5><p>多维销售分析</p></div></a>
+      <a href="automated-insight-generator.html" class="related-card"><div class="related-card-icon">💡</div><div class="related-card-content"><h5>自动洞察生成器</h5><p>自动发现洞察</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var ANM = {
+  detect: function(){
+    var text = document.getElementById('inpData').value;
+    var sigma = parseFloat(document.getElementById('inpSigma').value);
+    var lines = text.trim().split('\n').filter(function(l){return l.trim()});
+    var data = lines.map(function(l){ var p = l.split(',').map(function(s){return s.trim()}); return {label:p[0], value:parseFloat(p[1])||0}; });
+    if(data.length < 4){ return; }
+    var values = data.map(function(d){return d.value});
+    var n = values.length;
+    var mean = values.reduce(function(a,b){return a+b},0) / n;
+    var variance = values.reduce(function(s,v){return s + Math.pow(v-mean,2)},0) / n;
+    var stdDev = Math.sqrt(variance);
+    var upperLimit = mean + sigma * stdDev;
+    var lowerLimit = mean - sigma * stdDev;
+    var anomalies = [];
+    data.forEach(function(d, i){
+      var z = stdDev > 0 ? (d.value - mean) / stdDev : 0;
+      if(Math.abs(z) > sigma){
+        anomalies.push({label:d.label, value:d.value, z:z, type: z > 0 ? 'high' : 'low', mean:mean, dev:Math.abs(z).toFixed(1)});
+      }
+    });
+    document.getElementById('statTotal').textContent = n;
+    document.getElementById('statAnomaly').textContent = anomalies.length;
+    document.getElementById('statRate').textContent = (anomalies.length/n*100).toFixed(1)+'%';
+    document.getElementById('statMaxDev').textContent = anomalies.length > 0 ? Math.max.apply(null, anomalies.map(function(a){return a.dev}))+'σ' : '0σ';
+    this.renderChart(data, mean, upperLimit, lowerLimit, anomalies, stdDev);
+    this.renderList(anomalies);
+    this.renderChecklist(anomalies);
+  },
+
+  renderChart: function(data, mean, upper, lower, anomalies, stdDev){
+    var w = 800, h = 300, pad = 50;
+    var values = data.map(function(d){return d.value});
+    var maxV = Math.max.apply(null, values.concat([upper]));
+    var minV = Math.min.apply(null, values.concat([lower]));
+    var range = maxV - minV || 1;
+    var n = values.length;
+    var xScale = function(i){ return pad + (i/(n-1))*(w-2*pad); };
+    var yScale = function(v){ return h - pad - ((v-minV)/range)*(h-2*pad); };
+    var pathD = '';
+    values.forEach(function(v,i){ pathD += (i===0?'M':'L')+xScale(i)+' '+yScale(v)+' '; });
+    var svg = '<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.15"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient></defs>';
+    // 控制限区域
+    svg += '<rect x="'+pad+'" y="'+yScale(upper)+'" width="'+(w-2*pad)+'" height="'+(yScale(lower)-yScale(upper))+'" fill="#ecfdf5" opacity="0.5"/>';
+    // 控制限线
+    svg += '<line x1="'+pad+'" y1="'+yScale(upper)+'" x2="'+(w-pad)+'" y2="'+yScale(upper)+'" stroke="#ef4444" stroke-dasharray="5 5" stroke-width="1.5"/>';
+    svg += '<text x="'+(w-pad+4)+'" y="'+(yScale(upper)+4)+'" font-size="10" fill="#ef4444">UCL</text>';
+    svg += '<line x1="'+pad+'" y1="'+yScale(mean)+'" x2="'+(w-pad)+'" y2="'+yScale(mean)+'" stroke="#4f46e5" stroke-dasharray="3 3" stroke-width="1"/>';
+    svg += '<text x="'+(w-pad+4)+'" y="'+(yScale(mean)+4)+'" font-size="10" fill="#4f46e5">均值</text>';
+    svg += '<line x1="'+pad+'" y1="'+yScale(lower)+'" x2="'+(w-pad)+'" y2="'+yScale(lower)+'" stroke="#ef4444" stroke-dasharray="5 5" stroke-width="1.5"/>';
+    svg += '<text x="'+(w-pad+4)+'" y="'+(yScale(lower)+4)+'" font-size="10" fill="#ef4444">LCL</text>';
+    // 数据线
+    svg += '<path d="'+pathD+'" fill="none" stroke="#4f46e5" stroke-width="2"/>';
+    // 数据点
+    data.forEach(function(d,i){
+      var isAnom = anomalies.find(function(a){return a.label===d.label});
+      if(isAnom){
+        svg += '<circle cx="'+xScale(i)+'" cy="'+yScale(d.value)+'" r="7" fill="'+(isAnom.type==='high'?'#ef4444':'#f59e0b')+'" stroke="#fff" stroke-width="2"/>';
+        svg += '<text x="'+xScale(i)+'" y="'+(yScale(d.value)-14)+'" font-size="9" fill="'+(isAnom.type==='high'?'#ef4444':'#f59e0b')+'" text-anchor="middle" font-weight="700">'+isAnom.dev+'σ</text>';
+      } else {
+        svg += '<circle cx="'+xScale(i)+'" cy="'+yScale(d.value)+'" r="3" fill="#4f46e5"/>';
+      }
+    });
+    svg += '<text x="'+pad+'" y="20" font-size="11" fill="#64748b">3σ异常检测（红点=异常高，黄点=异常低）</text>';
+    data.forEach(function(d,i){ if(i%3===0){ svg += '<text x="'+xScale(i)+'" y="'+(h-8)+'" font-size="9" fill="#94a3b8" text-anchor="middle">'+d.label.slice(5)+'</text>'; } });
+    document.getElementById('anomalySvg').innerHTML = svg;
+  },
+
+  renderList: function(anomalies){
+    if(anomalies.length === 0){
+      document.getElementById('anomalyList').innerHTML = '<p style="color:var(--t-success);text-align:center;padding:20px;font-weight:600">未检测到异常数据点</p>';
+      return;
+    }
+    var html = '';
+    anomalies.forEach(function(a){
+      html += '<div class="anomaly-item '+a.type+'"><div class="anomaly-date">'+a.label+'</div><div class="anomaly-detail">数值 '+a.value+'（均值'+Math.round(a.mean)+'）</div><div class="anomaly-type" style="color:'+(a.type==='high'?'var(--t-danger)':'var(--t-warning)')+'">'+(a.type==='high'?'异常偏高':'异常偏低')+'</div><div class="anomaly-dev" style="color:'+(a.type==='high'?'var(--t-danger)':'var(--t-warning)')+'">'+a.dev+'σ</div></div>';
+    });
+    document.getElementById('anomalyList').innerHTML = html;
+  },
+
+  renderChecklist: function(anomalies){
+    var checklist = [
+      '是否为促销/大促活动导致的数据飙升？（检查是否有营销活动）',
+      '是否为库存断货/Listing下架导致的销售骤降？',
+      '是否为数据采集/录入错误？（核对原始数据源）',
+      '是否为季节性因素？（对比去年同期数据）',
+      '是否为竞品动作影响？（检查竞品价格/活动）',
+      '是否为平台算法更新/政策变化导致？',
+      '是否为广告投放异常？（检查广告花费与转化）',
+      '是否为外部事件影响？（如物流中断、汇率波动）'
+    ];
+    var html = '';
+    checklist.forEach(function(c){ html += '<li>'+c+'</li>' });
+    if(anomalies.length === 0) html = '<li>当前数据未检测到异常，建议定期复查</li><li>可尝试调整灵敏度（2σ/4σ）进行更严格或宽松的检测</li>';
+    document.getElementById('checklist').innerHTML = html;
+  }
+};
+ANM.detect();
+</script>
+</body>
+</html>

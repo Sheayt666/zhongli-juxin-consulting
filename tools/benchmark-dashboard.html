@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="基准看板：自己的8项指标与行业均值/Top25%对比，CSS差距柱状图，改进优先级排序。免费在线数据分析工具。">
+<title>基准看板 - 行业基准对比·差距分析·改进优先级 | 跨境卖家工具</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+:root{--t-primary:#4f46e5;--t-primary-light:#6366f1;--t-primary-bg:#eef2ff;--t-success:#10b981;--t-warning:#f59e0b;--t-danger:#ef4444;--t-ink:#0f172a;--t-ink-soft:#334155;--t-muted:#64748b;--t-rule:#e2e8f0;--t-rule-light:#f1f5f9;--t-surface:#fff;--t-bg-soft:#f8fafc;--t-shadow-md:0 4px 6px -1px rgba(0,0,0,0.07);--t-radius:12px;--t-radius-lg:16px}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--t-ink);line-height:1.6;margin:0}
+.tool-container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--t-rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:50;overflow-x:auto}.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}.workflow-label{font-size:13px;font-weight:700;color:var(--t-primary);white-space:nowrap;flex-shrink:0}.workflow-steps{display:flex;align-items:center;gap:4px;overflow-x:auto}.workflow-step{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--t-ink-soft);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent}.workflow-step:hover{background:#fff;color:var(--t-primary)}.workflow-step.active{background:var(--t-primary);color:#fff;font-weight:600}
+.tool-breadcrumb{background:var(--t-bg-soft);padding:10px 0;font-size:13px;color:var(--t-muted)}.tool-breadcrumb a{color:var(--t-muted);text-decoration:none}.tool-breadcrumb a:hover{color:var(--t-primary)}.tool-breadcrumb .sep{margin:0 6px;color:var(--t-muted-light)}.tool-breadcrumb .current{color:var(--t-ink);font-weight:600}
+.tool-header{padding:40px 0 24px;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 100%)}.tool-header h1{font-size:32px;font-weight:800;margin:0 0 8px}.tool-header h1 em{font-style:normal;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.tool-header-desc{font-size:15px;color:var(--t-muted);max-width:680px;margin:0}.tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:#fff;border:1px solid var(--t-primary-bg);border-radius:50px;font-size:12px;color:var(--t-primary);font-weight:600;margin-bottom:12px}
+.tool-section{padding:32px 0}.section-card{background:var(--t-surface);border:1px solid var(--t-rule);border-radius:var(--t-radius-lg);padding:28px;box-shadow:var(--t-shadow-md);margin-bottom:24px}.section-card h2{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--t-ink)}.section-sub{font-size:13px;color:var(--t-muted);margin:0 0 20px}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.form-field{display:flex;flex-direction:column;gap:6px}.form-field label{font-size:13px;font-weight:600;color:var(--t-ink-soft)}.form-field label .unit{font-weight:400;color:var(--t-muted-light);font-size:12px}.form-field input{padding:10px 14px;border:1px solid var(--t-rule);border-radius:10px;font-size:14px;color:var(--t-ink);background:#fff;font-family:inherit}.form-field input:focus{outline:none;border-color:var(--t-primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}.btn-primary{background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;box-shadow:0 4px 14px rgba(79,70,229,0.3)}.btn-primary:hover{transform:translateY(-1px)}
+/* 差距柱状图 */
+.bench-row{margin-bottom:20px}
+.bench-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.bench-name{font-size:14px;font-weight:700;color:var(--t-ink)}
+.bench-status{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.status-above{background:var(--t-success-bg);color:var(--t-success)}.status-par{background:var(--t-primary-bg);color:var(--t-primary)}.status-below{background:var(--t-danger-bg);color:var(--t-danger)}
+.bench-bars{position:relative;height:80px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.bench-bar-row{display:grid;grid-template-columns:80px 1fr 80px;gap:8px;align-items:center}
+.bench-bar-label{font-size:11px;color:var(--t-muted);text-align:right}
+.bench-bar-track{height:18px;background:var(--t-bg-soft);border-radius:9px;overflow:hidden;position:relative}
+.bench-bar-fill{height:100%;border-radius:9px;transition:width .5s;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;color:#fff;font-weight:700}
+.bench-bar-val{font-size:13px;font-weight:700;color:var(--t-ink)}
+/* 优先级 */
+.priority-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.priority-item{display:grid;grid-template-columns:40px 1fr 100px;gap:12px;align-items:center;padding:14px 16px;background:var(--t-bg-soft);border-radius:10px;border-left:4px solid}
+.priority-item.p1{border-left-color:var(--t-danger)}.priority-item.p2{border-left-color:var(--t-warning)}.priority-item.p3{border-left-color:var(--t-primary)}.priority-item.p4{border-left-color:var(--t-success)}
+.priority-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff}
+.p1 .priority-rank{background:var(--t-danger)}.p2 .priority-rank{background:var(--t-warning)}.p3 .priority-rank{background:var(--t-primary)}.p4 .priority-rank{background:var(--t-success)}
+.priority-content .pc-name{font-size:14px;font-weight:700;color:var(--t-ink)}.priority-content .pc-action{font-size:12px;color:var(--t-muted)}
+.priority-gap{text-align:right}.priority-gap .pg-val{font-size:18px;font-weight:800}.priority-gap .pg-lbl{font-size:11px;color:var(--t-muted)}
+.related-section{padding:32px 0 48px}.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.related-card{display:flex;gap:12px;padding:16px;background:var(--t-bg-soft);border-radius:var(--t-radius);text-decoration:none;transition:all .2s;border:1px solid var(--t-rule-light)}.related-card:hover{background:#fff;border-color:var(--t-primary);box-shadow:var(--t-shadow-md);transform:translateY(-2px)}.related-card-icon{width:40px;height:40px;border-radius:10px;background:var(--t-primary-bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.related-card-content h5{font-size:14px;font-weight:600;color:var(--t-ink);margin:0 0 2px}.related-card-content p{font-size:12px;color:var(--t-muted);margin:0}
+.back-to-tools{text-align:center;padding:24px 0}.back-to-tools a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:linear-gradient(135deg,var(--t-primary),var(--t-primary-light));color:#fff;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,0.3)}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.bench-bar-row{grid-template-columns:60px 1fr 60px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W40 数据分析工作流</div><div class="workflow-steps">
+<a href="sales-data-explorer.html" class="workflow-step">销售探索</a><a href="cohort-analysis-tool.html" class="workflow-step">同期群分析</a><a href="rfm-segmentation.html" class="workflow-step">RFM分群</a><a href="abc-analysis-tool.html" class="workflow-step">ABC分析</a><a href="trend-decomposition.html" class="workflow-step">趋势分解</a><a href="anomaly-detector.html" class="workflow-step">异常检测</a><a href="benchmark-dashboard.html" class="workflow-step active">基准看板</a><a href="kpi-tree-builder.html" class="workflow-step">KPI树</a><a href="data-quality-checker.html" class="workflow-step">数据质量</a><a href="automated-insight-generator.html" class="workflow-step">自动洞察</a>
+</div></div></div>
+<div class="tool-breadcrumb"><div class="tool-container"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">工具中心</a><span class="sep">/</span><a href="#">W40 数据分析</a><span class="sep">/</span><span class="current">基准看板</span></div></div>
+<header class="tool-header"><div class="tool-container"><span class="tool-badge">W40 · 数据分析工作流</span><h1>基准<em>看板</em></h1><p class="tool-header-desc">输入你的8项关键指标，与行业均值和Top25%基准对比，CSS差距柱状图可视化，自动排序改进优先级。</p></div></header>
+<main class="tool-container">
+  <section class="tool-section"><div class="section-card">
+    <h2>你的指标输入</h2>
+    <p class="section-sub">输入你的各项指标值（行业基准已内置）</p>
+    <div class="form-grid">
+      <div class="form-field"><label>转化率 <span class="unit">%</span></label><input type="number" id="inp0" value="2.5" step="0.1" oninput="BEN.render()"></div>
+      <div class="form-field"><label>客单价 <span class="unit">$</span></label><input type="number" id="inp1" value="65" oninput="BEN.render()"></div>
+      <div class="form-field"><label>复购率 <span class="unit">%</span></label><input type="number" id="inp2" value="18" step="0.1" oninput="BEN.render()"></div>
+      <div class="form-field"><label>退货率 <span class="unit">%</span></label><input type="number" id="inp3" value="8" step="0.1" oninput="BEN.render()"></div>
+    </div>
+    <div class="form-grid" style="margin-top:16px">
+      <div class="form-field"><label>广告ACOS <span class="unit">%</span></label><input type="number" id="inp4" value="25" step="0.1" oninput="BEN.render()"></div>
+      <div class="form-field"><label>库存周转 <span class="unit">次/年</span></label><input type="number" id="inp5" value="6" step="0.1" oninput="BEN.render()"></div>
+      <div class="form-field"><label>评价均分 <span class="unit">/5</span></label><input type="number" id="inp6" value="4.2" step="0.1" oninput="BEN.render()"></div>
+      <div class="form-field"><label>物流时效 <span class="unit">天</span></label><input type="number" id="inp7" value="5" step="0.1" oninput="BEN.render()"></div>
+    </div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>指标差距对比</h2>
+    <p class="section-sub">你的指标 vs 行业均值 vs Top25%（绿色=优于基准，红色=低于基准）</p>
+    <div id="benchChart"></div>
+  </div></section>
+
+  <section class="tool-section" style="padding-top:0"><div class="section-card">
+    <h2>改进优先级</h2>
+    <p class="section-sub">按差距大小排序，优先改进差距最大的指标</p>
+    <div class="priority-list" id="priorityList"></div>
+  </div></section>
+
+  <section class="related-section">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;text-align:center">相关工具推荐</h2>
+    <div class="related-grid">
+      <a href="kpi-tree-builder.html" class="related-card"><div class="related-card-icon">🌲</div><div class="related-card-content"><h5>KPI树构建器</h5><p>指标分解分析</p></div></a>
+      <a href="automated-insight-generator.html" class="related-card"><div class="related-card-icon">💡</div><div class="related-card-content"><h5>自动洞察生成器</h5><p>发现改进机会</p></div></a>
+      <a href="sales-data-explorer.html" class="related-card"><div class="related-card-icon">📊</div><div class="related-card-content"><h5>销售数据探索器</h5><p>多维销售分析</p></div></a>
+    </div>
+    <div class="back-to-tools"><a href="index.html">← 返回工具中心</a></div>
+  </section>
+</main>
+<script>
+var BEN = {
+  // [你的值, 行业均值, Top25%值, 名称, 单位, 是否越高越好, 改进建议]
+  metrics: [
+    {name:'转化率',unit:'%',avg:3.5,top:5.8,higherBetter:true,advice:'优化Listing主图和标题，A/B测试价格点，提升Review数量'},
+    {name:'客单价',unit:'$',avg:55,top:85,higherBetter:true,advice:'增加捆绑销售套餐，设置满减门槛，推荐关联产品'},
+    {name:'复购率',unit:'%',avg:22,top:35,higherBetter:true,advice:'建立会员体系，发送复购优惠券，邮件营销触达老客'},
+    {name:'退货率',unit:'%',avg:6,top:3,higherBetter:false,advice:'优化产品描述准确度，提升品控，完善尺码/规格说明'},
+    {name:'广告ACOS',unit:'%',avg:20,top:12,higherBetter:false,advice:'优化关键词精度，否定无效词，提升自然排名降低广告依赖'},
+    {name:'库存周转',unit:'次/年',avg:8,top:12,higherBetter:true,advice:'优化补货周期，清理滞销库存，实施JIT库存管理'},
+    {name:'评价均分',unit:'/5',avg:4.3,top:4.6,higherBetter:true,advice:'主动跟进差评客户，优化产品质量，引导满意客户留评'},
+    {name:'物流时效',unit:'天',avg:4,top:2,higherBetter:false,advice:'使用FBA/海外仓，优化发货流程，选择更快物流渠道'}
+  ],
+
+  render: function(){
+    var data = this.metrics.map(function(m, i){
+      var val = parseFloat(document.getElementById('inp'+i).value) || 0;
+      return Object.assign({}, m, {val:val});
+    });
+    this.renderChart(data);
+    this.renderPriority(data);
+  },
+
+  renderChart: function(data){
+    var html = '';
+    data.forEach(function(m){
+      var maxVal = Math.max(m.val, m.avg, m.top) * 1.1;
+      var status, statusCls;
+      if(m.higherBetter){
+        if(m.val >= m.top){ status='优于Top25%'; statusCls='status-above'; }
+        else if(m.val >= m.avg){ status='高于均值'; statusCls='status-par'; }
+        else { status='低于均值'; statusCls='status-below'; }
+      } else {
+        if(m.val <= m.top){ status='优于Top25%'; statusCls='status-above'; }
+        else if(m.val <= m.avg){ status='优于均值'; statusCls='status-par'; }
+        else { status='差于均值'; statusCls='status-below'; }
+      }
+      html += '<div class="bench-row"><div class="bench-header"><div class="bench-name">'+m.name+'</div><span class="bench-status '+statusCls+'">'+status+'</span></div><div class="bench-bars">';
+      var yourColor = m.higherBetter ? (m.val>=m.avg?'#10b981':'#ef4444') : (m.val<=m.avg?'#10b981':'#ef4444');
+      html += '<div class="bench-bar-row"><div class="bench-bar-label">你的值</div><div class="bench-bar-track"><div class="bench-bar-fill" style="width:'+(m.val/maxVal*100)+'%;background:'+yourColor+'">'+m.val+m.unit+'</div></div><div class="bench-bar-val" style="color:'+yourColor+'">'+m.val+m.unit+'</div></div>';
+      html += '<div class="bench-bar-row"><div class="bench-bar-label">行业均值</div><div class="bench-bar-track"><div class="bench-bar-fill" style="width:'+(m.avg/maxVal*100)+'%;background:#94a3b8">'+m.avg+m.unit+'</div></div><div class="bench-bar-val" style="color:#94a3b8">'+m.avg+m.unit+'</div></div>';
+      html += '<div class="bench-bar-row"><div class="bench-bar-label">Top25%</div><div class="bench-bar-track"><div class="bench-bar-fill" style="width:'+(m.top/maxVal*100)+'%;background:#4f46e5">'+m.top+m.unit+'</div></div><div class="bench-bar-val" style="color:#4f46e5">'+m.top+m.unit+'</div></div>';
+      html += '</div></div>';
+    });
+    document.getElementById('benchChart').innerHTML = html;
+  },
+
+  renderPriority: function(data){
+    var gaps = data.map(function(m){
+      var gapPct;
+      if(m.higherBetter){
+        gapPct = m.avg > 0 ? ((m.val - m.avg) / m.avg * 100) : 0;
+      } else {
+        gapPct = m.avg > 0 ? ((m.avg - m.val) / m.avg * 100) : 0;
+      }
+      return Object.assign({}, m, {gapPct: gapPct, gapAbs: Math.abs(gapPct)});
+    });
+    gaps.sort(function(a,b){return b.gapAbs - a.gapAbs});
+    var html = '';
+    gaps.forEach(function(g, i){
+      var pCls = i < 2 ? 'p1' : i < 4 ? 'p2' : i < 6 ? 'p3' : 'p4';
+      var gapLabel = g.gapPct >= 0 ? '领先' : '落后';
+      var gapColor = g.gapPct >= 0 ? 'var(--t-success)' : 'var(--t-danger)';
+      html += '<div class="priority-item '+pCls+'"><div class="priority-rank">'+(i+1)+'</div><div class="priority-content"><div class="pc-name">'+g.name+'</div><div class="pc-action">'+g.advice+'</div></div><div class="priority-gap"><div class="pg-val" style="color:'+gapColor+'">'+(g.gapPct>=0?'+':'')+g.gapPct.toFixed(0)+'%</div><div class="pg-lbl">'+gapLabel+'均值</div></div></div>';
+    });
+    document.getElementById('priorityList').innerHTML = html;
+  }
+};
+BEN.render();
+</script>
+</body>
+</html>

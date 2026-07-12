@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="利润率预测器：输入售价、成本、费用率，对比3种销量场景的利润率，CSS柱状图可视化，计算盈亏平衡销量。">
+<meta name="keywords" content="利润率预测,盈亏平衡,利润分析,3场景对比,跨境电商工具">
+<title>利润率预测器 - 3场景对比·盈亏平衡·CSS柱状图 | 跨境卖家工具</title>
+<style>
+:root{--indigo:#4f46e5;--indigo-bg:#eef2ff;--green:#10b981;--green-bg:#ecfdf5;--gold:#f59e0b;--gold-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--bg:#f8fafc;--surface:#fff;--ink:#0f172a;--ink-soft:#334155;--muted:#64748b;--rule:#e2e8f0;--rule-light:#f1f5f9;--shadow:0 10px 30px -12px rgba(79,70,229,.18);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.workflow-nav{background:#f8fafc;border-bottom:1px solid var(--rule);height:48px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.workflow-label{font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:4px}
+.workflow-step{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--rule);color:var(--ink-soft);transition:all .2s;text-decoration:none;white-space:nowrap}
+.workflow-step:hover{background:var(--indigo-bg);border-color:var(--indigo);color:var(--indigo)}
+.workflow-step.active{background:var(--indigo);color:#fff;border-color:var(--indigo);font-weight:600}
+.workflow-arrow{color:var(--rule);font-size:12px;margin:0 2px}
+.breadcrumb{padding:14px 0;font-size:13px;color:var(--muted)}.breadcrumb a{color:var(--muted)}.breadcrumb a:hover{color:var(--indigo)}
+.breadcrumb .sep{margin:0 6px;color:var(--rule)}.breadcrumb .current{color:var(--ink);font-weight:600}
+.tool-hero{padding:40px 0 24px;background:linear-gradient(135deg,var(--indigo-bg) 0%,#fff 100%)}
+.tool-hero h1{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}.tool-hero h1 em{font-style:normal;color:var(--indigo)}
+.tool-hero p{font-size:15px;color:var(--muted);max-width:680px}
+.tool-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(255,255,255,.8);border:1px solid rgba(79,70,229,.2);border-radius:50px;font-size:12px;color:var(--indigo);font-weight:600;margin-bottom:16px}
+.tool-section{padding:24px 0 60px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+.input-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.input-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:#fff;font-family:inherit}
+.input-field input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.input-suffix{font-size:12px;color:var(--muted);margin-top:2px}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.scenario-card{border-radius:var(--radius);padding:20px;text-align:center;border:2px solid}
+.scenario-pessimistic{border-color:var(--red);background:var(--red-bg)}
+.scenario-realistic{border-color:var(--indigo);background:var(--indigo-bg)}
+.scenario-optimistic{border-color:var(--green);background:var(--green-bg)}
+.scenario-name{font-size:14px;font-weight:700;margin-bottom:12px}
+.scenario-revenue{font-size:24px;font-weight:900;margin-bottom:4px}
+.scenario-profit{font-size:16px;font-weight:700;margin-bottom:8px}
+.scenario-margin{font-size:13px;font-weight:600;padding:4px 12px;border-radius:20px;display:inline-block}
+.profit-chart{display:flex;align-items:flex-end;gap:40px;height:220px;padding:16px;margin-top:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--rule);justify-content:center}
+.profit-bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;width:80px;height:100%;justify-content:flex-end}
+.profit-bar-val{font-size:13px;font-weight:700}
+.profit-bar{width:60px;border-radius:8px 8px 0 0;transition:height .3s;min-height:4px;position:relative}
+.profit-bar-label{font-size:12px;font-weight:600;color:var(--muted);text-align:center}
+.breakeven-box{padding:20px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold-bg),#fff);border:2px solid var(--gold);text-align:center;margin-top:16px}
+.breakeven-val{font-size:36px;font-weight:900;color:var(--gold)}
+.breakeven-label{font-size:13px;color:var(--muted);margin-top:4px}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sb-card{flex:1;min-width:100px;padding:14px;border-radius:var(--radius-sm);text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.sb-val{font-size:22px;font-weight:800}.sb-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.tool-footer{padding:32px 0;text-align:center;border-top:1px solid var(--rule);margin-top:40px}
+.related-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.rt-card{display:flex;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-sm);text-decoration:none;transition:all .2s}
+.rt-card:hover{border-color:var(--indigo);box-shadow:var(--shadow);transform:translateY(-2px)}
+.rt-icon{font-size:22px;flex-shrink:0}.rt-content h5{font-size:13px;font-weight:600;color:var(--ink)}.rt-content p{font-size:11px;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:50px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600}
+@media(max-width:768px){.grid-2,.input-row,.scenario-grid{grid-template-columns:1fr}.related-tools{grid-template-columns:1fr}.container{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W36 选品深度工作流</div><div class="workflow-steps">
+<a href="product-research-scorecard.html" class="workflow-step">选品评分</a><span class="workflow-arrow">→</span>
+<a href="market-gap-finder.html" class="workflow-step">市场空白</a><span class="workflow-arrow">→</span>
+<a href="demand-trend-analyzer.html" class="workflow-step">需求趋势</a><span class="workflow-arrow">→</span>
+<a href="competition-density-mapper.html" class="workflow-step">竞争密度</a><span class="workflow-arrow">→</span>
+<a href="product-differentiation-planner.html" class="workflow-step">差异化</a><span class="workflow-arrow">→</span>
+<a href="seasonality-checker.html" class="workflow-step">季节性</a><span class="workflow-arrow">→</span>
+<a href="profit-margin-forecaster.html" class="workflow-step active">利润预测</a><span class="workflow-arrow">→</span>
+<a href="review-velocity-analyzer.html" class="workflow-step">评论速度</a><span class="workflow-arrow">→</span>
+<a href="keyword-opportunity-finder.html" class="workflow-step">关键词机会</a><span class="workflow-arrow">→</span>
+<a href="product-launch-timeline.html" class="workflow-step">上线时间线</a>
+</div></div></div>
+<div class="container"><div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="index.html">实用工具</a><span class="sep">/</span><a href="#">W36</a><span class="sep">/</span><span class="current">利润预测</span></div></div>
+<header class="tool-hero"><div class="container"><span class="tool-hero-badge">W36 选品深度工作流</span><h1>利润率<em>预测器</em></h1><p>输入售价、成本和各项费用率，对比悲观/现实/乐观3种销量场景下的利润率，CSS柱状图可视化利润对比，计算盈亏平衡销量。</p></div></header>
+<section class="tool-section"><div class="container">
+<div class="summary-bar">
+<div class="sb-card"><div class="sb-val" id="sbUnitProfit" style="color:var(--green)">$0</div><div class="sb-lbl">单件毛利</div></div>
+<div class="sb-card"><div class="sb-val" id="sbMargin" style="color:var(--indigo)">0%</div><div class="sb-lbl">毛利率</div></div>
+<div class="sb-card"><div class="sb-val" id="sbBreakeven" style="color:var(--gold)">0</div><div class="sb-lbl">盈亏平衡销量</div></div>
+<div class="sb-card"><div class="sb-val" id="sbBestProfit" style="color:var(--green)">$0</div><div class="sb-lbl">乐观场景利润</div></div>
+</div>
+<div class="card">
+<h3>💰 成本与定价输入</h3>
+<div class="input-row">
+<div class="input-field"><label>售价 ($)</label><input type="number" id="price" value="29.99" step="0.01" oninput="calc()"><div class="input-suffix">产品销售单价</div></div>
+<div class="input-field"><label>采购成本 ($)</label><input type="number" id="cost" value="8.50" step="0.01" oninput="calc()"><div class="input-suffix">出厂价+运费到FBA</div></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>平台佣金率 (%)</label><input type="number" id="commission" value="15" step="0.5" oninput="calc()"><div class="input-suffix">Amazon Referral Fee</div></div>
+<div class="input-field"><label>FBA费用 ($)</label><input type="number" id="fba" value="4.20" step="0.01" oninput="calc()"><div class="input-suffix">仓储+配送费</div></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>广告费率 (%)</label><input type="number" id="adRate" value="12" step="0.5" oninput="calc()"><div class="input-suffix">广告花费占售价比重</div></div>
+<div class="input-field"><label>其他费用率 (%)</label><input type="number" id="otherRate" value="5" step="0.5" oninput="calc()"><div class="input-suffix">退货/损耗/杂费</div></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>月固定成本 ($)</label><input type="number" id="fixedCost" value="500" step="50" oninput="calc()"><div class="input-suffix">工具/软件/人工等</div></div>
+<div class="input-field"><label>广告花费 ($)</label><input type="number" id="adSpend" value="800" step="50" oninput="calc()"><div class="input-suffix">月度广告预算</div></div>
+</div>
+<h4 style="font-size:14px;font-weight:700;margin:16px 0 10px">3种销量场景（月销量）</h4>
+<div class="input-row">
+<div class="input-field"><label>悲观场景（件/月）</label><input type="number" id="pessSales" value="100" oninput="calc()"></div>
+<div class="input-field"><label>现实场景（件/月）</label><input type="number" id="realSales" value="300" oninput="calc()"></div>
+</div>
+<div class="input-row">
+<div class="input-field"><label>乐观场景（件/月）</label><input type="number" id="optSales" value="600" oninput="calc()"></div>
+</div>
+</div>
+<div class="card">
+<h3>📊 3场景利润对比</h3>
+<div class="scenario-grid" id="scenarioGrid"></div>
+<div class="profit-chart" id="profitChart"></div>
+</div>
+<div class="breakeven-box">
+<div class="breakeven-label">盈亏平衡月销量</div>
+<div class="breakeven-val" id="breakevenVal">0 件</div>
+<div class="breakeven-label" id="breakevenDesc">在该销量下总收入=总成本，利润为0</div>
+</div>
+<div class="tool-footer">
+<h3 style="font-size:18px;margin-bottom:16px;text-align:left">相关工具推荐</h3>
+<div class="related-tools">
+<a href="product-research-scorecard.html" class="rt-card"><span class="rt-icon">📋</span><div class="rt-content"><h5>选品评分卡</h5><p>12维度评估</p></div></a>
+<a href="seasonality-checker.html" class="rt-card"><span class="rt-icon">📅</span><div class="rt-content"><h5>季节性检查器</h5><p>最佳上架月</p></div></a>
+<a href="product-launch-timeline.html" class="rt-card"><span class="rt-icon">📅</span><div class="rt-content"><h5>上线时间线</h5><p>甘特图规划</p></div></a>
+</div>
+<a href="index.html" class="back-link">← 返回工具中心</a>
+</div>
+</div></section>
+<script>
+function calc(){
+const price=parseFloat(document.getElementById('price').value)||0;
+const cost=parseFloat(document.getElementById('cost').value)||0;
+const commission=parseFloat(document.getElementById('commission').value)/100||0;
+const fba=parseFloat(document.getElementById('fba').value)||0;
+const adRate=parseFloat(document.getElementById('adRate').value)/100||0;
+const otherRate=parseFloat(document.getElementById('otherRate').value)/100||0;
+const fixedCost=parseFloat(document.getElementById('fixedCost').value)||0;
+const adSpend=parseFloat(document.getElementById('adSpend').value)||0;
+const pessSales=parseFloat(document.getElementById('pessSales').value)||0;
+const realSales=parseFloat(document.getElementById('realSales').value)||0;
+const optSales=parseFloat(document.getElementById('optSales').value)||0;
+// Unit economics
+const commissionFee=price*commission;
+const adFee=price*adRate;
+const otherFee=price*otherRate;
+const unitCost=cost+fba+commissionFee+adFee+otherFee;
+const unitProfit=price-unitCost;
+const unitMargin=price>0?(unitProfit/price*100):0;
+// Scenarios
+const scenarios=[
+{name:'悲观场景',sales:pessSales,color:'var(--red)',bg:'var(--red-bg)'},
+{name:'现实场景',sales:realSales,color:'var(--indigo)',bg:'var(--indigo-bg)'},
+{name:'乐观场景',sales:optSales,color:'var(--green)',bg:'var(--green-bg)'}
+];
+const results=scenarios.map(s=>{
+const revenue=s.sales*price;
+const totalCost=s.sales*unitCost+fixedCost+adSpend;
+const profit=revenue-totalCost;
+const margin=revenue>0?(profit/revenue*100):0;
+return{...s,revenue,profit,margin};
+});
+// Summary
+document.getElementById('sbUnitProfit').textContent='$'+unitProfit.toFixed(2);
+document.getElementById('sbUnitProfit').style.color=unitProfit>0?'var(--green)':'var(--red)';
+document.getElementById('sbMargin').textContent=unitMargin.toFixed(1)+'%';
+document.getElementById('sbMargin').style.color=unitMargin>20?'var(--green)':unitMargin>0?'var(--gold)':'var(--red)';
+document.getElementById('sbBestProfit').textContent='$'+Math.round(results[2].profit).toLocaleString();
+// Breakeven
+const breakeven=unitProfit>0?Math.ceil((fixedCost+adSpend)/unitProfit):Infinity;
+document.getElementById('sbBreakeven').textContent=breakeven===Infinity?'∞':breakeven;
+document.getElementById('breakevenVal').textContent=breakeven===Infinity?'无法盈利':breakeven+' 件/月';
+document.getElementById('breakevenDesc').textContent=breakeven===Infinity?'当前定价下无法覆盖固定成本，需调整价格或成本':'月销量需达到'+breakeven+'件才能覆盖固定成本$'+(fixedCost+adSpend).toLocaleString();
+// Scenario cards
+document.getElementById('scenarioGrid').innerHTML=results.map(r=>`
+<div class="scenario-card" style="border-color:${r.color};background:${r.bg}">
+<div class="scenario-name" style="color:${r.color}">${r.name} (${r.sales}件/月)</div>
+<div class="scenario-revenue" style="color:${r.color}">$${Math.round(r.revenue).toLocaleString()}</div>
+<div style="font-size:11px;color:var(--muted);margin-bottom:4px">月收入</div>
+<div class="scenario-profit" style="color:${r.profit>=0?'var(--green)':'var(--red)'}">${r.profit>=0?'+':''}$${Math.round(r.profit).toLocaleString()}</div>
+<div style="font-size:11px;color:var(--muted);margin-bottom:8px">月利润</div>
+<span class="scenario-margin" style="background:${r.margin>=20?'var(--green-bg)':r.margin>=0?'var(--gold-bg)':'var(--red-bg)'};color:${r.margin>=20?'var(--green)':r.margin>=0?'var(--gold)':'var(--red)'}">利润率 ${r.margin.toFixed(1)}%</span>
+</div>`).join('');
+// Profit chart
+const maxProfit=Math.max(...results.map(r=>Math.abs(r.profit)),1);
+document.getElementById('profitChart').innerHTML=results.map(r=>{
+const h=Math.abs(r.profit)/maxProfit*80;
+const color=r.profit>=0?r.color:'var(--red)';
+return`<div class="profit-bar-col"><div class="profit-bar-val" style="color:${color}">${r.profit>=0?'+':''}$${Math.round(r.profit).toLocaleString()}</div><div class="profit-bar" style="height:${h}%;background:${color}"></div><div class="profit-bar-label">${r.name}</div></div>`;
+}).join('');
+try{localStorage.setItem('jx_profit_forecast',JSON.stringify({price,cost,commission:commission*100,fba,adRate:adRate*100,otherRate:otherRate*100,fixedCost,adSpend,pessSales,realSales,optSales}))}catch(e){}
+}
+try{const s=JSON.parse(localStorage.getItem('jx_profit_forecast'));if(s){Object.entries(s).forEach(([k,v])=>{if(document.getElementById(k))document.getElementById(k).value=v})}}catch(e){}
+calc();
+</script>
+</body>
+</html>

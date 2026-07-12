@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="达人画像分析器：输入粉丝数/点赞数/视频数/直播数/带货GMV，计算粉丝质量评分、互动率、带货转化率，CSS数据卡片展示，达人活跃度评估。免费达人营销工具。">
+<meta name="keywords" content="达人画像分析,粉丝质量,互动率,带货转化率,达人活跃度,KOL分析">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/influencer-profile-analyzer.html">
+<title>达人画像分析器 - 粉丝质量·互动率·带货转化率 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.profile-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:var(--shadow-md);margin-top:16px}
+.profile-card h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+.metric-card{padding:20px;border-radius:12px;text-align:center;background:linear-gradient(135deg,#f8f9ff,#f0f4ff);border:1px solid #e0e7ff}
+.metric-card .mc-val{font-size:28px;font-weight:800;color:#4f46e5}
+.metric-card .mc-lbl{font-size:13px;color:var(--muted);margin-top:4px}
+.metric-card .mc-tag{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.tag-good{background:#ecfdf5;color:#10b981}
+.tag-warn{background:#fffbeb;color:#f59e0b}
+.tag-bad{background:#fef2f2;color:#ef4444}
+.quality-bar{margin:16px 0}
+.quality-bar .qb-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.quality-bar .qb-track{height:12px;background:var(--rule-light);border-radius:6px;overflow:hidden}
+.quality-bar .qb-fill{height:100%;border-radius:6px;transition:width .5s}
+.activity-timeline{display:flex;align-items:center;gap:4px;margin-top:16px;flex-wrap:wrap}
+.activity-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.dot-1{background:#10b981}.dot-2{background:#34d399}.dot-3{background:#fbbf24}.dot-4{background:#f59e0b}.dot-5{background:#ef4444}
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+</style>
+</head>
+<body class="tool-page" data-tool="influencer_profile_analyzer">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+    <button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🎯</span>
+      <span class="workflow-name">达人营销工作流</span>
+      <span class="workflow-step">第2步 / 共10步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="influencer-match-score.html" class="step">达人匹配</a>
+      <span class="arrow">→</span>
+      <a href="influencer-commission-calc.html" class="step">佣金计算</a>
+      <span class="arrow">→</span>
+      <a href="influencer-tier-manager.html" class="step">达人分级</a>
+      <span class="arrow">→</span>
+      <a href="influencer-sample-tracker.html" class="step">样品寄送</a>
+      <span class="arrow">→</span>
+      <a href="influencer-database.html" class="step">达人资源库</a>
+    </div>
+  </div>
+
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🎯 达人营销工具 · 标准版</span>
+      <h1>达人画像<em>分析器</em></h1>
+      <p class="tool-hero-desc">输入达人核心数据（粉丝数/点赞/视频/直播/带货GMV），自动计算粉丝质量评分、互动率、带货转化率，CSS数据卡片直观展示达人画像，评估活跃度与商业价值。</p>
+    </div>
+  </header>
+
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 达人数据输入</h2>
+          <p class="calc-form-subtitle">填写达人核心数据，实时分析画像</p>
+
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>达人名称</label>
+              <input type="text" id="ifName" placeholder="如 BeautyQueen" value="BeautyQueen" oninput="PA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>平台</label>
+              <select id="ifPlatform" onchange="PA.calc()">
+                <option value="tiktok">TikTok</option>
+                <option value="douyin">抖音</option>
+                <option value="instagram">Instagram</option>
+                <option value="youtube">YouTube</option>
+                <option value="xiaohongshu">小红书</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>粉丝数</label>
+              <input type="number" id="ifFollowers" placeholder="如 120000" step="100" min="0" value="120000" oninput="PA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>总点赞数</label>
+              <input type="number" id="ifLikes" placeholder="如 3500000" step="100" min="0" value="3500000" oninput="PA.calc()">
+            </div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>视频数</label>
+              <input type="number" id="ifVideos" placeholder="如 280" step="1" min="0" value="280" oninput="PA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>直播数（近30天）</label>
+              <input type="number" id="ifLives" placeholder="如 12" step="1" min="0" value="12" oninput="PA.calc()">
+            </div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>带货GMV <span class="hint">($)</span></label>
+              <input type="number" id="ifGmv" placeholder="如 45000" step="100" min="0" value="45000" oninput="PA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>带货订单数</label>
+              <input type="number" id="ifOrders" placeholder="如 1800" step="10" min="0" value="1800" oninput="PA.calc()">
+            </div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>平均评论数/视频</label>
+              <input type="number" id="ifComments" placeholder="如 320" step="1" min="0" value="320" oninput="PA.calc()">
+            </div>
+            <div class="calc-field">
+              <label>近30天新增粉丝</label>
+              <input type="number" id="ifNewFollowers" placeholder="如 8000" step="100" min="0" value="8000" oninput="PA.calc()">
+            </div>
+          </div>
+
+          <div class="fee-rule-box">
+            <h4>📐 分析公式</h4>
+            <ul>
+              <li>互动率 = (总点赞 + 总评论) / (粉丝数 × 视频数) × 100%</li>
+              <li>带货转化率 = 订单数 / (粉丝数 × 直播数) × 100%</li>
+              <li>粉丝质量评分 = 互动率权重40% + 转化率权重30% + 活跃度权重30%</li>
+              <li>平均GMV/直播 = 总GMV / 直播数</li>
+              <li>活跃度 = 视频发布频率 + 直播频率 + 粉丝增长率</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div id="extraSections"></div>
+
+      <div class="wf-foot-nav">
+        <a href="influencer-match-score.html" class="prev"><span class="fn-label">上一步 · 第1步</span><span class="fn-name">← 达人匹配</span></a>
+        <a href="influencer-commission-calc.html" class="next"><span class="fn-label">下一步 · 第3步</span><span class="fn-name">佣金计算 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>众力聚鑫咨询</h3>
+        <p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p>
+      </div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="influencer-match-score.html">达人匹配评分器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+var PA = (function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function fmt(n){return (isFinite(n)?n.toFixed(2):'0.00');}
+  function fmtK(n){if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return Math.round(n);}
+
+  function calc(){
+    var name=$('ifName').value||'该达人';
+    var followers=n('ifFollowers'),likes=n('ifLikes'),videos=n('ifVideos'),lives=n('ifLives');
+    var gmv=n('ifGmv'),orders=n('ifOrders'),comments=n('ifComments'),newFollowers=n('ifNewFollowers');
+
+    if(followers<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">👤</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入达人数据</p>';$('extraSections').innerHTML='';return;}
+
+    var totalComments=comments*videos;
+    var engagementRate=followers>0&&videos>0?((likes+totalComments)/(followers*videos))*100:0;
+    var conversionRate=followers>0&&lives>0?(orders/(followers*lives))*100:0;
+    var gmvPerLive=lives>0?gmv/lives:0;
+    var avgPrice=orders>0?gmv/orders:0;
+    var videoFreq=videos>0?videos/30:0;
+    var liveFreq=lives/30;
+    var followerGrowthRate=followers>0?(newFollowers/followers)*100:0;
+
+    // 粉丝质量评分0-100
+    var engScore=Math.min(engagementRate/10*100,100);
+    var convScore=Math.min(conversionRate/2*100,100);
+    var actScore=Math.min((videoFreq*20+liveFreq*30+Math.min(followerGrowthRate*5,50))/100*100,100);
+    var qualityScore=Math.round(engScore*0.4+convScore*0.3+actScore*0.3);
+
+    var qualityTag=qualityScore>=70?'tag-good':qualityScore>=40?'tag-warn':'tag-bad';
+    var qualityText=qualityScore>=70?'优质':qualityScore>=40?'中等':'待提升';
+    var engTag=engagementRate>=5?'tag-good':engagementRate>=2?'tag-warn':'tag-bad';
+    var engText=engagementRate>=5?'优秀':engagementRate>=2?'一般':'偏低';
+    var convTag=conversionRate>=1?'tag-good':conversionRate>=0.3?'tag-warn':'tag-bad';
+    var convText=conversionRate>=1?'高效':conversionRate>=0.3?'中等':'偏低';
+
+    // 活跃度等级
+    var activityLevel=Math.round((videoFreq*25+liveFreq*25+Math.min(followerGrowthRate*2,50)));
+    var activityDots=[];
+    for(var i=0;i<5;i++){
+      var level=Math.ceil(activityLevel/20);
+      var cls=i<level?'dot-'+(i+1):'';
+      activityDots.push('<div class="activity-dot '+(cls||'')+'" style="'+(cls?'':'background:#e2e8f0')+'">'+(i+1)+'</div>');
+    }
+
+    $('resultCard').innerHTML=
+      '<h3>📊 '+name+' 画像分析</h3>'+
+      '<div class="metric-grid">'+
+        '<div class="metric-card"><div class="mc-val">'+fmtK(followers)+'</div><div class="mc-lbl">粉丝总数</div></div>'+
+        '<div class="metric-card"><div class="mc-val">'+fmt(engagementRate)+'%</div><div class="mc-lbl">互动率</div><span class="mc-tag '+engTag+'">'+engText+'</span></div>'+
+        '<div class="metric-card"><div class="mc-val">'+fmt(conversionRate)+'%</div><div class="mc-lbl">带货转化率</div><span class="mc-tag '+convTag+'">'+convText+'</span></div>'+
+        '<div class="metric-card"><div class="mc-val">$'+fmtK(gmvPerLive)+'</div><div class="mc-lbl">场均GMV</div></div>'+
+      '</div>'+
+      '<div class="result-grid" style="margin-top:16px">'+
+        '<div class="result-item"><div class="ri-label">平均客单价</div><div class="ri-value">$'+fmt(avgPrice)+'</div></div>'+
+        '<div class="result-item"><div class="ri-label">视频发布频率</div><div class="ri-value">'+fmt(videoFreq)+'/天</div></div>'+
+        '<div class="result-item"><div class="ri-label">直播频率</div><div class="ri-value">'+fmt(liveFreq)+'/天</div></div>'+
+        '<div class="result-item"><div class="ri-label">粉丝增长率</div><div class="ri-value">'+fmt(followerGrowthRate)+'%</div></div>'+
+      '</div>';
+
+    $('extraSections').innerHTML=
+      '<div class="profile-card">'+
+        '<h3>⭐ 粉丝质量评分</h3>'+
+        '<div style="text-align:center;margin:20px 0">'+
+          '<div style="font-size:56px;font-weight:800;color:'+(qualityScore>=70?'#10b981':qualityScore>=40?'#f59e0b':'#ef4444')+'">'+qualityScore+'</div>'+
+          '<div style="font-size:14px;color:var(--muted)">粉丝质量总分 / 100</div>'+
+          '<span class="mc-tag '+qualityTag+'" style="font-size:13px;padding:4px 16px;margin-top:8px;display:inline-block">'+qualityText+'</span>'+
+        '</div>'+
+        '<div class="quality-bar"><div class="qb-head"><span>互动率维度（40%）</span><span>'+fmt(engScore)+'/100</span></div><div class="qb-track"><div class="qb-fill" style="width:'+engScore+'%;background:linear-gradient(90deg,#4f46e5,#6366f1)"></div></div></div>'+
+        '<div class="quality-bar"><div class="qb-head"><span>转化率维度（30%）</span><span>'+fmt(convScore)+'/100</span></div><div class="qb-track"><div class="qb-fill" style="width:'+convScore+'%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div></div>'+
+        '<div class="quality-bar"><div class="qb-head"><span>活跃度维度（30%）</span><span>'+fmt(actScore)+'/100</span></div><div class="qb-track"><div class="qb-fill" style="width:'+actScore+'%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div></div>'+
+      '</div>'+
+      '<div class="profile-card">'+
+        '<h3>🔥 达人活跃度评估</h3>'+
+        '<div style="display:flex;align-items:center;gap:12px;margin:16px 0">'+
+          '<div class="activity-timeline">'+activityDots.join('')+'</div>'+
+          '<span style="font-size:14px;font-weight:600;color:'+(activityLevel>=60?'#10b981':activityLevel>=30?'#f59e0b':'#ef4444')+'">'+(activityLevel>=60?'高活跃':activityLevel>=30?'中活跃':'低活跃')+'</span>'+
+        '</div>'+
+        '<div class="result-note">💡 '+getActivityAdvice(activityLevel,videoFreq,liveFreq,followerGrowthRate)+'</div>'+
+      '</div>'+
+      '<div class="profile-card">'+
+        '<h3>🧠 达人画像总结</h3>'+
+        '<ul class="opt-tips" style="list-style:none;padding:0;margin:0">'+
+          '<li style="padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📌 粉丝量级：'+getFollowerTier(followers)+'，'+getFollowerAdvice(followers)+'</li>'+
+          '<li style="padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">💬 互动质量：互动率'+fmt(engagementRate)+'%，'+(engagementRate>=5?'粉丝粘性强，内容触达效率高':engagementRate>=2?'互动表现一般，需关注内容质量':'互动率偏低，可能存在僵尸粉')+'</li>'+
+          '<li style="padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">💰 带货能力：场均GMV $'+fmtK(gmvPerLive)+'，'+(gmvPerLive>=5000?'带货能力强':gmvPerLive>=1000?'带货能力中等':'带货能力待验证')+'</li>'+
+          '<li style="padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative">🎯 建议：'+getOverallAdvice(qualityScore,engagementRate,conversionRate,activityLevel)+'</li>'+
+        '</ul>'+
+      '</div>';
+  }
+
+  function getFollowerTier(f){
+    if(f>=1000000)return'头部达人（百万级）';
+    if(f>=100000)return'腰部达人（十万级）';
+    if(f>=10000)return'初级达人（万级）';
+    return'素人/微型达人';
+  }
+  function getFollowerAdvice(f){
+    if(f>=1000000)return'适合品牌曝光，但合作费用高';
+    if(f>=100000)return'性价比高，适合精准带货';
+    if(f>=10000)return'粉丝粘性强，适合种草';
+    return'适合小预算测试合作';
+  }
+  function getActivityAdvice(a,vf,lf,fg){
+    if(a>=60)return'达人保持高频更新和直播，粉丝增长势头良好，适合立即合作。';
+    if(a>=30)return'达人活跃度中等，建议关注其更新频率是否稳定后再决定合作。';
+    return'达人活跃度偏低，更新和直播频率较少，合作前需确认其近期是否有足够的内容产能。';
+  }
+  function getOverallAdvice(q,e,c,a){
+    if(q>=70)return'综合质量优秀，建议优先纳入合作候选名单，匹配产品后尽快推进。';
+    if(q>=40)return'综合质量中等，可在特定场景下合作，建议先小规模测试带货效果。';
+    return'综合质量待提升，建议谨慎评估合作价值，优先考虑其他达人。';
+  }
+
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',PA.init);}else{PA.init();}
+</script>
+</body>
+</html>

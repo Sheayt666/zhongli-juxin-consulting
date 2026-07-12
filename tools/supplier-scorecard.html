@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="供应商综合评分卡：8维度评分（质量/价格/交期/服务/产能/合规/创新/风险），SVG雷达图，A/B/C/D分级，改善建议，排名对比。">
+<title>供应商评分卡 - 8维度雷达图·A/B/C/D分级·改善建议 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.jx-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.jx-row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.score-hero{text-align:center;padding:30px;background:linear-gradient(135deg,#eef2ff,#f5f3ff);border-radius:16px;margin-bottom:20px}
+.score-hero .grade{display:inline-flex;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;font-size:42px;font-weight:800;color:#fff;margin-bottom:12px}
+.grade.A{background:linear-gradient(135deg,#10b981,#059669)}.grade.B{background:linear-gradient(135deg,#4f46e5,#6366f1)}.grade.C{background:linear-gradient(135deg,#f59e0b,#d97706)}.grade.D{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.score-hero .score-num{font-size:48px;font-weight:800;color:var(--ink);line-height:1}
+.score-hero .score-lbl{font-size:14px;color:var(--muted);margin-top:6px}
+.score-hero .score-desc{font-size:14px;color:var(--ink-soft);margin-top:12px;max-width:500px;margin-left:auto;margin-right:auto}
+.radar-wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap;justify-content:center}
+.svg-radar{width:380px;height:380px;flex-shrink:0;max-width:100%}
+.radar-legend{flex:1;min-width:200px}
+.dim-list{display:grid;gap:10px}
+.dim-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:var(--bg-soft);font-size:13px}
+.dim-item .di-name{font-weight:600;color:var(--ink);min-width:90px}
+.dim-item .di-bar{flex:1;height:8px;background:var(--rule);border-radius:4px;overflow:hidden}
+.dim-item .di-fill{height:100%;border-radius:4px;transition:width .4s}
+.dim-item .di-score{font-weight:800;min-width:40px;text-align:right}
+.weight-input{display:flex;align-items:center;gap:8px}
+.weight-input input{width:60px;padding:6px 8px;border:1px solid var(--rule);border-radius:8px;font-size:13px;font-family:inherit;text-align:center}
+.weight-input input:focus{outline:none;border-color:#4f46e5}
+.weight-input .w-label{font-size:12px;color:var(--muted)}
+.dim-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.dim-card{padding:16px;border-radius:12px;border:1px solid var(--rule-light);background:#fff}
+.dim-card .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dim-card .dc-name{font-size:14px;font-weight:700;color:var(--ink)}
+.dim-card .dc-score{font-size:20px;font-weight:800}
+.dim-card .dc-tip{font-size:13px;color:var(--ink-soft);line-height:1.6;padding-top:8px;border-top:1px solid var(--rule-light)}
+.rank-table{width:100%;border-collapse:collapse;font-size:13px}
+.rank-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.rank-table th.num{text-align:right}
+.rank-table td{padding:10px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.rank-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.rank-table tr.best td{background:#ecfdf5;font-weight:700}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+@media(max-width:768px){.jx-row,.jx-row-4{grid-template-columns:1fr 1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step active">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">供应商评分</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🏆</span>供应商综合评分卡 <span style="font-size:13px;padding:3px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-weight:600">深度版</span></h1>
+  <p>8 维度综合评分（质量 / 价格 / 交期 / 服务 / 产能 / 合规 / 创新 / 风险），支持自定义权重，SVG 雷达图全景展示，A/B/C/D 分级评定，改善建议精准定位短板，多供应商排名对比。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="score-hero">
+    <div class="grade" id="gradeBox">B</div>
+    <div class="score-num" id="totalScore">0</div>
+    <div class="score-lbl">加权综合评分（满分 10）</div>
+    <div class="score-desc" id="gradeDesc">--</div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 8 维度评分输入（1-10分）</h2>
+    <div id="dimInputs"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🎯 8 维度 SVG 雷达图</h2>
+    <div class="radar-wrap">
+      <svg class="svg-radar" id="radar" viewBox="0 0 400 400"></svg>
+      <div class="radar-legend" id="radarLegend"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🔍 各维度诊断卡片</h2>
+    <div class="dim-cards" id="dimCards"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 多供应商排名对比</h2>
+    <div style="overflow-x:auto"><table class="rank-table" id="rankTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 改善建议引擎</h2>
+    <ul id="tips" style="list-style:none;padding:0;margin:0"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="supplier-risk-assessment.html" class="rt-card"><div class="rt-icon">⚠️</div><div><h5>供应商风险评估</h5><p>6维度风险矩阵</p></div></a>
+      <a href="multi-supplier-allocator.html" class="rt-card"><div class="rt-icon">🔀</div><div><h5>多供应商分配</h5><p>最优分配方案</p></div></a>
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📝</div><div><h5>采购订单构建</h5><p>PO生成器</p></div></a>
+      <a href="delivery-performance-tracker.html" class="rt-card"><div class="rt-icon">🚚</div><div><h5>交付绩效追踪</h5><p>准时率分析</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-scorecard.html">供应商评分卡</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var SSC=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  var dims=[
+    {key:'quality',name:'质量',icon:'✅',weight:18,bench:8,score:8,tips:{low:'质量评分偏低，不良率高。建议加强来料检验，要求供应商提供质量改进计划。',mid:'质量表现良好，建议建立 SQE 定期审核机制持续监控。',high:'质量表现优秀，可考虑纳入战略供应商。'}},
+    {key:'price',name:'价格',icon:'💰',weight:15,bench:7,score:7,tips:{low:'价格竞争力不足，建议比价谈判或引入备选供应商。',mid:'价格处于市场合理水平，建议定期比价保持竞争力。',high:'价格优势明显，建议锁定长期合作价格。'}},
+    {key:'delivery',name:'交期',icon:'🚚',weight:15,bench:7,score:6,tips:{low:'交期表现差，准时率低。建议设定交付 SLA，要求改善或寻找替代。',mid:'交期表现尚可，建议监控延迟趋势并建立安全库存。',high:'交期稳定可靠，可考虑缩短安全库存周期。'}},
+    {key:'service',name:'服务',icon:'🎧',weight:10,bench:7,score:8,tips:{low:'服务响应慢，沟通成本高。建议明确对接人并设定响应时效。',mid:'服务水平一般，建议定期沟通会议提升协作效率。',high:'服务响应优秀，沟通顺畅。'}},
+    {key:'capacity',name:'产能',icon:'🏭',weight:12,bench:7,score:7,tips:{low:'产能不足，难以支撑增长。建议确认扩产计划或分散订单。',mid:'产能基本匹配需求，建议提前沟通峰值需求。',high:'产能充足，可承接更大订单。'}},
+    {key:'compliance',name:'合规',icon:'📋',weight:10,bench:8,score:8,tips:{low:'合规风险高，缺少必要认证。建议要求补齐资质文件，否则考虑替换。',mid:'合规基本达标，建议定期复核证书有效期。',high:'合规完善，资质齐全。'}},
+    {key:'innovation',name:'创新',icon:'💡',weight:10,bench:6,score:6,tips:{low:'创新能力弱，产品迭代慢。建议联合开发或引入创新型供应商。',mid:'具备一定创新能力，建议加强技术交流。',high:'创新能力强，可联合开发新品。'}},
+    {key:'risk',name:'风险',icon:'🛡️',weight:10,bench:7,score:7,tips:{low:'风险评分低（风险高），存在财务/运营隐患。建议制定备用供应商方案。',mid:'风险可控，建议持续监控关键风险指标。',high:'风险抵御能力强，经营稳健。'}}
+  ];
+  var competitors=[
+    {name:'当前供应商',scores:null},
+    {name:'供应商-B',scores:{quality:7,price:8,delivery:8,service:7,capacity:6,compliance:8,innovation:5,risk:8}},
+    {name:'供应商-C',scores:{quality:9,price:6,delivery:7,service:9,capacity:8,compliance:9,innovation:8,risk:6}}
+  ];
+
+  function scoreColor(s){return s>=8?'#10b981':s>=6?'#4f46e5':s>=4?'#f59e0b':'#ef4444'}
+
+  function renderInputs(){
+    var h='<div class="jx-row-4">';
+    dims.forEach(function(d,i){
+      h+='<div class="jx-field"><label>'+d.icon+' '+d.name+' <span class="hint">(1-10)</span></label><input type="number" id="s_'+d.key+'" value="'+d.score+'" step="0.5" min="0" max="10" oninput="SSC.updateScore('+i+',this.value)"></div>';
+    });
+    h+='</div><div style="height:1px;background:var(--rule-light);margin:18px 0"></div><h3 style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--ink)">权重设置（合计需为100）</h3><div class="jx-row-4">';
+    dims.forEach(function(d,i){
+      h+='<div class="weight-input"><input type="number" id="w_'+d.key+'" value="'+d.weight+'" step="1" min="0" max="100" oninput="SSC.updateWeight('+i+',this.value)"><span class="w-label">'+d.icon+' '+d.name+'</span></div>';
+    });
+    h+='</div>';
+    $('dimInputs').innerHTML=h;
+  }
+
+  function updateScore(i,v){dims[i].score=Math.max(0,Math.min(10,parseFloat(v)||0));calc()}
+  function updateWeight(i,v){dims[i].weight=Math.max(0,parseFloat(v)||0);calc()}
+
+  function calc(){
+    var totalW=dims.reduce(function(a,b){return a+b.weight},0);
+    var weighted=0;
+    dims.forEach(function(d){weighted+=d.score*d.weight});
+    var total=totalW>0?weighted/totalW:0;
+    var grade=total>=8.5?'A':total>=7?'B':total>=5?'C':'D';
+    var gradeDescs={
+      A:'战略级供应商，各维度均衡优秀。建议深化战略合作，锁定长期协议，联合开发新品。',
+      B:'合格供应商，整体表现良好，存在个别短板。建议持续优化，向 A 级培育。',
+      C:'待改善供应商，多个维度需提升。建议制定改善计划，设定 3-6 个月提升目标。',
+      D:'高风险供应商，关键维度不达标。建议启动替代供应商寻源，逐步转移订单。'
+    };
+    var gb=$('gradeBox');gb.textContent=grade;gb.className='grade '+grade;
+    $('totalScore').textContent=total.toFixed(1);
+    $('gradeDesc').textContent=gradeDescs[grade];
+    competitors[0].scores={};dims.forEach(function(d){competitors[0].scores[d.key]=d.score});
+    renderRadar();
+    renderCards();
+    renderRank(total,grade);
+    renderTips(total,grade);
+    save();
+  }
+
+  function renderRadar(){
+    var cx=200,cy=200,R=150,N=8;
+    var svg='';
+    for(var r=1;r<=5;r++){var rr=R*r/5;var pts='';for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;pts+=(i?' ':'')+((cx+rr*Math.cos(a)).toFixed(1))+','+((cy+rr*Math.sin(a)).toFixed(1))}svg+='<polygon points="'+pts+'" fill="none" stroke="#e2e8f0"/>';}
+    for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var ex=cx+R*Math.cos(a),ey=cy+R*Math.sin(a);svg+='<line x1="'+cx+'" y1="'+cy+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="#e2e8f0"/>';var lx=cx+(R+22)*Math.cos(a),ly=cy+(R+22)*Math.sin(a);svg+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#64748b" font-weight="600">'+dims[i].name+'</text>';}
+    // benchmark
+    var bp='';for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var rr=R*dims[i].bench/10;bp+=(i?' ':'')+((cx+rr*Math.cos(a)).toFixed(1))+','+((cy+rr*Math.sin(a)).toFixed(1))}svg+='<polygon points="'+bp+'" fill="rgba(245,158,11,.08)" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>';
+    // score
+    var sp='';for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var rr=R*dims[i].score/10;sp+=(i?' ':'')+((cx+rr*Math.cos(a)).toFixed(1))+','+((cy+rr*Math.sin(a)).toFixed(1))}svg+='<polygon points="'+sp+'" fill="rgba(79,70,229,.18)" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round"/>';
+    for(var i=0;i<N;i++){var a=-Math.PI/2+i*2*Math.PI/N;var rr=R*dims[i].score/10;var px=cx+rr*Math.cos(a),py=cy+rr*Math.sin(a);svg+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="4" fill="#fff" stroke="'+scoreColor(dims[i].score)+'" stroke-width="2"/>';}
+    $('radar').innerHTML=svg;
+    var lh='<div class="dim-list">';
+    dims.forEach(function(d){var c=scoreColor(d.score);lh+='<div class="dim-item"><span class="di-name">'+d.icon+' '+d.name+'</span><div class="di-bar"><div class="di-fill" style="width:'+(d.score*10)+'%;background:'+c+'"></div></div><span class="di-score" style="color:'+c+'">'+d.score.toFixed(1)+'</span></div>'});
+    lh+='</div><div style="margin-top:12px;font-size:12px;color:var(--muted)">橙色虚线 = 行业基准 · 蓝色实线 = 当前评分</div>';
+    $('radarLegend').innerHTML=lh;
+  }
+
+  function renderCards(){
+    var h='';
+    dims.forEach(function(d){
+      var c=scoreColor(d.score);
+      var lvl=d.score<5?'low':d.score<8?'mid':'high';
+      h+='<div class="dim-card"><div class="dc-head"><span class="dc-name">'+d.icon+' '+d.name+'</span><span class="dc-score" style="color:'+c+'">'+d.score.toFixed(1)+'</span></div><div style="font-size:12px;color:var(--muted)">权重 '+d.weight+'% · 基准 '+d.bench+' · '+(d.score>=d.bench?'<span style="color:#059669">达标</span>':'<span style="color:#dc2626">未达标</span>')+'</div><div class="dc-tip">'+d.tips[lvl]+'</div></div>';
+    });
+    $('dimCards').innerHTML=h;
+  }
+
+  function renderRank(total,grade){
+    var all=competitors.map(function(c){
+      var s=0;dims.forEach(function(d){s+=c.scores[d.key]*d.weight});var tw=dims.reduce(function(a,b){return a+b.weight},0);var score=tw>0?s/tw:0;
+      return {name:c.name,score:score,grade:score>=8.5?'A':score>=7?'B':score>=5?'C':'D'};
+    });
+    all.sort(function(a,b){return b.score-a.score});
+    var h='<thead><tr><th>排名</th><th>供应商</th><th class="num">综合评分</th><th class="num">等级</th><th class="num">评价</th></tr></thead><tbody>';
+    all.forEach(function(c,i){
+      h+='<tr '+(c.name==='当前供应商'?'class="best"':'')+'><td>'+(i+1)+'</td><td>'+c.name+(c.name==='当前供应商'?' ⬅️':'')+'</td><td class="num" style="color:'+scoreColor(c.score)+';font-weight:700">'+c.score.toFixed(1)+'</td><td class="num"><span style="display:inline-block;padding:2px 10px;border-radius:6px;background:'+scoreColor(c.score)+';color:#fff;font-weight:700;font-size:12px">'+c.grade+'</span></td><td class="num" style="font-size:12px">'+(c.score>=8.5?'推荐战略合作':c.score>=7?'合格供应商':c.score>=5?'待改善':'高风险')+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('rankTable').innerHTML=h;
+  }
+
+  function renderTips(total,grade){
+    var tips=[];
+    var sorted=dims.slice().sort(function(a,b){return a.score-b.score});
+    var weakest=sorted[0];
+    tips.push({t:'最薄弱维度为「'+weakest.name+'」（'+weakest.score.toFixed(1)+'分），建议优先改善。目标 3 个月内提升至 '+Math.max(weakest.bench,7)+' 分以上。',c:scoreColor(weakest.score)});
+    var second=sorted[1];
+    if(second.score<7)tips.push({t:'第二短板为「'+second.name+'」（'+second.score.toFixed(1)+'分），建议同步制定改善计划。',c:scoreColor(second.score)});
+    var strongest=sorted[sorted.length-1];
+    tips.push({t:'最强维度为「'+strongest.name+'」（'+strongest.score.toFixed(1)+'分），是该供应商的核心优势，可在合作中充分利用。',c:'#10b981'});
+    var belowBench=dims.filter(function(d){return d.score<d.bench});
+    if(belowBench.length>0)tips.push({t:'有 '+belowBench.length+' 个维度低于行业基准：'+belowBench.map(function(d){return d.name}).join('、')+'，建议逐项对标改进。',c:'#f59e0b'});
+    tips.push({t:'当前评级为 '+grade+' 级，综合评分 '+total.toFixed(1)+'。建议每季度复评一次，跟踪改善趋势。',c:'#4f46e5'});
+    $('tips').innerHTML=tips.map(function(t){return '<li style="padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative"><span style="position:absolute;left:0;top:12px;width:18px;height:18px;border-radius:50%;background:'+t.c+';opacity:.15"></span><span style="position:absolute;left:5px;top:13px;color:'+t.c+';font-size:12px;font-weight:700">!</span>'+t.t+'</li>'}).join('');
+  }
+
+  function save(){var d={scores:{},weights:{}};dims.forEach(function(dim){d.scores[dim.key]=dim.score;d.weights[dim.key]=dim.weight});try{localStorage.setItem('jx_ssc_data',JSON.stringify(d))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_ssc_data'));if(d){dims.forEach(function(dim){if(d.scores&&d.scores[dim.key]!==undefined)dim.score=d.scores[dim.key];if(d.weights&&d.weights[dim.key]!==undefined)dim.weight=d.weights[dim.key]})}}catch(e){}}
+  return {updateScore:updateScore,updateWeight:updateWeight,init:function(){load();renderInputs();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',SSC.init)}else{SSC.init()}
+</script>
+</body>
+</html>

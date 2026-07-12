@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="多供应商订单分配器：输入总需求量与各供应商产能/价格/交期/质量评分，自动生成最优分配方案，CSS饼图展示分配比例，总成本对比。">
+<title>多供应商分配器 - 最优分配方案·成本对比·CSS饼图 | 众力聚鑫咨询</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:#f8fafc;height:48px;position:sticky;top:64px;z-index:90;border-bottom:1px solid var(--rule);display:flex;align-items:center;overflow-x:auto;white-space:nowrap}
+.workflow-nav-inner{max-width:1152px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;width:100%}
+.workflow-label{font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+.workflow-steps{display:flex;align-items:center;gap:14px}
+.workflow-step{padding:6px 14px;font-size:13px;color:#64748b;background:#fff;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;border-radius:8px;transition:all .2s;position:relative}
+.workflow-step:hover{color:#4f46e5;border-color:#c7d2fe;background:#f5f3ff}
+.workflow-step.active{background:#4f46e5;color:#fff;border-color:#4f46e5;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.25)}
+.workflow-step:not(:first-child)::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid #cbd5e1;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.workflow-step.active:not(:first-child)::before{border-left-color:#818cf8}
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--rule-light);padding:12px 0;font-size:13px;color:var(--muted)}
+.breadcrumb-bar a{color:var(--muted)}.breadcrumb-bar a:hover{color:#4f46e5}
+.breadcrumb-bar .current{color:var(--ink);font-weight:600}.breadcrumb-bar .sep{margin:0 6px;color:#cbd5e1}
+.tool-title-area{padding:32px 0 8px}
+.tool-title-area h1{font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px;color:var(--ink)}
+.tool-title-area .tt-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tool-title-area p{color:var(--muted);margin-top:8px;font-size:15px;max-width:720px;line-height:1.7}
+.jx-card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.jx-card h2{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.jx-field{margin-bottom:14px}.jx-field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+.jx-field label .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.jx-field input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.jx-field input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.metric-card{padding:18px;border-radius:14px;background:linear-gradient(135deg,#f0f4ff,#fff);border:1px solid #e0e7ff;text-align:center}
+.metric-card .mc-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.metric-card .mc-value{font-size:24px;font-weight:800;color:#4f46e5;line-height:1}
+.metric-card.success{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#a7f3d0}.metric-card.success .mc-value{color:#059669}
+.metric-card.warn{background:linear-gradient(135deg,#fffbeb,#fff);border-color:#fde68a}.metric-card.warn .mc-value{color:#d97706}
+.metric-card.danger{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#fecaca}.metric-card.danger .mc-value{color:#dc2626}
+.sup-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule-light)}
+.sup-row:last-child{border-bottom:none}
+.sup-row label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.sup-row input{padding:7px 10px;border:1px solid var(--rule);border-radius:8px;font-size:12px;font-family:inherit;width:100%;text-align:center}
+.sup-row input:focus{outline:none;border-color:#4f46e5}
+.sup-row .sr-head{font-size:10px;color:var(--muted);font-weight:700;text-align:center}
+.alloc-table{width:100%;border-collapse:collapse;font-size:13px}
+.alloc-table th{padding:11px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.alloc-table th.num{text-align:right}
+.alloc-table td{padding:10px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.alloc-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.alloc-table tr.total td{background:linear-gradient(90deg,#eef2ff,#f0f4ff);font-weight:800;color:#4f46e5}
+.pie-wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap;justify-content:center}
+.pie-chart{width:260px;height:260px;border-radius:50%;position:relative;flex-shrink:0}
+.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.pie-center .pc-val{font-size:22px;font-weight:800;color:#4f46e5}
+.pie-center .pc-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.pie-legend{flex:1;min-width:200px;display:grid;gap:10px}
+.legend-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--bg-soft);font-size:13px}
+.legend-item .li-color{width:16px;height:16px;border-radius:4px;flex-shrink:0}
+.legend-item .li-name{font-weight:600;color:var(--ink);flex:1}
+.legend-item .li-val{font-weight:800;color:var(--ink)}
+.cost-compare{display:flex;align-items:flex-end;gap:16px;height:260px;padding:20px 8px 0;border-bottom:2px solid var(--rule);overflow-x:auto}
+.cc-col{display:flex;flex-direction:column;align-items:center;min-width:120px;flex:1;height:100%;justify-content:flex-end}
+.cc-bar{width:70%;border-radius:6px 6px 0 0;transition:height .4s;min-height:2px;display:flex;align-items:flex-start;justify-content:center;position:relative}
+.cc-bar.optimal{background:linear-gradient(180deg,#34d399,#10b981)}
+.cc-bar.average{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.cc-bar.max{background:linear-gradient(180deg,#f87171,#ef4444)}
+.cc-val{position:absolute;top:-22px;font-size:12px;font-weight:700;white-space:nowrap;color:var(--ink)}
+.cc-label{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.3}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.rt-card{display:flex;gap:12px;padding:16px;background:var(--bg-soft);border-radius:12px;text-decoration:none;transition:all .2s;border:1px solid var(--rule-light)}
+.rt-card:hover{background:#f0f4ff;border-color:#c7d2fe;transform:translateX(4px)}
+.rt-card .rt-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rt-card h5{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}.rt-card p{font-size:12px;color:var(--muted)}
+.back-center{text-align:center;padding:24px 0}
+.back-center a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.tips-list{list-style:none;padding:0;margin:0}
+.tips-list li{padding:12px 0 12px 28px;border-bottom:1px solid var(--rule-light);font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6}
+.tips-list li:last-child{border-bottom:none}
+.tips-list li::before{content:'💡';position:absolute;left:0;top:12px;font-size:16px}
+@media(max-width:768px){.sup-row{grid-template-columns:1fr 1fr 1fr}.tool-title-area h1{font-size:22px}}
+</style>
+</head>
+<body class="tool-page">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<div class="workflow-nav"><div class="workflow-nav-inner"><div class="workflow-label">W34 供应链协同工作流</div><div class="workflow-steps">
+  <a href="supplier-scorecard.html" class="workflow-step">供应商评分</a>
+  <a href="purchase-order-builder.html" class="workflow-step">采购订单</a>
+  <a href="moq-negotiator.html" class="workflow-step">MOQ谈判</a>
+  <a href="quality-inspection-checklist.html" class="workflow-step">品质检验</a>
+  <a href="supplier-risk-assessment.html" class="workflow-step">风险评估</a>
+  <a href="cost-reduction-planner.html" class="workflow-step">降本规划</a>
+  <a href="multi-supplier-allocator.html" class="workflow-step active">多供应商分配</a>
+  <a href="supplier-contract-terms.html" class="workflow-step">合同条款</a>
+  <a href="delivery-performance-tracker.html" class="workflow-step">交付绩效</a>
+  <a href="supply-chain-mapping.html" class="workflow-step">供应链图谱</a>
+</div></div></div>
+<div class="breadcrumb-bar"><div class="container"><a href="../index.html">首页</a><span class="sep">›</span><a href="index.html">实用工具</a><span class="sep">›</span><a href="#">W34 供应链</a><span class="sep">›</span><span class="current">多供应商分配</span></div></div>
+
+<div class="container"><div class="tool-title-area">
+  <h1><span class="tt-icon">🔀</span>多供应商订单分配器 Multi-Supplier Allocator</h1>
+  <p>输入总需求量与各供应商的产能、价格、交期、质量评分，系统按综合性价比自动生成最优分配方案，CSS 饼图展示分配比例，柱状图对比不同策略的总成本差异。</p>
+</div></div>
+
+<section class="tool-section"><div class="container">
+  <div class="metric-grid">
+    <div class="metric-card"><div class="mc-label">总需求量</div><div class="mc-value" id="mDemand">0</div></div>
+    <div class="metric-card success"><div class="mc-label">最优总成本</div><div class="mc-value" id="mCost">$0</div></div>
+    <div class="metric-card warn"><div class="mc-label">加权质量评分</div><div class="mc-value" id="mQuality">0</div></div>
+    <div class="metric-card"><div class="mc-label">平均交期(天)</div><div class="mc-value" id="mLeadTime">0</div></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📋 总需求与策略参数</h2>
+    <div class="jx-field">
+      <label>总需求量 <span class="hint">(总采购件数)</span></label>
+      <input type="number" id="demand" value="10000" step="100" min="0" oninput="MSA.calc()">
+    </div>
+    <div class="jx-field">
+      <label>成本权重 <span class="hint">(0-100，越高越偏重价格)</span></label>
+      <input type="number" id="wCost" value="40" step="5" min="0" max="100" oninput="MSA.calc()">
+    </div>
+    <div class="jx-field">
+      <label>质量权重 <span class="hint">(0-100，越高越偏重质量)</span></label>
+      <input type="number" id="wQuality" value="35" step="5" min="0" max="100" oninput="MSA.calc()">
+    </div>
+    <div class="jx-field">
+      <label>交期权重 <span class="hint">(0-100，越高越偏重交期)</span></label>
+      <input type="number" id="wLead" value="25" step="5" min="0" max="100" oninput="MSA.calc()">
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🏭 供应商信息录入</h2>
+    <div class="sup-row" style="font-size:10px;color:var(--muted);font-weight:700;border-bottom:2px solid var(--rule)">
+      <div>供应商</div><div class="sr-head">产能(件)</div><div class="sr-head">单价($)</div><div class="sr-head">交期(天)</div><div class="sr-head">质量(1-10)</div><div class="sr-head">综合分</div>
+    </div>
+    <div id="supRows"></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>📊 最优分配方案</h2>
+    <div style="overflow-x:auto"><table class="alloc-table" id="allocTable"></table></div>
+  </div>
+
+  <div class="jx-card">
+    <h2>🥧 分配比例饼图</h2>
+    <div class="pie-wrap">
+      <div class="pie-chart" id="pieChart">
+        <div class="pie-center"><div class="pc-val" id="pieCenterVal">0</div><div class="pc-lbl">总分配量</div></div>
+      </div>
+      <div class="pie-legend" id="pieLegend"></div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💰 策略成本对比</h2>
+    <div class="cost-compare" id="costCompare"></div>
+    <div style="display:flex;gap:20px;margin-top:16px;font-size:13px;justify-content:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;color:var(--muted)"><div style="width:14px;height:14px;border-radius:4px;background:linear-gradient(180deg,#34d399,#10b981)"></div>最优性价比</div>
+      <div style="display:flex;align-items:center;gap:6px;color:var(--muted)"><div style="width:14px;height:14px;border-radius:4px;background:linear-gradient(180deg,#fbbf24,#f59e0b)"></div>平均分配</div>
+      <div style="display:flex;align-items:center;gap:6px;color:var(--muted)"><div style="width:14px;height:14px;border-radius:4px;background:linear-gradient(180deg,#f87171,#ef4444)"></div>最高成本</div>
+    </div>
+  </div>
+
+  <div class="jx-card">
+    <h2>💡 分配优化建议</h2>
+    <ul class="tips-list" id="tips"></ul>
+  </div>
+
+  <div class="jx-card">
+    <h2>🧰 相关工具推荐</h2>
+    <div class="related-tools">
+      <a href="supplier-scorecard.html" class="rt-card"><div class="rt-icon">🏆</div><div><h5>供应商评分卡</h5><p>8维度评分</p></div></a>
+      <a href="purchase-order-builder.html" class="rt-card"><div class="rt-icon">📄</div><div><h5>采购订单构建</h5><p>格式化PO</p></div></a>
+      <a href="cost-reduction-planner.html" class="rt-card"><div class="rt-icon">📉</div><div><h5>降本规划器</h5><p>降本路径图</p></div></a>
+      <a href="delivery-performance-tracker.html" class="rt-card"><div class="rt-icon">🚚</div><div><h5>交付绩效追踪</h5><p>准时率排名</p></div></a>
+    </div>
+  </div>
+  <div class="back-center"><a href="index.html">← 返回工具中心</a></div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="multi-supplier-allocator.html">多供应商分配器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li><li><a href="acos-calculator.html">ACoS计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,.4)">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+
+<script>
+var MSA=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id)}
+  function fmt0(n){return '$'+(isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0')}
+  function fmt0n(n){return isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:0}):'0'}
+  var colors=['#4f46e5','#10b981','#f59e0b','#ef4444','#06b6d4','#8b5cf6','#ec4899','#84cc16'];
+  var suppliers=[
+    {name:'供应商A 华东工厂',capacity:5000,price:3.20,lead:25,quality:8},
+    {name:'供应商B 华南工厂',capacity:4000,price:2.85,lead:30,quality:7},
+    {name:'供应商C 越南工厂',capacity:6000,price:2.50,lead:45,quality:6},
+    {name:'供应商D 台湾工厂',capacity:3000,price:3.80,lead:20,quality:9}
+  ];
+
+  function renderRows(){
+    var h='';
+    suppliers.forEach(function(s,i){
+      var score=compScore(s);
+      h+='<div class="sup-row"><label>'+s.name+'</label><input type="number" value="'+s.capacity+'" step="100" min="0" oninput="MSA.update('+i+','+i+',this.value)"><input type="number" value="'+s.price+'" step="0.01" min="0" oninput="MSA.update('+i+',\'p\',this.value)"><input type="number" value="'+s.lead+'" step="1" min="0" oninput="MSA.update('+i+',\'l\',this.value)"><input type="number" value="'+s.quality+'" step="0.5" min="0" max="10" oninput="MSA.update('+i+',\'q\',this.value)"><div style="text-align:center;font-weight:800;color:#4f46e5" id="score_'+i+'">'+score.toFixed(1)+'</div></div>';
+    });
+    $('supRows').innerHTML=h;
+  }
+
+  function compScore(s){
+    var wCost=parseFloat($('wCost').value)||0;
+    var wQual=parseFloat($('wQuality').value)||0;
+    var wLead=parseFloat($('wLead').value)||0;
+    var totalW=wCost+wQual+wLead;
+    if(totalW===0)return 0;
+    var maxP=Math.max.apply(null,suppliers.map(function(x){return x.price}));
+    var maxL=Math.max.apply(null,suppliers.map(function(x){return x.lead}));
+    var costScore=maxP>0?(maxP-s.price)/maxP*10:0;
+    var leadScore=maxL>0?(maxL-s.lead)/maxL*10:0;
+    var qualScore=s.quality;
+    return (costScore*wCost+qualScore*wQual+leadScore*wLead)/totalW;
+  }
+
+  function update(i,t,v){
+    if(t===i)suppliers[i].capacity=parseFloat(v)||0;
+    else if(t==='p')suppliers[i].price=parseFloat(v)||0;
+    else if(t==='l')suppliers[i].lead=parseFloat(v)||0;
+    else if(t==='q')suppliers[i].quality=parseFloat(v)||0;
+    var el=$('score_'+i);if(el)el.textContent=compScore(suppliers[i]).toFixed(1);
+    calc();
+  }
+
+  function calc(){
+    var demand=parseFloat($('demand').value)||0;
+    var totalCap=suppliers.reduce(function(a,s){return a+s.capacity},0);
+    // compute scores
+    var scored=suppliers.map(function(s,i){
+      return {idx:i,name:s.name,capacity:s.capacity,price:s.price,lead:s.lead,quality:s.quality,score:compScore(s)};
+    });
+    // sort by score desc for optimal allocation
+    var sorted=scored.slice().sort(function(a,b){return b.score-a.score});
+
+    // Optimal allocation: allocate to highest score first up to capacity
+    var remaining=demand;
+    var optimalAlloc={};
+    sorted.forEach(function(s){
+      var alloc=Math.min(remaining,s.capacity);
+      optimalAlloc[s.idx]=alloc;
+      remaining-=alloc;
+      if(remaining<0)remaining=0;
+    });
+
+    // Total cost
+    var totalCost=0,totalAlloc=0,weightedQ=0,weightedL=0;
+    suppliers.forEach(function(s,i){
+      var a=optimalAlloc[i]||0;
+      totalCost+=a*s.price;
+      totalAlloc+=a;
+      weightedQ+=a*s.quality;
+      weightedL+=a*s.lead;
+      var el=$('score_'+i);if(el)el.textContent=compScore(s).toFixed(1);
+    });
+    var avgQ=totalAlloc>0?weightedQ/totalAlloc:0;
+    var avgL=totalAlloc>0?weightedL/totalAlloc:0;
+
+    $('mDemand').textContent=fmt0n(demand);
+    $('mCost').textContent=fmt0(totalCost);
+    $('mQuality').textContent=avgQ.toFixed(1);
+    $('mLeadTime').textContent=avgL.toFixed(0);
+
+    // Allocation table
+    var h='<thead><tr><th>供应商</th><th class="num">综合分</th><th class="num">产能</th><th class="num">分配量</th><th class="num">单价</th><th class="num">金额</th><th class="num">交期</th><th class="num">质量</th><th class="num">占比</th></tr></thead><tbody>';
+    suppliers.forEach(function(s,i){
+      var a=optimalAlloc[i]||0;
+      var amt=a*s.price;
+      var pct=totalAlloc>0?a/totalAlloc*100:0;
+      var score=compScore(s);
+      h+='<tr><td>'+s.name+'</td><td class="num" style="color:#4f46e5;font-weight:700">'+score.toFixed(1)+'</td><td class="num">'+fmt0n(s.capacity)+'</td><td class="num" style="font-weight:800;color:#059669">'+fmt0n(a)+'</td><td class="num">$'+s.price.toFixed(2)+'</td><td class="num">'+fmt0(amt)+'</td><td class="num">'+s.lead+'天</td><td class="num">'+s.quality.toFixed(1)+'</td><td class="num">'+pct.toFixed(1)+'%</td></tr>';
+    });
+    h+='<tr class="total"><td>合计</td><td>-</td><td class="num">'+fmt0n(totalCap)+'</td><td class="num">'+fmt0n(totalAlloc)+'</td><td>-</td><td class="num">'+fmt0(totalCost)+'</td><td class="num">'+avgL.toFixed(0)+'天</td><td class="num">'+avgQ.toFixed(1)+'</td><td class="num">100%</td></tr>';
+    h+='</tbody>';
+    $('allocTable').innerHTML=h;
+
+    // Pie chart with conic-gradient
+    var pieParts=[];
+    var legendH='';
+    var cumPct=0;
+    var activeSuppliers=suppliers.filter(function(s,i){return(optimalAlloc[i]||0)>0});
+    activeSuppliers.forEach(function(s,i){
+      var a=optimalAlloc[suppliers.indexOf(s)]||0;
+      var pct=totalAlloc>0?a/totalAlloc*100:0;
+      var color=colors[i%colors.length];
+      pieParts.push(color+' '+cumPct.toFixed(2)+'% '+(cumPct+pct).toFixed(2)+'%');
+      cumPct+=pct;
+      legendH+='<div class="legend-item"><div class="li-color" style="background:'+color+'"></div><div class="li-name">'+s.name+'</div><div class="li-val">'+fmt0n(a)+' ('+pct.toFixed(1)+'%)</div></div>';
+    });
+    var pieGradient=pieParts.length>0?'conic-gradient('+pieParts.join(',')+')':'conic-gradient(#e2e8f0 0% 100%)';
+    $('pieChart').style.background=pieGradient;
+    $('pieCenterVal').textContent=fmt0n(totalAlloc);
+    $('pieLegend').innerHTML=legendH;
+
+    // Cost comparison: optimal vs average vs max price
+    var avgCost=0,maxCost=0;
+    if(totalAlloc>0){
+      // average allocation
+      var perSup=demand/suppliers.length;
+      suppliers.forEach(function(s){
+        var a=Math.min(perSup,s.capacity);
+        avgCost+=a*s.price;
+      });
+      // max price allocation (all to most expensive)
+      var maxP=Math.max.apply(null,suppliers.map(function(s){return s.price}));
+      maxCost=demand*maxP;
+    }
+    var maxVal=Math.max(totalCost,avgCost,maxCost,1);
+    var ccH='';
+    var pctF=function(v){return maxVal>0?v/maxVal*100:0};
+    ccH+='<div class="cc-col"><div class="cc-bar optimal" style="height:'+pctF(totalCost)+'%"><span class="cc-val">'+fmt0(totalCost)+'</span></div><div class="cc-label">最优性价比分配</div></div>';
+    ccH+='<div class="cc-col"><div class="cc-bar average" style="height:'+pctF(avgCost)+'%"><span class="cc-val">'+fmt0(avgCost)+'</span></div><div class="cc-label">平均分配</div></div>';
+    ccH+='<div class="cc-col"><div class="cc-bar max" style="height:'+pctF(maxCost)+'%"><span class="cc-val">'+fmt0(maxCost)+'</span></div><div class="cc-label">最高成本(全选最贵)</div></div>';
+    $('costCompare').innerHTML=ccH;
+
+    // Tips
+    var tips=[];
+    tips.push('总需求 '+fmt0n(demand)+' 件，总产能 '+fmt0n(totalCap)+' 件，产能'+(totalCap>=demand?'充足':'不足（缺口 '+fmt0n(demand-totalCap)+' 件）')+'。最优方案总成本 '+fmt0(totalCost)+'，加权质量 '+avgQ.toFixed(1)+'，平均交期 '+avgL.toFixed(0)+' 天。');
+    if(avgCost>totalCost){
+      var save=avgCost-totalCost;
+      tips.push('相比平均分配（'+fmt0(avgCost)+'），最优方案节省 '+fmt0(save)+'（'+(save/avgCost*100).toFixed(1)+'%），体现了按综合性价比分配的价值。');
+    }
+    var bestSup=sorted[0];
+    var bestAlloc=optimalAlloc[bestSup.idx]||0;
+    tips.push('综合评分最高的「'+bestSup.name+'」获得最大分配量 '+fmt0n(bestAlloc)+' 件（占比 '+(totalAlloc>0?bestAlloc/totalAlloc*100:0).toFixed(1)+'%），评分为 '+bestSup.score.toFixed(1)+' 分。');
+    var lowQ=suppliers.filter(function(s){return s.quality<6});
+    if(lowQ.length>0)tips.push('注意：'+lowQ.map(function(s){return s.name}).join('、')+' 质量评分低于 6 分，建议控制分配量并加强来料检验。');
+    var longLead=suppliers.filter(function(s){return s.lead>40});
+    if(longLead.length>0)tips.push('交期超 40 天的供应商：'+longLead.map(function(s){return s.name+'('+s.lead+'天)'}).join('、')+'，建议提前下单或作为备选供应商。');
+    tips.push('建议结合供应商评分卡和风险评估工具，定期复核各供应商绩效，动态调整分配权重以实现持续优化。');
+    $('tips').innerHTML=tips.map(function(t){return '<li>'+t+'</li>'}).join('');
+    save();
+  }
+
+  function save(){try{localStorage.setItem('jx_msa_data',JSON.stringify({suppliers:suppliers}))}catch(e){}}
+  function load(){try{var d=JSON.parse(localStorage.getItem('jx_msa_data'));if(d&&d.suppliers)suppliers=d.suppliers}catch(e){}}
+  return {update:update,calc:calc,init:function(){load();renderRows();calc()}}
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',MSA.init)}else{MSA.init()}
+</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="直播GMV预测器：输入预计观看人数/预估转化率/客单价，GMV预测保守/基准/乐观三场景，CSS柱状图对比，基于历史数据趋势调整。免费直播运营工具。">
+<meta name="keywords" content="直播GMV预测,GMV预测,保守预测,乐观预测,转化率预测,客单价,直播运营">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/live-gmv-forecast.html">
+<title>直播GMV预测器 - 三场景预测·CSS柱状图 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.wf-foot-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px auto 8px;max-width:1152px;flex-wrap:wrap}
+.wf-foot-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1px solid var(--rule)}
+.wf-foot-nav .prev{background:#fff;color:var(--ink-soft)}
+.wf-foot-nav .prev:hover{border-color:#4f46e5;color:#4f46e5;background:#e0e7ff}
+.wf-foot-nav .next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;box-shadow:0 6px 16px rgba(79,70,229,.25)}
+.wf-foot-nav .next:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.32)}
+.wf-foot-nav .fn-label{font-size:11px;color:var(--muted);display:block;margin-bottom:2px}
+.wf-foot-nav .next .fn-label{color:rgba(255,255,255,.75)}
+.wf-foot-nav .fn-name{font-size:15px}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule-light)}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+
+  .forecast-bar-group{display:flex;gap:20px;align-items:flex-end;height:240px;padding:16px 0;border-bottom:2px solid var(--rule);margin-top:20px;justify-content:center}
+  .forecast-bar{display:flex;flex-direction:column;align-items:center;gap:8px;width:80px}
+  .fb-fill{width:60px;border-radius:8px 8px 0 0;min-height:4px;transition:height .5s;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;color:#fff;font-weight:700;font-size:13px}
+  .fb-label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .fb-sub{font-size:11px;color:var(--muted)}
+  
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"直播GMV预测器","description":"直播GMV预测器：输入预计观看人数/预估转化率/客单价，GMV预测保守/基准/乐观三场景，CSS柱状图对比，基于历史数据趋势调整。免费直播运营工具。","url":"https://juxin-consulting.help/tools/live-gmv-forecast.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"publisher":{"@type":"Organization","name":"众力聚鑫咨询","url":"https://juxin-consulting.help"}}
+</script>
+</head>
+<body class="tool-page" data-tool="live_gmv_forecast">
+<a href="#main-content" class="skip-link">跳转到主要内容</a>
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links"><li><a href="../index.html">首页</a></li><li><a href="index.html" class="active">工具中心</a></li><li><a href="../blog.html">深度文章</a></li><li><a href="../contact.html">联系我们</a></li></ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a><button class="nav-mobile-toggle">☰</button>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="workflow-nav">
+    <div class="workflow-nav-header"><span class="workflow-icon">📹</span><span class="workflow-name">直播运营工作流</span><span class="workflow-step">第8步 / 共10步</span></div>
+    <div class="workflow-nav-steps"><a href="live-product-selection.html" class="step">选品策略</a><span class="arrow">→</span><a href="live-script-generator.html" class="step">话术生成</a><span class="arrow">→</span><a href="live-data-dashboard.html" class="step">数据看板</a><span class="arrow">→</span><span class="step current">GMV预测</span><span class="arrow">→</span><a href="live-checklist.html" class="step">直播清单</a></div>
+  </div>
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📹 直播运营工具 · 标准版</span>
+      <h1>直播GMV<em>预测器</em></h1>
+      <p class="tool-hero-desc">输入预计观看人数/预估转化率/客单价，GMV预测：保守/基准/乐观三场景，CSS柱状图对比，基于历史数据趋势调整。</p>
+    </div>
+  </header>
+  <section class="tool-section">
+    <div class="container">
+      
+  <div class="calculator-wrap">
+    <div class="calculator-form">
+      <h2>📋 预测参数</h2>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>预计观看人数</label><input type="number" id="viewers" value="15000" step="500" oninput="GF.calc()"></div>
+        <div class="calc-field"><label>基准转化率 (%)</label><input type="number" id="convRate" value="5" step="0.5" oninput="GF.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>客单价 ($)</label><input type="number" id="avgPrice" value="30" step="1" oninput="GF.calc()"></div>
+        <div class="calc-field"><label>退货率 (%)</label><input type="number" id="returnRate" value="8" step="0.5" oninput="GF.calc()"></div>
+      </div>
+      <div class="calc-row-2">
+        <div class="calc-field"><label>上期观看人数</label><input type="number" id="lastViewers" value="12000" step="500" oninput="GF.calc()"></div>
+        <div class="calc-field"><label>上期GMV ($)</label><input type="number" id="lastGmv" value="17400" step="100" oninput="GF.calc()"></div>
+      </div>
+      <div class="fee-rule-box">
+        <h4>📐 预测模型</h4>
+        <ul>
+          <li>保守场景：转化率×0.7，客单价×0.9</li>
+          <li>基准场景：按输入参数计算</li>
+          <li>乐观场景：转化率×1.3，客单价×1.1</li>
+          <li>净GMV = 预估订单 × 客单价 × (1-退货率)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+  </div>
+  <div id="extraSections"></div>
+  
+      <div class="wf-foot-nav"><a href="live-promo-text.html" class="prev"><span class="fn-label">上一步 · 第7步</span><span class="fn-name">← 预告文案</span></a><a href="live-competitor-analysis.html" class="next"><span class="fn-label">下一步 · 第9步</span><span class="fn-name">竞品分析 →</span></a></div>
+    </div>
+  </section>
+</main>
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">↑</button>
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div>
+  <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="live-product-selection.html">直播选品策略器</a></li><li><a href="acos-calculator.html">ACoS广告计算器</a></li><li><a href="fba-calculator.html">FBA利润计算器</a></li></ul></div>
+  <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+  <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+</div></div></footer>
+<script>
+
+var GF=(function(){
+  'use strict';
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat($(id).value)||0;}
+  function fmt(v){return '$'+(isFinite(v)?v.toFixed(2):'0.00');}
+
+  function calc(){
+    var viewers=n('viewers'),conv=n('convRate')/100,price=n('avgPrice'),ret=n('returnRate')/100;
+    var lastV=n('lastViewers'),lastG=n('lastGmv');
+    if(viewers<=0||conv<=0){$('resultCard').innerHTML='<div class="empty-icon" style="font-size:48px;text-align:center;opacity:.5">📈</div><p style="text-align:center;font-size:14px;color:var(--muted)">请输入预测参数</p>';$('extraSections').innerHTML='';return;}
+
+    var scenarios=[
+      {name:'保守',conv:conv*0.7,price:price*0.9,color:'#f59e0b'},
+      {name:'基准',conv:conv,price:price,color:'#4f46e5'},
+      {name:'乐观',conv:conv*1.3,price:price*1.1,color:'#10b981'}
+    ];
+
+    scenarios.forEach(function(s){
+      s.orders=Math.round(viewers*s.conv);
+      s.gmv=s.orders*s.price;
+      s.netGmv=s.gmv*(1-ret);
+    });
+
+    var trendAdjust='';
+    if(lastV>0&&lastG>0){
+      var lastConvRate=lastG/(lastV*price);
+      var viewerGrowth=(viewers/lastV-1)*100;
+      trendAdjust='基于上期数据：上期观看'+lastV.toLocaleString()+'人，GMV '+fmt(lastG)+'，转化率'+(lastConvRate*100).toFixed(1)+'%。本期观看'+(viewerGrowth>=0?'增长':'下降')+Math.abs(viewerGrowth).toFixed(0)+'%。';
+    }
+
+    $('resultCard').innerHTML=
+      '<h3>📈 GMV预测结果</h3>'+
+      '<div class="result-summary-bar">'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#f59e0b">'+fmt(scenarios[0].netGmv)+'</div><div class="rsb-lbl">保守净GMV</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#4f46e5">'+fmt(scenarios[1].netGmv)+'</div><div class="rsb-lbl">基准净GMV</div></div>'+
+        '<div class="rsb-card"><div class="rsb-val" style="color:#10b981">'+fmt(scenarios[2].netGmv)+'</div><div class="rsb-lbl">乐观净GMV</div></div>'+
+      '</div>';
+
+    // 柱状图
+    var maxGmv=Math.max.apply(null,scenarios.map(function(s){return s.netGmv;}));
+    var barHtml='<div class="section-block"><h3>📊 三场景GMV对比</h3><div class="forecast-bar-group">'+
+      scenarios.map(function(s){var h=(s.netGmv/maxGmv)*200;return '<div class="forecast-bar"><div class="fb-fill" style="height:'+h+'px;background:linear-gradient(180deg,'+s.color+','+s.color+'cc)">'+fmt(s.netGmv)+'</div><div class="fb-label">'+s.name+'</div><div class="fb-sub">'+s.orders+'单</div></div>';}).join('')+
+      '</div></div>';
+
+    // 详细数据
+    var detailHtml='<div class="section-block"><h3>📋 详细预测数据</h3><div style="overflow-x:auto"><table class="compare-table" style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:var(--bg-soft)"><th style="padding:10px;text-align:left">场景</th><th style="padding:10px">转化率</th><th style="padding:10px">客单价</th><th style="padding:10px">预估订单</th><th style="padding:10px">毛GMV</th><th style="padding:10px">净GMV</th></tr></thead><tbody>'+
+      scenarios.map(function(s){return '<tr style="border-bottom:1px solid var(--rule-light)"><td style="padding:10px;font-weight:600;color:'+s.color+'">'+s.name+'</td><td style="padding:10px;text-align:center">'+(s.conv*100).toFixed(1)+'%</td><td style="padding:10px;text-align:center">'+fmt(s.price)+'</td><td style="padding:10px;text-align:center">'+s.orders+'</td><td style="padding:10px;text-align:center">'+fmt(s.gmv)+'</td><td style="padding:10px;text-align:center;font-weight:700">'+fmt(s.netGmv)+'</td></tr>';}).join('')+
+      '</tbody></table></div></div>';
+
+    // 建议
+    var advice='<div class="section-block"><h3>🧠 预测分析与建议</h3><ul class="opt-tips" style="list-style:none;padding:0;margin:0">'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📌 基准场景净GMV '+fmt(scenarios[1].netGmv)+'，保守场景 '+fmt(scenarios[0].netGmv)+'，建议以保守场景作为最低目标</li>'+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📌 三场景GMV差距 '+(scenarios[2].netGmv/scenarios[0].netGmv).toFixed(1)+'倍，建议通过优化转化率缩小波动</li>'+
+      (trendAdjust?'<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative;border-bottom:1px solid var(--rule-light)">📊 '+trendAdjust+'</li>':'')+
+      '<li style="padding:8px 0 8px 28px;font-size:14px;color:var(--ink-soft);position:relative">💡 提升建议：优化选品组合和逼单话术可提升转化率，套餐搭配可提升客单价</li>'+
+      '</ul></div>';
+
+    $('extraSections').innerHTML=barHtml+detailHtml+advice;
+  }
+
+  function init(){calc();}
+  return{calc:calc,init:init};
+})();
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',GF.init);}else{GF.init();}
+  
+</script>
+</body>
+</html>
