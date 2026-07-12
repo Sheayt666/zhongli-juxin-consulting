@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="降本分析器：成本拆解（材料/人工/包装/物流/损耗），5种降本方案（换材料/优化工艺/批量采购/精简包装/减少损耗），节省金额估算，CSS成本对比柱状图。免费在线跨境电商降本分析工具。">
+<meta name="keywords" content="降本分析,成本拆解,成本优化,材料成本,物流成本,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/cost-reduction.html">
+<title>降本分析器 - 成本拆解·5种方案·节省估算 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.cr-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.cr-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.cost-pie-wrap{display:flex;align-items:center;gap:24px;justify-content:center;padding:20px 0}
+.cost-pie{width:160px;height:160px;border-radius:50%;position:relative}
+.cost-pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;background:#fff;width:90px;height:90px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cost-pie-center .cpc-val{font-size:18px;font-weight:800;color:#4f46e5}
+.cost-pie-center .cpc-lbl{font-size:10px;color:var(--muted)}
+.cost-legend{font-size:13px}
+.cost-legend-item{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cost-legend-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+.cost-legend-val{font-weight:700;margin-left:auto}
+.scheme-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.scheme-card{padding:16px;border-radius:12px;border:2px solid var(--rule);background:#fff;cursor:pointer;transition:all .2s}
+.scheme-card:hover{border-color:#c7d2fe;transform:translateY(-2px)}
+.scheme-card.active{border-color:#10b981;background:#ecfdf5}
+.scheme-icon{font-size:24px;margin-bottom:6px}
+.scheme-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.scheme-desc{font-size:11px;color:var(--muted)}
+.scheme-saving{font-size:14px;font-weight:800;color:#10b981;margin-top:6px}
+.bar-chart{display:flex;align-items:flex-end;gap:24px;height:240px;padding:20px 0;margin-top:16px;border-bottom:2px solid var(--rule);justify-content:center}
+.bar-item{display:flex;flex-direction:column;align-items:center;gap:6px;width:80px}
+.bar-fill{width:100%;border-radius:8px 8px 0 0;transition:height .5s;min-height:4px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px}
+.bar-fill.before{background:linear-gradient(180deg,#ef4444,#dc2626)}
+.bar-fill.after{background:linear-gradient(180deg,#10b981,#059669)}
+.bar-val{font-size:13px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:12px;color:var(--muted);font-weight:600}
+.saving-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.saving-card{padding:20px;border-radius:12px;text-align:center}
+.saving-card.before{background:#fef2f2;border:1px solid #fecaca}
+.saving-card.after{background:#ecfdf5;border:1px solid #bbf7d0}
+.saving-card.save{background:linear-gradient(135deg,#f0f4ff,#e0e7ff);border:1px solid #c7d2fe}
+.saving-card .sv-val{font-size:28px;font-weight:800}
+.saving-card .sv-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+@media(max-width:768px){.scheme-grid{grid-template-columns:repeat(2,1fr)}.cost-pie-wrap{flex-direction:column}.saving-summary{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="cost_reduction">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🏭 跨境电商工具 · 标准版</span>
+      <h1>降本 <em>分析器</em></h1>
+      <p class="tool-hero-desc">成本拆解5大维度（材料/人工/包装/物流/损耗），5种降本方案（换材料/优化工艺/批量采购/精简包装/减少损耗），节省金额估算，CSS成本对比柱状图。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第4步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a>
+      <span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a>
+      <span class="arrow">→</span>
+      <span class="step current">降本分析</span>
+      <span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入成本数据</h2>
+          <p class="calc-form-subtitle">填写单件产品各维度成本（$）</p>
+          <div class="calc-field"><label>材料成本 <span class="hint">($/件)</span></label><input type="number" id="c_material" value="3.5" step="0.1" oninput="CR.calc()"></div>
+          <div class="calc-field"><label>人工成本 <span class="hint">($/件)</span></label><input type="number" id="c_labor" value="1.2" step="0.1" oninput="CR.calc()"></div>
+          <div class="calc-field"><label>包装成本 <span class="hint">($/件)</span></label><input type="number" id="c_package" value="0.8" step="0.1" oninput="CR.calc()"></div>
+          <div class="calc-field"><label>物流成本 <span class="hint">($/件)</span></label><input type="number" id="c_logistics" value="1.5" step="0.1" oninput="CR.calc()"></div>
+          <div class="calc-field"><label>损耗成本 <span class="hint">($/件)</span></label><input type="number" id="c_waste" value="0.5" step="0.1" oninput="CR.calc()"></div>
+          <div class="calc-field"><label>月产量 <span class="hint">(件)</span></label><input type="number" id="monthlyQty" value="3000" step="100" oninput="CR.calc()"></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="cr-section">
+        <h3>🥧 成本结构分析</h3>
+        <div class="cost-pie-wrap" id="pieWrap"></div>
+      </div>
+
+      <div class="cr-section">
+        <h3>💡 降本方案选择</h3>
+        <div class="scheme-grid" id="schemeGrid"></div>
+        <p style="font-size:13px;color:var(--muted)">点击方案卡片选择，可多选。降本比例可调整。</p>
+      </div>
+
+      <div class="cr-section">
+        <h3>📊 成本对比柱状图</h3>
+        <div class="bar-chart" id="barChart"></div>
+        <div class="saving-summary" id="savingSummary"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="qc-checklist.html" class="wbn-btn prev">← 上一步：质检清单</a>
+        <a href="lead-time-calc.html" class="wbn-btn next">下一步：交期计算 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-audit.html">供应商评估器</a></li><li><a href="purchase-planner.html">采购计划器</a></li><li><a href="qc-checklist.html">质检清单生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var CR = (function(){
+  'use strict';
+  var COSTS = [
+    {key:'material',name:'材料成本',color:'#4f46e5'},
+    {key:'labor',name:'人工成本',color:'#10b981'},
+    {key:'package',name:'包装成本',color:'#f59e0b'},
+    {key:'logistics',name:'物流成本',color:'#8b5cf6'},
+    {key:'waste',name:'损耗成本',color:'#ef4444'}
+  ];
+  var SCHEMES = [
+    {key:'material',icon:'🔄',name:'换材料',desc:'寻找替代材料降本',rate:15,target:'material'},
+    {key:'process',icon:'⚙️',name:'优化工艺',desc:'提升生产效率降本',rate:10,target:'labor'},
+    {key:'bulk',icon:'📦',name:'批量采购',desc:'规模采购降本',rate:8,target:'material'},
+    {key:'package',icon:'🎁',name:'精简包装',desc:'简化包装设计降本',rate:20,target:'package'},
+    {key:'waste',icon:'♻️',name:'减少损耗',desc:'提升良品率降本',rate:30,target:'waste'}
+  ];
+  var selected = {};
+
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+
+  function calc(){
+    var costs = {};
+    var total = 0;
+    COSTS.forEach(function(c){ costs[c.key]=v('c_'+c.key); total+=costs[c.key]; });
+    var qty = v('monthlyQty');
+
+    // 饼图
+    var grad = '';
+    var acc = 0;
+    var legendHtml = '';
+    COSTS.forEach(function(c,i){
+      var pct = total>0 ? costs[c.key]/total*100 : 0;
+      grad += c.color+' '+acc+'% '+(acc+pct)+'%';
+      acc += pct;
+      if(i<COSTS.length-1) grad += ',';
+      legendHtml += '<div class="cost-legend-item"><div class="cost-legend-dot" style="background:'+c.color+'"></div>'+c.name+'<span class="cost-legend-val">$'+costs[c.key].toFixed(2)+' ('+pct.toFixed(0)+'%)</span></div>';
+    });
+    document.getElementById('pieWrap').innerHTML =
+      '<div class="cost-pie" style="background:conic-gradient('+grad+')">'+
+      '<div class="cost-pie-center"><div class="cpc-val">$'+total.toFixed(2)+'</div><div class="cpc-lbl">单件总成本</div></div></div>'+
+      '<div class="cost-legend">'+legendHtml+'</div>';
+
+    // 降本方案
+    var schemeHtml = '';
+    SCHEMES.forEach(function(s){
+      var isSel = selected[s.key];
+      var saving = costs[s.target]*s.rate/100;
+      schemeHtml += '<div class="scheme-card'+(isSel?' active':'')+'" onclick="CR.toggle(\''+s.key+'\')">';
+      schemeHtml += '<div class="scheme-icon">'+s.icon+'</div>';
+      schemeHtml += '<div class="scheme-name">'+s.name+'</div>';
+      schemeHtml += '<div class="scheme-desc">'+s.desc+'</div>';
+      schemeHtml += '<div class="scheme-saving">省$'+saving.toFixed(2)+'/件</div>';
+      schemeHtml += '</div>';
+    });
+    document.getElementById('schemeGrid').innerHTML = schemeHtml;
+
+    // 计算降本后成本
+    var afterCosts = JSON.parse(JSON.stringify(costs));
+    var totalSaving = 0;
+    Object.keys(selected).forEach(function(sk){
+      if(selected[sk]){
+        var scheme = SCHEMES.find(function(s){return s.key===sk;});
+        var saving = afterCosts[scheme.target]*scheme.rate/100;
+        afterCosts[scheme.target] -= saving;
+        totalSaving += saving;
+      }
+    });
+    var afterTotal = total - totalSaving;
+    var monthlySaving = totalSaving * qty;
+
+    // 柱状图
+    var maxVal = total;
+    document.getElementById('barChart').innerHTML =
+      '<div class="bar-item"><div class="bar-val">$'+total.toFixed(2)+'</div><div class="bar-fill before" style="height:'+((total/maxVal)*100)+'%"></div><div class="bar-label">降本前</div></div>'+
+      '<div class="bar-item"><div class="bar-val" style="color:#10b981">$'+afterTotal.toFixed(2)+'</div><div class="bar-fill after" style="height:'+((afterTotal/maxVal)*100)+'%"></div><div class="bar-label">降本后</div></div>';
+
+    // 汇总
+    document.getElementById('savingSummary').innerHTML =
+      '<div class="saving-card before"><div class="sv-val" style="color:#ef4444">$'+(total*qty).toFixed(0)+'</div><div class="sv-lbl">降本前月成本</div></div>'+
+      '<div class="saving-card after"><div class="sv-val" style="color:#10b981">$'+(afterTotal*qty).toFixed(0)+'</div><div class="sv-lbl">降本后月成本</div></div>'+
+      '<div class="saving-card save"><div class="sv-val" style="color:#4f46e5">$'+monthlySaving.toFixed(0)+'</div><div class="sv-lbl">月节省金额 ('+(total>0?(totalSaving/total*100).toFixed(1):0)+'%)</div></div>';
+
+    // 概览
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 降本分析概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">单件成本</div><div class="ri-value">$'+total.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">单件节省</div><div class="ri-value positive">$'+totalSaving.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">月节省</div><div class="ri-value positive">$'+monthlySaving.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">年节省</div><div class="ri-value positive">$'+(monthlySaving*12).toFixed(0)+'</div></div>'+
+      '</div><div class="result-note">💡 已选'+Object.keys(selected).filter(function(k){return selected[k];}).length+'种降本方案，预计每年节省$'+(monthlySaving*12).toFixed(0)+'</div>';
+  }
+
+  function toggle(key){
+    selected[key] = !selected[key];
+    calc();
+  }
+
+  function init(){
+    selected['material'] = true;
+    selected['package'] = true;
+    calc();
+  }
+  return { toggle:toggle, calc:calc, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',CR.init); } else { CR.init(); }
+</script>
+</body>
+</html>

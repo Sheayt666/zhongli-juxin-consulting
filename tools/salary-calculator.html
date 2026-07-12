@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="跨境团队薪酬计算器：底薪+绩效+提成三段式薪酬计算，支持按销售额/按利润/按完成率三种提成规则，运营/广告/设计/客服/主管多岗位对比，月度薪酬模拟计算。免费在线跨境团队薪酬管理工具。">
+<meta name="keywords" content="薪酬计算器,提成计算,跨境团队薪酬,底薪绩效提成,岗位薪酬对比">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/salary-calculator.html">
+<title>跨境团队薪酬计算器 - 三段式薪酬·多岗位对比 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.sal-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.sal-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.sal-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.sal-card{flex:1;min-width:120px;padding:18px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.sal-card .sc-val{font-size:28px;font-weight:800}
+.sal-card .sc-val.blue{color:#4f46e5}.sal-card .sc-val.green{color:#10b981}.sal-card .sc-val.gold{color:#f59e0b}.sal-card .sc-val.red{color:#ef4444}
+.sal-card .sc-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.sal-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.sal-table th{padding:10px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.sal-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.sal-table tr:hover td{background:var(--accent-bg)}
+.sal-table .pos-input{width:80px;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;font-size:12px;font-family:inherit}
+.sal-table .total-col{font-weight:800;color:#4f46e5;font-size:15px}
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:200px;padding:20px 0;margin-top:16px;border-bottom:2px solid var(--rule)}
+.bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar-fill{width:100%;border-radius:8px 8px 0 0;transition:height .5s ease;background:linear-gradient(180deg,#6366f1,#4f46e5);min-height:4px;position:relative}
+.bar-fill.alt1{background:linear-gradient(180deg,#10b981,#059669)}
+.bar-fill.alt2{background:linear-gradient(180deg,#f59e0b,#d97706)}
+.bar-fill.alt3{background:linear-gradient(180deg,#8b5cf6,#7c3aed)}
+.bar-fill.alt4{background:linear-gradient(180deg,#ec4899,#db2777)}
+.bar-val{font-size:12px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted);text-align:center}
+@media(max-width:768px){.sal-table{font-size:12px}.sal-table th,.sal-table td{padding:6px 8px}.bar-chart{height:150px;gap:8px}}
+</style>
+</head>
+<body class="tool-page" data-tool="salary_calculator">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 跨境电商工具 · 标准版</span>
+      <h1>跨境团队 <em>薪酬计算器</em></h1>
+      <p class="tool-hero-desc">底薪+绩效+提成三段式薪酬计算，支持按销售额/利润/完成率三种提成规则，运营/广告/设计/客服/主管多岗位对比，月度薪酬一目了然。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span>
+      <span class="workflow-name">团队管理工作流</span>
+      <span class="workflow-step">第3步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <span class="step current">薪酬计算</span>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="sal-section">
+        <h3>⚙️ 薪酬参数设置</h3>
+        <div class="calc-row-2">
+          <div class="calc-field"><label>团队月总销售额 <span class="hint">($)</span></label><input type="number" id="totalSales" value="50000" step="1000" oninput="SAL.calc()"></div>
+          <div class="calc-field"><label>团队月总利润 <span class="hint">($)</span></label><input type="number" id="totalProfit" value="15000" step="500" oninput="SAL.calc()"></div>
+        </div>
+        <div class="calc-row-2">
+          <div class="calc-field">
+            <label>提成规则</label>
+            <select id="commissionType" onchange="SAL.calc()">
+              <option value="sales">按销售额提成</option>
+              <option value="profit">按利润提成</option>
+              <option value="rate">按完成率提成</option>
+            </select>
+          </div>
+          <div class="calc-field"><label>月度目标完成率 <span class="hint">(%)</span></label><input type="number" id="completionRate" value="85" step="5" oninput="SAL.calc()"></div>
+        </div>
+        <div class="fee-rule-box" style="margin-top:16px">
+          <h4>📐 薪酬公式</h4>
+          <ul>
+            <li>总薪酬 = 底薪 + 绩效奖金 + 提成</li>
+            <li>按销售额：提成 = 个人销售额 × 提成比例</li>
+            <li>按利润：提成 = 个人利润贡献 × 提成比例</li>
+            <li>按完成率：提成 = 底薪 × 完成率 × 提成系数</li>
+            <li>绩效奖金 = 绩效基数 × KPI达成率</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sal-section">
+        <h3>📊 各岗位薪酬对比</h3>
+        <div style="overflow-x:auto">
+          <table class="sal-table" id="salaryTable">
+            <thead><tr><th>岗位</th><th>底薪($)</th><th>绩效基数($)</th><th>提成比例(%)</th><th>KPI达成(%)</th><th>底薪</th><th>绩效</th><th>提成</th><th>总薪酬</th></tr></thead>
+            <tbody id="salaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sal-section">
+        <h3>📊 薪酬对比柱状图</h3>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="sal-section">
+        <h3>💰 薪酬汇总</h3>
+        <div class="sal-summary-bar" id="summaryBar"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="sop-builder.html" class="wbn-btn prev">← 上一步：SOP构建</a>
+        <a href="productivity-score.html" class="wbn-btn next">下一步：人效分析 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="kpi-tracker.html">KPI追踪器</a></li><li><a href="sop-builder.html">SOP构建器</a></li><li><a href="salary-calculator.html">薪酬计算器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var SAL = (function(){
+  'use strict';
+  var POSITIONS = [
+    {name:'运营',base:6000,perfBase:2000,commRate:3,kpiRate:85,share:0.35},
+    {name:'广告',base:5500,perfBase:1800,commRate:2.5,kpiRate:80,share:0.25},
+    {name:'设计',base:5000,perfBase:1500,commRate:1,kpiRate:90,share:0.10},
+    {name:'客服',base:4000,perfBase:1200,commRate:1.5,kpiRate:88,share:0.15},
+    {name:'主管',base:8000,perfBase:3000,commRate:4,kpiRate:90,share:0.15}
+  ];
+
+  function calc(){
+    var totalSales = parseFloat(document.getElementById('totalSales').value)||0;
+    var totalProfit = parseFloat(document.getElementById('totalProfit').value)||0;
+    var commType = document.getElementById('commissionType').value;
+    var completionRate = parseFloat(document.getElementById('completionRate').value)||0;
+
+    var html = '';
+    var totalSalary = 0;
+    var chartData = [];
+    POSITIONS.forEach(function(p,i){
+      var perf = p.perfBase * (p.kpiRate/100);
+      var commission = 0;
+      if(commType==='sales'){
+        commission = totalSales * p.share * (p.commRate/100);
+      } else if(commType==='profit'){
+        commission = totalProfit * p.share * (p.commRate/100);
+      } else {
+        commission = p.base * (completionRate/100) * (p.commRate/100) * 2;
+      }
+      var total = p.base + perf + commission;
+      totalSalary += total;
+      chartData.push({name:p.name,total:total,idx:i});
+
+      html += '<tr>';
+      html += '<td><strong>'+p.name+'</strong></td>';
+      html += '<td><input class="pos-input" type="number" value="'+p.base+'" oninput="SAL.updatePos('+i+',\'base\',this.value)"></td>';
+      html += '<td><input class="pos-input" type="number" value="'+p.perfBase+'" oninput="SAL.updatePos('+i+',\'perfBase\',this.value)"></td>';
+      html += '<td><input class="pos-input" type="number" value="'+p.commRate+'" step="0.5" oninput="SAL.updatePos('+i+',\'commRate\',this.value)"></td>';
+      html += '<td><input class="pos-input" type="number" value="'+p.kpiRate+'" oninput="SAL.updatePos('+i+',\'kpiRate\',this.value)"></td>';
+      html += '<td>$'+p.base.toFixed(0)+'</td>';
+      html += '<td>$'+perf.toFixed(0)+'</td>';
+      html += '<td>$'+commission.toFixed(0)+'</td>';
+      html += '<td class="total-col">$'+total.toFixed(0)+'</td>';
+      html += '</tr>';
+    });
+    document.getElementById('salaryBody').innerHTML = html;
+
+    // 柱状图
+    var maxVal = Math.max.apply(null, chartData.map(function(d){return d.total;}));
+    var barHtml = '';
+    var colors = ['','alt1','alt2','alt3','alt4'];
+    chartData.forEach(function(d){
+      var h = (d.total/maxVal)*100;
+      barHtml += '<div class="bar-item">';
+      barHtml += '<div class="bar-val">$'+d.total.toFixed(0)+'</div>';
+      barHtml += '<div class="bar-fill '+colors[d.idx]+'" style="height:'+h+'%"></div>';
+      barHtml += '<div class="bar-label">'+d.name+'</div>';
+      barHtml += '</div>';
+    });
+    document.getElementById('barChart').innerHTML = barHtml;
+
+    // 汇总
+    var avgSalary = totalSalary/POSITIONS.length;
+    var maxSalary = Math.max.apply(null, chartData.map(function(d){return d.total;}));
+    var minSalary = Math.min.apply(null, chartData.map(function(d){return d.total;}));
+    document.getElementById('summaryBar').innerHTML =
+      '<div class="sal-card"><div class="sc-val blue">$'+totalSalary.toFixed(0)+'</div><div class="sc-lbl">团队月总薪酬</div></div>'+
+      '<div class="sal-card"><div class="sc-val green">$'+avgSalary.toFixed(0)+'</div><div class="sc-lbl">平均月薪</div></div>'+
+      '<div class="sal-card"><div class="sc-val gold">$'+maxSalary.toFixed(0)+'</div><div class="sc-lbl">最高薪酬</div></div>'+
+      '<div class="sal-card"><div class="sc-val red">$'+minSalary.toFixed(0)+'</div><div class="sc-lbl">最低薪酬</div></div>';
+  }
+
+  function updatePos(i,field,val){
+    POSITIONS[i][field] = parseFloat(val)||0;
+    calc();
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, updatePos:updatePos, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',SAL.init); } else { SAL.init(); }
+</script>
+</body>
+</html>

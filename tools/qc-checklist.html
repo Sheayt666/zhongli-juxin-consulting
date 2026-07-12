@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="质检清单生成器：按产品类型（电子/服装/家居/玩具/食品）自动生成10-15项质检清单，AQL抽样标准计算，质检报告模板。免费在线跨境电商质检工具。">
+<meta name="keywords" content="质检清单,质检报告,AQL抽样,产品质量,电子质检,服装质检,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/qc-checklist.html">
+<title>质检清单生成器 - AQL抽样标准·质检报告模板 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.qc-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.qc-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.type-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.type-card{padding:20px 12px;border-radius:12px;border:2px solid var(--rule);text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.type-card:hover{border-color:#c7d2fe;transform:translateY(-2px)}
+.type-card.active{border-color:#4f46e5;background:#f0f4ff;box-shadow:0 4px 14px rgba(79,70,229,.15)}
+.type-icon{font-size:32px;margin-bottom:8px}
+.type-name{font-size:13px;font-weight:600;color:var(--ink)}
+.aql-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.aql-card{padding:18px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light);text-align:center}
+.aql-card .ac-val{font-size:24px;font-weight:800;color:#4f46e5}
+.aql-card .ac-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.qc-list{list-style:none;padding:0;margin:0}
+.qc-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-light);font-size:13px;color:var(--ink-soft)}
+.qc-item:last-child{border-bottom:none}
+.qc-num{width:28px;height:28px;border-radius:50%;background:#4f46e5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.qc-text{flex:1}
+.qc-level{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700;flex-shrink:0}
+.qc-level.critical{background:#fee2e2;color:#dc2626}
+.qc-level.major{background:#fef3c7;color:#d97706}
+.qc-level.minor{background:#dbeafe;color:#2563eb}
+.report-template{padding:20px;background:var(--bg-soft);border-radius:12px;border:1px solid var(--rule);font-size:13px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap}
+.btn-copy{padding:10px 24px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-copy:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+@media(max-width:768px){.type-grid{grid-template-columns:repeat(2,1fr)}.aql-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="qc_checklist">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🏭 跨境电商工具 · 标准版</span>
+      <h1>质检清单 <em>生成器</em></h1>
+      <p class="tool-hero-desc">按产品类型自动生成10-15项质检清单，AQL抽样标准计算（临界/主要/次要缺陷），一键生成质检报告模板，让品控标准化。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第3步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a>
+      <span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <span class="step current">质检清单</span>
+      <span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本分析</a>
+      <span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="qc-section">
+        <h3>📦 选择产品类型</h3>
+        <div class="type-grid" id="typeGrid"></div>
+      </div>
+
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 AQL抽样参数</h2>
+          <p class="calc-form-subtitle">输入批量数据，自动计算AQL抽样标准</p>
+          <div class="calc-field"><label>批次总数量 <span class="hint">(件)</span></label><input type="number" id="lotSize" value="1000" step="50" oninput="QC.calc()"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>检验水平</label><select id="inspectLevel" onchange="QC.calc()"><option value="I">特殊检验 I</option><option value="II" selected>一般检验 II</option><option value="III">一般检验 III</option></select></div>
+            <div class="calc-field"><label>AQL标准</label><select id="aqlLevel" onchange="QC.calc()"><option value="2.5">常规 2.5</option><option value="1.5" selected>严格 1.5</option><option value="4.0">宽松 4.0</option></select></div>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="qc-section">
+        <h3>📊 AQL抽样结果</h3>
+        <div class="aql-grid" id="aqlGrid"></div>
+      </div>
+
+      <div class="qc-section">
+        <h3>✅ 质检清单</h3>
+        <ul class="qc-list" id="qcList"></ul>
+      </div>
+
+      <div class="qc-section">
+        <h3>📄 质检报告模板</h3>
+        <div class="report-template" id="reportTemplate"></div>
+        <div style="margin-top:16px;text-align:center">
+          <button class="btn-copy" onclick="QC.copy()">📋 复制质检报告</button>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="purchase-planner.html" class="wbn-btn prev">← 上一步：采购计划</a>
+        <a href="cost-reduction.html" class="wbn-btn next">下一步：降本分析 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-audit.html">供应商评估器</a></li><li><a href="purchase-planner.html">采购计划器</a></li><li><a href="qc-checklist.html">质检清单生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var QC = (function(){
+  'use strict';
+  var TYPES = {
+    '电子': {icon:'📱', items:[
+      {text:'外观检查：无划痕、无变形、无色差',level:'major'},
+      {text:'功能测试：开机/关机/各项功能正常',level:'critical'},
+      {text:'电池测试：充电/放电/续航时间达标',level:'critical'},
+      {text:'按键/接口测试：所有按键和接口正常',level:'major'},
+      {text:'屏幕显示：无亮点/坏点/色差',level:'major'},
+      {text:'信号/连接测试：WiFi/蓝牙/信号正常',level:'critical'},
+      {text:'包装完整性：彩盒/内托/说明书齐全',level:'minor'},
+      {text:'标签正确性：型号/参数/认证标识正确',level:'major'},
+      {text:'配件齐全：充电器/数据线/说明书等',level:'minor'},
+      {text:'安全测试：无漏电/无过热/无异味',level:'critical'},
+      {text:'跌落测试：1米高度跌落无损坏',level:'major'},
+      {text:'序列号唯一性和可追溯性',level:'minor'}
+    ]},
+    '服装': {icon:'👕', items:[
+      {text:'面料检查：材质/手感/厚度符合要求',level:'major'},
+      {text:'色差检查：与确认样对比无明显色差',level:'major'},
+      {text:'尺寸测量：各部位尺寸在公差范围内',level:'critical'},
+      {text:'缝线质量：无跳针/断线/浮线',level:'major'},
+      {text:'拉链/纽扣：开合顺畅/牢固无脱落',level:'major'},
+      {text:'印花/绣花：图案清晰/无脱落/位置正确',level:'minor'},
+      {text:'线头处理：无多余线头/毛边',level:'minor'},
+      {text:'对称性检查：左右对称/图案对称',level:'minor'},
+      {text:'标签/洗水标：内容正确/位置正确',level:'minor'},
+      {text:'包装检查：吊牌/胶袋/防潮纸齐全',level:'minor'},
+      {text:'异味检查：无化学异味/霉味',level:'major'},
+      {text:'面料色牢度：摩擦不掉色',level:'major'}
+    ]},
+    '家居': {icon:'🏠', items:[
+      {text:'外观检查：无破损/裂纹/气泡',level:'major'},
+      {text:'尺寸测量：长宽高/容量符合要求',level:'major'},
+      {text:'材质验证：与确认样材质一致',level:'major'},
+      {text:'承重测试：承重能力达标',level:'critical'},
+      {text:'稳定性测试：放置平稳不摇晃',level:'major'},
+      {text:'表面处理：光滑无毛刺/无锋利边角',level:'critical'},
+      {text:'组装测试：配件齐全/组装顺畅',level:'major'},
+      {text:'防水/防漏测试（适用产品）',level:'critical'},
+      {text:'标签/说明书：内容正确/语言正确',level:'minor'},
+      {text:'包装检查：防震/防压措施到位',level:'minor'}
+    ]},
+    '玩具': {icon:'🧸', items:[
+      {text:'安全测试：无尖锐边角/无小零件脱落',level:'critical'},
+      {text:'材质安全：无毒/无异味/符合EN71',level:'critical'},
+      {text:'功能测试：所有功能正常运作',level:'major'},
+      {text:'油漆测试：无铅/无掉漆/附着力达标',level:'critical'},
+      {text:'年龄标识：年龄警告标签正确',level:'major'},
+      {text:'拉力测试：部件连接牢固不脱落',level:'critical'},
+      {text:'电池仓安全：螺丝固定/不可轻易打开',level:'major'},
+      {text:'声光测试：音量/亮度在安全范围',level:'major'},
+      {text:'包装检查：信息完整/防伪标签',level:'minor'},
+      {text:'CE/ASTM认证标识正确',level:'major'}
+    ]},
+    '食品': {icon:'🍪', items:[
+      {text:'包装密封性：无漏气/无破损',level:'critical'},
+      {text:'生产日期/保质期：印刷清晰/正确',level:'critical'},
+      {text:'标签合规：成分/营养表/过敏原标注',level:'critical'},
+      {text:'外观检查：无变形/无变色/无异物',level:'major'},
+      {text:'重量/容量：在公差范围内',level:'major'},
+      {text:'感官检查：色泽/气味/口感正常',level:'major'},
+      {text:'温度记录：运输/储存温度达标',level:'critical'},
+      {text:'认证文件：FDA/CE/HACCP证书齐全',level:'major'},
+      {text:'包装材料：食品级/无迁移物',level:'major'},
+      {text:'批次追溯：批号可追溯',level:'minor'}
+    ]}
+  };
+  var currentType = '电子';
+
+  function renderTypes(){
+    var html = '';
+    Object.keys(TYPES).forEach(function(key){
+      html += '<div class="type-card'+(key===currentType?' active':'')+'" onclick="QC.select(\''+key+'\')">';
+      html += '<div class="type-icon">'+TYPES[key].icon+'</div>';
+      html += '<div class="type-name">'+key+'</div>';
+      html += '</div>';
+    });
+    document.getElementById('typeGrid').innerHTML = html;
+  }
+
+  function select(key){ currentType = key; renderTypes(); renderList(); renderReport(); }
+
+  function calc(){
+    var lot = parseInt(document.getElementById('lotSize').value)||0;
+    var level = document.getElementById('inspectLevel').value;
+    var aql = parseFloat(document.getElementById('aqlLevel').value);
+
+    // 简化AQL表
+    var sampleSize, code;
+    if(level==='I'){
+      sampleSize = lot<=50?5:(lot<=500?8:(lot<=3200?20:32)); code='S-1';
+    } else if(level==='II'){
+      sampleSize = lot<=50?8:(lot<=500?32:(lot<=3200?50:80)); code='G-II';
+    } else {
+      sampleSize = lot<=50?13:(lot<=500?50:(lot<=3200?80:125)); code='G-III';
+    }
+
+    var ac_critical = Math.floor(sampleSize*0);
+    var ac_major = Math.floor(sampleSize*aql/100);
+    var ac_minor = Math.floor(sampleSize*aql*1.5/100);
+
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 AQL抽样结果</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">抽样数量</div><div class="ri-value">'+sampleSize+'件</div></div>'+
+      '<div class="result-item"><div class="ri-label">检验水平</div><div class="ri-value">'+code+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">AQL值</div><div class="ri-value">'+aql+'</div></div>'+
+      '</div><div class="result-note">💡 从'+lot+'件中抽取'+sampleSize+'件检验，临界缺陷允收0件，主要缺陷允收'+ac_major+'件，次要缺陷允收'+ac_minor+'件</div>';
+
+    document.getElementById('aqlGrid').innerHTML =
+      '<div class="aql-card"><div class="ac-val" style="color:#ef4444">0</div><div class="ac-lbl">临界缺陷允收数(Ac)</div></div>'+
+      '<div class="aql-card"><div class="ac-val" style="color:#f59e0b">'+ac_major+'</div><div class="ac-lbl">主要缺陷允收数(Ac)</div></div>'+
+      '<div class="aql-card"><div class="ac-val" style="color:#2563eb">'+ac_minor+'</div><div class="ac-lbl">次要缺陷允收数(Ac)</div></div>';
+  }
+
+  function renderList(){
+    var items = TYPES[currentType].items;
+    var html = '';
+    items.forEach(function(it,i){
+      var levelText = it.level==='critical'?'临界':(it.level==='major'?'主要':'次要');
+      html += '<li class="qc-item"><div class="qc-num">'+(i+1)+'</div><div class="qc-text">'+it.text+'</div><span class="qc-level '+it.level+'">'+levelText+'</span></li>';
+    });
+    document.getElementById('qcList').innerHTML = html;
+  }
+
+  function renderReport(){
+    var lot = document.getElementById('lotSize').value;
+    var items = TYPES[currentType].items;
+    var date = new Date().toLocaleDateString('zh-CN');
+    var text = '════════════════════════════════════\n';
+    text += '   质检报告 (QC Report)\n';
+    text += '════════════════════════════════════\n\n';
+    text += '产品类型：'+currentType+'\n';
+    text += '检验日期：'+date+'\n';
+    text += '批次数量：'+lot+'件\n';
+    text += '检验标准：AQL '+document.getElementById('aqlLevel').value+'\n\n';
+    text += '【质检清单】\n';
+    items.forEach(function(it,i){
+      var lv = it.level==='critical'?'[临界]':(it.level==='major'?'[主要]':'[次要]');
+      text += (i+1)+'. '+lv+' '+it.text+'  □合格 □不合格\n';
+    });
+    text += '\n【检验结果】\n';
+    text += '抽样数量：___件\n';
+    text += '临界缺陷：___件 (允收: 0)\n';
+    text += '主要缺陷：___件 (允收: ___)\n';
+    text += '次要缺陷：___件 (允收: ___)\n';
+    text += '结论：□ 接收  □ 拒收  □ 条件接收\n\n';
+    text += '检验员：________  日期：________\n';
+    text += '复核员：________  日期：________\n';
+    text += '════════════════════════════════════';
+    document.getElementById('reportTemplate').textContent = text;
+  }
+
+  function copy(){
+    var text = document.getElementById('reportTemplate').textContent;
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){alert('质检报告已复制！');}); }
+    else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');alert('质检报告已复制！');}catch(e){alert('复制失败');} document.body.removeChild(ta); }
+  }
+
+  function init(){ renderTypes(); calc(); renderList(); renderReport(); }
+  return { select:select, calc:calc, copy:copy, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',QC.init); } else { QC.init(); }
+</script>
+</body>
+</html>

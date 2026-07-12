@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="周报生成器：输入本周GMV/订单/广告/退货/新品上架/优化记录，自动生成周报文本，环比上周变化分析，CSS柱状图展示周度趋势。免费在线跨境电商周报工具。">
+<meta name="keywords" content="周报生成器,电商周报,周度趋势,环比分析,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/weekly-report.html">
+<title>周报生成器 - 环比分析·周度趋势柱状图 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.rpt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.rpt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.data-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.data-card{padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.data-card .dc-val{font-size:24px;font-weight:800}
+.data-card .dc-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.data-card .dc-change{font-size:11px;margin-top:4px;font-weight:600}
+.change-up{color:#10b981}.change-down{color:#ef4444}.change-flat{color:var(--muted)}
+.bar-chart{display:flex;align-items:flex-end;gap:12px;height:200px;padding:20px 0;margin-top:16px;border-bottom:2px solid var(--rule)}
+.bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-fill{width:100%;border-radius:6px 6px 0 0;transition:height .5s ease;background:linear-gradient(180deg,#6366f1,#4f46e5);min-height:4px}
+.bar-fill.alt{background:linear-gradient(180deg,#10b981,#059669)}
+.bar-val{font-size:11px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted)}
+.report-text{margin-top:16px;padding:24px;background:var(--bg-soft);border-radius:12px;border:1px solid var(--rule);font-size:13px;line-height:1.9;color:var(--ink-soft);white-space:pre-wrap;max-height:500px;overflow-y:auto}
+.btn-copy{padding:10px 24px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-copy:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+@media(max-width:768px){.data-cards{grid-template-columns:repeat(2,1fr)}.bar-chart{height:150px;gap:6px}}
+</style>
+</head>
+<body class="tool-page" data-tool="weekly_report">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📊 跨境电商工具 · 标准版</span>
+      <h1>周报 <em>生成器</em></h1>
+      <p class="tool-hero-desc">输入本周GMV、订单、广告、退货、新品上架和优化记录，自动生成周报文本，环比上周变化分析，CSS柱状图展示周度趋势。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📊</span>
+      <span class="workflow-name">数据报表工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="daily-report.html" class="step">日报</a>
+      <span class="arrow">→</span>
+      <span class="step current">周报</span>
+      <span class="arrow">→</span>
+      <a href="monthly-report.html" class="step">月报</a>
+      <span class="arrow">→</span>
+      <a href="custom-dashboard.html" class="step">自定义看板</a>
+      <span class="arrow">→</span>
+      <a href="kpi-dashboard.html" class="step">KPI看板</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入本周数据</h2>
+          <p class="calc-form-subtitle">填写本周与上周数据，自动生成环比周报</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>本周GMV <span class="hint">($)</span></label><input type="number" id="wkGMV" value="18000" step="500" oninput="WR.calc()"></div>
+            <div class="calc-field"><label>上周GMV <span class="hint">($)</span></label><input type="number" id="lstGMV" value="16000" step="500" oninput="WR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>本周订单数</label><input type="number" id="wkOrders" value="620" step="10" oninput="WR.calc()"></div>
+            <div class="calc-field"><label>上周订单数</label><input type="number" id="lstOrders" value="580" step="10" oninput="WR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>本周广告费 <span class="hint">($)</span></label><input type="number" id="wkAd" value="3000" step="100" oninput="WR.calc()"></div>
+            <div class="calc-field"><label>上周广告费 <span class="hint">($)</span></label><input type="number" id="lstAd" value="2800" step="100" oninput="WR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>本周退货数</label><input type="number" id="wkReturn" value="18" step="1" oninput="WR.calc()"></div>
+            <div class="calc-field"><label>上周退货数</label><input type="number" id="lstReturn" value="15" step="1" oninput="WR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>本周新品上架</label><input type="number" id="wkNew" value="2" step="1" oninput="WR.calc()"></div>
+            <div class="calc-field"><label>本周优化记录</label><input type="number" id="wkOpt" value="5" step="1" oninput="WR.calc()"></div>
+          </div>
+          <div class="calc-field"><label>本周每日GMV（逗号分隔，7天）</label><input type="text" id="dailyGMV" value="2200,2500,2800,2600,2400,3000,2500" oninput="WR.calc()"></div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="rpt-section">
+        <h3>📊 本周核心数据</h3>
+        <div class="data-cards" id="dataCards"></div>
+      </div>
+
+      <div class="rpt-section">
+        <h3>📈 周度GMV趋势</h3>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="rpt-section">
+        <h3>📄 周报文本（可复制）</h3>
+        <div class="report-text" id="reportText"></div>
+        <div style="margin-top:16px;text-align:center">
+          <button class="btn-copy" onclick="WR.copy()">📋 复制周报到剪贴板</button>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="daily-report.html" class="wbn-btn prev">← 上一步：日报</a>
+        <a href="monthly-report.html" class="wbn-btn next">下一步：月报 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="weekly-report.html">周报生成器</a></li><li><a href="monthly-report.html">月报生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var WR = (function(){
+  'use strict';
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+  function chg(t,y){ if(y===0) return {pct:0,cls:'change-flat',text:'→'}; var p=((t-y)/y*100); var cls=p>0?'change-up':(p<0?'change-down':'change-flat'); var a=p>0?'↑':(p<0?'↓':'→'); return {pct:Math.abs(p),cls:cls,text:a+Math.abs(p).toFixed(1)+'%'}; }
+
+  function calc(){
+    var wg=v('wkGMV'),lg=v('lstGMV'),wo=v('wkOrders'),lo=v('lstOrders');
+    var wa=v('wkAd'),la=v('lstAd'),wr=v('wkReturn'),lr=v('lstReturn');
+    var wn=v('wkNew'),wopt=v('wkOpt');
+    var aov=wo>0?wg/wo:0, acos=wg>0?wa/wg*100:0, retRate=wo>0?wr/wo*100:0;
+    var c1=chg(wg,lg),c2=chg(wo,lo),c3=chg(wa,la),c4=chg(wr,lr);
+
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 本周数据概览</h3>'+
+      '<div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">客单价</div><div class="ri-value">$'+aov.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">ACoS</div><div class="ri-value">'+acos.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">退货率</div><div class="ri-value">'+retRate.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">新品上架</div><div class="ri-value">'+wn+'</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 本周GMV '+c1.text+'，订单'+c2.text+'。'+(c1.cls==='change-up'?'增长趋势良好！':(c1.cls==='change-down'?'需关注下滑原因':'保持平稳'))+'</div>';
+
+    document.getElementById('dataCards').innerHTML =
+      '<div class="data-card"><div class="dc-val" style="color:#4f46e5">$'+wg.toFixed(0)+'</div><div class="dc-lbl">本周GMV</div><div class="dc-change '+c1.cls+'">'+c1.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#10b981">'+wo+'</div><div class="dc-lbl">订单数</div><div class="dc-change '+c2.cls+'">'+c2.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#f59e0b">$'+wa.toFixed(0)+'</div><div class="dc-lbl">广告费</div><div class="dc-change '+c3.cls+'">'+c3.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#ef4444">'+wr+'</div><div class="dc-lbl">退货数</div><div class="dc-change '+c4.cls+'">'+c4.text+'</div></div>';
+
+    // 柱状图
+    var daily = document.getElementById('dailyGMV').value.split(',').map(function(s){return parseFloat(s.trim())||0;});
+    var maxVal = Math.max.apply(null,daily.length>0?daily:[1]);
+    var days = ['周一','周二','周三','周四','周五','周六','周日'];
+    var barHtml = '';
+    daily.forEach(function(d,i){
+      var h = (d/maxVal)*100;
+      var cls = i===daily.length-1?'':'';
+      barHtml += '<div class="bar-item"><div class="bar-val">$'+d.toFixed(0)+'</div><div class="bar-fill '+cls+'" style="height:'+h+'%"></div><div class="bar-label">'+(days[i]||('D'+(i+1)))+'</div></div>';
+    });
+    document.getElementById('barChart').innerHTML = barHtml;
+
+    // 周报文本
+    var date = new Date().toLocaleDateString('zh-CN');
+    var text = '════════════════════════════════════\n';
+    text += '   跨境电商运营周报\n';
+    text += '   报告日期：'+date+'\n';
+    text += '════════════════════════════════════\n\n';
+    text += '【本周核心数据】\n';
+    text += '  GMV：$'+wg.toFixed(2)+'（上周 $'+lg.toFixed(2)+'，'+c1.text+'）\n';
+    text += '  订单数：'+wo+'单（上周 '+lo+'单，'+c2.text+'）\n';
+    text += '  广告费：$'+wa.toFixed(2)+'（上周 $'+la.toFixed(2)+'，'+c3.text+'）\n';
+    text += '  退货数：'+wr+'单（上周 '+lr+'单，'+c4.text+'）\n';
+    text += '  新品上架：'+wn+'个\n';
+    text += '  优化记录：'+wopt+'项\n\n';
+    text += '【衍生指标】\n';
+    text += '  客单价：$'+aov.toFixed(2)+'\n';
+    text += '  ACoS：'+acos.toFixed(1)+'%\n';
+    text += '  退货率：'+retRate.toFixed(1)+'%\n';
+    text += '  日均GMV：$'+(wg/7).toFixed(2)+'\n\n';
+    text += '【本周小结】\n';
+    if(c1.cls==='change-up') text += '  GMV环比增长'+c1.pct.toFixed(1)+'%，周度趋势向好。\n';
+    else if(c1.cls==='change-down') text += '  GMV环比下降'+c1.pct.toFixed(1)+'%，需分析原因并制定改善计划。\n';
+    else text += '  GMV环比持平，保持稳定运营。\n';
+    if(acos>30) text += '  ⚠ ACoS偏高（'+acos.toFixed(1)+'%），下周重点优化广告。\n';
+    if(retRate>5) text += '  ⚠ 退货率偏高（'+retRate.toFixed(1)+'%），需检查产品质量。\n';
+    text += '  本周完成'+wopt+'项优化，上架'+wn+'个新品。\n';
+    text += '\n【下周计划建议】\n';
+    text += '  1. 继续优化广告ACoS，目标降低至'+(acos*0.9).toFixed(1)+'%\n';
+    text += '  2. 跟进新品上架后的初期表现\n';
+    text += '  3. 处理退货问题，优化Listing准确性\n';
+    text += '\n════════════════════════════════════\n';
+    text += '  本周报由众力聚鑫咨询工具自动生成\n';
+    text += '════════════════════════════════════';
+    document.getElementById('reportText').textContent = text;
+  }
+
+  function copy(){
+    var text = document.getElementById('reportText').textContent;
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){alert('周报已复制到剪贴板！');}); }
+    else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');alert('周报已复制到剪贴板！');}catch(e){alert('复制失败');} document.body.removeChild(ta); }
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, copy:copy, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',WR.init); } else { WR.init(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="KPI看板：8个核心KPI（GMV/利润率/ACoS/库存周转/退货率/好评率/排名/转化率），每个KPI显示当前值/目标值/达成率/趋势，CSS进度条+颜色编码，总体经营健康分。免费在线跨境电商KPI看板工具。">
+<meta name="keywords" content="KPI看板,核心KPI,达成率,经营健康分,进度条,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/kpi-dashboard.html">
+<title>KPI看板 - 8核心KPI·达成率·经营健康分 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.kpi-dash-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.kpi-dash-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.health-score-wrap{display:flex;align-items:center;gap:24px;justify-content:center;padding:20px 0}
+.health-gauge{width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.health-gauge::before{content:'';position:absolute;width:130px;height:130px;border-radius:50%;background:#fff}
+.health-inner{position:relative;z-index:1;text-align:center}
+.health-inner .hi-val{font-size:36px;font-weight:800;line-height:1}
+.health-inner .hi-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.health-desc{font-size:14px}
+.health-desc .hd-title{font-size:20px;font-weight:700;margin-bottom:8px}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.kpi-item{padding:20px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.kpi-item .ki-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.kpi-item .ki-name{font-size:14px;font-weight:600;color:var(--ink)}
+.kpi-item .ki-trend{font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px}
+.kpi-item .ki-trend.up{background:#d1fae5;color:#059669}
+.kpi-item .ki-trend.down{background:#fee2e2;color:#dc2626}
+.kpi-item .ki-trend.flat{background:var(--rule);color:var(--muted)}
+.kpi-item .ki-values{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.kpi-item .ki-current{font-size:26px;font-weight:800}
+.kpi-item .ki-target{font-size:13px;color:var(--muted)}
+.kpi-item .ki-bar{height:8px;border-radius:4px;background:var(--rule);overflow:hidden}
+.kpi-item .ki-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.kpi-item .ki-achieve{font-size:12px;margin-top:6px;font-weight:600}
+.kpi-item.green{border-left:4px solid #10b981}.kpi-item.green .ki-current{color:#10b981}.kpi-item.green .ki-bar-fill{background:linear-gradient(90deg,#10b981,#059669)}
+.kpi-item.yellow{border-left:4px solid #f59e0b}.kpi-item.yellow .ki-current{color:#f59e0b}.kpi-item.yellow .ki-bar-fill{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.kpi-item.red{border-left:4px solid #ef4444}.kpi-item.red .ki-current{color:#ef4444}.kpi-item.red .ki-bar-fill{background:linear-gradient(90deg,#ef4444,#dc2626)}
+@media(max-width:768px){.kpi-grid{grid-template-columns:1fr}.health-score-wrap{flex-direction:column}}
+</style>
+</head>
+<body class="tool-page" data-tool="kpi_dashboard">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📊 跨境电商工具 · 标准版</span>
+      <h1>KPI <em>看板</em></h1>
+      <p class="tool-hero-desc">8个核心KPI一目了然：GMV/利润率/ACoS/库存周转/退货率/好评率/排名/转化率，当前值/目标值/达成率/趋势，CSS进度条+颜色编码，总体经营健康分。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📊</span>
+      <span class="workflow-name">数据报表工作流</span>
+      <span class="workflow-step">第5步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="daily-report.html" class="step">日报</a>
+      <span class="arrow">→</span>
+      <a href="weekly-report.html" class="step">周报</a>
+      <span class="arrow">→</span>
+      <a href="monthly-report.html" class="step">月报</a>
+      <span class="arrow">→</span>
+      <a href="custom-dashboard.html" class="step">自定义看板</a>
+      <span class="arrow">→</span>
+      <span class="step current">KPI看板</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入KPI数据</h2>
+          <p class="calc-form-subtitle">填写8个核心KPI的当前值和目标值</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>GMV <span class="hint">($)</span></label><input type="number" id="k_gmv" value="80000" step="1000" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>GMV目标 <span class="hint">($)</span></label><input type="number" id="t_gmv" value="100000" step="1000" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>利润率 <span class="hint">(%)</span></label><input type="number" id="k_margin" value="25" step="0.5" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>利润率目标 <span class="hint">(%)</span></label><input type="number" id="t_margin" value="30" step="0.5" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>ACoS <span class="hint">(%)</span></label><input type="number" id="k_acos" value="18" step="0.5" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>ACoS目标 <span class="hint">(%)</span></label><input type="number" id="t_acos" value="15" step="0.5" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>库存周转 <span class="hint">(次/月)</span></label><input type="number" id="k_inv" value="2.3" step="0.1" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>库存周转目标 <span class="hint">(次/月)</span></label><input type="number" id="t_inv" value="3" step="0.1" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>退货率 <span class="hint">(%)</span></label><input type="number" id="k_ret" value="3.5" step="0.1" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>退货率目标 <span class="hint">(%)</span></label><input type="number" id="t_ret" value="3" step="0.1" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>好评率 <span class="hint">(%)</span></label><input type="number" id="k_review" value="92" step="0.5" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>好评率目标 <span class="hint">(%)</span></label><input type="number" id="t_review" value="95" step="0.5" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>BSR排名</label><input type="number" id="k_bsr" value="5" step="1" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>BSR目标</label><input type="number" id="t_bsr" value="3" step="1" oninput="KPID.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>转化率 <span class="hint">(%)</span></label><input type="number" id="k_cvr" value="12" step="0.5" oninput="KPID.calc()"></div>
+            <div class="calc-field"><label>转化率目标 <span class="hint">(%)</span></label><input type="number" id="t_cvr" value="15" step="0.5" oninput="KPID.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="kpi-dash-section">
+        <h3>🏥 总体经营健康分</h3>
+        <div class="health-score-wrap" id="healthWrap"></div>
+      </div>
+
+      <div class="kpi-dash-section">
+        <h3>📊 8大核心KPI</h3>
+        <div class="kpi-grid" id="kpiGrid"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="custom-dashboard.html" class="wbn-btn prev">← 上一步：自定义看板</a>
+        <a href="account-health.html" class="wbn-btn next">下一工作流：账号健康 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="weekly-report.html">周报生成器</a></li><li><a href="monthly-report.html">月报生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var KPID = (function(){
+  'use strict';
+  var KPIS = [
+    {key:'gmv',name:'GMV',icon:'💰',unit:'$',higherBetter:true},
+    {key:'margin',name:'利润率',icon:'📈',unit:'%',higherBetter:true},
+    {key:'acos',name:'ACoS',icon:'🎯',unit:'%',higherBetter:false},
+    {key:'inv',name:'库存周转',icon:'📦',unit:'',higherBetter:true},
+    {key:'ret',name:'退货率',icon:'↩️',unit:'%',higherBetter:false},
+    {key:'review',name:'好评率',icon:'⭐',unit:'%',higherBetter:true},
+    {key:'bsr',name:'BSR排名',icon:'🏆',unit:'#',higherBetter:false},
+    {key:'cvr',name:'转化率',icon:'🔄',unit:'%',higherBetter:true}
+  ];
+
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+
+  function calc(){
+    var items = KPIS.map(function(k){
+      var cur = v('k_'+k.key);
+      var tgt = v('t_'+k.key);
+      var achieve;
+      if(k.higherBetter){
+        achieve = tgt>0 ? (cur/tgt*100) : 100;
+      } else {
+        achieve = cur>0 ? (tgt/cur*100) : 100;
+      }
+      achieve = Math.min(achieve,200);
+      var status = achieve>=100?'green':(achieve>=80?'yellow':'red');
+      var trend = k.higherBetter ? (cur>=tgt?'up':(cur>=tgt*0.8?'flat':'down')) : (cur<=tgt?'up':(cur<=tgt*1.2?'flat':'down'));
+      return {k:k,cur:cur,tgt:tgt,achieve:achieve,status:status,trend:trend};
+    });
+
+    // 健康分
+    var totalScore = items.reduce(function(s,it){
+      var score = it.status==='green'?100:(it.status==='yellow'?60:20);
+      return s+score;
+    },0)/items.length;
+    var healthColor = totalScore>=80?'#10b981':(totalScore>=60?'#f59e0b':'#ef4444');
+    var healthText = totalScore>=80?'经营健康':(totalScore>=60?'需要关注':'紧急改善');
+    var deg = (totalScore/100)*360;
+
+    document.getElementById('healthWrap').innerHTML =
+      '<div class="health-gauge" style="background:conic-gradient('+healthColor+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)">'+
+      '<div class="health-inner"><div class="hi-val" style="color:'+healthColor+'">'+totalScore.toFixed(0)+'</div><div class="hi-lbl">健康分</div></div>'+
+      '</div>'+
+      '<div class="health-desc"><div class="hd-title" style="color:'+healthColor+'">'+healthText+'</div>'+
+      '<div style="color:var(--muted)">基于8项核心KPI综合评估<br>绿: '+items.filter(function(i){return i.status==='green';}).length+'项 | 黄: '+items.filter(function(i){return i.status==='yellow';}).length+'项 | 红: '+items.filter(function(i){return i.status==='red';}).length+'项</div></div>';
+
+    // KPI卡片
+    var html = '';
+    items.forEach(function(it){
+      var trendText = it.trend==='up'?'↑ 达标':(it.trend==='down'?'↓ 未达':'→ 接近');
+      var trendCls = it.trend==='up'?'up':(it.trend==='down'?'down':'flat');
+      var achievePct = Math.min(it.achieve,100);
+      html += '<div class="kpi-item '+it.status+'">';
+      html += '<div class="ki-header"><span class="ki-name">'+it.k.icon+' '+it.k.name+'</span><span class="ki-trend '+trendCls+'">'+trendText+'</span></div>';
+      html += '<div class="ki-values"><span class="ki-current">'+it.k.unit+it.cur+'</span><span class="ki-target">目标: '+it.k.unit+it.tgt+'</span></div>';
+      html += '<div class="ki-bar"><div class="ki-bar-fill" style="width:'+achievePct+'%"></div></div>';
+      html += '<div class="ki-achieve" style="color:'+(it.status==='green'?'#10b981':it.status==='yellow'?'#f59e0b':'#ef4444')+'">达成率: '+it.achieve.toFixed(0)+'%</div>';
+      html += '</div>';
+    });
+    document.getElementById('kpiGrid').innerHTML = html;
+
+    // 概览
+    var greenCount = items.filter(function(i){return i.status==='green';}).length;
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 KPI看板概览</h3>'+
+      '<div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">健康分</div><div class="ri-value" style="color:'+healthColor+'">'+totalScore.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">达标KPI</div><div class="ri-value positive">'+greenCount+'/8</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 健康分'+totalScore.toFixed(0)+'分 - '+healthText+'。'+(totalScore<80?'建议优先改善标红KPI':'继续保持当前水平')+'</div>';
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',KPID.init); } else { KPID.init(); }
+</script>
+</body>
+</html>

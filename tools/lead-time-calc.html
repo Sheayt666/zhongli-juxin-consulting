@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="交期计算器：输入生产周期/检验时间/运输时间/清关时间/上架时间，总交期计算，CSS时间线可视化，关键节点标注，交期优化建议。免费在线跨境电商交期计算工具。">
+<meta name="keywords" content="交期计算,生产周期,运输时间,清关时间,交期优化,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/lead-time-calc.html">
+<title>交期计算器 - 总交期计算·时间线可视化·优化建议 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.lt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.lt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.total-banner{display:flex;align-items:center;justify-content:center;gap:20px;padding:24px;background:linear-gradient(135deg,#f0f4ff,#e0e7ff);border-radius:16px;margin-bottom:20px}
+.total-banner .tb-val{font-size:48px;font-weight:800;color:#4f46e5;line-height:1}
+.total-banner .tb-lbl{font-size:14px;color:var(--muted)}
+.total-banner .tb-unit{font-size:20px;font-weight:600;color:var(--ink-soft)}
+/* 时间线 */
+.lt-timeline{margin-top:20px;padding:20px 0}
+.lt-timeline-track{position:relative;display:flex;height:60px;border-radius:8px;overflow:hidden}
+.lt-segment{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;position:relative;transition:all .3s;border-right:2px solid #fff}
+.lt-segment:last-child{border-right:none}
+.lt-segment:hover{filter:brightness(1.1)}
+.lt-legend{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap}
+.lt-legend-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft)}
+.lt-legend-dot{width:14px;height:14px;border-radius:3px}
+.phase-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+.phase-card{padding:16px;border-radius:10px;border:1px solid var(--rule);text-align:center}
+.phase-card .ph-icon{font-size:24px;margin-bottom:6px}
+.phase-card .ph-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.phase-card .ph-days{font-size:20px;font-weight:800;color:#4f46e5}
+.phase-card .ph-pct{font-size:11px;color:var(--muted);margin-top:2px}
+.optimize-list{list-style:none;padding:0;margin:0}
+.optimize-item{padding:14px;border-radius:10px;background:var(--bg-soft);border-left:4px solid #10b981;margin-bottom:10px;font-size:13px;color:var(--ink-soft);line-height:1.7}
+.optimize-item .oi-title{font-weight:600;color:var(--ink);margin-bottom:4px}
+.optimize-item .oi-save{font-size:12px;color:#10b981;font-weight:600;margin-top:4px}
+@media(max-width:768px){.phase-grid{grid-template-columns:repeat(2,1fr)}.lt-timeline-track{height:40px}.total-banner .tb-val{font-size:36px}}
+</style>
+</head>
+<body class="tool-page" data-tool="lead_time_calc">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🏭 跨境电商工具 · 标准版</span>
+      <h1>交期 <em>计算器</em></h1>
+      <p class="tool-hero-desc">输入生产/检验/运输/清关/上架5个阶段时间，自动计算总交期，CSS时间线可视化各阶段占比，关键节点标注，交期优化建议帮你缩短周期。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第5步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a>
+      <span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a>
+      <span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本分析</a>
+      <span class="arrow">→</span>
+      <span class="step current">交期计算</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入各阶段时间</h2>
+          <p class="calc-form-subtitle">填写5个阶段的天数，实时计算总交期</p>
+          <div class="calc-field"><label>🏭 生产周期 <span class="hint">(天)</span></label><input type="number" id="t_production" value="15" step="1" oninput="LT.calc()"></div>
+          <div class="calc-field"><label>🔍 检验时间 <span class="hint">(天)</span></label><input type="number" id="t_inspection" value="2" step="1" oninput="LT.calc()"></div>
+          <div class="calc-field"><label>🚢 运输时间 <span class="hint">(天)</span></label><input type="number" id="t_shipping" value="25" step="1" oninput="LT.calc()"></div>
+          <div class="calc-field"><label>📜 清关时间 <span class="hint">(天)</span></label><input type="number" id="t_customs" value="5" step="1" oninput="LT.calc()"></div>
+          <div class="calc-field"><label>📦 上架时间 <span class="hint">(天)</span></label><input type="number" id="t_listing" value="3" step="1" oninput="LT.calc()"></div>
+          <div class="fee-rule-box" style="margin-top:16px">
+            <h4>📐 计算公式</h4>
+            <ul>
+              <li>总交期 = 生产 + 检验 + 运输 + 清关 + 上架</li>
+              <li>各阶段占比 = 阶段天数 / 总交期</li>
+              <li>优化后交期 = 各阶段优化后的总和</li>
+            </ul>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="lt-section">
+        <h3>⏱️ 总交期</h3>
+        <div class="total-banner" id="totalBanner"></div>
+      </div>
+
+      <div class="lt-section">
+        <h3>📅 交期时间线</h3>
+        <div class="lt-timeline" id="timeline"></div>
+        <div class="lt-legend" id="legend"></div>
+      </div>
+
+      <div class="lt-section">
+        <h3>📊 各阶段详情</h3>
+        <div class="phase-grid" id="phaseGrid"></div>
+      </div>
+
+      <div class="lt-section">
+        <h3>💡 交期优化建议</h3>
+        <div class="optimize-list" id="optimizeList"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="cost-reduction.html" class="wbn-btn prev">← 上一步：降本分析</a>
+        <a href="index.html" class="wbn-btn next">返回工具中心 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-audit.html">供应商评估器</a></li><li><a href="purchase-planner.html">采购计划器</a></li><li><a href="qc-checklist.html">质检清单生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var LT = (function(){
+  'use strict';
+  var PHASES = [
+    {key:'production',name:'生产周期',icon:'🏭',color:'#4f46e5',optimize:{desc:'与供应商协商缩短生产周期，提前备料，优化排产计划',save:3}},
+    {key:'inspection',name:'检验时间',icon:'🔍',color:'#10b981',optimize:{desc:'驻厂检验减少来回时间，使用AQL抽样替代全检',save:1}},
+    {key:'shipping',name:'运输时间',icon:'🚢',color:'#f59e0b',optimize:{desc:'海运改空运(紧急)，或选择更近的港口，优化物流路线',save:10}},
+    {key:'customs',name:'清关时间',icon:'📜',color:'#8b5cf6',optimize:{desc:'提前准备清关文件，使用专业清关代理，预申报',save:2}},
+    {key:'listing',name:'上架时间',icon:'📦',color:'#ec4899',optimize:{desc:'提前创建Listing，使用FBA贴标服务，预约入库',save:1}}
+  ];
+
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+
+  function calc(){
+    var phases = PHASES.map(function(p){ return {p:p,days:v('t_'+p.key)}; });
+    var total = phases.reduce(function(s,ph){return s+ph.days;},0);
+
+    document.getElementById('totalBanner').innerHTML =
+      '<div class="tb-val">'+total+'</div><div><div class="tb-unit">天</div><div class="tb-lbl">总交期</div></div>';
+
+    // 时间线
+    var trackHtml = '';
+    phases.forEach(function(ph){
+      var pct = total>0 ? ph.days/total*100 : 0;
+      trackHtml += '<div class="lt-segment" style="width:'+pct+'%;background:'+ph.p.color+'" title="'+ph.p.name+': '+ph.days+'天">'+ph.p.icon+' '+ph.days+'天</div>';
+    });
+    document.getElementById('timeline').innerHTML = '<div class="lt-timeline-track">'+trackHtml+'</div>';
+
+    // 图例
+    var legendHtml = '';
+    phases.forEach(function(ph){
+      legendHtml += '<div class="lt-legend-item"><div class="lt-legend-dot" style="background:'+ph.p.color+'"></div>'+ph.p.icon+' '+ph.p.name+': '+ph.days+'天</div>';
+    });
+    document.getElementById('legend').innerHTML = legendHtml;
+
+    // 阶段卡片
+    var phaseHtml = '';
+    phases.forEach(function(ph){
+      var pct = total>0 ? ph.days/total*100 : 0;
+      phaseHtml += '<div class="phase-card" style="border-top:4px solid '+ph.p.color+'">';
+      phaseHtml += '<div class="ph-icon">'+ph.p.icon+'</div>';
+      phaseHtml += '<div class="ph-name">'+ph.p.name+'</div>';
+      phaseHtml += '<div class="ph-days" style="color:'+ph.p.color+'">'+ph.days+'天</div>';
+      phaseHtml += '<div class="ph-pct">'+pct.toFixed(0)+'% 占比</div>';
+      phaseHtml += '</div>';
+    });
+    document.getElementById('phaseGrid').innerHTML = phaseHtml;
+
+    // 优化建议
+    var optHtml = '';
+    var totalSave = 0;
+    phases.forEach(function(ph){
+      var save = Math.min(ph.p.optimize.save, ph.days);
+      totalSave += save;
+      optHtml += '<div class="optimize-item"><div class="oi-title">'+ph.p.icon+' '+ph.p.name+'优化</div>'+ph.p.optimize.desc+'<div class="oi-save">预计缩短: '+save+'天</div></div>';
+    });
+    optHtml += '<div class="optimize-item" style="border-left-color:#4f46e5;background:#f0f4ff"><div class="oi-title" style="color:#4f46e5">总计优化潜力</div>通过以上优化，总交期可从 '+total+'天 缩短至 '+(total-totalSave)+'天<div class="oi-save" style="color:#4f46e5">总节省: '+totalSave+'天 (缩短'+(total>0?(totalSave/total*100).toFixed(0):0)+'%)</div></div>';
+    document.getElementById('optimizeList').innerHTML = optHtml;
+
+    // 概览
+    document.getElementById('resultCard').innerHTML =
+      '<h3>⏱️ 交期分析概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">总交期</div><div class="ri-value">'+total+'天</div></div>'+
+      '<div class="result-item"><div class="ri-label">最长阶段</div><div class="ri-value">'+(phases.reduce(function(a,b){return a.days>b.days?a:b;}).p.name)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">优化潜力</div><div class="ri-value positive">-'+totalSave+'天</div></div>'+
+      '<div class="result-item"><div class="ri-label">优化后</div><div class="ri-value">'+(total-totalSave)+'天</div></div>'+
+      '</div><div class="result-note">💡 运输和清关通常是最大优化空间。考虑海运+空运组合策略，紧急补货用空运，常规补货用海运。</div>';
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',LT.init); } else { LT.init(); }
+</script>
+</body>
+</html>

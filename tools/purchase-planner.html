@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="采购计划器：输入当前库存/日均销量/交期/安全库存，输出建议采购量/下单时间/到货时间，CSS采购时间线可视化，资金需求估算。免费在线跨境电商采购计划工具。">
+<meta name="keywords" content="采购计划,采购量计算,安全库存,补货计划,资金估算,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/purchase-planner.html">
+<title>采购计划器 - 建议采购量·时间线·资金估算 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.pp-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.pp-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.result-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.result-card-item{padding:20px;border-radius:12px;text-align:center;background:linear-gradient(135deg,#f0f4ff,#e0e7ff);border:1px solid #c7d2fe}
+.result-card-item .rci-val{font-size:28px;font-weight:800;color:#4f46e5}
+.result-card-item .rci-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+/* 时间线 */
+.timeline-wrap{margin-top:20px;padding:20px 0}
+.timeline-track{position:relative;padding:20px 0}
+.timeline-line{position:absolute;left:0;right:0;top:50%;height:4px;background:var(--rule);border-radius:2px}
+.timeline-progress{position:absolute;left:0;top:50%;height:4px;background:linear-gradient(90deg,#4f46e5,#6366f1);border-radius:2px;transition:width .5s}
+.timeline-nodes{display:flex;justify-content:space-between;position:relative;z-index:1}
+.timeline-node{text-align:center;flex:1}
+.timeline-dot{width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid #4f46e5;margin:0 auto 8px;position:relative;z-index:1}
+.timeline-dot.alert{border-color:#ef4444}
+.timeline-dot.active{background:#4f46e5}
+.timeline-label{font-size:12px;font-weight:600;color:var(--ink)}
+.timeline-date{font-size:11px;color:var(--muted);margin-top:2px}
+.timeline-detail{font-size:11px;color:#4f46e5;margin-top:4px;font-weight:500}
+.fund-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.fund-table th{padding:10px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.fund-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.fund-table .total-row{font-weight:700;background:var(--bg-soft);color:#4f46e5}
+@media(max-width:768px){.result-cards{grid-template-columns:repeat(2,1fr)}.timeline-nodes{flex-direction:column;gap:16px}.timeline-line,.timeline-progress{display:none}}
+</style>
+</head>
+<body class="tool-page" data-tool="purchase_planner">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🏭 跨境电商工具 · 标准版</span>
+      <h1>采购 <em>计划器</em></h1>
+      <p class="tool-hero-desc">输入当前库存、日均销量、交期和安全库存，自动计算建议采购量、最佳下单时间和预计到货时间，CSS时间线可视化，资金需求一目了然。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="supplier-audit.html" class="step">供应商评估</a>
+      <span class="arrow">→</span>
+      <span class="step current">采购计划</span>
+      <span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a>
+      <span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本分析</a>
+      <span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入库存与销售数据</h2>
+          <p class="calc-form-subtitle">填写库存和销售参数，实时计算采购计划</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>当前库存 <span class="hint">(件)</span></label><input type="number" id="curStock" value="500" step="10" oninput="PP.calc()"></div>
+            <div class="calc-field"><label>日均销量 <span class="hint">(件/天)</span></label><input type="number" id="dailySales" value="20" step="1" oninput="PP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>交货周期 <span class="hint">(天)</span></label><input type="number" id="leadTime" value="30" step="1" oninput="PP.calc()"></div>
+            <div class="calc-field"><label>安全库存 <span class="hint">(件)</span></label><input type="number" id="safetyStock" value="200" step="10" oninput="PP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>单件采购成本 <span class="hint">($)</span></label><input type="number" id="unitCost" value="5" step="0.5" oninput="PP.calc()"></div>
+            <div class="calc-field"><label>采购周期目标 <span class="hint">(天)</span></label><input type="number" id="cycleDays" value="45" step="5" oninput="PP.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>在途库存 <span class="hint">(件)</span></label><input type="number" id="inTransit" value="0" step="10" oninput="PP.calc()"></div>
+            <div class="calc-field"><label>销量增长率 <span class="hint">(%/月)</span></label><input type="number" id="growthRate" value="10" step="5" oninput="PP.calc()"></div>
+          </div>
+          <div class="fee-rule-box" style="margin-top:16px">
+            <h4>📐 计算公式</h4>
+            <ul>
+              <li>可用库存 = 当前库存 + 在途库存</li>
+              <li>库存可售天数 = 可用库存 / 日均销量</li>
+              <li>建议采购量 = (交期+周期) × 日均销量 ×(1+增长率) - 可用库存 + 安全库存</li>
+              <li>最晚下单日 = 今天 + (库存可售天数 - 交期)</li>
+              <li>资金需求 = 建议采购量 × 单件成本</li>
+            </ul>
+          </div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="pp-section">
+        <h3>📊 采购计划结果</h3>
+        <div class="result-cards" id="resultCards"></div>
+      </div>
+
+      <div class="pp-section">
+        <h3>📅 采购时间线</h3>
+        <div class="timeline-wrap" id="timelineWrap"></div>
+      </div>
+
+      <div class="pp-section">
+        <h3>💰 资金需求估算</h3>
+        <div style="overflow-x:auto">
+          <table class="fund-table" id="fundTable"></table>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="supplier-audit.html" class="wbn-btn prev">← 上一步：供应商评估</a>
+        <a href="qc-checklist.html" class="wbn-btn next">下一步：质检清单 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-audit.html">供应商评估器</a></li><li><a href="purchase-planner.html">采购计划器</a></li><li><a href="qc-checklist.html">质检清单生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PP = (function(){
+  'use strict';
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+
+  function calc(){
+    var stock=v('curStock'),daily=v('dailySales'),lead=v('leadTime'),safety=v('safetyStock');
+    var cost=v('unitCost'),cycle=v('cycleDays'),transit=v('inTransit'),growth=v('growthRate');
+
+    var available = stock+transit;
+    var sellDays = daily>0 ? available/daily : 0;
+    var growthFactor = 1+growth/100;
+    var reorderQty = Math.max(0, Math.ceil((lead+cycle)*daily*growthFactor - available + safety));
+    var latestOrderDays = Math.max(0, sellDays - lead);
+    var fundNeed = reorderQty*cost;
+    var arrivalDays = lead;
+    var urgency = sellDays<=lead?'紧急':(sellDays<=lead+7?'需尽快':'正常');
+
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 采购计划概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">建议采购量</div><div class="ri-value">'+reorderQty+'件</div></div>'+
+      '<div class="result-item"><div class="ri-label">资金需求</div><div class="ri-value">$'+fundNeed.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">库存可售天数</div><div class="ri-value">'+sellDays.toFixed(0)+'天</div></div>'+
+      '<div class="result-item"><div class="ri-label">紧急程度</div><div class="ri-value '+(urgency==='紧急'?'negative':'positive')+'">'+urgency+'</div></div>'+
+      '</div><div class="result-note">💡 '+(urgency==='紧急'?'库存即将耗尽，请立即下单采购！':(urgency==='需尽快'?'建议在一周内完成采购下单':'库存充足，可按计划采购'))+'</div>';
+
+    document.getElementById('resultCards').innerHTML =
+      '<div class="result-card-item"><div class="rci-val">'+reorderQty+'</div><div class="rci-lbl">建议采购量(件)</div></div>'+
+      '<div class="result-card-item"><div class="rci-val" style="color:#ef4444">'+latestOrderDays.toFixed(0)+'</div><div class="rci-lbl">最晚下单(天后)</div></div>'+
+      '<div class="result-card-item"><div class="rci-val" style="color:#10b981">'+arrivalDays+'</div><div class="rci-lbl">到货周期(天)</div></div>'+
+      '<div class="result-card-item"><div class="rci-val" style="color:#f59e0b">$'+fundNeed.toFixed(0)+'</div><div class="rci-lbl">资金需求</div></div>';
+
+    // 时间线
+    var today = new Date();
+    var orderDate = new Date(today.getTime()+latestOrderDays*86400000);
+    var arrivalDate = new Date(orderDate.getTime()+lead*86400000);
+    var stockoutDate = new Date(today.getTime()+sellDays*86400000);
+    var fmt = function(d){ return (d.getMonth()+1)+'/'+d.getDate(); };
+
+    var html = '<div class="timeline-track"><div class="timeline-line"></div><div class="timeline-progress" style="width:100%"></div><div class="timeline-nodes">';
+    html += '<div class="timeline-node"><div class="timeline-dot active"></div><div class="timeline-label">今天</div><div class="timeline-date">'+fmt(today)+'</div><div class="timeline-detail">库存:'+stock+'件</div></div>';
+    html += '<div class="timeline-node"><div class="timeline-dot'+(urgency==='紧急'?' alert':'')+'"></div><div class="timeline-label">建议下单</div><div class="timeline-date">'+fmt(orderDate)+'</div><div class="timeline-detail">最晚'+latestOrderDays.toFixed(0)+'天后</div></div>';
+    html += '<div class="timeline-node"><div class="timeline-dot alert"></div><div class="timeline-label">预计断货</div><div class="timeline-date">'+fmt(stockoutDate)+'</div><div class="timeline-detail">可售'+sellDays.toFixed(0)+'天</div></div>';
+    html += '<div class="timeline-node"><div class="timeline-dot active"></div><div class="timeline-label">预计到货</div><div class="timeline-date">'+fmt(arrivalDate)+'</div><div class="timeline-detail">下单后'+lead+'天</div></div>';
+    html += '</div></div>';
+    document.getElementById('timelineWrap').innerHTML = html;
+
+    // 资金表
+    document.getElementById('fundTable').innerHTML =
+      '<thead><tr><th>项目</th><th>数量</th><th>单价($)</th><th>金额($)</th></tr></thead>'+
+      '<tbody>'+
+      '<tr><td>采购货款</td><td>'+reorderQty+'件</td><td>$'+cost.toFixed(2)+'</td><td>$'+fundNeed.toFixed(2)+'</td></tr>'+
+      '<tr><td>物流费用(估)</td><td>-</td><td>-</td><td>$'+(reorderQty*0.8).toFixed(2)+'</td></tr>'+
+      '<tr><td>关税(估)</td><td>-</td><td>-</td><td>$'+(fundNeed*0.05).toFixed(2)+'</td></tr>'+
+      '<tr><td>质检费用(估)</td><td>-</td><td>-</td><td>$'+(reorderQty*0.1).toFixed(2)+'</td></tr>'+
+      '<tr class="total-row"><td>资金需求合计</td><td>-</td><td>-</td><td>$'+(fundNeed+reorderQty*0.8+fundNeed*0.05+reorderQty*0.1).toFixed(2)+'</td></tr>'+
+      '</tbody>';
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',PP.init); } else { PP.init(); }
+</script>
+</body>
+</html>

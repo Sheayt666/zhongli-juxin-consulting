@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="自定义数据看板：用户可添加6个指标卡片（销售额/利润/ACoS/库存/退货/排名），每个卡片手动输入数值，CSS柱状图/折线图/饼图/仪表盘可选，2×3网格布局，阈值预警。免费在线跨境电商数据看板工具。">
+<meta name="keywords" content="自定义看板,数据看板,指标卡片,阈值预警,数据可视化,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/custom-dashboard.html">
+<title>自定义数据看板 - 多指标卡片·阈值预警·多图表 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.dash-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.dash-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.dash-card{padding:20px;border-radius:14px;background:var(--surface);border:2px solid var(--rule);transition:all .2s;position:relative}
+.dash-card.status-green{border-color:#10b981;background:#ecfdf5}
+.dash-card.status-yellow{border-color:#f59e0b;background:#fffbeb}
+.dash-card.status-red{border-color:#ef4444;background:#fef2f2}
+.dash-card .dc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dash-card .dc-name{font-size:14px;font-weight:600;color:var(--ink)}
+.dash-card .dc-icon{font-size:20px}
+.dash-card .dc-value{font-size:28px;font-weight:800;margin-bottom:8px}
+.dash-card .dc-unit{font-size:14px;font-weight:400;color:var(--muted)}
+.dash-card .dc-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;display:inline-block}
+.dash-card .dc-bar{height:6px;border-radius:3px;background:var(--rule);overflow:hidden;margin-top:8px}
+.dash-card .dc-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.dash-card .dc-threshold{font-size:11px;color:var(--muted);margin-top:6px}
+.dash-card .dc-edit{position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;border:1px solid var(--rule);background:#fff;cursor:pointer;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.dash-card .dc-edit:hover{color:#4f46e5;border-color:#4f46e5}
+.chart-type-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.chart-type-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--rule);background:#fff;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
+.chart-type-btn.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.chart-type-btn:hover{border-color:#4f46e5}
+.chart-area{padding:20px;background:var(--bg-soft);border-radius:12px;min-height:200px}
+/* 柱状图 */
+.bar-chart{display:flex;align-items:flex-end;gap:12px;height:180px;padding:10px 0}
+.bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-fill{width:80%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#6366f1,#4f46e5);min-height:4px;transition:height .5s}
+.bar-val{font-size:11px;font-weight:700}
+.bar-label{font-size:10px;color:var(--muted)}
+/* 饼图 */
+.pie-wrap{display:flex;align-items:center;justify-content:center;gap:24px}
+.pie-chart{width:160px;height:160px;border-radius:50%;position:relative}
+.pie-legend{font-size:13px}
+.pie-legend-item{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pie-legend-dot{width:12px;height:12px;border-radius:3px}
+/* 仪表盘 */
+.gauge-wrap{display:flex;justify-content:center}
+.gauge{width:200px;height:100px;border-radius:200px 200px 0 0;position:relative;overflow:hidden}
+.gauge::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:140px;height:70px;border-radius:140px 140px 0 0;background:var(--bg-soft);z-index:1}
+.gauge-val{position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;z-index:2;font-size:20px;font-weight:800}
+/* 折线图 */
+.line-chart svg{width:100%;height:180px}
+@media(max-width:768px){.dash-grid{grid-template-columns:1fr}.pie-wrap{flex-direction:column}}
+</style>
+</head>
+<body class="tool-page" data-tool="custom_dashboard">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📊 跨境电商工具 · 深度版</span>
+      <h1>自定义 <em>数据看板</em></h1>
+      <p class="tool-hero-desc">自定义6个指标卡片，手动输入数值，支持柱状图/折线图/饼图/仪表盘四种可视化，红黄绿阈值预警，2×3网格布局，localStorage自动保存。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📊</span>
+      <span class="workflow-name">数据报表工作流</span>
+      <span class="workflow-step">第4步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="daily-report.html" class="step">日报</a>
+      <span class="arrow">→</span>
+      <a href="weekly-report.html" class="step">周报</a>
+      <span class="arrow">→</span>
+      <a href="monthly-report.html" class="step">月报</a>
+      <span class="arrow">→</span>
+      <span class="step current">自定义看板</span>
+      <span class="arrow">→</span>
+      <a href="kpi-dashboard.html" class="step">KPI看板</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="dash-section">
+        <h3>🎛️ 看板设置</h3>
+        <div class="chart-type-bar">
+          <button class="chart-type-btn active" onclick="DASH.setChart('bar')">📊 柱状图</button>
+          <button class="chart-type-btn" onclick="DASH.setChart('line')">📈 折线图</button>
+          <button class="chart-type-btn" onclick="DASH.setChart('pie')">🥧 饼图</button>
+          <button class="chart-type-btn" onclick="DASH.setChart('gauge')">🎯 仪表盘</button>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">点击卡片右上角编辑按钮修改数值和阈值。数据自动保存到本地。</p>
+      </div>
+
+      <div class="dash-section">
+        <h3>📋 指标看板（2×3网格）</h3>
+        <div class="dash-grid" id="dashGrid"></div>
+      </div>
+
+      <div class="dash-section">
+        <h3>📊 可视化图表</h3>
+        <div class="chart-area" id="chartArea"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="monthly-report.html" class="wbn-btn prev">← 上一步：月报</a>
+        <a href="kpi-dashboard.html" class="wbn-btn next">下一步：KPI看板 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="weekly-report.html">周报生成器</a></li><li><a href="monthly-report.html">月报生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var DASH = (function(){
+  'use strict';
+  var STORAGE_KEY = 'jx_dashboard';
+  var chartType = 'bar';
+  var defaultCards = [
+    {name:'销售额',icon:'💰',value:80000,unit:'$',green:70000,yellow:50000,red:0,higherBetter:true},
+    {name:'利润',icon:'📈',value:20000,unit:'$',green:18000,yellow:10000,red:0,higherBetter:true},
+    {name:'ACoS',icon:'🎯',value:18,unit:'%',green:0,yellow:15,red:25,higherBetter:false},
+    {name:'库存',icon:'📦',value:35000,unit:'$',green:0,yellow:50000,red:80000,higherBetter:false},
+    {name:'退货率',icon:'↩️',value:3,unit:'%',green:0,yellow:5,red:8,higherBetter:false},
+    {name:'排名',icon:'🏆',value:5,unit:'#',green:0,yellow:10,red:20,higherBetter:false}
+  ];
+  var cards = [];
+
+  function load(){
+    try{ var d=localStorage.getItem(STORAGE_KEY); if(d) cards=JSON.parse(d); else cards=JSON.parse(JSON.stringify(defaultCards)); }catch(e){ cards=JSON.parse(JSON.stringify(defaultCards)); }
+  }
+  function save(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(cards)); }catch(e){} }
+
+  function getStatus(c){
+    if(c.higherBetter){
+      if(c.value>=c.green) return 'green';
+      if(c.value>=c.yellow) return 'yellow';
+      return 'red';
+    } else {
+      if(c.value<=c.green) return 'green';
+      if(c.value<=c.yellow) return 'yellow';
+      return 'red';
+    }
+  }
+  function getStatusText(s){ return s==='green'?'健康':(s==='yellow'?'注意':'预警'); }
+
+  function renderCards(){
+    var html='';
+    cards.forEach(function(c,i){
+      var st = getStatus(c);
+      var pct = c.higherBetter ? Math.min(c.value/c.green*100,100) : (c.green>0?Math.max(100-c.value/c.green*100,0):100);
+      var barColor = st==='green'?'#10b981':(st==='yellow'?'#f59e0b':'#ef4444');
+      html += '<div class="dash-card status-'+st+'">';
+      html += '<div class="dc-header"><span class="dc-name">'+c.icon+' '+c.name+'</span></div>';
+      html += '<button class="dc-edit" onclick="DASH.editCard('+i+')">✎</button>';
+      html += '<div class="dc-value" style="color:'+barColor+'">'+c.unit+c.value+'<span class="dc-unit">'+c.unit+'</span></div>';
+      html += '<span class="dc-status" style="background:'+(st==='green'?'#d1fae5':st==='yellow'?'#fef3c7':'#fee2e2')+';color:'+barColor+'">'+getStatusText(st)+'</span>';
+      html += '<div class="dc-bar"><div class="dc-bar-fill" style="width:'+pct+'%;background:'+barColor+'"></div></div>';
+      html += '<div class="dc-threshold">绿≤'+c.green+' / 黄≤'+c.yellow+' / 红>'+c.red+'</div>';
+      html += '</div>';
+    });
+    document.getElementById('dashGrid').innerHTML = html;
+  }
+
+  function renderChart(){
+    var area = document.getElementById('chartArea');
+    if(chartType==='bar'){
+      var maxV = Math.max.apply(null,cards.map(function(c){return c.value;}));
+      var html = '<div class="bar-chart">';
+      cards.forEach(function(c){
+        var h = (c.value/maxV)*100;
+        html += '<div class="bar-item"><div class="bar-val">'+c.unit+c.value+'</div><div class="bar-fill" style="height:'+h+'%"></div><div class="bar-label">'+c.name+'</div></div>';
+      });
+      html += '</div>';
+      area.innerHTML = html;
+    } else if(chartType==='line'){
+      var w=560,h=180,pad=30;
+      var maxV = Math.max.apply(null,cards.map(function(c){return c.value;}));
+      var pts='';
+      cards.forEach(function(c,i){
+        var x = pad + (i/(cards.length-1))*(w-2*pad);
+        var y = h-pad - (c.value/maxV)*(h-2*pad);
+        pts += x+','+y+' ';
+      });
+      var svg = '<div class="line-chart"><svg viewBox="0 0 '+w+' '+h+'">';
+      for(var g=0;g<=3;g++){ var gy=pad+g*(h-2*pad)/3; svg+='<line x1="'+pad+'" y1="'+gy+'" x2="'+(w-pad)+'" y2="'+gy+'" stroke="#e2e8f0" stroke-width="1"/>'; }
+      svg += '<polyline points="'+pts+'" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round"/>';
+      cards.forEach(function(c,i){
+        var x=pad+(i/(cards.length-1))*(w-2*pad);
+        var y=h-pad-(c.value/maxV)*(h-2*pad);
+        svg += '<circle cx="'+x+'" cy="'+y+'" r="4" fill="#fff" stroke="#4f46e5" stroke-width="2"/>';
+        svg += '<text x="'+x+'" y="'+(y-8)+'" text-anchor="middle" font-size="9" fill="#4f46e5" font-weight="700">'+c.value+'</text>';
+        svg += '<text x="'+x+'" y="'+(h-pad+15)+'" text-anchor="middle" font-size="9" fill="#94a3b8">'+c.name+'</text>';
+      });
+      svg += '</svg></div>';
+      area.innerHTML = svg;
+    } else if(chartType==='pie'){
+      var total = cards.reduce(function(s,c){return s+c.value;},0);
+      var colors = ['#4f46e5','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899'];
+      var grad = '';
+      var acc = 0;
+      cards.forEach(function(c,i){
+        var pct = c.value/total*100;
+        grad += colors[i]+' '+acc+'% '+(acc+pct)+'%';
+        acc += pct;
+        if(i<cards.length-1) grad += ',';
+      });
+      var html = '<div class="pie-wrap">';
+      html += '<div class="pie-chart" style="background:conic-gradient('+grad+')"></div>';
+      html += '<div class="pie-legend">';
+      cards.forEach(function(c,i){
+        html += '<div class="pie-legend-item"><div class="pie-legend-dot" style="background:'+colors[i]+'"></div>'+c.name+': '+c.unit+c.value+' ('+(c.value/total*100).toFixed(1)+'%)</div>';
+      });
+      html += '</div></div>';
+      area.innerHTML = html;
+    } else if(chartType==='gauge'){
+      var avgPct = cards.reduce(function(s,c){
+        var st = getStatus(c);
+        return s + (st==='green'?100:(st==='yellow'?50:0));
+      },0)/cards.length;
+      var deg = (avgPct/100)*360;
+      var color = avgPct>=70?'#10b981':(avgPct>=40?'#f59e0b':'#ef4444');
+      var html = '<div class="gauge-wrap"><div style="text-align:center">';
+      html += '<div class="gauge" style="background:conic-gradient('+color+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)">';
+      html += '<div class="gauge-val" style="color:'+color+'">'+avgPct.toFixed(0)+'</div>';
+      html += '</div>';
+      html += '<div style="margin-top:12px;font-size:14px;font-weight:600;color:'+color+'">综合健康度: '+avgPct.toFixed(0)+'/100</div>';
+      html += '<div style="margin-top:4px;font-size:12px;color:var(--muted)">'+(avgPct>=70?'整体健康':(avgPct>=40?'需要注意':'紧急关注'))+'</div>';
+      html += '</div></div>';
+      area.innerHTML = html;
+    }
+  }
+
+  function editCard(i){
+    var c = cards[i];
+    var val = prompt('编辑 '+c.name+' 的数值：\n（当前: '+c.unit+c.value+'）', c.value);
+    if(val!==null){
+      c.value = parseFloat(val)||0;
+      save(); renderCards(); renderChart();
+    }
+  }
+
+  function setChart(type){
+    chartType = type;
+    document.querySelectorAll('.chart-type-btn').forEach(function(b){b.classList.remove('active');});
+    event.target.classList.add('active');
+    renderChart();
+  }
+
+  function init(){
+    load(); renderCards(); renderChart();
+  }
+  return { editCard:editCard, setChart:setChart, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',DASH.init); } else { DASH.init(); }
+</script>
+</body>
+</html>

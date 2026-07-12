@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="SOP流程构建器：支持选品SOP/上架SOP/广告SOP/库存SOP/客服SOP五种模板，步骤编辑器可添加/删除/排序步骤，每步骤可设置负责人/时间/工具/输出物，支持复制SOP到剪贴板。免费在线跨境团队SOP管理工具。">
+<meta name="keywords" content="SOP构建器,标准操作流程,选品SOP,上架SOP,广告SOP,跨境团队管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/sop-builder.html">
+<title>SOP流程构建器 - 步骤编辑器·模板库·一键导出 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.sop-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.sop-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.template-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.template-card{padding:20px 12px;border-radius:12px;border:2px solid var(--rule);text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.template-card:hover{border-color:#c7d2fe;transform:translateY(-2px)}
+.template-card.active{border-color:#4f46e5;background:#f0f4ff;box-shadow:0 4px 14px rgba(79,70,229,.15)}
+.template-icon{font-size:32px;margin-bottom:8px}
+.template-name{font-size:13px;font-weight:600;color:var(--ink)}
+.template-desc{font-size:11px;color:var(--muted);margin-top:4px}
+.step-editor{margin-top:20px}
+.step-item{display:grid;grid-template-columns:40px 1fr 1fr 1fr 1fr 1fr 40px;gap:10px;align-items:center;padding:14px;background:var(--bg-soft);border-radius:10px;margin-bottom:10px;border:1px solid var(--rule-light)}
+.step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.step-input{padding:8px 10px;border:1px solid var(--rule);border-radius:6px;font-size:12px;width:100%;font-family:inherit;background:#fff}
+.step-del{width:32px;height:32px;border-radius:50%;border:none;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:16px;transition:all .2s}
+.step-del:hover{background:#ef4444;color:#fff}
+.btn-action{padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-add-step{background:var(--bg-soft);color:var(--ink-soft);border:1px dashed var(--rule);width:100%;padding:12px;margin-top:8px}
+.btn-add-step:hover{border-color:#4f46e5;color:#4f46e5}
+.btn-export{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.btn-export:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.btn-reset-sop{background:var(--bg-soft);color:var(--ink-soft);border:1px solid var(--rule)}
+.btn-reset-sop:hover{border-color:var(--muted)}
+.sop-preview{margin-top:20px;padding:24px;background:var(--bg-soft);border-radius:12px;border:1px solid var(--rule);font-size:13px;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;max-height:400px;overflow-y:auto}
+.sop-toolbar{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.empty-hint{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+@media(max-width:768px){.template-grid{grid-template-columns:repeat(2,1fr)}.step-item{grid-template-columns:32px 1fr 1fr auto;gap:6px}.step-item .step-input:nth-child(4),.step-item .step-input:nth-child(5),.step-item .step-input:nth-child(6){display:none}}
+</style>
+</head>
+<body class="tool-page" data-tool="sop_builder">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 跨境电商工具 · 标准版</span>
+      <h1>SOP流程 <em>构建器</em></h1>
+      <p class="tool-hero-desc">5种跨境业务SOP模板一键加载，步骤编辑器灵活增删排序，每步骤设置负责人/时间/工具/输出物，一键复制SOP到剪贴板，让团队标准化运营。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span>
+      <span class="workflow-name">团队管理工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <span class="step current">SOP构建</span>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="sop-section">
+        <h3>📁 选择SOP模板</h3>
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+      <div class="sop-section">
+        <h3>✏️ 步骤编辑器</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">每步骤设置：步骤名称 / 负责人 / 预计时间 / 使用工具 / 输出物</p>
+        <div class="step-editor" id="stepEditor"></div>
+        <button class="btn-action btn-add-step" onclick="SOP.addStep()">+ 添加步骤</button>
+        <div class="sop-toolbar">
+          <button class="btn-action btn-export" onclick="SOP.export()">📋 复制SOP到剪贴板</button>
+          <button class="btn-action btn-reset-sop" onclick="SOP.reset()">重置</button>
+        </div>
+      </div>
+      <div class="sop-section">
+        <h3>📄 SOP预览</h3>
+        <div class="sop-preview" id="sopPreview"></div>
+      </div>
+      <div class="workflow-bottom-nav">
+        <a href="kpi-tracker.html" class="wbn-btn prev">← 上一步：KPI追踪</a>
+        <a href="salary-calculator.html" class="wbn-btn next">下一步：薪酬计算 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="kpi-tracker.html">KPI追踪器</a></li><li><a href="sop-builder.html">SOP构建器</a></li><li><a href="salary-calculator.html">薪酬计算器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var SOP = (function(){
+  'use strict';
+  var TEMPLATES = {
+    '选品SOP': { icon:'🔍', desc:'市场调研到选品决策', steps:[
+      {name:'市场容量分析',owner:'运营',time:'2天',tool:'Jungle Scout',output:'市场报告'},
+      {name:'竞品分析',owner:'运营',time:'1天',tool:'Helium 10',output:'竞品对比表'},
+      {name:'利润测算',owner:'财务',time:'0.5天',tool:'FBA计算器',output:'利润表'},
+      {name:'样品采购测试',owner:'采购',time:'7天',tool:'1688',output:'样品报告'},
+      {name:'选品决策评审',owner:'主管',time:'0.5天',tool:'会议',output:'决策书'}
+    ]},
+    '上架SOP': { icon:'📦', desc:'Listing创建到正式上线', steps:[
+      {name:'关键词调研',owner:'运营',time:'1天',tool:'Helium 10',output:'关键词库'},
+      {name:'标题/五点/描述撰写',owner:'运营',time:'2天',tool:'Listing优化器',output:'Listing文案'},
+      {name:'图片/视频制作',owner:'设计',time:'3天',tool:'Photoshop',output:'产品图片'},
+      {name:'类目/A+页面设置',owner:'运营',time:'1天',tool:'卖家后台',output:'A+页面'},
+      {name:'上架检查与提交',owner:'运营',time:'0.5天',tool:'Checklist',output:'上架确认'}
+    ]},
+    '广告SOP': { icon:'📢', desc:'广告搭建到优化迭代', steps:[
+      {name:'广告结构规划',owner:'广告',time:'0.5天',tool:'Excel',output:'广告架构图'},
+      {name:'自动广告启动',owner:'广告',time:'1天',tool:'卖家后台',output:'广告活动'},
+      {name:'搜索词分析',owner:'广告',time:'7天',tool:'搜索词报告',output:'词库'},
+      {name:'手动广告搭建',owner:'广告',time:'1天',tool:'卖家后台',output:'手动广告'},
+      {name:'竞价与预算优化',owner:'广告',time:'持续',tool:'ACoS计算器',output:'优化记录'}
+    ]},
+    '库存SOP': { icon:'🏭', desc:'库存计划到补货管理', steps:[
+      {name:'销量预测',owner:'运营',time:'每周',tool:'销量估算器',output:'预测表'},
+      {name:'库存周转分析',owner:'运营',time:'每周',tool:'库存报表',output:'周转率'},
+      {name:'补货计划制定',owner:'采购',time:'每月',tool:'采购计划器',output:'采购单'},
+      {name:'发货与追踪',owner:'仓储',time:'持续',tool:'物流系统',output:'物流追踪'},
+      {name:'滞销库存处理',owner:'运营',time:'每月',tool:'促销工具',output:'清理方案'}
+    ]},
+    '客服SOP': { icon:'💬', desc:'客户沟通到评价管理', steps:[
+      {name:'消息回复规范',owner:'客服',time:'24h内',tool:'邮件模板',output:'回复记录'},
+      {name:'差评处理流程',owner:'客服',time:'48h内',tool:'评价分析',output:'处理记录'},
+      {name:'退货退款处理',owner:'客服',time:'24h内',tool:'后台系统',output:'退货报告'},
+      {name:'QA回复管理',owner:'运营',time:'每日',tool:'Listing页面',output:'QA内容'},
+      {name:'客户满意度回访',owner:'客服',time:'每月',tool:'邮件',output:'满意度报告'}
+    ]}
+  };
+  var currentTemplate = '选品SOP';
+  var steps = [];
+
+  function renderTemplates(){
+    var html = '';
+    Object.keys(TEMPLATES).forEach(function(key){
+      var t = TEMPLATES[key];
+      html += '<div class="template-card'+(key===currentTemplate?' active':'')+'" onclick="SOP.loadTemplate(\''+key+'\')">';
+      html += '<div class="template-icon">'+t.icon+'</div>';
+      html += '<div class="template-name">'+key+'</div>';
+      html += '<div class="template-desc">'+t.desc+'</div>';
+      html += '</div>';
+    });
+    document.getElementById('templateGrid').innerHTML = html;
+  }
+
+  function loadTemplate(key){
+    currentTemplate = key;
+    steps = TEMPLATES[key].steps.map(function(s){ return {name:s.name,owner:s.owner,time:s.time,tool:s.tool,output:s.output}; });
+    renderTemplates(); renderEditor(); renderPreview();
+  }
+
+  function renderEditor(){
+    if(steps.length===0){
+      document.getElementById('stepEditor').innerHTML = '<div class="empty-hint">暂无步骤，点击下方"添加步骤"开始构建</div>';
+      return;
+    }
+    var html = '';
+    steps.forEach(function(s,i){
+      html += '<div class="step-item">';
+      html += '<div class="step-num">'+(i+1)+'</div>';
+      html += '<input class="step-input" placeholder="步骤名称" value="'+s.name+'" oninput="SOP.updateStep('+i+',\'name\',this.value)">';
+      html += '<input class="step-input" placeholder="负责人" value="'+s.owner+'" oninput="SOP.updateStep('+i+',\'owner\',this.value)">';
+      html += '<input class="step-input" placeholder="预计时间" value="'+s.time+'" oninput="SOP.updateStep('+i+',\'time\',this.value)">';
+      html += '<input class="step-input" placeholder="使用工具" value="'+s.tool+'" oninput="SOP.updateStep('+i+',\'tool\',this.value)">';
+      html += '<input class="step-input" placeholder="输出物" value="'+s.output+'" oninput="SOP.updateStep('+i+',\'output\',this.value)">';
+      html += '<button class="step-del" onclick="SOP.delStep('+i+')">✕</button>';
+      html += '</div>';
+    });
+    document.getElementById('stepEditor').innerHTML = html;
+  }
+
+  function addStep(){
+    steps.push({name:'新步骤',owner:'',time:'',tool:'',output:''});
+    renderEditor(); renderPreview();
+  }
+  function delStep(i){ steps.splice(i,1); renderEditor(); renderPreview(); }
+  function updateStep(i,field,val){ steps[i][field]=val; renderPreview(); }
+  function moveStep(i,dir){
+    var j=i+dir; if(j<0||j>=steps.length) return;
+    var tmp=steps[i]; steps[i]=steps[j]; steps[j]=tmp;
+    renderEditor(); renderPreview();
+  }
+  function reset(){ loadTemplate(currentTemplate); }
+
+  function renderPreview(){
+    var t = TEMPLATES[currentTemplate];
+    var text = '========================================\n';
+    text += '  '+t.icon+' '+currentTemplate+' 标准操作流程\n';
+    text += '  生成时间：'+new Date().toLocaleDateString('zh-CN')+'\n';
+    text += '========================================\n\n';
+    steps.forEach(function(s,i){
+      text += '【步骤'+(i+1)+'】'+s.name+'\n';
+      text += '  负责人：'+(s.owner||'待定')+'\n';
+      text += '  预计时间：'+(s.time||'待定')+'\n';
+      text += '  使用工具：'+(s.tool||'待定')+'\n';
+      text += '  输出物：'+(s.output||'待定')+'\n';
+      if(i<steps.length-1) text += '\n---\n\n';
+    });
+    text += '\n========================================\n';
+    text += '共 '+steps.length+' 个步骤 | 请团队确认后执行\n';
+    text += '========================================';
+    document.getElementById('sopPreview').textContent = text;
+  }
+
+  function exportSOP(){
+    var text = document.getElementById('sopPreview').textContent;
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){ alert('SOP已复制到剪贴板！'); });
+    } else {
+      var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); alert('SOP已复制到剪贴板！'); }catch(e){ alert('复制失败，请手动选择文本复制'); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  function init(){ loadTemplate(currentTemplate); }
+  return { loadTemplate:loadTemplate, addStep:addStep, delStep:delStep, updateStep:updateStep, moveStep:moveStep, reset:reset, export:exportSOP, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',SOP.init); } else { SOP.init(); }
+</script>
+</body>
+</html>

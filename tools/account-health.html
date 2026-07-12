@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="账号健康监控器：8维度检查（ODR/迟发率/取消率/有效追踪率/知识产权/政策合规/客服指标/账户指标），CSS健康仪表盘conic-gradient 0-100分，风险等级判断，改善建议引擎，历史趋势记录。免费在线亚马逊账号健康监控工具。">
+<meta name="keywords" content="账号健康,ODR,迟发率,取消率,有效追踪率,知识产权,政策合规,账号风险,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/account-health.html">
+<title>账号健康监控器 - 8维度检查·健康仪表盘·改善建议 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.ah-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.ah-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.health-gauge-wrap{display:flex;align-items:center;gap:32px;justify-content:center;padding:24px 0}
+.ah-gauge{width:200px;height:200px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.ah-gauge::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:#fff}
+.ah-gauge-inner{position:relative;z-index:1;text-align:center}
+.ah-gauge-inner .ag-val{font-size:42px;font-weight:800;line-height:1}
+.ah-gauge-inner .ag-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.health-info .hi-level{font-size:24px;font-weight:800;margin-bottom:8px}
+.health-info .hi-desc{font-size:14px;color:var(--muted);line-height:1.7}
+.dim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.dim-card{padding:18px;border-radius:12px;border:1px solid var(--rule);background:var(--surface)}
+.dim-card.green{border-left:4px solid #10b981;background:#ecfdf5}
+.dim-card.yellow{border-left:4px solid #f59e0b;background:#fffbeb}
+.dim-card.red{border-left:4px solid #ef4444;background:#fef2f2}
+.dim-card .dc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dim-card .dc-name{font-size:14px;font-weight:600;color:var(--ink)}
+.dim-card .dc-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700}
+.dim-card .dc-values{display:flex;gap:16px;font-size:13px;margin-bottom:8px}
+.dim-card .dc-cur{font-weight:700}
+.dim-card .dc-thr{color:var(--muted)}
+.dim-card .dc-bar{height:6px;border-radius:3px;background:#fff;overflow:hidden}
+.dim-card .dc-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.suggest-list{list-style:none;padding:0;margin:0}
+.suggest-list li{padding:12px 0 12px 28px;font-size:14px;color:var(--ink-soft);position:relative;line-height:1.7;border-bottom:1px solid var(--rule-light)}
+.suggest-list li:last-child{border-bottom:none}
+.suggest-list li::before{content:'⚠️';position:absolute;left:0;top:12px;font-size:16px}
+.history-list{list-style:none;padding:0;margin:0}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:8px;margin-bottom:6px;background:var(--bg-soft);font-size:13px}
+.history-item .hi-date{color:var(--muted)}
+.history-item .hi-score{font-weight:700}
+@media(max-width:768px){.dim-grid{grid-template-columns:1fr}.health-gauge-wrap{flex-direction:column;gap:16px}}
+</style>
+</head>
+<body class="tool-page" data-tool="account_health">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚠️ 跨境电商工具 · 深度版</span>
+      <h1>账号健康 <em>监控器</em></h1>
+      <p class="tool-hero-desc">8维度全面检查账号健康状态，CSS conic-gradient仪表盘0-100分可视化，风险等级智能判断，改善建议引擎针对红色维度给出方案，历史趋势自动记录。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第1步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <span class="step current">账号健康</span>
+      <span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a>
+      <span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a>
+      <span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a>
+      <span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入账号健康数据</h2>
+          <p class="calc-form-subtitle">填写8个维度的当前值和阈值</p>
+          <div class="calc-row-2"><div class="calc-field"><label>ODR订单缺陷率 <span class="hint">(%)</span></label><input type="number" id="d_odr" value="0.8" step="0.1" oninput="AH.calc()"></div><div class="calc-field"><label>ODR阈值 <span class="hint">(%)</span></label><input type="number" id="t_odr" value="1" step="0.1" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>迟发率 <span class="hint">(%)</span></label><input type="number" id="d_late" value="2.5" step="0.1" oninput="AH.calc()"></div><div class="calc-field"><label>迟发率阈值 <span class="hint">(%)</span></label><input type="number" id="t_late" value="4" step="0.1" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>取消率 <span class="hint">(%)</span></label><input type="number" id="d_cancel" value="1.2" step="0.1" oninput="AH.calc()"></div><div class="calc-field"><label>取消率阈值 <span class="hint">(%)</span></label><input type="number" id="t_cancel" value="2.5" step="0.1" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>有效追踪率 <span class="hint">(%)</span></label><input type="number" id="d_track" value="98" step="0.5" oninput="AH.calc()"></div><div class="calc-field"><label>有效追踪率阈值 <span class="hint">(%)</span></label><input type="number" id="t_track" value="95" step="0.5" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>知识产权投诉数</label><input type="number" id="d_ip" value="0" step="1" oninput="AH.calc()"></div><div class="calc-field"><label>知识产权阈值</label><input type="number" id="t_ip" value="2" step="1" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>政策违规数</label><input type="number" id="d_policy" value="0" step="1" oninput="AH.calc()"></div><div class="calc-field"><label>政策违规阈值</label><input type="number" id="t_policy" value="1" step="1" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>客服回复时间 <span class="hint">(小时)</span></label><input type="number" id="d_cs" value="8" step="1" oninput="AH.calc()"></div><div class="calc-field"><label>客服回复阈值 <span class="hint">(小时)</span></label><input type="number" id="t_cs" value="24" step="1" oninput="AH.calc()"></div></div>
+          <div class="calc-row-2"><div class="calc-field"><label>账户指标分 <span class="hint">(0-1000)</span></label><input type="number" id="d_acct" value="850" step="10" oninput="AH.calc()"></div><div class="calc-field"><label>账户指标阈值 <span class="hint">(0-1000)</span></label><input type="number" id="t_acct" value="700" step="10" oninput="AH.calc()"></div></div>
+        </div>
+        <div class="calc-results"><div class="result-card" id="resultCard"></div></div>
+      </div>
+
+      <div class="ah-section">
+        <h3>🏥 账号健康仪表盘</h3>
+        <div class="health-gauge-wrap" id="gaugeWrap"></div>
+      </div>
+
+      <div class="ah-section">
+        <h3>🔍 8维度检查结果</h3>
+        <div class="dim-grid" id="dimGrid"></div>
+      </div>
+
+      <div class="ah-section" id="suggestSection" style="display:none">
+        <h3>🧠 改善建议引擎</h3>
+        <ul class="suggest-list" id="suggestList"></ul>
+      </div>
+
+      <div class="ah-section">
+        <h3>📅 历史检查记录</h3>
+        <div id="historyWrap"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="index.html" class="wbn-btn prev">← 工具中心</a>
+        <a href="compliance-check.html" class="wbn-btn next">下一步：合规检查 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="compliance-check.html">合规检查器</a></li><li><a href="ip-protector.html">知识产权保护</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var AH = (function(){
+  'use strict';
+  var STORAGE_KEY = 'jx_account_health';
+  var history = [];
+  var DIMS = [
+    {key:'odr',name:'ODR订单缺陷率',icon:'📋',lowerBetter:true},
+    {key:'late',name:'迟发率',icon:'⏰',lowerBetter:true},
+    {key:'cancel',name:'取消率',icon:'❌',lowerBetter:true},
+    {key:'track',name:'有效追踪率',icon:'📍',lowerBetter:false},
+    {key:'ip',name:'知识产权投诉',icon:'©️',lowerBetter:true},
+    {key:'policy',name:'政策违规',icon:'📜',lowerBetter:true},
+    {key:'cs',name:'客服回复时间',icon:'💬',lowerBetter:true},
+    {key:'acct',name:'账户指标分',icon:'📊',lowerBetter:false}
+  ];
+  var SUGGESTIONS = {
+    odr:'ODR偏高：检查A-to-Z索赔和差评订单，改善产品质量和Listing描述准确性，主动联系不满意的客户解决问题。',
+    late:'迟发率偏高：优化FBA发货流程，确保48小时内发货，考虑使用FBA替代FBM以降低迟发风险。',
+    cancel:'取消率偏高：检查库存准确性，避免超卖，及时更新库存数据，设置安全库存预警。',
+    track:'有效追踪率不足：确保所有包裹使用可追踪物流方式，及时上传有效追踪单号。',
+    ip:'存在知识产权投诉：立即排查侵权产品，下架涉嫌侵权的Listing，完成品牌备案和侵权申诉。',
+    policy:'存在政策违规：仔细阅读亚马逊政策，移除违规内容，提交申诉并制定合规流程。',
+    cs:'客服回复时间过长：设置自动回复模板，分配专人处理买家消息，确保24小时内回复。',
+    acct:'账户指标分偏低：全面改善各项指标，关注账户健康仪表盘，优先处理标记红色的问题。'
+  };
+
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+  function load(){ try{ var d=localStorage.getItem(STORAGE_KEY); if(d) history=JSON.parse(d); }catch(e){} }
+  function save(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(history)); }catch(e){} }
+
+  function calc(){
+    var items = DIMS.map(function(d){
+      var cur = v('d_'+d.key), thr = v('t_'+d.key);
+      var ratio;
+      if(d.lowerBetter){
+        ratio = cur>=thr ? (thr/cur) : 1;
+      } else {
+        ratio = cur>=thr ? 1 : (cur/thr);
+      }
+      var status = ratio>=0.9?'green':(ratio>=0.7?'yellow':'red');
+      var score = ratio>=0.9?100:(ratio>=0.7?60:20);
+      return {d:d,cur:cur,thr:thr,ratio:ratio,status:status,score:score};
+    });
+
+    var totalScore = items.reduce(function(s,i){return s+i.score;},0)/items.length;
+    var level = totalScore>=85?'健康':(totalScore>=60?'注意':(totalScore>=35?'警告':'危险'));
+    var levelColor = totalScore>=85?'#10b981':(totalScore>=60?'#f59e0b':(totalScore>=35?'#f97316':'#ef4444'));
+    var deg = (totalScore/100)*360;
+
+    document.getElementById('gaugeWrap').innerHTML =
+      '<div class="ah-gauge" style="background:conic-gradient('+levelColor+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)">'+
+      '<div class="ah-gauge-inner"><div class="ag-val" style="color:'+levelColor+'">'+totalScore.toFixed(0)+'</div><div class="ag-lbl">健康分</div></div></div>'+
+      '<div class="health-info"><div class="hi-level" style="color:'+levelColor+'">'+level+'</div>'+
+      '<div class="hi-desc">绿: '+items.filter(function(i){return i.status==='green';}).length+'项 | 黄: '+items.filter(function(i){return i.status==='yellow';}).length+'项 | 红: '+items.filter(function(i){return i.status==='red';}).length+'项<br>'+
+      (totalScore>=85?'账号状态良好，继续保持':(totalScore>=60?'有指标需关注，及时改善':(totalScore>=35?'多项指标异常，需立即处理':'账号处于危险状态，紧急行动')))+'</div></div>';
+
+    var html = '';
+    items.forEach(function(it){
+      var barPct = it.ratio*100;
+      var barColor = it.status==='green'?'#10b981':(it.status==='yellow'?'#f59e0b':'#ef4444');
+      html += '<div class="dim-card '+it.status+'">';
+      html += '<div class="dc-header"><span class="dc-name">'+it.d.icon+' '+it.d.name+'</span><span class="dc-status" style="background:'+(it.status==='green'?'#d1fae5':it.status==='yellow'?'#fef3c7':'#fee2e2')+';color:'+barColor+'">'+(it.status==='green'?'正常':it.status==='yellow'?'注意':'危险')+'</span></div>';
+      html += '<div class="dc-values"><span class="dc-cur" style="color:'+barColor+'">当前: '+it.cur+'</span><span class="dc-thr">阈值: '+it.thr+'</span></div>';
+      html += '<div class="dc-bar"><div class="dc-bar-fill" style="width:'+barPct+'%;background:'+barColor+'"></div></div>';
+      html += '</div>';
+    });
+    document.getElementById('dimGrid').innerHTML = html;
+
+    // 改善建议
+    var redItems = items.filter(function(i){return i.status==='red'||i.status==='yellow';});
+    if(redItems.length>0){
+      document.getElementById('suggestSection').style.display='block';
+      var sHtml = '';
+      redItems.forEach(function(it){
+        if(SUGGESTIONS[it.d.key]) sHtml += '<li><strong>'+it.d.name+'</strong>（当前: '+it.cur+'，阈值: '+it.thr+'）: '+SUGGESTIONS[it.d.key]+'</li>';
+      });
+      document.getElementById('suggestList').innerHTML = sHtml;
+    } else {
+      document.getElementById('suggestSection').style.display='none';
+    }
+
+    // 概览
+    document.getElementById('resultCard').innerHTML =
+      '<h3>🏥 健康监控概览</h3><div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">健康分</div><div class="ri-value" style="color:'+levelColor+'">'+totalScore.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">风险等级</div><div class="ri-value" style="color:'+levelColor+'">'+level+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">正常维度</div><div class="ri-value positive">'+items.filter(function(i){return i.status==='green';}).length+'/8</div></div>'+
+      '<div class="result-item"><div class="ri-label">需改善</div><div class="ri-value '+(redItems.length>0?'negative':'positive')+'">'+redItems.length+'</div></div>'+
+      '</div><div class="result-note">💡 '+(totalScore>=85?'账号健康状态优秀':(totalScore>=60?'有'+redItems.length+'项需要关注':(totalScore>=35?'有'+redItems.length+'项需立即处理':'账号危险，紧急行动')))+'</div>';
+
+    renderHistory();
+  }
+
+  function renderHistory(){
+    if(history.length===0){
+      document.getElementById('historyWrap').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">暂无历史记录，点击下方按钮保存本次检查</div>';
+    } else {
+      var html = '';
+      history.slice(-5).reverse().forEach(function(h){
+        var color = h.score>=85?'#10b981':(h.score>=60?'#f59e0b':(h.score>=35?'#f97316':'#ef4444');
+        html += '<div class="history-item"><span class="hi-date">'+h.date+'</span><span style="color:var(--muted)">'+h.level+'</span><span class="hi-score" style="color:'+color+'">'+h.score+'分</span></div>';
+      });
+      document.getElementById('historyWrap').innerHTML = html;
+    }
+    document.getElementById('historyWrap').innerHTML += '<div style="text-align:center;margin-top:12px"><button class="btn-copy" style="padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600" onclick="AH.saveRecord()">💾 保存本次检查</button></div>';
+  }
+
+  function saveRecord(){
+    var items = DIMS.map(function(d){
+      var cur=v('d_'+d.key),thr=v('t_'+d.key);
+      var ratio = d.lowerBetter ? (cur>=thr?thr/cur:1) : (cur>=thr?1:cur/thr);
+      return ratio>=0.9?100:(ratio>=0.7?60:20);
+    });
+    var score = items.reduce(function(s,v){return s+v;},0)/items.length;
+    var level = score>=85?'健康':(score>=60?'注意':(score>=35?'警告':'危险'));
+    history.push({date:new Date().toLocaleString('zh-CN'),score:Math.round(score),level:level});
+    save(); renderHistory();
+    alert('检查记录已保存！');
+  }
+
+  function init(){ load(); calc(); }
+  return { calc:calc, saveRecord:saveRecord, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',AH.init); } else { AH.init(); }
+</script>
+</body>
+</html>

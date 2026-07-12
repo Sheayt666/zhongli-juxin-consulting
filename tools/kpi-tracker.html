@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="团队KPI追踪器：输入团队成员姓名和5个核心KPI指标（销售额/广告ACoS/库存周转/Listing质量/客户满意度），每项1-10评分，CSS雷达图可视化展示，团队总评分排行，KPI达成率进度条。免费在线跨境团队管理工具。">
+<meta name="keywords" content="KPI追踪器,团队KPI,绩效管理,雷达图,跨境团队管理,KPI达成率">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/kpi-tracker.html">
+<title>团队KPI追踪器 - 雷达图可视化·达成率进度条 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* ===== 工作流导航栏 ===== */
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+/* ===== KPI追踪器专属样式 ===== */
+.kpi-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.kpi-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.member-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:12px;align-items:end;margin-bottom:20px}
+.member-form .calc-field{margin-bottom:0}
+.member-form .btn-add{padding:11px 20px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.member-form .btn-add:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.member-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.member-table th{padding:10px 12px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.member-table th:first-child{text-align:left}
+.member-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);text-align:center;color:var(--ink-soft)}
+.member-table td:first-child{text-align:left;font-weight:600}
+.member-table .del-btn{color:var(--red);cursor:pointer;border:none;background:none;font-size:16px}
+.score-badge{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-weight:700;font-size:12px;color:#fff}
+.score-low{background:#ef4444}.score-mid{background:#f59e0b}.score-high{background:#10b981}
+.total-score{font-weight:800;font-size:16px;color:#4f46e5}
+/* 雷达图 */
+.radar-wrap{display:flex;justify-content:center;margin:20px 0}
+.radar-chart{position:relative;width:320px;height:320px}
+.radar-chart svg{width:100%;height:100%}
+/* KPI进度条 */
+.kpi-progress-item{margin-bottom:14px}
+.kpi-progress-item .kpi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px}
+.kpi-progress-item .kpi-name{font-weight:600;color:var(--ink-soft)}
+.kpi-progress-item .kpi-score{font-weight:700;color:var(--ink)}
+.kpi-bar{height:20px;border-radius:10px;background:var(--bg-soft);overflow:hidden;position:relative}
+.kpi-bar-fill{height:100%;border-radius:10px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:11px;font-weight:700;color:#fff}
+.kpi-bar-fill.green{background:linear-gradient(90deg,#10b981,#059669)}
+.kpi-bar-fill.yellow{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.kpi-bar-fill.red{background:linear-gradient(90deg,#ef4444,#dc2626)}
+/* 排行榜 */
+.rank-list{list-style:none;padding:0;margin:0}
+.rank-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:8px;background:var(--bg-soft);transition:all .2s}
+.rank-item:hover{background:var(--accent-bg)}
+.rank-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+.rank-1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff}
+.rank-2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+.rank-3{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff}
+.rank-other{background:var(--rule);color:var(--muted)}
+.rank-name{flex:1;font-weight:600;color:var(--ink)}
+.rank-score{font-size:18px;font-weight:800;color:#4f46e5}
+.empty-hint{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+@media(max-width:768px){.member-form{grid-template-columns:1fr 1fr}.member-table{font-size:12px}.member-table th,.member-table td{padding:6px 8px}.radar-chart{width:260px;height:260px}}
+</style>
+</head>
+<body class="tool-page" data-tool="kpi_tracker">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 跨境电商工具 · 标准版</span>
+      <h1>团队KPI <em>追踪器</em></h1>
+      <p class="tool-hero-desc">输入团队成员姓名和5个核心KPI指标，CSS雷达图可视化展示团队综合能力，KPI达成率进度条一目了然，团队总评分排行激励竞争。</p>
+    </div>
+  </header>
+
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span>
+      <span class="workflow-name">团队管理工作流</span>
+      <span class="workflow-step">第1步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <span class="step current">KPI追踪</span>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <div class="container">
+
+      <div class="kpi-section">
+        <h3>📋 添加团队成员KPI</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">输入成员姓名和5项KPI评分（1-10分），点击添加生成雷达图和排行</p>
+        <div class="member-form">
+          <div class="calc-field"><label>成员姓名</label><input type="text" id="memberName" placeholder="如 张三" value="张三"></div>
+          <div class="calc-field"><label>销售额 <span class="hint">1-10</span></label><input type="number" id="kpi1" min="1" max="10" value="8" oninput="KPI.updatePreview()"></div>
+          <div class="calc-field"><label>广告ACoS <span class="hint">1-10</span></label><input type="number" id="kpi2" min="1" max="10" value="7" oninput="KPI.updatePreview()"></div>
+          <div class="calc-field"><label>库存周转 <span class="hint">1-10</span></label><input type="number" id="kpi3" min="1" max="10" value="6" oninput="KPI.updatePreview()"></div>
+          <div class="calc-field"><label>Listing质量 <span class="hint">1-10</span></label><input type="number" id="kpi4" min="1" max="10" value="9" oninput="KPI.updatePreview()"></div>
+          <button class="btn-add" onclick="KPI.addMember()">+ 添加</button>
+        </div>
+        <div class="calc-field" style="max-width:120px">
+          <label>客户满意度 <span class="hint">1-10</span></label>
+          <input type="number" id="kpi5" min="1" max="10" value="8" oninput="KPI.updatePreview()">
+        </div>
+        <div class="fee-rule-box" style="margin-top:16px">
+          <h4>📐 评分标准</h4>
+          <ul>
+            <li>1-3分（红）：未达标，需重点改进</li>
+            <li>4-7分（黄）：基本达标，有提升空间</li>
+            <li>8-10分（绿）：优秀，保持水平</li>
+            <li>总分 = 5项KPI平均分 × 10（满分100）</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="kpi-section" id="radarSection" style="display:none">
+        <h3>🎯 成员KPI雷达图</h3>
+        <div class="radar-wrap" id="radarWrap"></div>
+        <div style="text-align:center;font-size:13px;color:var(--muted);margin-top:8px">五维KPI雷达图 · 点击表格行切换查看</div>
+      </div>
+
+      <div class="kpi-section" id="progressSection" style="display:none">
+        <h3>📊 KPI达成率</h3>
+        <div id="progressList"></div>
+      </div>
+
+      <div class="kpi-section" id="rankSection" style="display:none">
+        <h3>🏆 团队总评分排行</h3>
+        <ul class="rank-list" id="rankList"></ul>
+      </div>
+
+      <div class="kpi-section" id="tableSection">
+        <h3>👥 团队成员列表</h3>
+        <div id="tableWrap">
+          <div class="empty-hint">暂无成员数据，请在上方添加团队成员</div>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="index.html" class="wbn-btn prev">← 工具中心</a>
+        <a href="sop-builder.html" class="wbn-btn next">下一步：SOP构建 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>众力聚鑫咨询</h3>
+        <p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p>
+      </div>
+      <div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="kpi-tracker.html">KPI追踪器</a></li><li><a href="sop-builder.html">SOP构建器</a></li><li><a href="salary-calculator.html">薪酬计算器</a></li></ul></div>
+      <div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div>
+      <div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+var KPI = (function(){
+  'use strict';
+  var STORAGE_KEY = 'jx_kpi_data';
+  var KPI_NAMES = ['销售额','广告ACoS','库存周转','Listing质量','客户满意度'];
+  var members = [];
+  var selectedIdx = 0;
+
+  function load(){
+    try{ var d = localStorage.getItem(STORAGE_KEY); if(d) members = JSON.parse(d); }catch(e){}
+  }
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(members)); }catch(e){}
+  }
+  function $(id){ return document.getElementById(id); }
+
+  function addMember(){
+    var name = $('memberName').value.trim();
+    if(!name){ alert('请输入成员姓名'); return; }
+    var scores = [];
+    for(var i=1;i<=5;i++){
+      var v = parseInt($('kpi'+i).value)||0;
+      if(v<1) v=1; if(v>10) v=10;
+      scores.push(v);
+    }
+    members.push({name:name, scores:scores});
+    selectedIdx = members.length-1;
+    save();
+    render();
+    $('memberName').value = '';
+  }
+
+  function delMember(idx){
+    members.splice(idx,1);
+    if(selectedIdx>=members.length) selectedIdx = members.length-1;
+    save(); render();
+  }
+
+  function selectMember(idx){
+    selectedIdx = idx; render();
+  }
+
+  function getTotal(scores){
+    var sum=0; for(var i=0;i<scores.length;i++) sum+=scores[i];
+    return (sum/scores.length*10).toFixed(0);
+  }
+
+  function scoreClass(v){
+    if(v<=3) return 'score-low'; if(v<=7) return 'score-mid'; return 'score-high';
+  }
+
+  function renderTable(){
+    if(members.length===0){
+      $('tableWrap').innerHTML = '<div class="empty-hint">暂无成员数据，请在上方添加团队成员</div>';
+      return;
+    }
+    var html = '<div style="overflow-x:auto"><table class="member-table"><thead><tr><th>成员</th>';
+    KPI_NAMES.forEach(function(n){ html += '<th>'+n+'</th>'; });
+    html += '<th>总分</th><th>操作</th></tr></thead><tbody>';
+    members.forEach(function(m,i){
+      var total = getTotal(m.scores);
+      html += '<tr style="cursor:pointer" onclick="KPI.selectMember('+i+')" class="'+(i===selectedIdx?'':'')+'">';
+      html += '<td style="'+(i===selectedIdx?'color:#4f46e5':'')+'">'+m.name+(i===selectedIdx?' ▸':'')+'</td>';
+      m.scores.forEach(function(s){ html += '<td><span class="score-badge '+scoreClass(s)+'">'+s+'</span></td>'; });
+      html += '<td><span class="total-score">'+total+'</span></td>';
+      html += '<td><button class="del-btn" onclick="event.stopPropagation();KPI.delMember('+i+')">✕</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    $('tableWrap').innerHTML = html;
+  }
+
+  function renderRadar(){
+    if(members.length===0 || selectedIdx<0){
+      $('radarSection').style.display='none';
+      return;
+    }
+    $('radarSection').style.display='block';
+    var m = members[selectedIdx];
+    var cx=160, cy=160, maxR=120;
+    var n=5;
+    var svg = '<svg viewBox="0 0 320 320">';
+    // 网格
+    for(var g=1;g<=5;g++){
+      var r = maxR*g/5;
+      var pts='';
+      for(var i=0;i<n;i++){
+        var ang = -Math.PI/2 + i*2*Math.PI/n;
+        pts += (cx+Math.cos(ang)*r)+','+(cy+Math.sin(ang)*r)+' ';
+      }
+      svg += '<polygon points="'+pts+'" fill="none" stroke="#e2e8f0" stroke-width="1"/>';
+    }
+    // 轴线
+    for(var i=0;i<n;i++){
+      var ang = -Math.PI/2 + i*2*Math.PI/n;
+      svg += '<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(ang)*maxR)+'" y2="'+(cy+Math.sin(ang)*maxR)+'" stroke="#e2e8f0" stroke-width="1"/>';
+    }
+    // 数据多边形
+    var dpts='';
+    m.scores.forEach(function(s,i){
+      var ang = -Math.PI/2 + i*2*Math.PI/n;
+      var r = maxR*s/10;
+      dpts += (cx+Math.cos(ang)*r)+','+(cy+Math.sin(ang)*r)+' ';
+    });
+    svg += '<polygon points="'+dpts+'" fill="rgba(79,70,229,0.2)" stroke="#4f46e5" stroke-width="2"/>';
+    // 数据点
+    m.scores.forEach(function(s,i){
+      var ang = -Math.PI/2 + i*2*Math.PI/n;
+      var r = maxR*s/10;
+      svg += '<circle cx="'+(cx+Math.cos(ang)*r)+'" cy="'+(cy+Math.sin(ang)*r)+'" r="4" fill="#4f46e5"/>';
+    });
+    // 标签
+    KPI_NAMES.forEach(function(label,i){
+      var ang = -Math.PI/2 + i*2*Math.PI/n;
+      var lr = maxR+22;
+      var lx = cx+Math.cos(ang)*lr;
+      var ly = cy+Math.sin(ang)*lr;
+      svg += '<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#64748b" font-weight="600">'+label+'</text>';
+      svg += '<text x="'+lx+'" y="'+(ly+14)+'" text-anchor="middle" font-size="13" fill="#4f46e5" font-weight="700">'+m.scores[i]+'</text>';
+    });
+    svg += '</svg>';
+    $('radarWrap').innerHTML = svg;
+  }
+
+  function renderProgress(){
+    if(members.length===0 || selectedIdx<0){
+      $('progressSection').style.display='none';
+      return;
+    }
+    $('progressSection').style.display='block';
+    var m = members[selectedIdx];
+    var html = '<div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px">'+m.name+' 的KPI达成率</div>';
+    m.scores.forEach(function(s,i){
+      var pct = s*10;
+      var cls = s<=3?'red':(s<=7?'yellow':'green');
+      html += '<div class="kpi-progress-item">';
+      html += '<div class="kpi-header"><span class="kpi-name">'+KPI_NAMES[i]+'</span><span class="kpi-score">'+s+'/10 ('+pct+'%)</span></div>';
+      html += '<div class="kpi-bar"><div class="kpi-bar-fill '+cls+'" style="width:'+pct+'%">'+pct+'%</div></div>';
+      html += '</div>';
+    });
+    $('progressList').innerHTML = html;
+  }
+
+  function renderRank(){
+    if(members.length===0){
+      $('rankSection').style.display='none';
+      return;
+    }
+    $('rankSection').style.display='block';
+    var sorted = members.map(function(m,i){ return {m:m,idx:i,total:parseInt(getTotal(m.scores))}; }).sort(function(a,b){ return b.total-a.total; });
+    var html = '';
+    sorted.forEach(function(item,rank){
+      var numClass = rank===0?'rank-1':(rank===1?'rank-2':(rank===2?'rank-3':'rank-other'));
+      html += '<li class="rank-item">';
+      html += '<div class="rank-num '+numClass+'">'+(rank+1)+'</div>';
+      html += '<div class="rank-name">'+item.m.name+'</div>';
+      html += '<div class="rank-score">'+item.total+'分</div>';
+      html += '</li>';
+    });
+    $('rankList').innerHTML = html;
+  }
+
+  function render(){
+    renderTable(); renderRadar(); renderProgress(); renderRank();
+  }
+
+  function updatePreview(){}
+
+  function init(){
+    load();
+    if(members.length===0){
+      members.push({name:'张三',scores:[8,7,6,9,8]});
+      members.push({name:'李四',scores:[7,8,7,6,7]});
+      members.push({name:'王五',scores:[9,6,8,7,9]});
+      save();
+    }
+    render();
+  }
+
+  return { addMember:addMember, delMember:delMember, selectMember:selectMember, updatePreview:updatePreview, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',KPI.init); } else { KPI.init(); }
+</script>
+</body>
+</html>

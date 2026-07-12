@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="日报生成器：输入今日销售额/订单数/广告费/退货数/新Review，自动生成可复制日报文本，环比昨日变化分析，CSS数据卡片展示。免费在线跨境电商日报工具。">
+<meta name="keywords" content="日报生成器,电商日报,销售日报,环比分析,数据报表">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/daily-report.html">
+<title>日报生成器 - 自动生成·环比分析·数据卡片 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.rpt-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.rpt-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.data-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.data-card{padding:16px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.data-card .dc-val{font-size:24px;font-weight:800}
+.data-card .dc-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.data-card .dc-change{font-size:11px;margin-top:4px;font-weight:600}
+.change-up{color:#10b981}.change-down{color:#ef4444}.change-flat{color:var(--muted)}
+.report-text{margin-top:16px;padding:24px;background:var(--bg-soft);border-radius:12px;border:1px solid var(--rule);font-size:13px;line-height:1.9;color:var(--ink-soft);white-space:pre-wrap;max-height:500px;overflow-y:auto}
+.btn-copy{padding:10px 24px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-copy:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+@media(max-width:768px){.data-cards{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body class="tool-page" data-tool="daily_report">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">📊 跨境电商工具 · 标准版</span>
+      <h1>日报 <em>生成器</em></h1>
+      <p class="tool-hero-desc">输入今日销售数据，自动生成可复制的日报文本，环比昨日变化分析，CSS数据卡片直观展示，一键复制发给团队。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">📊</span>
+      <span class="workflow-name">数据报表工作流</span>
+      <span class="workflow-step">第1步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <span class="step current">日报</span>
+      <span class="arrow">→</span>
+      <a href="weekly-report.html" class="step">周报</a>
+      <span class="arrow">→</span>
+      <a href="monthly-report.html" class="step">月报</a>
+      <span class="arrow">→</span>
+      <a href="custom-dashboard.html" class="step">自定义看板</a>
+      <span class="arrow">→</span>
+      <a href="kpi-dashboard.html" class="step">KPI看板</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入今日数据</h2>
+          <p class="calc-form-subtitle">填写今日与昨日数据，自动生成环比日报</p>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日销售额 <span class="hint">($)</span></label><input type="number" id="todaySales" value="2800" step="50" oninput="DR.calc()"></div>
+            <div class="calc-field"><label>昨日销售额 <span class="hint">($)</span></label><input type="number" id="yestSales" value="2500" step="50" oninput="DR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日订单数</label><input type="number" id="todayOrders" value="95" step="1" oninput="DR.calc()"></div>
+            <div class="calc-field"><label>昨日订单数</label><input type="number" id="yestOrders" value="88" step="1" oninput="DR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日广告费 <span class="hint">($)</span></label><input type="number" id="todayAd" value="450" step="10" oninput="DR.calc()"></div>
+            <div class="calc-field"><label>昨日广告费 <span class="hint">($)</span></label><input type="number" id="yestAd" value="420" step="10" oninput="DR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日退货数</label><input type="number" id="todayReturn" value="3" step="1" oninput="DR.calc()"></div>
+            <div class="calc-field"><label>昨日退货数</label><input type="number" id="yestReturn" value="2" step="1" oninput="DR.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>今日新Review</label><input type="number" id="todayReview" value="2" step="1" oninput="DR.calc()"></div>
+            <div class="calc-field"><label>昨日新Review</label><input type="number" id="yestReview" value="1" step="1" oninput="DR.calc()"></div>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="rpt-section">
+        <h3>📊 今日数据卡片</h3>
+        <div class="data-cards" id="dataCards"></div>
+      </div>
+
+      <div class="rpt-section">
+        <h3>📄 日报文本（可复制）</h3>
+        <div class="report-text" id="reportText"></div>
+        <div style="margin-top:16px;text-align:center">
+          <button class="btn-copy" onclick="DR.copy()">📋 复制日报到剪贴板</button>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="index.html" class="wbn-btn prev">← 工具中心</a>
+        <a href="weekly-report.html" class="wbn-btn next">下一步：周报 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="daily-report.html">日报生成器</a></li><li><a href="weekly-report.html">周报生成器</a></li><li><a href="monthly-report.html">月报生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var DR = (function(){
+  'use strict';
+  function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+  function change(t,y){
+    if(y===0) return {pct:0,cls:'change-flat',text:'- };
+    var p = ((t-y)/y*100);
+    var cls = p>0?'change-up':(p<0?'change-down':'change-flat');
+    var arrow = p>0?'↑':(p<0?'↓':'→');
+    return {pct:Math.abs(p),cls:cls,text:arrow+Math.abs(p).toFixed(1)+'%'};
+  }
+
+  function calc(){
+    var ts=v('todaySales'),ys=v('yestSales'),to=v('todayOrders'),yo=v('yestOrders');
+    var ta=v('todayAd'),ya=v('yestAd'),tr=v('todayReturn'),yr=v('yestReturn');
+    var trev=v('todayReview'),yrev=v('yestReview');
+
+    var aov = to>0?ts/to:0;
+    var acos = ts>0?(ta/ts*100):0;
+    var returnRate = to>0?(tr/to*100):0;
+
+    var c1=change(ts,ys),c2=change(to,yo),c3=change(ta,ya),c4=change(tr,yr),c5=change(trev,yrev);
+
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 今日数据概览</h3>'+
+      '<div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">客单价</div><div class="ri-value">$'+aov.toFixed(2)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">ACoS</div><div class="ri-value">'+acos.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">退货率</div><div class="ri-value '+returnRate>5?'negative':'positive'+'">'+returnRate.toFixed(1)+'%</div></div>'+
+      '<div class="result-item"><div class="ri-label">广告占比</div><div class="ri-value">'+(ts>0?ta/ts*100:0).toFixed(1)+'%</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 今日销售额'+c1.text+'，订单'+c2.text+'，广告费'+c3.text+'。'+(c1.pct>10?'销售增长显著，保持势头！':(c1.cls==='change-down'?'销售下滑，需关注原因':'销售平稳'))+'</div>';
+
+    document.getElementById('dataCards').innerHTML =
+      '<div class="data-card"><div class="dc-val" style="color:#4f46e5">$'+ts.toFixed(0)+'</div><div class="dc-lbl">销售额</div><div class="dc-change '+c1.cls+'">'+c1.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#10b981">'+to+'</div><div class="dc-lbl">订单数</div><div class="dc-change '+c2.cls+'">'+c2.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#f59e0b">$'+ta.toFixed(0)+'</div><div class="dc-lbl">广告费</div><div class="dc-change '+c3.cls+'">'+c3.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#ef4444">'+tr+'</div><div class="dc-lbl">退货数</div><div class="dc-change '+c4.cls+'">'+c4.text+'</div></div>'+
+      '<div class="data-card"><div class="dc-val" style="color:#8b5cf6">'+trev+'</div><div class="dc-lbl">新Review</div><div class="dc-change '+c5.cls+'">'+c5.text+'</div></div>';
+
+    var date = new Date().toLocaleDateString('zh-CN');
+    var text = '════════════════════════════════════\n';
+    text += '   跨境电商运营日报\n';
+    text += '   日期：'+date+'\n';
+    text += '════════════════════════════════════\n\n';
+    text += '【今日核心数据】\n';
+    text += '  销售额：$'+ts.toFixed(2)+'（昨日 $'+ys.toFixed(2)+'，'+c1.text+'）\n';
+    text += '  订单数：'+to+'单（昨日 '+yo+'单，'+c2.text+'）\n';
+    text += '  广告费：$'+ta.toFixed(2)+'（昨日 $'+ya.toFixed(2)+'，'+c3.text+'）\n';
+    text += '  退货数：'+tr+'单（昨日 '+yr+'单，'+c4.text+'）\n';
+    text += '  新Review：'+trev+'个（昨日 '+yrev+'个，'+c5.text+'）\n\n';
+    text += '【衍生指标】\n';
+    text += '  客单价：$'+aov.toFixed(2)+'\n';
+    text += '  ACoS：'+acos.toFixed(1)+'%\n';
+    text += '  退货率：'+returnRate.toFixed(1)+'%\n';
+    text += '  广告占比：'+(ts>0?ta/ts*100:0).toFixed(1)+'%\n\n';
+    text += '【今日小结】\n';
+    if(c1.cls==='change-up') text += '  销售额环比增长'+c1.pct.toFixed(1)+'%，表现良好，继续维持当前运营策略。\n';
+    else if(c1.cls==='change-down') text += '  销售额环比下降'+c1.pct.toFixed(1)+'%，需排查原因（流量/转化/竞品等）。\n';
+    else text += '  销售额环比持平，保持稳定运营。\n';
+    if(returnRate>5) text += '  ⚠ 退货率偏高（'+returnRate.toFixed(1)+'%），需关注产品质量和Listing准确性。\n';
+    if(acos>30) text += '  ⚠ ACoS偏高（'+acos.toFixed(1)+'%），建议优化广告关键词和出价。\n';
+    text += '\n════════════════════════════════════\n';
+    text += '  本日报由众力聚鑫咨询工具自动生成\n';
+    text += '════════════════════════════════════';
+    document.getElementById('reportText').textContent = text;
+  }
+
+  function copy(){
+    var text = document.getElementById('reportText').textContent;
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){alert('日报已复制到剪贴板！');}); }
+    else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');alert('日报已复制到剪贴板！');}catch(e){alert('复制失败，请手动选择');} document.body.removeChild(ta); }
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, copy:copy, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',DR.init); } else { DR.init(); }
+</script>
+</body>
+</html>

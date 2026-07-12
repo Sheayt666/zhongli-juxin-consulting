@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="合规检查器：检查产品合规/包装合规/标签合规/广告合规/税务合规/数据合规6大类，每类5-8项检查项，合规评分和进度条，风险等级标注。免费在线跨境电商合规检查工具。">
+<meta name="keywords" content="合规检查,产品合规,包装合规,标签合规,广告合规,税务合规,数据合规,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/compliance-check.html">
+<title>合规检查器 - 6大类合规检查·评分进度条·风险标注 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.comp-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.comp-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.score-bar-wrap{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.score-bar{flex:1;height:24px;border-radius:12px;background:var(--bg-soft);overflow:hidden;position:relative}
+.score-bar-fill{height:100%;border-radius:12px;transition:width .5s;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:12px;font-weight:700;color:#fff}
+.score-label{font-size:14px;font-weight:600;white-space:nowrap}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.cat-card{padding:20px;border-radius:12px;border:1px solid var(--rule);background:var(--surface)}
+.cat-card.cat-green{border-left:4px solid #10b981}
+.cat-card.cat-yellow{border-left:4px solid #f59e0b}
+.cat-card.cat-red{border-left:4px solid #ef4444}
+.cat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cat-name{font-size:15px;font-weight:700;color:var(--ink)}
+.cat-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700}
+.check-list{list-style:none;padding:0;margin:0}
+.check-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px solid var(--rule-light)}
+.check-item:last-child{border-bottom:none}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--rule);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;font-size:12px}
+.check-box.checked{background:#10b981;border-color:#10b981;color:#fff}
+.cat-progress{height:6px;border-radius:3px;background:var(--rule);overflow:hidden;margin-top:12px}
+.cat-progress-fill{height:100%;border-radius:3px;transition:width .3s}
+@media(max-width:768px){.cat-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="compliance_check">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚠️ 跨境电商工具 · 标准版</span>
+      <h1>合规 <em>检查器</em></h1>
+      <p class="tool-hero-desc">6大类合规检查（产品/包装/标签/广告/税务/数据），每类5-8项检查项，点击勾选完成检查，合规评分进度条实时更新，风险等级智能标注。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第2步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a>
+      <span class="arrow">→</span>
+      <span class="step current">合规检查</span>
+      <span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a>
+      <span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a>
+      <span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="comp-section">
+        <h3>📊 总体合规评分</h3>
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-bar-fill" id="totalBar" style="width:0%"></div></div>
+          <span class="score-label" id="totalLabel">0% - 待检查</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted)">点击下方各项检查项进行勾选，评分自动更新</div>
+      </div>
+
+      <div class="comp-section">
+        <h3>📋 合规检查清单</h3>
+        <div class="cat-grid" id="catGrid"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="account-health.html" class="wbn-btn prev">← 上一步：账号健康</a>
+        <a href="ip-protector.html" class="wbn-btn next">下一步：知识产权 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="compliance-check.html">合规检查器</a></li><li><a href="ip-protector.html">知识产权保护</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var COMP = (function(){
+  'use strict';
+  var CATS = [
+    {name:'产品合规',icon:'📦',items:['产品已通过目标国认证(CE/FCC/UL等)','产品符合目标国安全标准','无违禁成分或材料','产品测试报告齐全','已获得必要许可证','产品保质期/有效期合规']},
+    {name:'包装合规',icon:'🎁',items:['包装符合目标国环保要求','包装上有必要警示标签','包装尺寸符合物流要求','包装材料无毒无害','包装含原产国信息','包装条码正确']},
+    {name:'标签合规',icon:'🏷️',items:['标签语言为目标国语言','标签含产品成分/材质','标签含制造商信息','标签含警告/使用说明','标签字体大小合规','标签位置正确']},
+    {name:'广告合规',icon:'📢',items:['广告内容无虚假宣传','无未经授权的医疗/功效声称','广告图片有授权使用','无诱导性比较广告','广告关键词无侵权','符合平台广告政策']},
+    {name:'税务合规',icon:'💰',items:['已注册目标国VAT/EIN','按时申报和缴纳增值税','有完善的税务记录','了解跨境税务协定','关税分类编码正确','转移定价合规']},
+    {name:'数据合规',icon:'🔒',items:['客户数据处理符合GDPR','隐私政策已公示','数据存储符合法规','有数据泄露应急预案','员工数据访问权限管控','定期进行数据安全审计']}
+  ];
+  var checked = {};
+
+  function render(){
+    var html = '';
+    var totalChecked = 0, totalItems = 0;
+    CATS.forEach(function(cat,ci){
+      var catChecked = 0;
+      cat.items.forEach(function(item,ii){
+        var key = ci+'_'+ii;
+        if(checked[key]) catChecked++;
+        totalItems++;
+      });
+      totalChecked += catChecked;
+      var pct = (catChecked/cat.items.length*100);
+      var catStatus = pct>=80?'green':(pct>=50?'yellow':'red');
+      var badgeColor = catStatus==='green'?'#d1fae5':catStatus==='yellow'?'#fef3c7':'#fee2e2';
+      var badgeText = catStatus==='green'?'合规':(catStatus==='yellow'?'部分':'不合规');
+
+      html += '<div class="cat-card cat-'+catStatus+'">';
+      html += '<div class="cat-header"><span class="cat-name">'+cat.icon+' '+cat.name+'</span>';
+      html += '<span class="cat-badge" style="background:'+badgeColor+';color:'+(catStatus==='green'?'#059669':catStatus==='yellow'?'#d97706':'#dc2626')+'">'+catChecked+'/'+cat.items.length+' '+badgeText+'</span></div>';
+      html += '<ul class="check-list">';
+      cat.items.forEach(function(item,ii){
+        var key = ci+'_'+ii;
+        var isChecked = checked[key];
+        if(isChecked) catChecked;
+        html += '<li class="check-item"><div class="check-box'+(isChecked?' checked':'')+'" onclick="COMP.toggle('+ci+','+ii+')">'+(isChecked?'✓':'')+'</div><span>'+item+'</span></li>';
+      });
+      html += '</ul>';
+      html += '<div class="cat-progress"><div class="cat-progress-fill" style="width:'+pct+'%;background:'+(catStatus==='green'?'#10b981':catStatus==='yellow'?'#f59e0b':'#ef4444')+'"></div></div>';
+      html += '</div>';
+    });
+    document.getElementById('catGrid').innerHTML = html;
+
+    var totalPct = (totalChecked/totalItems*100);
+    var barColor = totalPct>=80?'#10b981':(totalPct>=50?'#f59e0b':'#ef4444');
+    var level = totalPct>=80?'合规优秀':(totalPct>=50?'部分合规':'不合规');
+    document.getElementById('totalBar').style.width = totalPct+'%';
+    document.getElementById('totalBar').style.background = 'linear-gradient(90deg,'+barColor+','+barColor+')';
+    document.getElementById('totalLabel').textContent = totalPct.toFixed(0)+'% - '+level;
+    document.getElementById('totalLabel').style.color = barColor;
+  }
+
+  function toggle(ci,ii){
+    var key = ci+'_'+ii;
+    checked[key] = !checked[key];
+    render();
+  }
+
+  function init(){ render(); }
+  return { toggle:toggle, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',COMP.init); } else { COMP.init(); }
+</script>
+</body>
+</html>

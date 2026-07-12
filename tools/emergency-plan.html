@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="应急预案生成器：选择场景（封号/侵权投诉/差评爆发/断货/被跟卖），自动生成应急预案步骤，24/48/72小时行动清单，联系人和资源准备清单。免费在线跨境电商应急预案工具。">
+<meta name="keywords" content="应急预案,封号应急,侵权投诉,差评爆发,断货,被跟卖,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/emergency-plan.html">
+<title>应急预案生成器 - 场景化应急·72小时行动清单 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.ep-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.ep-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.scenario-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.scenario-card{padding:20px 12px;border-radius:12px;border:2px solid var(--rule);text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.scenario-card:hover{border-color:#c7d2fe;transform:translateY(-2px)}
+.scenario-card.active{border-color:#ef4444;background:#fef2f2;box-shadow:0 4px 14px rgba(239,68,68,.15)}
+.scenario-icon{font-size:32px;margin-bottom:8px}
+.scenario-name{font-size:13px;font-weight:600;color:var(--ink)}
+.timeline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.timeline-card{padding:20px;border-radius:12px;border:1px solid var(--rule);position:relative}
+.timeline-card.t24{border-top:4px solid #ef4444}
+.timeline-card.t48{border-top:4px solid #f59e0b}
+.timeline-card.t72{border-top:4px solid #10b981}
+.timeline-card .tc-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.timeline-card .tc-time{font-size:16px;font-weight:800;color:var(--ink)}
+.timeline-card .tc-badge{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700}
+.timeline-card.t24 .tc-badge{background:#fee2e2;color:#dc2626}
+.timeline-card.t48 .tc-badge{background:#fef3c7;color:#d97706}
+.timeline-card.t72 .tc-badge{background:#d1fae5;color:#059669}
+.action-list{list-style:none;padding:0;margin:0}
+.action-list li{padding:8px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px solid var(--rule-light);display:flex;align-items:flex-start;gap:8px}
+.action-list li:last-child{border-bottom:none}
+.action-list li::before{content:'▸';color:#4f46e5;font-weight:700;flex-shrink:0}
+.resource-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.resource-item{padding:14px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--rule-light);font-size:13px}
+.resource-item .ri-title{font-weight:600;color:var(--ink);margin-bottom:4px}
+.resource-item .ri-desc{color:var(--muted);font-size:12px}
+@media(max-width:768px){.scenario-grid{grid-template-columns:repeat(2,1fr)}.timeline-grid{grid-template-columns:1fr}.resource-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="emergency_plan">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚠️ 跨境电商工具 · 标准版</span>
+      <h1>应急预案 <em>生成器</em></h1>
+      <p class="tool-hero-desc">选择应急场景，自动生成72小时行动清单，24小时紧急处理、48小时深入应对、72小时恢复计划，联系人和资源准备清单一目了然。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第5步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a>
+      <span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a>
+      <span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a>
+      <span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a>
+      <span class="arrow">→</span>
+      <span class="step current">应急预案</span>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="ep-section">
+        <h3>🚨 选择应急场景</h3>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </div>
+
+      <div class="ep-section">
+        <h3>⏰ 72小时行动清单</h3>
+        <div class="timeline-grid" id="timelineGrid"></div>
+      </div>
+
+      <div class="ep-section">
+        <h3>📞 联系人与资源准备清单</h3>
+        <div class="resource-grid" id="resourceGrid"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="ban-prevention.html" class="wbn-btn prev">← 上一步：封号预防</a>
+        <a href="supplier-audit.html" class="wbn-btn next">下一工作流：供应商评估 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="compliance-check.html">合规检查器</a></li><li><a href="ip-protector.html">知识产权保护</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var EP = (function(){
+  'use strict';
+  var SCENARIOS = {
+    '封号': {icon:'🚫', t24:['立即查看账号健康仪表盘','查看亚马逊通知邮件','确认封号原因','暂停所有广告活动','截图保存所有数据','准备申诉材料'], t48:['撰写详细申诉信(POA)','提交申诉并跟进','检查其他关联账号','备份客户和订单数据','联系亚马逊卖家支持','评估资金周转影响'], t72:['跟进申诉进度','准备备用账号方案','制定库存转移计划','调整运营策略','团队情绪安抚和分工','制定预防措施防止再次封号']},
+    '侵权投诉': {icon:'⚖️', t24:['查看投诉详情和投诉方信息','下架被投诉Listing','确认侵权类型(商标/专利/版权)','收集自有知识产权证据','暂停相关产品广告','检查其他Listing是否涉及'], t48:['准备Counter-Notice申诉','提交品牌备案维权','联系投诉方沟通','咨询知识产权律师','准备DMCA反通知(版权类)','更新产品图片和文案'], t72:['提交正式申诉','恢复被下架的Listing','建立侵权监控机制','完善知识产权布局','更新供应链合规要求','制定品牌保护长期策略']},
+    '差评爆发': {icon:'⭐', t24:['统计差评数量和趋势','分析差评内容找原因','检查是否竞品恶意差评','联系差评客户了解情况','暂停可能引发差评的广告','检查产品质量问题'], t48:['针对差评原因改进产品','更新Listing描述准确性','增加正面评价(Vine计划)','提交差评移除申请','监控Review变化趋势','优化客服处理流程'], t72:['持续监控评价变化','跟进差评移除进度','总结差评原因并制定改进','优化产品质量检测流程','建立Review预警机制','制定长期口碑管理计划']},
+    '断货': {icon:'📦', t24:['确认断货SKU和预计补货时间','调整广告预算(降低竞价)','提高售价控制销量','检查FBA库存和在途库存','联系供应商加急生产','评估竞品替代可能'], t48:['安排加急发货(空运)','更新Listing库存状态','通知VIP客户预计到货时间','优化发货物流方案','检查其他SKU库存预警','调整广告策略到有库存产品'], t72:['跟进补货到货进度','恢复广告投放','恢复正常售价','制定安全库存标准','建立库存预警机制','优化供应链响应速度']},
+    '被跟卖': {icon:'👥', t24:['确认跟卖者信息和产品','检查品牌备案状态','拍摄产品对比证据','发送Stop Cease信函','加入Amazon Transparency','调整价格策略'], t48:['提交Brand Registry投诉','申请Project Zero移除','购买跟卖产品作为证据','联系跟卖者要求停止','升级品牌保护措施','监控跟卖者动态'], t72:['跟进投诉处理进度','完成Transparency计划注册','优化产品差异化','建立跟卖监控机制','加强包装防伪设计','制定长期防跟卖策略']}
+  };
+  var RESOURCES = [
+    {title:'亚马逊卖家支持',desc:'通过Seller Central > Help > Contact Us联系'},
+    {title:'品牌备案团队',desc:'Brand Registry Support: brandregistry@amazon.com'},
+    {title:'知识产权律师',desc:'提前联系专业IP律师，保存联系方式'},
+    {title:'物流商紧急联系',desc:'空运/快递公司联系方式，确保加急发货'},
+    {title:'备用账号信息',desc:'备用账号的登录信息和运营资料'},
+    {title:'供应商紧急联系',desc:'主要供应商电话和加急生产协议'},
+    {title:'资金周转方案',desc:'备用资金账户和周转方案'},
+    {title:'团队成员联系表',desc:'全员联系方式和应急分工表'}
+  ];
+  var currentScenario = '封号';
+
+  function renderScenarios(){
+    var html = '';
+    Object.keys(SCENARIOS).forEach(function(key){
+      html += '<div class="scenario-card'+(key===currentScenario?' active':'')+'" onclick="EP.select(\''+key+'\')">';
+      html += '<div class="scenario-icon">'+SCENARIOS[key].icon+'</div>';
+      html += '<div class="scenario-name">'+key+'</div>';
+      html += '</div>';
+    });
+    document.getElementById('scenarioGrid').innerHTML = html;
+  }
+
+  function select(key){ currentScenario = key; renderScenarios(); renderTimeline(); }
+
+  function renderTimeline(){
+    var s = SCENARIOS[currentScenario];
+    var html = '';
+    var times = [{label:'24小时内',cls:'t24',badge:'紧急',items:s.t24},{label:'48小时内',cls:'t48',badge:'应对',items:s.t48},{label:'72小时内',cls:'t72',badge:'恢复',items:s.t72}];
+    times.forEach(function(t){
+      html += '<div class="timeline-card '+t.cls+'">';
+      html += '<div class="tc-header"><span class="tc-time">'+t.label+'</span><span class="tc-badge">'+t.badge+'</span></div>';
+      html += '<ul class="action-list">';
+      t.items.forEach(function(a){ html += '<li>'+a+'</li>'; });
+      html += '</ul></div>';
+    });
+    document.getElementById('timelineGrid').innerHTML = html;
+  }
+
+  function renderResources(){
+    var html = '';
+    RESOURCES.forEach(function(r){
+      html += '<div class="resource-item"><div class="ri-title">'+r.title+'</div><div class="ri-desc">'+r.desc+'</div></div>';
+    });
+    document.getElementById('resourceGrid').innerHTML = html;
+  }
+
+  function init(){ renderScenarios(); renderTimeline(); renderResources(); }
+  return { select:select, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',EP.init); } else { EP.init(); }
+</script>
+</body>
+</html>

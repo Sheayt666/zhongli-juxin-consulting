@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="供应商评估器：8维度评估（质量/价格/交期/服务/产能/资质/付款/稳定性），每维度1-10评分，CSS评分柱状图，供应商A/B/C/D等级，最多5个供应商对比。免费在线跨境电商供应商评估工具。">
+<meta name="keywords" content="供应商评估,供应商管理,供应商等级,质量评估,采购管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/supplier-audit.html">
+<title>供应商评估器 - 8维度评分·A/B/C/D等级·多供应商对比 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.sa-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.sa-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.sup-form{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-bottom:20px}
+.sup-form .btn-add{padding:11px 20px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.sup-scores{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:16px}
+.sup-scores .calc-field{margin-bottom:0}
+.sup-scores input{padding:8px 6px;text-align:center;font-size:13px}
+.sup-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.sup-table th{padding:10px 8px;text-align:center;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule);font-size:12px}
+.sup-table th:first-child{text-align:left}
+.sup-table td{padding:10px 8px;border-bottom:1px solid var(--rule-light);text-align:center;color:var(--ink-soft)}
+.sup-table td:first-child{text-align:left;font-weight:600}
+.grade-badge{display:inline-block;width:36px;height:36px;line-height:36px;border-radius:50%;font-weight:800;font-size:16px;color:#fff}
+.grade-A{background:linear-gradient(135deg,#10b981,#059669)}
+.grade-B{background:linear-gradient(135deg,#3b82f6,#2563eb)}
+.grade-C{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.grade-D{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.score-input{width:50px;padding:6px 4px;border:1px solid var(--rule);border-radius:6px;text-align:center;font-size:12px;font-family:inherit}
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:200px;padding:20px 0;margin-top:16px;border-bottom:2px solid var(--rule)}
+.bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-fill{width:80%;border-radius:6px 6px 0 0;transition:height .5s;min-height:4px}
+.bar-val{font-size:11px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted);text-align:center;max-width:60px;word-break:break-all}
+.empty-hint{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+@media(max-width:768px){.sup-scores{grid-template-columns:repeat(4,1fr)}.sup-table{font-size:11px}.sup-table th,.sup-table td{padding:6px 4px}.bar-chart{height:150px;gap:8px}}
+</style>
+</head>
+<body class="tool-page" data-tool="supplier_audit">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">🏭 跨境电商工具 · 标准版</span>
+      <h1>供应商 <em>评估器</em></h1>
+      <p class="tool-hero-desc">8维度全面评估供应商（质量/价格/交期/服务/产能/资质/付款/稳定性），每维度1-10评分，CSS柱状图可视化，自动评定A/B/C/D等级，最多5个供应商对比。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">🏭</span>
+      <span class="workflow-name">采购管理工作流</span>
+      <span class="workflow-step">第1步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <span class="step current">供应商评估</span>
+      <span class="arrow">→</span>
+      <a href="purchase-planner.html" class="step">采购计划</a>
+      <span class="arrow">→</span>
+      <a href="qc-checklist.html" class="step">质检清单</a>
+      <span class="arrow">→</span>
+      <a href="cost-reduction.html" class="step">降本分析</a>
+      <span class="arrow">→</span>
+      <a href="lead-time-calc.html" class="step">交期计算</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="sa-section">
+        <h3>📋 添加供应商</h3>
+        <div class="sup-form">
+          <div class="calc-field" style="margin-bottom:0"><label>供应商名称</label><input type="text" id="supName" placeholder="如 深圳XX电子厂" value="深圳XX电子"></div>
+          <button class="btn-add" onclick="SA.addSupplier()">+ 添加供应商</button>
+        </div>
+        <div class="sup-scores">
+          <div class="calc-field" style="margin-bottom:0"><label>质量</label><input type="number" id="s_quality" min="1" max="10" value="8"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>价格</label><input type="number" id="s_price" min="1" max="10" value="7"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>交期</label><input type="number" id="s_delivery" min="1" max="10" value="6"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>服务</label><input type="number" id="s_service" min="1" max="10" value="8"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>产能</label><input type="number" id="s_capacity" min="1" max="10" value="7"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>资质</label><input type="number" id="s_cert" min="1" max="10" value="9"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>付款</label><input type="number" id="s_payment" min="1" max="10" value="6"></div>
+          <div class="calc-field" style="margin-bottom:0"><label>稳定性</label><input type="number" id="s_stability" min="1" max="10" value="7"></div>
+        </div>
+        <div class="fee-rule-box">
+          <h4>📐 评分标准</h4>
+          <ul>
+            <li>每维度1-10分，总分=8项平均分×10（满分100）</li>
+            <li>A级（85+）: 优秀供应商，优先合作</li>
+            <li>B级（70-84）: 良好供应商，正常合作</li>
+            <li>C级（55-69）: 一般供应商，观察改进</li>
+            <li>D级（<55）: 不合格供应商，谨慎合作</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sa-section" id="tableSection">
+        <h3>📊 供应商评估对比表</h3>
+        <div id="tableWrap"></div>
+      </div>
+
+      <div class="sa-section" id="chartSection" style="display:none">
+        <h3>📈 供应商评分柱状图</h3>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="index.html" class="wbn-btn prev">← 工具中心</a>
+        <a href="purchase-planner.html" class="wbn-btn next">下一步：采购计划 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="supplier-audit.html">供应商评估器</a></li><li><a href="purchase-planner.html">采购计划器</a></li><li><a href="qc-checklist.html">质检清单生成器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var SA = (function(){
+  'use strict';
+  var DIMS = ['quality','price','delivery','service','capacity','cert','payment','stability'];
+  var DIM_NAMES = ['质量','价格','交期','服务','产能','资质','付款','稳定性'];
+  var suppliers = [];
+
+  function addSupplier(){
+    if(suppliers.length>=5){ alert('最多对比5个供应商'); return; }
+    var name = document.getElementById('supName').value.trim();
+    if(!name){ alert('请输入供应商名称'); return; }
+    var scores = DIMS.map(function(d){ var v=parseInt(document.getElementById('s_'+d).value)||5; if(v<1)v=1; if(v>10)v=10; return v; });
+    suppliers.push({name:name,scores:scores});
+    render();
+    document.getElementById('supName').value = '';
+  }
+
+  function updateScore(si,di,val){
+    v = parseInt(val)||1; if(v<1)v=1; if(v>10)v=10;
+    suppliers[si].scores[di] = v; render();
+  }
+
+  function delSupplier(i){ suppliers.splice(i,1); render(); }
+
+  function getTotal(scores){ return (scores.reduce(function(a,b){return a+b;},0)/scores.length*10).toFixed(0); }
+  function getGrade(total){ return total>=85?'A':(total>=70?'B':(total>=55?'C':'D')); }
+
+  function render(){
+    if(suppliers.length===0){
+      document.getElementById('tableWrap').innerHTML = '<div class="empty-hint">暂无供应商数据，请在上方添加</div>';
+      document.getElementById('chartSection').style.display='none';
+      return;
+    }
+    var html = '<div style="overflow-x:auto"><table class="sup-table"><thead><tr><th>供应商</th>';
+    DIM_NAMES.forEach(function(n){ html += '<th>'+n+'</th>'; });
+    html += '<th>总分</th><th>等级</th><th>操作</th></tr></thead><tbody>';
+    suppliers.forEach(function(s,si){
+      var total = getTotal(s.scores);
+      var grade = getGrade(parseInt(total));
+      html += '<tr><td>'+s.name+'</td>';
+      s.scores.forEach(function(sc,di){
+        html += '<td><input class="score-input" type="number" min="1" max="10" value="'+sc+'" onchange="SA.updateScore('+si+','+di+',this.value)"></td>';
+      });
+      html += '<td style="font-weight:800;color:#4f46e5;font-size:15px">'+total+'</td>';
+      html += '<td><span class="grade-badge grade-'+grade+'">'+grade+'</span></td>';
+      html += '<td><button onclick="SA.delSupplier('+si+')" style="border:none;background:#fee2e2;color:#ef4444;width:28px;height:28px;border-radius:50%;cursor:pointer">✕</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    document.getElementById('tableWrap').innerHTML = html;
+
+    // 柱状图
+    document.getElementById('chartSection').style.display='block';
+    var colors = ['#4f46e5','#10b981','#f59e0b','#8b5cf6','#ec4899'];
+    var html2 = '';
+    suppliers.forEach(function(s,si){
+      var total = parseInt(getTotal(s.scores));
+      var grade = getGrade(total);
+      var h = total;
+      var color = grade==='A'?'#10b981':(grade==='B'?'#3b82f6':(grade==='C'?'#f59e0b':'#ef4444'));
+      html2 += '<div class="bar-item"><div class="bar-val">'+total+'分</div><div class="bar-fill" style="height:'+h+'%;background:linear-gradient(180deg,'+color+','+color+'cc)"></div><div class="bar-label">'+s.name+'('+grade+')</div></div>';
+    });
+    document.getElementById('barChart').innerHTML = html2;
+  }
+
+  function init(){
+    suppliers.push({name:'深圳XX电子',scores:[8,7,6,8,7,9,6,7]});
+    suppliers.push({name:'广州YY科技',scores:[9,6,8,7,8,8,7,9]});
+    render();
+  }
+  return { addSupplier:addSupplier, updateScore:updateScore, delSupplier:delSupplier, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',SA.init); } else { SA.init(); }
+</script>
+</body>
+</html>

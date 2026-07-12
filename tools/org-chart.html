@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="组织架构设计器：支持运营/广告/设计/客服/仓储/财务/主管等岗位模板，CSS组织架构树状图可视化，自动计算人数和薪酬汇总，管理幅度分析。免费在线跨境团队组织架构设计工具。">
+<meta name="keywords" content="组织架构,树状图,岗位模板,管理幅度,跨境团队管理,组织设计">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/org-chart.html">
+<title>组织架构设计器 - 树状图可视化·薪酬汇总·管理幅度分析 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.org-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.org-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.pos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.pos-card{padding:16px;border-radius:12px;border:2px solid var(--rule);text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.pos-card:hover{border-color:#c7d2fe;transform:translateY(-2px)}
+.pos-card .pc-icon{font-size:28px;margin-bottom:6px}
+.pos-card .pc-name{font-size:13px;font-weight:600;color:var(--ink)}
+.pos-card .pc-salary{font-size:11px;color:var(--muted);margin-top:4px}
+/* 树状图 */
+.org-tree{padding:20px 0;overflow-x:auto}
+.org-node{display:inline-block;text-align:center;vertical-align:top;margin:0 8px}
+.org-box{display:inline-block;padding:12px 20px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-weight:600;font-size:13px;box-shadow:0 4px 12px rgba(79,70,229,.2);min-width:80px}
+.org-box.alt{background:linear-gradient(135deg,#10b981,#059669)}
+.org-box.alt2{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.org-box .ob-count{font-size:11px;opacity:.85;margin-top:2px}
+.org-line{height:24px;border-left:2px solid #c7d2fe;margin:0 auto;width:0}
+.org-children{display:flex;justify-content:center;gap:8px;position:relative;padding-top:24px}
+.org-children::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:#c7d2fe}
+.org-child{display:inline-block;text-align:center}
+.org-child .org-line{border-left:2px solid #c7d2fe;height:20px}
+.org-add-btn{display:inline-block;padding:8px 14px;border-radius:8px;border:1px dashed var(--rule);background:var(--bg-soft);color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s}
+.org-add-btn:hover{border-color:#4f46e5;color:#4f46e5}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.summary-card{padding:20px;border-radius:12px;text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.summary-card .sc-val{font-size:28px;font-weight:800;color:#4f46e5}
+.summary-card .sc-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.span-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.span-table th{padding:10px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.span-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.span-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.span-good{background:#d1fae5;color:#059669}.span-warn{background:#fef3c7;color:#d97706}.span-bad{background:#fee2e2;color:#dc2626}
+@media(max-width:768px){.pos-grid{grid-template-columns:repeat(2,1fr)}.summary-grid{grid-template-columns:repeat(2,1fr)}.org-children{gap:4px}}
+</style>
+</head>
+<body class="tool-page" data-tool="org_chart">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 跨境电商工具 · 标准版</span>
+      <h1>组织架构 <em>设计器</em></h1>
+      <p class="tool-hero-desc">运营/广告/设计/客服/仓储/财务/主管岗位模板一键添加，CSS组织架构树状图可视化展示，自动计算人数和薪酬汇总，管理幅度分析助你优化团队结构。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span>
+      <span class="workflow-name">团队管理工作流</span>
+      <span class="workflow-step">第5步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <a href="productivity-score.html" class="step">人效分析</a>
+      <span class="arrow">→</span>
+      <span class="step current">组织架构</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="org-section">
+        <h3>📂 岗位模板（点击添加到架构）</h3>
+        <div class="pos-grid" id="posGrid"></div>
+      </div>
+
+      <div class="org-section">
+        <h3>🌳 组织架构树状图</h3>
+        <div class="org-tree" id="orgTree"></div>
+      </div>
+
+      <div class="org-section">
+        <h3>💰 人数与薪酬汇总</h3>
+        <div class="summary-grid" id="summaryGrid"></div>
+        <div style="overflow-x:auto">
+          <table class="span-table" id="detailTable">
+            <thead><tr><th>部门</th><th>岗位</th><th>人数</th><th>月薪($)</th><th>月小计($)</th><th>操作</th></tr></thead>
+            <tbody id="detailBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="org-section">
+        <h3>📐 管理幅度分析</h3>
+        <div style="overflow-x:auto">
+          <table class="span-table" id="spanTable">
+            <thead><tr><th>管理层级</th><th>直接下属数</th><th>建议范围</th><th>管理幅度评价</th></tr></thead>
+            <tbody id="spanBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="productivity-score.html" class="wbn-btn prev">← 上一步：人效分析</a>
+        <a href="daily-report.html" class="wbn-btn next">下一工作流：日报生成 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="kpi-tracker.html">KPI追踪器</a></li><li><a href="sop-builder.html">SOP构建器</a></li><li><a href="salary-calculator.html">薪酬计算器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var ORG = (function(){
+  'use strict';
+  var POS_TEMPLATES = [
+    {icon:'🎯',name:'运营',dept:'运营部',salary:6000},
+    {icon:'📢',name:'广告',dept:'运营部',salary:5500},
+    {icon:'🎨',name:'设计',dept:'运营部',salary:5000},
+    {icon:'💬',name:'客服',dept:'客服部',salary:4000},
+    {icon:'🏭',name:'仓储',dept:'仓储部',salary:3500},
+    {icon:'💰',name:'财务',dept:'财务部',salary:5000},
+    {icon:'👔',name:'主管',dept:'管理层',salary:8000}
+  ];
+  var positions = [
+    {icon:'👔',name:'总经理',dept:'管理层',salary:12000,count:1},
+    {icon:'🎯',name:'运营',dept:'运营部',salary:6000,count:3},
+    {icon:'📢',name:'广告',dept:'运营部',salary:5500,count:1},
+    {icon:'🎨',name:'设计',dept:'运营部',salary:5000,count:1},
+    {icon:'💬',name:'客服',dept:'客服部',salary:4000,count:2}
+  ];
+
+  function renderPosGrid(){
+    var html = '';
+    POS_TEMPLATES.forEach(function(p){
+      html += '<div class="pos-card" onclick="ORG.addPos(\''+p.icon+'\',\''+p.name+'\',\''+p.dept+'\','+p.salary+')">';
+      html += '<div class="pc-icon">'+p.icon+'</div>';
+      html += '<div class="pc-name">'+p.name+'</div>';
+      html += '<div class="pc-salary">$'+p.salary+'/月</div>';
+      html += '</div>';
+    });
+    document.getElementById('posGrid').innerHTML = html;
+  }
+
+  function addPos(icon,name,dept,salary){
+    var existing = positions.find(function(p){return p.name===name && p.dept===dept;});
+    if(existing){ existing.count++; }
+    else { positions.push({icon:icon,name:name,dept:dept,salary:salary,count:1}); }
+    render();
+  }
+
+  function delPos(i){
+    if(positions[i].count>1) positions[i].count--;
+    else positions.splice(i,1);
+    render();
+  }
+
+  function renderTree(){
+    var depts = {};
+    positions.forEach(function(p){
+      if(!depts[p.dept]) depts[p.dept]=[];
+      depts[p.dept].push(p);
+    });
+    var html = '<div style="text-align:center">';
+    // 顶层
+    var topDept = positions.find(function(p){return p.dept==='管理层';});
+    if(topDept){
+      html += '<div class="org-node"><div class="org-box">'+topDept.icon+' '+topDept.name+'<div class="ob-count">×'+topDept.count+'</div></div></div>';
+      html += '<div class="org-line"></div>';
+    }
+    // 子部门
+    var childDepts = Object.keys(depts).filter(function(d){return d!=='管理层';});
+    if(childDepts.length>0){
+      html += '<div class="org-children">';
+      childDepts.forEach(function(dept){
+        html += '<div class="org-child">';
+        html += '<div class="org-line"></div>';
+        html += '<div class="org-box alt">'+dept+'</div>';
+        html += '<div class="org-line"></div>';
+        html += '<div class="org-children" style="flex-direction:column;gap:8px;padding-top:12px">';
+        html += '<div class="org-line" style="height:12px"></div>';
+        depts[dept].forEach(function(p){
+          html += '<div style="margin-bottom:8px"><div class="org-box alt2">'+p.icon+' '+p.name+'<div class="ob-count">×'+p.count+'</div></div></div>';
+        });
+        html += '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    document.getElementById('orgTree').innerHTML = html;
+  }
+
+  function renderSummary(){
+    var totalPeople = 0, totalSalary = 0;
+    positions.forEach(function(p){ totalPeople+=p.count; totalSalary+=p.salary*p.count; });
+    var deptCount = {};
+    positions.forEach(function(p){ deptCount[p.dept]=(deptCount[p.dept]||0)+p.count; });
+    var avgSalary = totalPeople>0 ? totalSalary/totalPeople : 0;
+    document.getElementById('summaryGrid').innerHTML =
+      '<div class="summary-card"><div class="sc-val">'+totalPeople+'</div><div class="sc-lbl">总人数</div></div>'+
+      '<div class="summary-card"><div class="sc-val">'+Object.keys(deptCount).length+'</div><div class="sc-lbl">部门数</div></div>'+
+      '<div class="summary-card"><div class="sc-val">$'+totalSalary.toFixed(0)+'</div><div class="sc-lbl">月薪酬总额</div></div>'+
+      '<div class="summary-card"><div class="sc-val">$'+avgSalary.toFixed(0)+'</div><div class="sc-lbl">平均月薪</div></div>';
+
+    var html = '';
+    positions.forEach(function(p,i){
+      html += '<tr><td>'+p.dept+'</td><td>'+p.icon+' '+p.name+'</td><td>'+p.count+'</td><td>$'+p.salary+'</td><td>$'+(p.salary*p.count)+'</td>';
+      html += '<td><button class="step-del" style="width:28px;height:28px;border-radius:50%;border:none;background:#fee2e2;color:#ef4444;cursor:pointer" onclick="ORG.delPos('+i+')">✕</button></td></tr>';
+    });
+    html += '<tr style="font-weight:700;background:var(--bg-soft)"><td colspan="2">合计</td><td>'+totalPeople+'</td><td>-</td><td>$'+totalSalary.toFixed(0)+'</td><td></td></tr>';
+    document.getElementById('detailBody').innerHTML = html;
+  }
+
+  function renderSpan(){
+    var depts = {};
+    positions.forEach(function(p){
+      if(!depts[p.dept]) depts[p.dept]=0;
+      depts[p.dept]+=p.count;
+    });
+    var html = '';
+    var managers = positions.find(function(p){return p.dept==='管理层';});
+    var mgrCount = managers ? managers.count : 1;
+    var totalSub = 0;
+    Object.keys(depts).forEach(function(d){ if(d!=='管理层') totalSub += depts[d]; });
+    var perMgr = mgrCount>0 ? totalSub/mgrCount : 0;
+    var spanCls = perMgr<=8?'span-good':(perMgr<=12?'span-warn':'span-bad');
+    var spanText = perMgr<=8?'合理':(perMgr<=12?'偏宽':'过宽');
+    html += '<tr><td>高层管理</td><td>'+totalSub+'人</td><td>5-8人</td><td><span class="span-badge '+spanCls+'">'+perMgr.toFixed(1)+'人/管 - '+spanText+'</span></td></tr>';
+
+    Object.keys(depts).forEach(function(dept){
+      if(dept==='管理层') return;
+      var count = depts[dept];
+      var cls = count<=6?'span-good':(count<=10?'span-warn':'span-bad');
+      var text = count<=6?'合理':(count<=10?'偏宽':'过宽');
+      html += '<tr><td>'+dept+'负责人</td><td>'+count+'人</td><td>3-6人</td><td><span class="span-badge '+cls+'">'+count+'人 - '+text+'</span></td></tr>';
+    });
+    document.getElementById('spanBody').innerHTML = html;
+  }
+
+  function render(){ renderTree(); renderSummary(); renderSpan(); }
+  function init(){ renderPosGrid(); render(); }
+  return { addPos:addPos, delPos:delPos, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',ORG.init); } else { ORG.init(); }
+</script>
+</body>
+</html>

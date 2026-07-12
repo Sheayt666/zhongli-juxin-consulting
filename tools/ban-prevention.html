@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="封号预防器：15项封号原因清单（刷单/侵权/关联/差评操纵/违规变体等），逐项风险自查，0-100风险评分，预防建议。免费在线亚马逊封号预防工具。">
+<meta name="keywords" content="封号预防,账号封禁,刷单,侵权,关联账号,差评操纵,违规变体,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/ban-prevention.html">
+<title>封号预防器 - 15项风险自查·0-100评分·预防建议 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.3)}
+.bp-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.bp-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.score-gauge-wrap{display:flex;align-items:center;gap:24px;justify-content:center;padding:20px 0}
+.bp-gauge{width:160px;height:160px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.bp-gauge::before{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:#fff}
+.bp-gauge-inner{position:relative;z-index:1;text-align:center}
+.bp-gauge-inner .bg-val{font-size:36px;font-weight:800;line-height:1}
+.bp-gauge-inner .bg-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.risk-info .ri-level{font-size:22px;font-weight:800;margin-bottom:6px}
+.risk-info .ri-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.risk-list{list-style:none;padding:0;margin:0}
+.risk-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:8px;background:var(--bg-soft);cursor:pointer;transition:all .2s}
+.risk-item:hover{background:var(--accent-bg)}
+.risk-item.checked{background:#ecfdf5}
+.risk-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:#fee2e2;color:#ef4444}
+.risk-item.checked .risk-icon{background:#d1fae5;color:#059669}
+.risk-content{flex:1}
+.risk-content .rc-title{font-size:14px;font-weight:600;color:var(--ink)}
+.risk-content .rc-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.risk-status{font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;flex-shrink:0}
+.risk-status.safe{background:#d1fae5;color:#059669}
+.risk-status.danger{background:#fee2e2;color:#dc2626}
+.suggest-list{list-style:none;padding:0;margin:0}
+.suggest-list li{padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;line-height:1.7;border-bottom:1px solid var(--rule-light)}
+.suggest-list li:last-child{border-bottom:none}
+.suggest-list li::before{content:'🛡️';position:absolute;left:0;top:10px;font-size:16px}
+@media(max-width:768px){.score-gauge-wrap{flex-direction:column;gap:16px}}
+</style>
+</head>
+<body class="tool-page" data-tool="ban_prevention">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚠️ 跨境电商工具 · 标准版</span>
+      <h1>封号 <em>预防器</em></h1>
+      <p class="tool-hero-desc">15项封号原因逐项自查，0-100风险评分实时计算，绿色表示已规避，红色表示存在风险，针对风险项给出预防建议。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第4步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a>
+      <span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a>
+      <span class="arrow">→</span>
+      <a href="ip-protector.html" class="step">知识产权</a>
+      <span class="arrow">→</span>
+      <span class="step current">封号预防</span>
+      <span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="bp-section">
+        <h3>🎯 封号风险评分</h3>
+        <div class="score-gauge-wrap" id="gaugeWrap"></div>
+        <div style="text-align:center;font-size:13px;color:var(--muted)">点击下方风险项进行自查，勾选表示"已规避该风险"</div>
+      </div>
+
+      <div class="bp-section">
+        <h3>📋 15项封号风险自查</h3>
+        <ul class="risk-list" id="riskList"></ul>
+      </div>
+
+      <div class="bp-section" id="suggestSection">
+        <h3>🛡️ 预防建议</h3>
+        <ul class="suggest-list" id="suggestList"></ul>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="ip-protector.html" class="wbn-btn prev">← 上一步：知识产权</a>
+        <a href="emergency-plan.html" class="wbn-btn next">下一步：应急预案 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="compliance-check.html">合规检查器</a></li><li><a href="ip-protector.html">知识产权保护</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var BP = (function(){
+  'use strict';
+  var RISKS = [
+    {title:'刷单/虚假评价',desc:'通过刷单、购买评价等方式操纵Review',suggest:'停止一切刷单行为，通过Vine计划和自然方式获取评价'},
+    {title:'知识产权侵权',desc:'产品/图片/文案侵犯他人商标、专利或版权',suggest:'完成品牌备案，定期检查Listing是否侵权'},
+    {title:'账号关联',desc:'多个账号使用相同IP、设备或收款方式',suggest:'不同账号使用独立网络环境和收款账户'},
+    {title:'差评操纵',desc:'通过退款/补偿诱导客户修改差评',suggest:'禁止任何形式的差评操纵，通过提升产品质量减少差评'},
+    {title:'违规变体',desc:'滥用变体系统合并不同产品Listing',suggest:'严格按照亚马逊变体规则创建变体，不合并不同产品'},
+    {title:'二手当新品',desc:'将退回的二手产品作为新品销售',suggest:'退回产品单独处理，不混入新品库存'},
+    {title:'类目错放',desc:'产品放在不相关的类目以获取更多曝光',suggest:'确保产品放在最相关的类目中'},
+    {title:'关键词滥用',desc:'在标题/后台 stuffing 无关关键词',suggest:'只使用与产品相关的关键词'},
+    {title:'价格操纵',desc:'通过大幅价格波动操纵购物车',suggest:'保持价格相对稳定，避免频繁大幅调价'},
+    {title:'虚假宣传',desc:'产品描述与实际不符，夸大功效',suggest:'确保Listing描述100%准确，不夸大产品功能'},
+    {title:'刷search频率',desc:'通过人工搜索提升自然排名',suggest:'停止任何形式的人工搜索刷排名行为'},
+    {title:'多账号运营',desc:'同一主体运营多个亚马逊账号',suggest:'如需多账号，确保信息完全独立'},
+    {title:'礼品卡诱导',desc:'通过礼品卡诱导好评或站外交易',suggest:'禁止在包裹中放礼品卡索评'},
+    {title:'违规促销',desc:'通过违规方式操纵促销活动',suggest:'严格遵守Lightning Deal和Coupon规则'},
+    {title:'账号闲置',desc:'长期不活跃的账号被标记风险',suggest:'保持账号活跃，定期登录和维护'}
+  ];
+  var checked = {};
+
+  function render(){
+    var safeCount = 0;
+    var html = '';
+    RISKS.forEach(function(r,i){
+      var isChecked = checked[i];
+      if(isChecked) safeCount++;
+      html += '<li class="risk-item'+(isChecked?' checked':'')+'" onclick="BP.toggle('+i+')">';
+      html += '<div class="risk-icon">'+(isChecked?'✓':'⚠')+'</div>';
+      html += '<div class="risk-content"><div class="rc-title">'+r.title+'</div><div class="rc-desc">'+r.desc+'</div></div>';
+      html += '<span class="risk-status '+(isChecked?'safe':'danger')+'">'+(isChecked?'已规避':'有风险')+'</span>';
+      html += '</li>';
+    });
+    document.getElementById('riskList').innerHTML = html;
+
+    var riskScore = ((RISKS.length-safeCount)/RISKS.length*100);
+    var safeScore = 100-riskScore;
+    var level = riskScore<20?'安全':(riskScore<50?'需关注':'高风险');
+    var color = riskScore<20?'#10b981':(riskScore<50?'#f59e0b':'#ef4444');
+    var deg = (safeScore/100)*360;
+
+    document.getElementById('gaugeWrap').innerHTML =
+      '<div class="bp-gauge" style="background:conic-gradient('+color+' 0deg '+deg+'deg,#e2e8f0 '+deg+'deg 360deg)">'+
+      '<div class="bp-gauge-inner"><div class="bg-val" style="color:'+color+'">'+safeScore.toFixed(0)+'</div><div class="bg-lbl">安全分</div></div></div>'+
+      '<div class="risk-info"><div class="ri-level" style="color:'+color+'">'+level+'</div>'+
+      '<div class="ri-desc">已规避: '+safeCount+'/'+RISKS.length+'项<br>剩余风险: '+(RISKS.length-safeCount)+'项<br>'+(riskScore<20?'封号风险极低':(riskScore<50?'存在部分风险需改善':'封号风险较高，立即处理'))+'</div></div>';
+
+    // 建议
+    var unchecked = RISKS.filter(function(r,i){return !checked[i];});
+    if(unchecked.length>0){
+      var sHtml = '';
+      unchecked.forEach(function(r){ sHtml += '<li><strong>'+r.title+'</strong>: '+r.suggest+'</li>'; });
+      document.getElementById('suggestList').innerHTML = sHtml;
+      document.getElementById('suggestSection').style.display = 'block';
+    } else {
+      document.getElementById('suggestSection').style.display = 'none';
+    }
+  }
+
+  function toggle(i){ checked[i] = !checked[i]; render(); }
+  function init(){ render(); }
+  return { toggle:toggle, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',BP.init); } else { BP.init(); }
+</script>
+</body>
+</html>

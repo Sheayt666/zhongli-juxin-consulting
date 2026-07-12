@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="人效分析器：输入团队人数/月GMV/月工时/月广告费/月SKU数，输出人均GMV/人均SKU/人均利润/工时产出，CSS柱状图各岗位人效对比，行业基准对比分析。免费在线跨境团队人效分析工具。">
+<meta name="keywords" content="人效分析,人均GMV,人均SKU,工时产出,团队效率,跨境团队管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/productivity-score.html">
+<title>人效分析器 - 人均GMV·工时产出·行业基准对比 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.prod-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.prod-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.metric-card{padding:20px;border-radius:12px;text-align:center;background:linear-gradient(135deg,#f0f4ff,#e0e7ff);border:1px solid #c7d2fe}
+.metric-card .mc-val{font-size:28px;font-weight:800;color:#4f46e5}
+.metric-card .mc-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.metric-card .mc-bench{font-size:11px;margin-top:6px;padding:2px 8px;border-radius:10px;display:inline-block}
+.bench-good{background:#d1fae5;color:#059669}.bench-warn{background:#fef3c7;color:#d97706}.bench-bad{background:#fee2e2;color:#dc2626}
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:220px;padding:20px 0;margin-top:16px;border-bottom:2px solid var(--rule)}
+.bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar-fill{width:100%;border-radius:8px 8px 0 0;transition:height .5s ease;background:linear-gradient(180deg,#6366f1,#4f46e5);min-height:4px}
+.bar-fill.alt1{background:linear-gradient(180deg,#10b981,#059669)}
+.bar-fill.alt2{background:linear-gradient(180deg,#f59e0b,#d97706)}
+.bar-fill.alt3{background:linear-gradient(180deg,#8b5cf6,#7c3aed)}
+.bar-fill.alt4{background:linear-gradient(180deg,#ec4899,#db2777)}
+.bar-val{font-size:12px;font-weight:700;color:var(--ink)}
+.bar-label{font-size:11px;color:var(--muted);text-align:center}
+.bench-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.bench-table th{padding:10px 12px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.bench-table td{padding:10px 12px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.bench-table .status-good{color:#10b981;font-weight:700}.bench-table .status-warn{color:#f59e0b;font-weight:700}.bench-table .status-bad{color:#ef4444;font-weight:700}
+@media(max-width:768px){.metric-grid{grid-template-columns:repeat(2,1fr)}.bar-chart{height:150px;gap:8px}.bench-table{font-size:12px}}
+</style>
+</head>
+<body class="tool-page" data-tool="productivity_score">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">👥 跨境电商工具 · 标准版</span>
+      <h1>人效 <em>分析器</em></h1>
+      <p class="tool-hero-desc">输入团队人数、月GMV、月工时、月广告费、月SKU数，自动计算人均GMV、人均SKU、人均利润、工时产出，CSS柱状图各岗位人效对比，行业基准一目了然。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">👥</span>
+      <span class="workflow-name">团队管理工作流</span>
+      <span class="workflow-step">第4步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="kpi-tracker.html" class="step">KPI追踪</a>
+      <span class="arrow">→</span>
+      <a href="sop-builder.html" class="step">SOP构建</a>
+      <span class="arrow">→</span>
+      <a href="salary-calculator.html" class="step">薪酬计算</a>
+      <span class="arrow">→</span>
+      <span class="step current">人效分析</span>
+      <span class="arrow">→</span>
+      <a href="org-chart.html" class="step">组织架构</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="calculator-wrap">
+        <div class="calculator-form">
+          <h2>📋 输入团队数据</h2>
+          <p class="calc-form-subtitle">填写团队整体运营数据，实时计算人效指标</p>
+          <div class="calc-field"><label>团队总人数 <span class="hint">(人)</span></label><input type="number" id="teamSize" value="8" min="1" oninput="PROD.calc()"></div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>月GMV <span class="hint">($)</span></label><input type="number" id="monthlyGMV" value="80000" step="1000" oninput="PROD.calc()"></div>
+            <div class="calc-field"><label>月总工时 <span class="hint">(小时)</span></label><input type="number" id="monthlyHours" value="1344" step="8" oninput="PROD.calc()"></div>
+          </div>
+          <div class="calc-row-2">
+            <div class="calc-field"><label>月广告费 <span class="hint">($)</span></label><input type="number" id="monthlyAd" value="15000" step="500" oninput="PROD.calc()"></div>
+            <div class="calc-field"><label>月SKU数 <span class="hint">(个)</span></label><input type="number" id="monthlySKU" value="45" step="1" oninput="PROD.calc()"></div>
+          </div>
+          <div class="calc-field"><label>月净利润 <span class="hint">($)</span></label><input type="number" id="monthlyProfit" value="20000" step="500" oninput="PROD.calc()"></div>
+          <div class="fee-rule-box" style="margin-top:16px">
+            <h4>📐 计算公式</h4>
+            <ul>
+              <li>人均GMV = 月GMV / 团队人数</li>
+              <li>人均SKU = 月SKU数 / 团队人数</li>
+              <li>人均利润 = 月净利润 / 团队人数</li>
+              <li>工时产出 = 月GMV / 月总工时</li>
+              <li>广告效率 = 月GMV / 月广告费</li>
+            </ul>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="result-card" id="resultCard"></div>
+        </div>
+      </div>
+
+      <div class="prod-section">
+        <h3>📊 核心人效指标</h3>
+        <div class="metric-grid" id="metricGrid"></div>
+      </div>
+
+      <div class="prod-section">
+        <h3>📈 各岗位人效对比</h3>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="prod-section">
+        <h3>📏 行业基准对比</h3>
+        <div style="overflow-x:auto">
+          <table class="bench-table" id="benchTable">
+            <thead><tr><th>指标</th><th>你的团队</th><th>行业平均</th><th>行业优秀</th><th>状态</th></tr></thead>
+            <tbody id="benchBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="salary-calculator.html" class="wbn-btn prev">← 上一步：薪酬计算</a>
+        <a href="org-chart.html" class="wbn-btn next">下一步：组织架构 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="kpi-tracker.html">KPI追踪器</a></li><li><a href="sop-builder.html">SOP构建器</a></li><li><a href="salary-calculator.html">薪酬计算器</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var PROD = (function(){
+  'use strict';
+  var BENCHMARKS = {
+    perCapGMV: {avg:8000, excellent:15000, label:'人均GMV', unit:'$'},
+    perCapSKU: {avg:5, excellent:8, label:'人均SKU', unit:'个'},
+    perCapProfit: {avg:2000, excellent:4000, label:'人均利润', unit:'$'},
+    hourlyOutput: {avg:50, excellent:80, label:'工时产出', unit:'$/h'},
+    adEfficiency: {avg:4, excellent:7, label:'广告效率', unit:'倍'}
+  };
+  var POSITIONS = [
+    {name:'运营',efficiency:1.2},{name:'广告',efficiency:1.0},
+    {name:'设计',efficiency:0.6},{name:'客服',efficiency:0.5},{name:'主管',efficiency:1.5}
+  ];
+
+  function calc(){
+    var size = parseFloat(document.getElementById('teamSize').value)||1;
+    var gmv = parseFloat(document.getElementById('monthlyGMV').value)||0;
+    var hours = parseFloat(document.getElementById('monthlyHours').value)||1;
+    var ad = parseFloat(document.getElementById('monthlyAd').value)||0;
+    var sku = parseFloat(document.getElementById('monthlySKU').value)||0;
+    var profit = parseFloat(document.getElementById('monthlyProfit').value)||0;
+
+    var perCapGMV = gmv/size;
+    var perCapSKU = sku/size;
+    var perCapProfit = profit/size;
+    var hourlyOutput = gmv/hours;
+    var adEff = ad>0 ? gmv/ad : 0;
+
+    document.getElementById('resultCard').innerHTML =
+      '<h3>📊 人效分析结果</h3>'+
+      '<div class="result-grid">'+
+      '<div class="result-item"><div class="ri-label">人均GMV</div><div class="ri-value">$'+perCapGMV.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">人均SKU</div><div class="ri-value">'+perCapSKU.toFixed(1)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">人均利润</div><div class="ri-value positive">$'+perCapProfit.toFixed(0)+'</div></div>'+
+      '<div class="result-item"><div class="ri-label">工时产出</div><div class="ri-value">$'+hourlyOutput.toFixed(1)+'/h</div></div>'+
+      '<div class="result-item full"><div class="ri-label">广告效率比</div><div class="ri-value">'+adEff.toFixed(2)+'倍</div></div>'+
+      '</div>'+
+      '<div class="result-note">💡 人效是团队管理的核心指标。人均GMV低于行业平均说明团队规模偏大或产出不足，应优化人员配置或提升单兵产出能力。</div>';
+
+    // 指标卡片
+    function benchClass(val,bench){
+      if(val>=bench.excellent) return 'bench-good';
+      if(val>=bench.avg) return 'bench-warn';
+      return 'bench-bad';
+    }
+    function benchText(val,bench){
+      if(val>=bench.excellent) return '优秀';
+      if(val>=bench.avg) return '中等';
+      return '待提升';
+    }
+    var metrics = [
+      {val:perCapGMV, bench:BENCHMARKS.perCapGMV, unit:'$'},
+      {val:perCapSKU, bench:BENCHMARKS.perCapSKU, unit:''},
+      {val:perCapProfit, bench:BENCHMARKS.perCapProfit, unit:'$'},
+      {val:hourlyOutput, bench:BENCHMARKS.hourlyOutput, unit:'$/h'}
+    ];
+    var mHtml = '';
+    metrics.forEach(function(m){
+      mHtml += '<div class="metric-card">';
+      mHtml += '<div class="mc-val">'+m.unit+m.val.toFixed(1)+'</div>';
+      mHtml += '<div class="mc-lbl">'+m.bench.label+'</div>';
+      mHtml += '<div class="mc-bench '+benchClass(m.val,m.bench)+'">'+benchText(m.val,m.bench)+'</div>';
+      mHtml += '</div>';
+    });
+    document.getElementById('metricGrid').innerHTML = mHtml;
+
+    // 柱状图
+    var maxEff = 1.5;
+    var chartHtml = '';
+    var colors = ['','alt1','alt2','alt3','alt4'];
+    POSITIONS.forEach(function(p,i){
+      var val = perCapGMV * p.efficiency;
+      var h = (p.efficiency/maxEff)*100;
+      chartHtml += '<div class="bar-item">';
+      chartHtml += '<div class="bar-val">$'+val.toFixed(0)+'</div>';
+      chartHtml += '<div class="bar-fill '+colors[i]+'" style="height:'+h+'%"></div>';
+      chartHtml += '<div class="bar-label">'+p.name+'</div>';
+      chartHtml += '</div>';
+    });
+    document.getElementById('barChart').innerHTML = chartHtml;
+
+    // 基准对比表
+    var bHtml = '';
+    var allMetrics = [
+      {label:'人均GMV',val:perCapGMV,bench:BENCHMARKS.perCapGMV,unit:'$'},
+      {label:'人均SKU',val:perCapSKU,bench:BENCHMARKS.perCapSKU,unit:''},
+      {label:'人均利润',val:perCapProfit,bench:BENCHMARKS.perCapProfit,unit:'$'},
+      {label:'工时产出',val:hourlyOutput,bench:BENCHMARKS.hourlyOutput,unit:'$/h'},
+      {label:'广告效率',val:adEff,bench:BENCHMARKS.adEfficiency,unit:''}
+    ];
+    allMetrics.forEach(function(m){
+      var status = m.val>=m.bench.excellent?'<span class="status-good">优秀</span>':(m.val>=m.bench.avg?'<span class="status-warn">中等</span>':'<span class="status-bad">待提升</span>');
+      bHtml += '<tr><td>'+m.label+'</td><td>'+m.unit+m.val.toFixed(1)+'</td><td>'+m.unit+m.bench.avg+'</td><td>'+m.unit+m.bench.excellent+'</td><td>'+status+'</td></tr>';
+    });
+    document.getElementById('benchBody').innerHTML = bHtml;
+  }
+
+  function init(){ calc(); }
+  return { calc:calc, init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',PROD.init); } else { PROD.init(); }
+</script>
+</body>
+</html>

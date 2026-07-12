@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="知识产权保护器：商标/专利/版权检查清单，品牌备案状态检查，侵权风险自查，维权流程指引。免费在线跨境电商知识产权保护工具。">
+<meta name="keywords" content="知识产权保护,商标,专利,版权,品牌备案,侵权自查,维权流程,风险管理">
+<meta name="author" content="众力聚鑫咨询">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://juxin-consulting.help/tools/ip-protector.html">
+<title>知识产权保护器 - 商标专利版权·品牌备案·侵权自查 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.workflow-nav{background:linear-gradient(135deg,#f8f9ff 0%,#f0f4ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:20px 24px;margin:24px auto;max-width:1152px}
+.workflow-nav-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:14px}
+.workflow-nav-header .workflow-icon{font-size:18px}
+.workflow-nav-header .workflow-name{font-weight:600;color:#4f46e5}
+.workflow-nav-header .workflow-step{margin-left:auto;color:#94a3b8;font-size:13px}
+.workflow-nav-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.workflow-nav-steps .step{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;border:1px solid #e0e7ff;color:#4f46e5;text-decoration:none;transition:all .2s}
+.workflow-nav-steps .step:hover{background:#4f46e5;color:#fff;transform:translateY(-1px)}
+.workflow-nav-steps .step.current{background:#4f46e5;color:#fff;font-weight:600}
+.workflow-nav-steps .arrow{color:#c7d2fe;font-size:13px}
+.workflow-bottom-nav{display:flex;justify-content:space-between;align-items:center;max-width:1152px;margin:24px auto;padding:0 4px}
+.wbn-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:inherit;cursor:pointer;border:none}
+.wbn-btn.prev{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.wbn-btn.prev:hover{border-color:#4f46e5;color:#4f46e5;transform:translateX(-2px)}
+.wbn-btn.next{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.wbn-btn.next:hover{transform:translateX(2px);box-shadow:0 6px 20px rgba(79,70,229,.4)}
+.ip-section{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.ip-section h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.ip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.ip-card{padding:20px;border-radius:12px;border:2px solid var(--rule);background:var(--surface);transition:all .2s}
+.ip-card:hover{border-color:#c7d2fe;transform:translateY(-2px)}
+.ip-card .ic-icon{font-size:32px;margin-bottom:8px}
+.ip-card .ic-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.check-list{list-style:none;padding:0;margin:0}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:var(--ink-soft)}
+.check-item::before{content:'☐';font-size:16px;flex-shrink:0}
+.check-item.done::before{content:'☑';color:#10b981}
+.risk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.risk-item{padding:14px;border-radius:10px;border:1px solid var(--rule);display:flex;align-items:center;gap:10px;font-size:13px}
+.risk-item .ri-icon{font-size:20px;flex-shrink:0}
+.risk-item.low{background:#ecfdf5;border-color:#10b981}
+.risk-item.mid{background:#fffbeb;border-color:#f59e0b}
+.risk-item.high{background:#fef2f2;border-color:#ef4444}
+.flow-steps{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;gap:16px;padding:14px 0;position:relative}
+.flow-step:not(:last-child)::before{content:'';position:absolute;left:15px;top:36px;bottom:0;width:2px;background:#c7d2fe}
+.flow-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;z-index:1}
+.flow-content{flex:1}
+.flow-content .fc-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.flow-content .fc-desc{font-size:13px;color:var(--muted);line-height:1.6}
+@media(max-width:768px){.ip-grid{grid-template-columns:1fr}.risk-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page" data-tool="ip_protector">
+<nav class="tool-nav" role="navigation" aria-label="主导航">
+  <div class="container tool-nav-inner">
+    <a href="../index.html" class="tool-nav-logo"><div class="nav-logo-icon">众</div><span>众力聚鑫咨询</span></a>
+    <ul class="tool-nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="index.html" class="active">工具中心</a></li>
+      <li><a href="../blog.html">深度文章</a></li>
+      <li><a href="../contact.html">联系我们</a></li>
+    </ul>
+    <a href="../index.html" class="tool-nav-back">← 返回首页</a>
+  </div>
+</nav>
+<main id="main-content">
+  <header class="tool-hero">
+    <div class="container">
+      <span class="tool-hero-badge">⚠️ 跨境电商工具 · 标准版</span>
+      <h1>知识产权 <em>保护器</em></h1>
+      <p class="tool-hero-desc">商标/专利/版权三大领域检查清单，品牌备案状态确认，侵权风险自查，完整维权流程指引，全面保护你的跨境品牌资产。</p>
+    </div>
+  </header>
+  <div class="workflow-nav">
+    <div class="workflow-nav-header">
+      <span class="workflow-icon">⚠️</span>
+      <span class="workflow-name">风险管理工作流</span>
+      <span class="workflow-step">第3步 / 共5步</span>
+    </div>
+    <div class="workflow-nav-steps">
+      <a href="account-health.html" class="step">账号健康</a>
+      <span class="arrow">→</span>
+      <a href="compliance-check.html" class="step">合规检查</a>
+      <span class="arrow">→</span>
+      <span class="step current">知识产权</span>
+      <span class="arrow">→</span>
+      <a href="ban-prevention.html" class="step">封号预防</a>
+      <span class="arrow">→</span>
+      <a href="emergency-plan.html" class="step">应急预案</a>
+    </div>
+  </div>
+  <section class="tool-section">
+    <div class="container">
+      <div class="ip-section">
+        <h3>📋 知识产权检查清单</h3>
+        <div class="ip-grid" id="ipGrid"></div>
+      </div>
+
+      <div class="ip-section">
+        <h3>🔍 侵权风险自查</h3>
+        <div class="risk-grid" id="riskGrid"></div>
+      </div>
+
+      <div class="ip-section">
+        <h3>🛡️ 维权流程指引</h3>
+        <div class="flow-steps" id="flowSteps"></div>
+      </div>
+
+      <div class="workflow-bottom-nav">
+        <a href="compliance-check.html" class="wbn-btn prev">← 上一步：合规检查</a>
+        <a href="ban-prevention.html" class="wbn-btn next">下一步：封号预防 →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>众力聚鑫咨询</h3><p>企业管理咨询 + 项目孵化 + 知识付费<br>三位一体的企业增长平台</p></div><div class="footer-col"><h4>工具中心</h4><ul><li><a href="index.html">工具首页</a></li><li><a href="account-health.html">账号健康监控</a></li><li><a href="compliance-check.html">合规检查器</a></li><li><a href="ip-protector.html">知识产权保护</a></li></ul></div><div class="footer-col"><h4>知识资源</h4><ul><li><a href="../blog.html">深度文章</a></li><li><a href="../courses.html">知识课程</a></li><li><a href="../cases.html">成功案例</a></li></ul></div><div class="footer-col"><h4>关于我们</h4><ul><li><a href="../about.html">公司介绍</a></li><li><a href="../contact.html">联系我们</a></li><li style="font-size:12px;color:rgba(255,255,255,0.4);">© 2026 众力聚鑫咨询</li></ul></div></div></div></footer>
+<script>
+var IP = (function(){
+  'use strict';
+  var IP_CATS = [
+    {icon:'™️',title:'商标保护',items:['已在目标国注册商标','商标注册类别覆盖产品','商标注册证在有效期内','商标未与他人注册商标冲突','已进行商标国际注册(Madrid)','定期监控商标侵权']},
+    {icon:'发明专利',title:'专利保护',items:['产品已申请发明专利','产品已申请实用新型专利','产品外观已申请设计专利','专利申请已在目标国生效','专利未侵犯他人专利权','定期监控专利侵权']},
+    {icon:'©️',title:'版权保护',items:['产品图片有版权登记','Listing文案为原创','视频内容有版权保护','包装设计有版权登记','软件/APP已登记版权','定期监控盗用行为']}
+  ];
+  var RISKS = [
+    {icon:'⚠️',level:'high',text:'产品名称包含他人注册商标'},
+    {icon:'📋',level:'low',text:'已进行商标检索确认无冲突'},
+    {icon:'⚠️',level:'high',text:'产品图片可能使用他人版权素材'},
+    {icon:'📋',level:'low',text:'Listing文案为原创撰写'},
+    {icon:'⚡',level:'mid',text:'产品功能类似已授权专利'},
+    {icon:'📋',level:'low',text:'已完成品牌备案(Brand Registry)'},
+    {icon:'⚠️',level:'high',text:'包装设计可能与竞品相似'},
+    {icon:'⚡',level:'mid',text:'未定期进行侵权监控'}
+  ];
+  var FLOW = [
+    {title:'Step 1: 发现侵权',desc:'通过品牌监控、卖家投诉或客户反馈发现侵权行为，保存证据截图和链接。'},
+    {title:'Step 2: 提交投诉',desc:'通过亚马逊Brand Registry的Report a Violation工具提交侵权投诉，或通过平台Cease and Desist流程。'},
+    {title:'Step 3: 提供证据',desc:'提交商标注册证、专利证书、版权登记等知识产权证明文件。'},
+    {title:'Step 4: 等待审核',desc:'平台通常在1-5个工作日内审核投诉，审核期间侵权Listing可能被暂停。'},
+    {title:'Step 5: 法律行动',desc:'如平台投诉无效，可发送律师函或提起诉讼，通过法律途径维权。'},
+    {title:'Step 6: 持续监控',desc:'定期检查平台上的侵权行为，维护品牌权益，必要时申请加入Project Zero。'}
+  ];
+
+  function render(){
+    var html = '';
+    IP_CATS.forEach(function(c){
+      html += '<div class="ip-card"><div class="ic-icon">'+c.icon+'</div><div class="ic-title">'+c.title+'</div><ul class="check-list">';
+      c.items.forEach(function(it){ html += '<li class="check-item">'+it+'</li>'; });
+      html += '</ul></div>';
+    });
+    document.getElementById('ipGrid').innerHTML = html;
+
+    var rHtml = '';
+    RISKS.forEach(function(r){
+      rHtml += '<div class="risk-item '+r.level+'"><span class="ri-icon">'+r.icon+'</span><span>'+r.text+'</span></div>';
+    });
+    document.getElementById('riskGrid').innerHTML = rHtml;
+
+    var fHtml = '';
+    FLOW.forEach(function(f,i){
+      fHtml += '<div class="flow-step"><div class="flow-num">'+(i+1)+'</div><div class="flow-content"><div class="fc-title">'+f.title+'</div><div class="fc-desc">'+f.desc+'</div></div></div>';
+    });
+    document.getElementById('flowSteps').innerHTML = fHtml;
+  }
+
+  function init(){ render(); }
+  return { init:init };
+})();
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',IP.init); } else { IP.init(); }
+</script>
+</body>
+</html>
