@@ -4,25 +4,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="亚马逊ACoS广告计算器：输入CPC、转化率、售价和日均点击数，一键计算每次点击成本、单次转化成本、日均广告花费、日均销售额、ACoS和盈亏平衡ACoS。免费在线亚马逊广告投放效果核算工具。">
-<meta name="keywords" content="ACoS计算器,亚马逊广告计算器,CPC计算,盈亏平衡ACoS,广告成本销售比,PPC计算器,跨境电商广告工具">
+<meta name="description" content="ACoS/TACoS/ROAS计算器：一键计算亚马逊广告ACoS、TACoS、ROAS，内置目标ACoS反推器、广告健康度仪表盘、30天消耗预测和ACoS优化建议引擎。免费在线广告效果分析工具。">
+<meta name="keywords" content="ACoS计算器,TACoS,ROAS,亚马逊广告,CPC,转化率,盈亏平衡ACoS,广告优化,跨境电商工具">
 <meta name="author" content="众力聚鑫咨询">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
-<meta property="og:title" content="亚马逊ACoS广告计算器 - 免费在线PPC广告效果核算工具">
-<meta property="og:description" content="输入CPC、转化率、售价和点击数，一键计算ACoS、盈亏平衡ACoS、日均广告花费和销售额。">
+<meta property="og:title" content="ACoS/TACoS/ROAS计算器 - 目标反推·健康度仪表盘·优化建议">
+<meta property="og:description" content="一键计算ACoS、TACoS、ROAS，内置目标ACoS反推器、CSS仪表盘、30天消耗预测和优化建议引擎。">
 <meta property="og:site_name" content="众力聚鑫咨询">
 <meta property="og:locale" content="zh_CN">
 <link rel="canonical" href="https://juxin-consulting.help/tools/acos-calculator.html">
-<title>亚马逊ACoS广告计算器 - 免费在线PPC广告效果核算工具 | 众力聚鑫咨询</title>
-<meta name="theme-color" content="#7c3aed">
+<title>ACoS/TACoS/ROAS计算器 - 广告健康度仪表盘·优化建议引擎 | 众力聚鑫咨询</title>
+<meta name="theme-color" content="#2563eb">
 <link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* === ACoS计算器增强样式 === */
+.acos-gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:20px 0}
+.acos-gauge{width:240px;height:120px;border-radius:120px 120px 0 0;position:relative;overflow:hidden;background:conic-gradient(from 270deg,#dc2626 0deg 54deg,#f59e0b 54deg 108deg,#16a34a 108deg 180deg,transparent 180deg 360deg)}
+.acos-gauge-mask{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:90px;border-radius:180px 180px 0 0;background:var(--surface)}
+.acos-gauge-needle{position:absolute;bottom:0;left:50%;width:4px;height:100px;background:var(--ink);transform-origin:bottom center;border-radius:4px 4px 0 0;transition:transform .5s ease;z-index:2}
+.acos-gauge-value{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);text-align:center;z-index:3}
+.acos-gauge-value .agv-num{font-size:28px;font-weight:800;color:var(--ink)}
+.acos-gauge-value .agv-lbl{font-size:12px;color:var(--muted)}
+.gauge-zones{display:flex;justify-content:center;gap:24px;font-size:11px;margin-top:20px}
+.gz-item{display:flex;align-items:center;gap:6px}
+.gz-dot{width:10px;height:10px;border-radius:3px}
+.gz-green{background:var(--green)}.gz-yellow{background:var(--gold)}.gz-red{background:var(--red)}
+.section-block{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);margin-top:24px}
+.section-block h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--ink);padding-bottom:12px;border-bottom:1px solid var(--rule-light);display:flex;align-items:center;gap:8px}
+.result-summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.rsb-card{flex:1;min-width:100px;padding:16px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.rsb-card .rsb-val{font-size:24px;font-weight:800;color:var(--ink)}
+.rsb-card .rsb-val.pos{color:var(--green)}.rsb-card .rsb-val.neg{color:var(--red)}.rsb-card .rsb-val.blue{color:var(--accent)}
+.rsb-card .rsb-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.opt-tips{list-style:none;padding:0;margin:0}
+.opt-tips li{padding:10px 0 10px 28px;font-size:14px;color:var(--ink-soft);position:relative;line-height:1.6;border-bottom:1px solid var(--rule-light)}
+.opt-tips li:last-child{border-bottom:none}
+.opt-tips li::before{content:'🎯';position:absolute;left:0;top:10px;font-size:16px}
+.scenario-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.scenario-table th{padding:12px 14px;text-align:left;font-weight:700;color:var(--ink);background:var(--bg-soft);border-bottom:2px solid var(--rule)}
+.scenario-table td{padding:12px 14px;border-bottom:1px solid var(--rule-light);color:var(--ink-soft)}
+.scenario-table tr:hover td{background:var(--accent-bg)}
+.scenario-tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.scenario-tag.conservative{background:var(--red-bg);color:var(--red)}
+.scenario-tag.baseline{background:var(--accent-bg);color:var(--accent)}
+.scenario-tag.optimistic{background:var(--green-bg);color:var(--green)}
+.forecast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.forecast-card{padding:20px;border-radius:var(--radius-md);text-align:center;background:var(--bg-soft);border:1px solid var(--rule-light)}
+.forecast-card .fc-val{font-size:28px;font-weight:800;color:var(--accent)}
+.forecast-card .fc-lbl{font-size:13px;color:var(--muted);margin-top:4px}
+.reverse-result{margin-top:16px;padding:20px;border-radius:var(--radius-md);background:linear-gradient(135deg,var(--accent-bg),var(--accent2-bg))}
+.reverse-result .rr-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.reverse-result .rr-item{text-align:center}
+.reverse-result .rr-item .rr-val{font-size:28px;font-weight:800;color:var(--accent)}
+.reverse-result .rr-item .rr-lbl{font-size:13px;color:var(--muted);margin-top:4px}
+.hidden{display:none!important}
+@media(max-width:768px){.forecast-grid{grid-template-columns:1fr}.reverse-result .rr-grid{grid-template-columns:1fr}.scenario-table{font-size:12px}.scenario-table th,.scenario-table td{padding:8px 10px}}
+</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "亚马逊ACoS广告计算器",
-  "description": "免费在线亚马逊ACoS广告计算工具，输入CPC、转化率、售价和日均点击数，自动计算单次转化成本、日均广告花费、ACoS和盈亏平衡ACoS。",
+  "name": "ACoS/TACoS/ROAS计算器",
+  "description": "免费在线亚马逊广告ACoS、TACoS、ROAS计算工具，内置目标ACoS反推器、广告健康度仪表盘、30天消耗预测和ACoS优化建议引擎。",
   "url": "https://juxin-consulting.help/tools/acos-calculator.html",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
@@ -37,7 +81,7 @@
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://juxin-consulting.help/index.html" },
     { "@type": "ListItem", "position": 2, "name": "工具中心", "item": "https://juxin-consulting.help/tools/index.html" },
-    { "@type": "ListItem", "position": 3, "name": "ACoS广告计算器", "item": "https://juxin-consulting.help/tools/acos-calculator.html" }
+    { "@type": "ListItem", "position": 3, "name": "ACoS计算器", "item": "https://juxin-consulting.help/tools/acos-calculator.html" }
   ]
 }
 </script>
@@ -46,7 +90,6 @@
 <a href="#main-content" class="skip-link">跳转到主要内容</a>
 <div class="reading-progress-bar" id="readingProgress"></div>
 
-<!-- 简化导航 -->
 <nav class="tool-nav" role="navigation" aria-label="主导航">
   <div class="container tool-nav-inner">
     <a href="../index.html" class="tool-nav-logo">
@@ -64,16 +107,14 @@
 </nav>
 
 <main id="main-content">
-  <!-- 页面标题 -->
   <header class="tool-hero">
     <div class="container">
-      <span class="tool-hero-badge">📊 跨境电商工具</span>
-      <h1>亚马逊ACoS<em>广告计算器</em></h1>
-      <p class="tool-hero-desc">输入CPC、转化率、售价和日均点击数，一键计算单次转化成本、日均广告花费、ACoS和盈亏平衡ACoS，帮你判断广告投放是否盈利。</p>
+      <span class="tool-hero-badge">🎯 跨境电商工具 · 深度版</span>
+      <h1>ACoS / TACoS / <em>ROAS 计算器</em></h1>
+      <p class="tool-hero-desc">一键计算广告三大核心指标，内置目标ACoS反推器、广告健康度CSS仪表盘、30天消耗预测和优化建议引擎，让广告投放从"凭感觉"变成"看数据"。</p>
     </div>
   </header>
 
-  <!-- 计算器 -->
   <section class="tool-section">
     <div class="container">
       <div class="calculator-wrap">
@@ -85,73 +126,184 @@
           <div class="calc-row-2">
             <div class="calc-field">
               <label>CPC 每次点击成本 <span class="hint">($)</span></label>
-              <input type="number" id="cpc" placeholder="如 0.85" step="0.01" min="0" value="0.85">
+              <input type="number" id="cpc" placeholder="如 0.85" step="0.01" min="0" value="0.85" oninput="ACOS.calc()">
             </div>
             <div class="calc-field">
               <label>转化率 <span class="hint">(%)</span></label>
-              <input type="number" id="cvr" placeholder="如 12" step="0.1" min="0" max="100" value="12">
+              <input type="number" id="cvr" placeholder="如 12" step="0.1" min="0" max="100" value="12" oninput="ACOS.calc()">
             </div>
           </div>
 
           <div class="calc-row-2">
             <div class="calc-field">
               <label>售价 <span class="hint">($)</span></label>
-              <input type="number" id="price" placeholder="如 29.99" step="0.01" min="0" value="29.99">
+              <input type="number" id="price" placeholder="如 29.99" step="0.01" min="0" value="29.99" oninput="ACOS.calc()">
             </div>
             <div class="calc-field">
               <label>日均点击数 <span class="hint">(次)</span></label>
-              <input type="number" id="clicks" placeholder="如 100" step="1" min="0" value="100">
+              <input type="number" id="clicks" placeholder="如 100" step="1" min="0" value="100" oninput="ACOS.calc()">
             </div>
           </div>
 
           <div class="calc-row-2">
             <div class="calc-field">
               <label>采购成本 <span class="hint">($)</span></label>
-              <input type="number" id="cost" placeholder="如 8.00" step="0.01" min="0" value="8.00">
+              <input type="number" id="cost" placeholder="如 8.00" step="0.01" min="0" value="8.00" oninput="ACOS.calc()">
             </div>
             <div class="calc-field">
               <label>其他费用/单 <span class="hint">($, 含FBA等)</span></label>
-              <input type="number" id="otherFee" placeholder="如 6.00" step="0.01" min="0" value="6.00">
+              <input type="number" id="otherFee" placeholder="如 6.00" step="0.01" min="0" value="6.00" oninput="ACOS.calc()">
             </div>
           </div>
 
-          <div class="calc-actions">
-            <button class="btn-calc" id="calcBtn">立即计算ACoS</button>
-            <button class="btn-reset" id="resetBtn">重置</button>
+          <div class="calc-row-2">
+            <div class="calc-field">
+              <label>日均总销售额 <span class="hint">($, 含自然单)</span></label>
+              <input type="number" id="totalSales" placeholder="如 600" step="0.01" min="0" value="600" oninput="ACOS.calc()">
+            </div>
+            <div class="calc-field">
+              <label>日均广告销售额 <span class="hint">($)</span></label>
+              <input type="number" id="adSales" placeholder="如 360" step="0.01" min="0" value="360" oninput="ACOS.calc()">
+            </div>
           </div>
 
-          <!-- 公式说明 -->
           <div class="fee-rule-box">
-            <h4>📐 计算公式说明</h4>
+            <h4>📐 计算公式</h4>
             <ul>
-              <li>单次转化成本 = CPC ÷ 转化率</li>
+              <li>ACoS = 广告花费 / 广告销售额 × 100% = CPC / (转化率 × 售价)</li>
+              <li>TACoS = 广告花费 / 总销售额 × 100%</li>
+              <li>ROAS = 广告销售额 / 广告花费 = 1 / ACoS</li>
+              <li>盈亏平衡ACoS = (售价 - 采购成本 - 其他费用) / 售价 × 100%</li>
               <li>日均广告花费 = CPC × 日均点击数</li>
-              <li>日均销售额 = 日均点击数 × 转化率 × 售价</li>
-              <li>ACoS = 日均广告花费 ÷ 日均销售额 × 100%</li>
-              <li>盈亏平衡ACoS = (售价 - 采购成本 - 其他费用) ÷ 售价 × 100%</li>
             </ul>
           </div>
         </div>
 
         <!-- 结果展示 -->
         <div class="calc-results">
-          <div class="result-card empty" id="resultCard">
-            <div class="empty-icon">📊</div>
-            <p>填写左侧广告数据后<br>点击"立即计算ACoS"查看结果</p>
+          <div class="result-card" id="resultCard">
+            <div class="empty-icon" style="font-size:48px;margin-bottom:16px;opacity:.5;text-align:center">🎯</div>
+            <p style="text-align:center;font-size:14px;color:var(--muted);line-height:1.7">填写左侧广告数据<br>实时查看ACoS分析结果</p>
           </div>
+        </div>
+      </div>
 
-          <!-- 计算历史 -->
-          <div class="calc-history" id="historyBox" style="display:none;">
-            <h4>🕘 最近计算记录 <button id="clearHistoryBtn">清空</button></h4>
-            <ul class="calc-history-list" id="historyList"></ul>
+      <!-- ============ ACoS健康度仪表盘 ============ -->
+      <div class="section-block hidden" id="gaugeSection">
+        <h3>🎛️ 广告健康度仪表盘</h3>
+        <div class="acos-gauge-wrap">
+          <div class="acos-gauge">
+            <div class="acos-gauge-mask"></div>
+            <div class="acos-gauge-needle" id="gaugeNeedle"></div>
+            <div class="acos-gauge-value">
+              <div class="agv-num" id="gaugeValue">0%</div>
+              <div class="agv-lbl">当前ACoS</div>
+            </div>
           </div>
+          <div class="gauge-zones">
+            <div class="gz-item"><div class="gz-dot gz-green"></div>健康 &lt;15%</div>
+            <div class="gz-item"><div class="gz-dot gz-yellow"></div>警戒 15-30%</div>
+            <div class="gz-item"><div class="gz-dot gz-red"></div>危险 &gt;30%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ ACoS优化建议引擎 ============ -->
+      <div class="section-block hidden" id="tipsSection">
+        <h3>🧠 ACoS优化建议引擎</h3>
+        <ul class="opt-tips" id="optTips"></ul>
+      </div>
+
+      <!-- ============ 目标ACoS反推器 ============ -->
+      <div class="section-block">
+        <h3>🔄 目标ACoS反推器</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">输入目标ACoS，反推你可承受的最大CPC和所需最低转化率。</p>
+        <div class="calc-row-2" style="max-width:500px">
+          <div class="calc-field">
+            <label>目标ACoS <span class="hint">(%)</span></label>
+            <input type="number" id="targetAcos" placeholder="如 15" step="0.5" min="0" max="100" value="15" oninput="ACOS.calcReverse()">
+          </div>
+          <div class="calc-field">
+            <label>当前售价 <span class="hint">($)</span></label>
+            <input type="number" id="revPrice" placeholder="如 29.99" step="0.01" min="0" value="29.99" oninput="ACOS.calcReverse()">
+          </div>
+        </div>
+        <div class="calc-row-2" style="max-width:500px">
+          <div class="calc-field">
+            <label>当前转化率 <span class="hint">(%)</span></label>
+            <input type="number" id="revCvr" placeholder="如 12" step="0.1" min="0" max="100" value="12" oninput="ACOS.calcReverse()">
+          </div>
+          <div class="calc-field">
+            <label>当前CPC <span class="hint">($)</span></label>
+            <input type="number" id="revCpc" placeholder="如 0.85" step="0.01" min="0" value="0.85" oninput="ACOS.calcReverse()">
+          </div>
+        </div>
+        <div class="reverse-result">
+          <div class="rr-grid">
+            <div class="rr-item">
+              <div class="rr-val" id="revMaxCpc">$0.00</div>
+              <div class="rr-lbl">可承受最大CPC</div>
+            </div>
+            <div class="rr-item">
+              <div class="rr-val" id="revMinCvr">0%</div>
+              <div class="rr-lbl">所需最低转化率</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 30天消耗预测 ============ -->
+      <div class="section-block">
+        <h3>📅 30天消耗预测</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px">输入日预算和转化率，预测30天广告消耗和预期销售额。</p>
+        <div class="calc-row-2" style="max-width:500px">
+          <div class="calc-field">
+            <label>日均广告预算 <span class="hint">($)</span></label>
+            <input type="number" id="dailyBudget" placeholder="如 50" step="0.01" min="0" value="50" oninput="ACOS.calcForecast()">
+          </div>
+          <div class="calc-field">
+            <label>预期转化率 <span class="hint">(%)</span></label>
+            <input type="number" id="forecastCvr" placeholder="如 12" step="0.1" min="0" max="100" value="12" oninput="ACOS.calcForecast()">
+          </div>
+        </div>
+        <div class="calc-row-2" style="max-width:500px">
+          <div class="calc-field">
+            <label>产品售价 <span class="hint">($)</span></label>
+            <input type="number" id="forecastPrice" placeholder="如 29.99" step="0.01" min="0" value="29.99" oninput="ACOS.calcForecast()">
+          </div>
+          <div class="calc-field">
+            <label>预估CPC <span class="hint">($)</span></label>
+            <input type="number" id="forecastCpc" placeholder="如 0.85" step="0.01" min="0" value="0.85" oninput="ACOS.calcForecast()">
+          </div>
+        </div>
+        <div class="forecast-grid" id="forecastGrid"></div>
+      </div>
+
+      <!-- ============ 三场景对比 ============ -->
+      <div class="section-block">
+        <h3>📊 三场景对比（保守/基准/乐观）</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:8px">基于当前CPC和售价，对比三种转化率场景下的ACoS和ROAS表现。</p>
+        <div style="overflow-x:auto">
+          <table class="scenario-table" id="scenarioTable">
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>转化率</th>
+                <th>ACoS</th>
+                <th>ROAS</th>
+                <th>单次转化成本</th>
+                <th>盈亏状态</th>
+              </tr>
+            </thead>
+            <tbody id="scenarioBody"></tbody>
+          </table>
         </div>
       </div>
 
       <!-- 分享区域 -->
       <div class="share-section">
         <h3>📤 分享给同事</h3>
-        <p>把这个ACoS广告计算器分享给你的运营团队，一起优化广告投放</p>
+        <p>把这个ACoS计算器分享给你的广告团队，一起优化投放效果</p>
         <div class="share-link-box">
           <input type="text" class="share-link-input" id="shareLinkInput" readonly placeholder="点击生成分享链接">
           <button class="btn-share" data-share-btn data-tool="acos_calculator" data-share-target="#shareLinkInput" data-share-done="已复制" data-share-label-target="#shareCopiedLabel">复制链接</button>
@@ -160,15 +312,15 @@
         <div class="share-channels">
           <a class="share-channel-btn" href="../contact.html">💬 咨询顾问</a>
           <a class="share-channel-btn" href="index.html">🧰 更多工具</a>
-          <a class="share-channel-btn" href="../blog.html">📖 深度文章</a>
+          <a class="share-channel-btn" href="break-even-cpc.html">⚖️ 盈亏平衡CPC</a>
         </div>
       </div>
 
-      <!-- 相关文章推荐 -->
+      <!-- 相关文章 -->
       <section class="tool-related">
         <div class="section-header" style="margin-bottom:28px;">
           <span class="section-tag">📖 延伸阅读</span>
-          <h2>广告相关<em>深度文章</em></h2>
+          <h2>广告优化<em>深度文章</em></h2>
         </div>
         <div class="tool-related-grid">
           <a href="../article-amazon-ads-acos.html" class="tool-related-card">
@@ -180,13 +332,13 @@
           <a href="../article-amazon-ranking-traffic.html" class="tool-related-card">
             <div class="trc-icon">📈</div>
             <h4>亚马逊排名与流量获取</h4>
-            <p>关键词排名提升与自然流量增长</p>
+            <p>广告流量与自然排名的协同策略</p>
             <span class="trc-link">阅读文章 →</span>
           </a>
           <a href="../article-amazon-offsite-traffic.html" class="tool-related-card">
-            <div class="trc-icon">🌐</div>
-            <h4>亚马逊站外流量引入</h4>
-            <p>站外引流渠道与转化策略</p>
+            <div class="trc-icon">🚀</div>
+            <h4>亚马逊站外引流策略</h4>
+            <p>多渠道流量获取与转化提升</p>
             <span class="trc-link">阅读文章 →</span>
           </a>
         </div>
@@ -212,6 +364,9 @@
           <li><a href="fba-calculator.html">FBA利润计算器</a></li>
           <li><a href="acos-calculator.html">ACoS广告计算器</a></li>
           <li><a href="currency-converter.html">汇率转换器</a></li>
+          <li><a href="break-even-cpc.html">盈亏平衡CPC</a></li>
+          <li><a href="referral-fee.html">类目佣金计算器</a></li>
+          <li><a href="size-tier.html">尺寸分段检查器</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -236,136 +391,214 @@
 
 <script src="../assets/js/engagement.js"></script>
 <script>
-/* ===== ACoS 广告计算逻辑 ===== */
-(function () {
-  var calcBtn = document.getElementById('calcBtn');
-  var resetBtn = document.getElementById('resetBtn');
-  var resultCard = document.getElementById('resultCard');
+/* ===== ACoS/TACoS/ROAS 计算器（深度版） ===== */
+var ACOS = (function () {
+  'use strict';
 
-  function $(id) { return parseFloat(document.getElementById(id).value) || 0; }
-  function fmt(n) { return (!isFinite(n)) ? '$0.00' : '$' + n.toFixed(2); }
+  function $(id) { return document.getElementById(id); }
+  function fmt(n) { return '$' + (isFinite(n) ? n.toFixed(2) : '0.00'); }
+  function pct(n) { return (isFinite(n) ? n.toFixed(1) : '0.0') + '%'; }
 
+  /* 核心计算 */
   function calc() {
-    var cpc = $('cpc');
-    var cvr = $('cvr');
-    var price = $('price');
-    var clicks = $('clicks');
-    var cost = $('cost');
-    var otherFee = $('otherFee');
+    var cpc = parseFloat($('cpc').value) || 0;
+    var cvr = parseFloat($('cvr').value) || 0;
+    var price = parseFloat($('price').value) || 0;
+    var clicks = parseFloat($('clicks').value) || 0;
+    var cost = parseFloat($('cost').value) || 0;
+    var otherFee = parseFloat($('otherFee').value) || 0;
+    var totalSales = parseFloat($('totalSales').value) || 0;
+    var adSales = parseFloat($('adSales').value) || 0;
 
-    if (cpc <= 0) { markError('cpc'); return; }
-    if (cvr <= 0) { markError('cvr'); return; }
-    if (price <= 0) { markError('price'); return; }
-    if (clicks < 0) { markError('clicks'); return; }
-
-    var cvrRate = cvr / 100;
-
-    // 单次转化成本 = CPC / 转化率
-    var costPerConversion = cpc / cvrRate;
-    // 日均广告花费 = CPC × 点击数
-    var dailyAdSpend = cpc * clicks;
-    // 日均订单数 = 点击数 × 转化率
-    var dailyOrders = clicks * cvrRate;
-    // 日均销售额 = 日均订单数 × 售价
-    var dailySales = dailyOrders * price;
-    // ACoS = 广告花费 / 销售额 × 100%
-    var acos = dailySales > 0 ? (dailyAdSpend / dailySales) * 100 : 0;
+    // 日均广告花费
+    var adSpend = cpc * clicks;
+    // 如果广告销售额未填写，用点击×转化率×售价计算
+    if (adSales === 0 && clicks > 0 && cvr > 0 && price > 0) {
+      adSales = clicks * (cvr / 100) * price;
+    }
+    // ACoS
+    var acos = adSales > 0 ? (adSpend / adSales) * 100 : 0;
+    // TACoS
+    var tacos = totalSales > 0 ? (adSpend / totalSales) * 100 : 0;
+    // ROAS
+    var roas = adSpend > 0 ? adSales / adSpend : 0;
     // 盈亏平衡ACoS = (售价 - 采购成本 - 其他费用) / 售价 × 100%
-    var breakEvenAcos = ((price - cost - otherFee) / price) * 100;
+    var breakEvenAcos = price > 0 ? ((price - cost - otherFee) / price) * 100 : 0;
+    // 单次转化成本
+    var cpa = cvr > 0 ? cpc / (cvr / 100) : 0;
 
-    // 判断是否盈利
-    var isProfitable = acos <= breakEvenAcos;
+    if (cpc <= 0 || cvr <= 0 || price <= 0) {
+      $('resultCard').innerHTML = '<div class="empty-icon" style="font-size:48px;margin-bottom:16px;opacity:.5;text-align:center">🎯</div><p style="text-align:center;font-size:14px;color:var(--muted);line-height:1.7">请填写CPC、转化率和售价<br>查看ACoS分析结果</p>';
+      $('gaugeSection').classList.add('hidden');
+      $('tipsSection').classList.add('hidden');
+      return;
+    }
 
-    renderResult({
-      cpc: cpc, cvr: cvr, price: price, clicks: clicks, cost: cost, otherFee: otherFee,
-      costPerConversion: costPerConversion, dailyAdSpend: dailyAdSpend,
-      dailyOrders: dailyOrders, dailySales: dailySales, acos: acos,
-      breakEvenAcos: breakEvenAcos, isProfitable: isProfitable
-    });
-
-    // 保存历史 & 埋点
-    var summary = 'ACoS=' + acos.toFixed(1) + '%/盈亏' + breakEvenAcos.toFixed(1) + '%';
-    if (window.HistoryStore) HistoryStore.save('ACoS广告计算器', {
-      CPC: cpc, 转化率: cvr + '%', ACoS: acos.toFixed(1) + '%', 盈亏平衡: breakEvenAcos.toFixed(1) + '%'
-    });
-    if (window.EngagementTracker) EngagementTracker.calcCompleted('acos_calculator', summary);
-    renderHistory();
+    renderResult(acos, tacos, roas, adSpend, adSales, breakEvenAcos, cpa);
+    renderGauge(acos);
+    renderTips(acos, breakEvenAcos, tacos);
+    renderScenarios(cpc, price, cost, otherFee, breakEvenAcos);
+    trackCalc(acos, tacos, roas);
   }
 
-  function markError(id) {
-    var el = document.getElementById(id);
-    el.classList.add('error');
-    el.focus();
-    setTimeout(function () { el.classList.remove('error'); }, 2000);
-  }
+  function renderResult(acos, tacos, roas, adSpend, adSales, breakEvenAcos, cpa) {
+    var acosClass = acos < breakEvenAcos ? 'pos' : 'neg';
+    var acosLabel = acos < breakEvenAcos ? '盈利' : '亏损';
 
-  function renderResult(r) {
-    var acosClass = r.isProfitable ? 'profit' : 'warning';
-    var breakEvenClass = 'roi';
-    var statusText = r.isProfitable ? '✓ 广告盈利中' : '⚠ 广告亏损中';
-    var statusColor = r.isProfitable ? 'var(--green)' : 'var(--red)';
-
-    resultCard.classList.remove('empty');
-    resultCard.innerHTML =
-      '<h3>📊 ACoS 分析结果</h3>' +
-      '<div class="result-highlight">' +
-        '<div class="highlight-card ' + acosClass + '">' +
-          '<div class="hc-label">ACoS 广告成本销售比</div>' +
-          '<div class="hc-value">' + r.acos.toFixed(1) + '%</div>' +
-          '<div class="hc-sub">日均广告花费 ' + fmt(r.dailyAdSpend) + '</div>' +
-        '</div>' +
-        '<div class="highlight-card ' + breakEvenClass + '">' +
-          '<div class="hc-label">盈亏平衡 ACoS</div>' +
-          '<div class="hc-value">' + r.breakEvenAcos.toFixed(1) + '%</div>' +
-          '<div class="hc-sub">' + statusText + '</div>' +
-        '</div>' +
+    $('resultCard').innerHTML =
+      '<h3>📊 广告效果分析</h3>' +
+      '<div class="result-summary-bar">' +
+        '<div class="rsb-card"><div class="rsb-val ' + acosClass + '">' + pct(acos) + '</div><div class="rsb-lbl">ACoS</div></div>' +
+        '<div class="rsb-card"><div class="rsb-val blue">' + pct(tacos) + '</div><div class="rsb-lbl">TACoS</div></div>' +
+        '<div class="rsb-card"><div class="rsb-val ' + (roas >= 4 ? 'pos' : 'neg') + '">' + roas.toFixed(2) + '</div><div class="rsb-lbl">ROAS</div></div>' +
       '</div>' +
       '<div class="result-grid">' +
-        '<div class="result-item"><div class="ri-label">CPC 每次点击成本</div><div class="ri-value">' + fmt(r.cpc) + '</div></div>' +
-        '<div class="result-item"><div class="ri-label">单次转化成本</div><div class="ri-value">' + fmt(r.costPerConversion) + '<div class="ri-sub">转化率 ' + r.cvr + '%</div></div></div>' +
-        '<div class="result-item"><div class="ri-label">日均广告花费</div><div class="ri-value">' + fmt(r.dailyAdSpend) + '<div class="ri-sub">' + r.clicks + ' 次点击</div></div></div>' +
-        '<div class="result-item"><div class="ri-label">日均销售额</div><div class="ri-value">' + fmt(r.dailySales) + '<div class="ri-sub">' + r.dailyOrders.toFixed(1) + ' 单/天</div></div></div>' +
-        '<div class="result-item"><div class="ri-label">售价</div><div class="ri-value">' + fmt(r.price) + '</div></div>' +
-        '<div class="result-item"><div class="ri-label">成本+其他费用</div><div class="ri-value">' + fmt(r.cost + r.otherFee) + '<div class="ri-sub">采购 ' + fmt(r.cost) + ' + 其他 ' + fmt(r.otherFee) + '</div></div></div>' +
-        '<div class="result-item full" style="text-align:center;background:' + (r.isProfitable ? 'var(--green-bg)' : 'var(--red-bg)') + ';">' +
-          '<div class="ri-label">广告投放状态</div>' +
-          '<div class="ri-value" style="color:' + statusColor + ';">' + statusText + '</div>' +
-          '<div class="ri-sub">' + (r.isProfitable ? '当前ACoS低于盈亏平衡点，广告盈利' : '当前ACoS高于盈亏平衡点，需优化') + '</div>' +
-        '</div>' +
+        '<div class="result-item"><div class="ri-label">日均广告花费</div><div class="ri-value">' + fmt(adSpend) + '</div></div>' +
+        '<div class="result-item"><div class="ri-label">日均广告销售额</div><div class="ri-value">' + fmt(adSales) + '</div></div>' +
+        '<div class="result-item"><div class="ri-label">单次转化成本(CPA)</div><div class="ri-value">' + fmt(cpa) + '</div></div>' +
+        '<div class="result-item"><div class="ri-label">盈亏平衡ACoS</div><div class="ri-value">' + pct(breakEvenAcos) + '</div></div>' +
+        '<div class="result-item full"><div class="ri-label">广告盈亏状态</div><div class="ri-value ' + acosClass + '">' +
+          '当前ACoS ' + pct(acos) + (acos < breakEvenAcos ? ' < 盈亏平衡 ' + pct(breakEvenAcos) + ' → ' : ' > 盈亏平衡 ' + pct(breakEvenAcos) + ' → ') + acosLabel +
+        '</div></div>' +
       '</div>' +
-      '<div class="result-note">💡 提示：当 ACoS < 盈亏平衡ACoS 时广告盈利。优化方向：降低CPC（优化关键词质量分）、提升转化率（优化Listing）、提高售价（提升品牌溢价）。盈亏平衡ACoS越高，广告优化空间越大。</div>';
+      '<div class="result-note">💡 提示：ACoS低于盈亏平衡ACoS时广告盈利，高于则亏损。ROAS≥4为健康水平，TACoS反映广告花费对整体销售的占比影响。</div>';
   }
 
-  function renderHistory() {
-    if (!window.HistoryStore) return;
-    var list = HistoryStore.list();
-    var box = document.getElementById('historyBox');
-    var ul = document.getElementById('historyList');
-    if (!list.length) { box.style.display = 'none'; return; }
-    box.style.display = 'block';
-    ul.innerHTML = list.map(function (item) {
-      var d = item.data || {};
-      var time = new Date(item.time).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-      return '<li><span class="ch-tool">' + item.tool + '</span>：ACoS ' + (d.ACoS || '-') + '，盈亏平衡 ' + (d.盈亏平衡 || '-') +
-        '<span class="ch-time">' + time + '</span></li>';
-    }).join('');
+  /* 渲染CSS仪表盘 */
+  function renderGauge(acos) {
+    $('gaugeSection').classList.remove('hidden');
+    // 仪表盘范围0-60%，超过60%固定在60%
+    var displayAcos = Math.min(acos, 60);
+    // 270度半圆，0%在左(270deg)，60%在右(90deg即从270转180deg)
+    // 指针角度: 0% -> -90deg(左), 60% -> 90deg(右)
+    var needleAngle = (displayAcos / 60) * 180 - 90;
+    $('gaugeNeedle').style.transform = 'translateX(-50%) rotate(' + needleAngle + 'deg)';
+    $('gaugeValue').textContent = pct(acos);
   }
 
-  calcBtn.addEventListener('click', calc);
-  resetBtn.addEventListener('click', function () {
-    ['cpc', 'cvr', 'price', 'clicks', 'cost', 'otherFee'].forEach(function (id) {
-      document.getElementById(id).value = '';
+  /* 优化建议引擎 */
+  function renderTips(acos, breakEvenAcos, tacos) {
+    $('tipsSection').classList.remove('hidden');
+    var tips = [];
+
+    if (acos < breakEvenAcos * 0.7) {
+      tips.push('ACoS远低于盈亏平衡线（' + pct(breakEvenAcos) + '），广告效益优秀。建议适当增加预算，抓住增长窗口期。');
+    } else if (acos < breakEvenAcos) {
+      tips.push('ACoS低于盈亏平衡线但利润空间不大（盈亏平衡ACoS ' + pct(breakEvenAcos) + '）。建议持续优化关键词和Listing以进一步降低ACoS。');
+    } else if (acos < breakEvenAcos * 1.3) {
+      tips.push('ACoS已超过盈亏平衡线（' + pct(breakEvenAcos) + '），广告处于亏损状态。建议立即排查高花费低转化关键词，暂停表现差的搜索词。');
+    } else {
+      tips.push('ACoS大幅超过盈亏平衡线（' + pct(breakEvenAcos) + '），广告严重亏损。建议紧急暂停所有自动广告，手动筛查每个关键词的转化数据。');
+    }
+
+    if (tacos > 30) {
+      tips.push('TACoS高达' + pct(tacos) + '，说明广告花费占整体销售额比重过大。应加强自然排名建设，降低对广告流量的依赖。');
+    } else if (tacos > 15) {
+      tips.push('TACoS为' + pct(tacos) + '，广告依赖度中等。建议通过优化Listing和获取Review来提升自然流量占比。');
+    } else {
+      tips.push('TACoS仅' + pct(tacos) + '，广告花费占比较低，整体结构健康。可以适当增加广告投入测试新品关键词。');
+    }
+
+    if (acos > 30) {
+      tips.push('ACoS超过30%属于危险区间。检查是否存在：1)无关搜索词消耗预算 2)竞价过高 3)Listing转化率偏低 4)产品定价不合理。');
+    } else if (acos > 15) {
+      tips.push('ACoS在15%-30%警戒区间。建议通过精准否定关键词、优化主图和标题提升CTR、降低CPC出价来改善。');
+    } else {
+      tips.push('ACoS低于15%，广告健康度良好。关注ROAS变化，确保在扩大预算时维持转化率稳定。');
+    }
+
+    tips.push('建议每周复盘一次搜索词报告(Search Term Report)，将高转化词升级为精准匹配，将高花费零转化词加入否定关键词。');
+    tips.push('如果产品处于新品期，可容忍短期ACoS高于盈亏线，但需设定时间节点（通常2-4周），到期未改善则果断调整策略。');
+
+    $('optTips').innerHTML = tips.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+  }
+
+  /* 三场景对比 */
+  function renderScenarios(cpc, price, cost, otherFee, breakEvenAcos) {
+    var scenarios = [
+      { name: '保守', cvr: 5, tag: 'conservative' },
+      { name: '基准', cvr: 12, tag: 'baseline' },
+      { name: '乐观', cvr: 20, tag: 'optimistic' }
+    ];
+
+    var html = '';
+    scenarios.forEach(function (s) {
+      var sAcos = (s.cvr > 0 && price > 0) ? (cpc / (s.cvr / 100 * price)) * 100 : 0;
+      var sRoas = sAcos > 0 ? 100 / sAcos : 0;
+      var sCpa = s.cvr > 0 ? cpc / (s.cvr / 100) : 0;
+      var status = sAcos < breakEvenAcos ? '<span style="color:var(--green);font-weight:700">盈利</span>' : '<span style="color:var(--red);font-weight:700">亏损</span>';
+
+      html += '<tr>' +
+        '<td><span class="scenario-tag ' + s.tag + '">' + s.name + '</span></td>' +
+        '<td>' + s.cvr + '%</td>' +
+        '<td>' + pct(sAcos) + '</td>' +
+        '<td>' + sRoas.toFixed(2) + '</td>' +
+        '<td>' + fmt(sCpa) + '</td>' +
+        '<td>' + status + '</td>' +
+      '</tr>';
     });
-    resultCard.classList.add('empty');
-    resultCard.innerHTML = '<div class="empty-icon">📊</div><p>填写左侧广告数据后<br>点击"立即计算ACoS"查看结果</p>';
-  });
+    $('scenarioBody').innerHTML = html;
+  }
 
-  document.getElementById('clearHistoryBtn').addEventListener('click', function () {
-    if (window.HistoryStore) { HistoryStore.clear(); renderHistory(); }
-  });
+  /* 目标ACoS反推 */
+  function calcReverse() {
+    var targetAcos = parseFloat($('targetAcos').value) || 0;
+    var price = parseFloat($('revPrice').value) || 0;
+    var cvr = parseFloat($('revCvr').value) || 0;
+    var cpc = parseFloat($('revCpc').value) || 0;
 
-  renderHistory();
+    // 可承受最大CPC = 目标ACoS × 转化率 × 售价 / 100
+    var maxCpc = targetAcos * (cvr / 100) * price;
+    $('revMaxCpc').textContent = fmt(maxCpc);
+
+    // 所需最低转化率 = CPC × 100 / (目标ACoS × 售价)
+    var minCvr = (targetAcos > 0 && price > 0) ? (cpc * 100) / (targetAcos * price) : 0;
+    $('revMinCvr').textContent = pct(minCvr);
+  }
+
+  /* 30天预测 */
+  function calcForecast() {
+    var dailyBudget = parseFloat($('dailyBudget').value) || 0;
+    var cvr = parseFloat($('forecastCvr').value) || 0;
+    var price = parseFloat($('forecastPrice').value) || 0;
+    var cpc = parseFloat($('forecastCpc').value) || 0;
+
+    var monthlySpend = dailyBudget * 30;
+    var dailyClicks = cpc > 0 ? dailyBudget / cpc : 0;
+    var dailyConversions = dailyClicks * (cvr / 100);
+    var dailyAdSales = dailyConversions * price;
+    var monthlyAdSales = dailyAdSales * 30;
+    var monthlyAcos = monthlyAdSales > 0 ? (monthlySpend / monthlyAdSales) * 100 : 0;
+
+    $('forecastGrid').innerHTML =
+      '<div class="forecast-card"><div class="fc-val">' + fmt(monthlySpend) + '</div><div class="fc-lbl">30天广告消耗</div></div>' +
+      '<div class="forecast-card"><div class="fc-val">' + fmt(monthlyAdSales) + '</div><div class="fc-lbl">30天广告销售额</div></div>' +
+      '<div class="forecast-card"><div class="fc-val">' + pct(monthlyAcos) + '</div><div class="fc-lbl">预估ACoS</div></div>';
+  }
+
+  /* 埋点 */
+  function trackCalc(acos, tacos, roas) {
+    var summary = 'ACoS=' + acos.toFixed(1) + '%,TACoS=' + tacos.toFixed(1) + '%,ROAS=' + roas.toFixed(2);
+    if (window.HistoryStore) HistoryStore.save('ACoS计算器', {
+      ACoS: acos.toFixed(1) + '%', TACoS: tacos.toFixed(1) + '%', ROAS: roas.toFixed(2)
+    });
+    if (window.EngagementTracker) EngagementTracker.calcCompleted('acos_calculator', summary);
+  }
+
+  function init() {
+    calc();
+    calcReverse();
+    calcForecast();
+  }
+
+  return { calc: calc, calcReverse: calcReverse, calcForecast: calcForecast, init: init };
 })();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', ACOS.init);
+} else {
+  ACOS.init();
+}
 </script>
 </body>
 </html>
